@@ -1,4 +1,1 @@
 # komfy-bot
- 
-app id: 1045127424347750401
-pub key: 8ba0b826fcfaa9abe198ded4e1d66fa2d4d46df76dcf89049282e7037be3b4b3
