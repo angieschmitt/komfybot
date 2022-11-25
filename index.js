@@ -48,28 +48,11 @@ for (const file of eventFiles) {
 // Log in to Discord with your client's token
 client.login(token);
 
-// Webserver stuff?
-const http = require('http');
-const host = 'http://komfy-bot.onrender.com';
-const port = 10000;
+// Webserver stuff
+const express = require('express');
+const server = express();
+const port = process.env.PORT || 3001;
 
-const requestListener = function(req, res) {
-	// res.writeHead(200);
-	// res.end('My first server!');
-	switch (req.url) {
-	case '/health':
-		res.setHeader('Content-Type', 'text/html');
-		res.writeHead(200);
-		res.end('<html><body><h1>Healthy</h1></body></html>');
-		break;
-	default:
-		res.setHeader('Content-Type', 'text/html');
-		res.writeHead(200);
-		res.end('<html><body><h1>Page?</h1></body></html>');
-	}
-};
-
-const server = http.createServer(requestListener);
-server.listen(port, host, () => {
-	console.log(`Server is running on http://${host}:${port}`);
-});
+server.get('/', (req, res) => res.type('html').send('<html><body><h1>Page?</h1></body></html>'));
+server.get('/healthy', (req, res) => res.status(200).type('html').send('<html><body><h1>Healthy</h1></body></html>'));
+server.listen(port, () => console.log(`Example app listening on port ${port}!`));
