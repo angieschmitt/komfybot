@@ -1,3 +1,4 @@
+// Discord Stuff
 const fs = require('node:fs');
 const path = require('node:path');
 
@@ -45,3 +46,25 @@ for (const file of eventFiles) {
 
 // Log in to Discord with your client's token
 client.login(token);
+
+// Webserver stuff?
+const http = require('http');
+const host = 'localhost';
+const port = 8000;
+
+const requestListener = function(req, res) {
+	// res.writeHead(200);
+	// res.end('My first server!');
+	switch (req.url) {
+	case '/health':
+		res.writeHead(200);
+		break;
+	default:
+		res.writeHead(200);
+	}
+};
+
+const server = http.createServer(requestListener);
+server.listen(port, host, () => {
+	console.log(`Server is running on http://${host}:${port}`);
+});
