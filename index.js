@@ -5,6 +5,7 @@ const path = require('node:path');
 // Require the necessary discord.js classes
 const { Client, Partials, GatewayIntentBits, Collection } = require('discord.js');
 const { token } = require('/etc/secrets/config.json');
+// const { token } = require('./config.json');
 
 // Create a new client instance
 const client = new Client({
@@ -49,18 +50,22 @@ client.login(token);
 
 // Webserver stuff?
 const http = require('http');
-const host = 'localhost';
-const port = 8000;
+const host = 'http://komfy-bot.onrender.com';
+const port = 10000;
 
 const requestListener = function(req, res) {
 	// res.writeHead(200);
 	// res.end('My first server!');
 	switch (req.url) {
 	case '/health':
+		res.setHeader('Content-Type', 'text/html');
 		res.writeHead(200);
+		res.end('<html><body><h1>Healthy</h1></body></html>');
 		break;
 	default:
+		res.setHeader('Content-Type', 'text/html');
 		res.writeHead(200);
+		res.end('<html><body><h1>Page?</h1></body></html>');
 	}
 };
 
