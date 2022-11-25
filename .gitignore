@@ -1,3 +1,5 @@
+.htaccess
+stderr.log
 node_modules
 .env
 config.json
