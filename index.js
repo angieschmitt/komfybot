@@ -61,8 +61,13 @@ const express = require('express');
 const app = express();
 const port = process.env.PORT || 3001;
 
-app.get('/', (req, res) => res.type('html').send(html));
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+app.listen(port, '0.0.0.0');
+app.get('/', (req, res) => {
+	res.status(200).type('html').send(html);
+});
+app.get('/healthy', (req, res) => {
+	res.status(200).type('html').send('<html><body><h1>Healthy</h1></body></html>');
+});
 
 const html = `
 <!DOCTYPE html>
