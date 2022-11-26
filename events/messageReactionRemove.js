@@ -1,4 +1,5 @@
 const { Events } = require('discord.js');
+const { messages, roles } = require('../config.json');
 
 module.exports = {
 	name: Events.MessageReactionRemove,
@@ -16,10 +17,20 @@ module.exports = {
 			}
 		}
 
-		const message = reaction.message;
-		message.channel.send(
-			`${user.username} removed their ${reaction.emoji.name} reaction on ${reaction.message.author}'s message!`,
-		);
+		const message	= reaction.message;
+		const member	= reaction.message.guild.members.cache.find(m => m.id === user.id);
+		// console.log(member);
+
+		if (messages.includes(message.id)) {
+			const reactedWith = reaction.emoji.name;
+			// console.log('is message');
+			if (reactedWith in roles) {
+				const role = reaction.message.guild.roles.cache.find(r => r.id === roles[reactedWith]);
+				// console.log('is reaction');
+				// console.log(role);
+				member.roles.remove(role);
+			}
+		}
 
 		// // Now the message has been cached and is fully available
 		// console.log(`${reaction.message.author}'s message "${reaction.message.content}" gained a reaction!`);

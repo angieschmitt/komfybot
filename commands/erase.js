@@ -1,11 +1,11 @@
 const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
-const { permissions } = require('../config.json');
+const { permissions, messages } = require('../config.json');
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('erase')
 		.setDescription('Deletes previous messages')
-		.addStringOption(option =>
+		.addIntegerOption(option =>
 			option
 				.setName('quantity')
 				.setDescription('How many messages should I delete?'))
@@ -28,27 +28,32 @@ module.exports = {
 			await interaction.reply({ content: 'Working on it!', ephemeral: true });
 
 			const channel 	= interaction.channel;
-			const quantity	= interaction.options.getString('quantity') ?? 1;
+			const quantity	= interaction.options.getInteger('quantity') ?? 1;
 
 			let count = 0;
-			channel.messages.fetch({ limit: quantity }).then(messages => {
-				if (messages.size > 0) {
+			let error = false;
+			channel.messages.fetch({ limit: quantity }).then(messageList => {
+				if (messageList.size > 0) {
 					// Iterate through the messages here with the variable "messages".
-					messages.forEach(message => {
-						setTimeout(() => {
-							message.delete();
-							count++;
-							if (count === messages.size) {
-								interaction.editReply(`Erasing ${count} messages, just be patient!`);
-							}
-						}, 1000);
+					messageList.forEach(message => {
+						if (!messages.includes(message.id)) {
+							setTimeout(() => {
+								message.delete();
+							}, 1000);
+						}
+						else {
+							error = '\r\nThere was at least one message that couldn\'t be erased.';
+						}
+						count++;
+						if (count === messageList.size) {
+							interaction.editReply(`Erasing ${count} messages, just be patient! \r\n` + error);
+						}
 					});
 				}
 				else {
 					interaction.editReply('Seems like there is nothing to delete.');
 				}
 			});
-
 		}
 		else {
 
