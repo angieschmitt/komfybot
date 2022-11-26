@@ -1,5 +1,5 @@
 const { REST, Routes } = require('discord.js');
-const { clientId, token } = require('./config.json');
+const { clientId, guildId, token } = require('./config.json');
 const fs = require('node:fs');
 
 const commands = [];
@@ -18,16 +18,29 @@ const rest = new REST({ version: '10' }).setToken(token);
 // and deploy your commands!
 (async () => {
 	try {
-		console.log(`Started refreshing ${commands.length} application (/) commands.`);
 
-		// The put method is used to fully refresh all commands in the guild with the current set
-		const data = await rest.put(
-			// Routes.applicationGuildCommands(clientId, guildId),
-			Routes.applicationCommands(clientId),
-			{ body: commands },
-		);
+		const myPromise = new Promise((resolve) => {
+			setTimeout(() => {
+				resolve('foo');
+			}, 500);
+		});
 
-		console.log(`Successfully reloaded ${data.length} application (/) commands.`);
+		myPromise
+			.then(() => {
+				rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: [] })
+					.then(() => console.log('Successfully deleted all guild commands.'))
+					.catch(console.error);
+			})
+			.then(() => {
+				rest.put(Routes.applicationCommands(clientId), { body: [] })
+					.then(() => console.log('Successfully deleted all application commands.'))
+					.catch(console.error);
+			})
+			.then(() => {
+				rest.put(Routes.applicationCommands(clientId), { body: commands })
+					.then(() => console.log('Successfully reloaded all application (/) commands'))
+					.catch(console.error);
+			});
 	}
 	catch (error) {
 		// And of course, make sure you catch and log any errors!
