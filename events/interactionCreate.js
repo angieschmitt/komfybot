@@ -23,8 +23,38 @@ module.exports = {
 		}
 		else {
 			if (interaction.isButton()) {
-				console.log(interaction);
-				await interaction.reply({ content: 'You clicked it. Why would you do that?', ephemeral: true });
+
+				const buttonInfo = interaction.customId.split('_');
+
+				if (buttonInfo[0] == 'pronouns') {
+					// const { pronouns } = require('../config.json');
+					const which = buttonInfo[1].replace('-', '/');
+
+					// console.log(pronouns.buttons[which].roleID);
+
+					await interaction.reply({ content: `Adding the ${which} role. Click again to remove!`, ephemeral: true });
+				}
+				else {
+					await interaction.reply({ content: 'WHAT DID YOU CLICK!?', ephemeral: true });
+				}
+
+				// console.log(interaction);
+
+			}
+			else if (interaction.isAutocomplete()) {
+				const command = interaction.client.commands.get(interaction.commandName);
+
+				if (!command) {
+					console.error(`No command matching ${interaction.commandName} was found.`);
+					return;
+				}
+
+				try {
+					await command.autocomplete(interaction);
+				}
+				catch (error) {
+					console.error(error);
+				}
 			}
 			return;
 		}
