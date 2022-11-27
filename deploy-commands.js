@@ -26,16 +26,16 @@ const rest = new REST({ version: '10' }).setToken(token);
 		});
 
 		myPromise
-			.then(() => {
-				rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: [] })
-					.then(() => console.log('Successfully deleted all guild commands.'))
-					.catch(console.error);
-			})
-			.then(() => {
-				rest.put(Routes.applicationCommands(clientId), { body: [] })
-					.then(() => console.log('Successfully deleted all application commands.'))
-					.catch(console.error);
-			})
+			// .then(() => {
+			// 	rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: [] })
+			// 		.then(() => console.log('Successfully deleted all guild commands.'))
+			// 		.catch(console.error);
+			// })
+			// .then(() => {
+			// 	rest.put(Routes.applicationCommands(clientId), { body: [] })
+			// 		.then(() => console.log('Successfully deleted all application commands.'))
+			// 		.catch(console.error);
+			// })
 			.then(() => {
 				rest.put(Routes.applicationCommands(clientId), { body: commands })
 					.then(() => console.log('Successfully reloaded all application (/) commands'))

@@ -46,7 +46,7 @@ module.exports = {
 						}
 						count++;
 						if (count === messageList.size) {
-							interaction.editReply(`Erasing ${count} messages, just be patient! \r\n` + error);
+							interaction.editReply(`Erasing ${count} messages, just be patient! \r\n` + (error != false ? error : ''));
 						}
 					});
 				}

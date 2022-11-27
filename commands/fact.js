@@ -1,0 +1,37 @@
+const axios = require('axios');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+
+const today = new Date();
+const dd 	= String(today.getDate()).padStart(2, '0');
+const mm 	= String(today.getMonth() + 1).padStart(2, '0');
+const yyyy	= today.getFullYear();
+
+module.exports = {
+	data: new SlashCommandBuilder()
+		.setName('fact-of-the-day')
+		.setDescription('Command to setup role assignments, run in channel with message'),
+	async execute(interaction) {
+
+		await interaction.deferReply();
+
+		await axios.get('https://kittenangie.com/bots/api/endpoint.php?request=fact')
+			.then(function(response) {
+
+				const embed = new EmbedBuilder()
+					.setColor(0xC44578)
+					.setTitle('Fact of the Day')
+					.setThumbnail('https://kittenangie.com/bots/images/question-mark.png')
+					.addFields(
+						{ name: `${mm}/${dd}/${yyyy}`, value: response.data },
+					);
+
+				interaction.editReply({ embeds: [embed] });
+			})
+			.catch(function(error) {
+				interaction.editReply({ content: `Something went wrong? ${error}` });
+			})
+			.finally(function() {
+				// always executed
+			});
+	},
+};
