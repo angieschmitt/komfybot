@@ -19,15 +19,23 @@ module.exports = {
 		await axios.get('https://kittenangie.com/bots/api/endpoint.php?request=8ball')
 			.then(function(response) {
 
-				const embed = new EmbedBuilder()
-					.setColor(0xC44578)
-					.setTitle('Magic 8 Ball')
-					.setThumbnail('https://kittenangie.com/bots/images/8ball.png')
-					.addFields(
-						{ name: question, value: response.data },
-					);
+				const output = response.data;
 
-				interaction.editReply({ embeds: [embed] });
+				if (output.status === 'success') {
+					const embed = new EmbedBuilder()
+						.setColor(0xC44578)
+						.setTitle('Magic 8 Ball')
+						.setThumbnail('https://kittenangie.com/bots/images/8ball.png')
+						.addFields(
+							{ name: question, value: output.content },
+						);
+
+					interaction.editReply({ embeds: [embed] });
+				}
+				else {
+					interaction.editReply({ content: 'Something went wrong?' });
+				}
+
 			})
 			.catch(function(error) {
 				interaction.editReply({ content: `Something went wrong? ${error}` });

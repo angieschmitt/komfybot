@@ -12,15 +12,26 @@ module.exports = {
 		await axios.get('https://kittenangie.com/bots/api/endpoint.php?request=quote')
 			.then(function(response) {
 
-				const embed = new EmbedBuilder()
-					.setColor(0xC44578)
-					.setTitle('Kiwi Quotes')
-					.setThumbnail('https://kittenangie.com/bots/images/komfy-kiwi.jpg')
-					.addFields(
-						{ name: 'Kiwi once said...', value: response.data },
-					);
+				const output = response.data;
 
-				interaction.editReply({ embeds: [embed] });
+				if (output.status === 'success') {
+					const embed = new EmbedBuilder()
+						.setColor(0xC44578)
+						.setTitle('Kiwi Quotes')
+						.setThumbnail('https://kittenangie.com/bots/images/komfy-kiwi.jpg')
+						.addFields(
+							{ name: 'Kiwi once said...', value: output.content },
+						)
+						.setTimestamp()
+						.setFooter(
+							{ text: `ID: ${output.id}` },
+						);
+
+					interaction.editReply({ embeds: [embed] });
+				}
+				else {
+					interaction.editReply({ content: 'Something went wrong?' });
+				}
 
 			})
 			.catch(function(error) {
