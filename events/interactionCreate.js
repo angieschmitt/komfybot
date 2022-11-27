@@ -21,43 +21,59 @@ module.exports = {
 				console.error(error);
 			}
 		}
-		else {
-			if (interaction.isButton()) {
+		else if (interaction.isButton()) {
+			const buttonInfo = interaction.customId.split('_');
+			const member	 = interaction.guild.members.cache.find(m => m.id === interaction.user.id);
 
-				const buttonInfo = interaction.customId.split('_');
+			console.log(member);
 
-				if (buttonInfo[0] == 'pronouns') {
-					// const { pronouns } = require('../config.json');
-					const which = buttonInfo[1].replace('-', '/');
+			// if (messages.includes(message.id)) {
+			// 	const reactedWith = reaction.emoji.name;
+			// 	// console.log('is message');
+			// 	if (reactedWith in roles) {
+			// 		const role = reaction.message.guild.roles.cache.find(r => r.id === roles[reactedWith]);
+			// 		// console.log('is reaction');
+			// 		// console.log(role);
+			// 		member.roles.add(role);
+			// 	}
+			// }
 
-					// console.log(pronouns.buttons[which].roleID);
+			if (buttonInfo[0] == 'pronouns') {
+				const { pronouns } = require('../config.json');
+				const which = buttonInfo[1].replace('-', '/');
+				const role	= interaction.guild.roles.cache.find(r => r.id === pronouns.buttons[which].roleID);
 
-					await interaction.reply({ content: `Adding the ${which} role. Click again to remove!`, ephemeral: true });
+				if (member.roles.cache.some(r => r.id === pronouns.buttons[which].roleID)) {
+					member.roles.remove(role);
+					await interaction.reply({ content: `Removing the ${which} role.`, ephemeral: true });
 				}
 				else {
-					await interaction.reply({ content: 'WHAT DID YOU CLICK!?', ephemeral: true });
-				}
-
-				// console.log(interaction);
-
-			}
-			else if (interaction.isAutocomplete()) {
-				const command = interaction.client.commands.get(interaction.commandName);
-
-				if (!command) {
-					console.error(`No command matching ${interaction.commandName} was found.`);
-					return;
-				}
-
-				try {
-					await command.autocomplete(interaction);
-				}
-				catch (error) {
-					console.error(error);
+					member.roles.add(role);
+					await interaction.reply({ content: `Adding the ${which} role.`, ephemeral: true });
 				}
 			}
+			else {
+				await interaction.reply({ content: 'WHAT DID YOU CLICK!?', ephemeral: true });
+			}
+
+		}
+		else if (interaction.isAutocomplete()) {
+			const command = interaction.client.commands.get(interaction.commandName);
+
+			if (!command) {
+				console.error(`No command matching ${interaction.commandName} was found.`);
+				return;
+			}
+
+			try {
+				await command.autocomplete(interaction);
+			}
+			catch (error) {
+				console.error(error);
+			}
+		}
+		else {
 			return;
 		}
-
 	},
 };
