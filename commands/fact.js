@@ -17,15 +17,26 @@ module.exports = {
 		await axios.get('https://kittenangie.com/bots/api/endpoint.php?request=fact')
 			.then(function(response) {
 
-				const embed = new EmbedBuilder()
-					.setColor(0xC44578)
-					.setTitle('Fact of the Day')
-					.setThumbnail('https://kittenangie.com/bots/images/question-mark.png')
-					.addFields(
-						{ name: `${mm}/${dd}/${yyyy}`, value: response.data },
-					);
+				const output = response.data;
 
-				interaction.editReply({ embeds: [embed] });
+				if (output.status === 'success') {
+					const embed = new EmbedBuilder()
+						.setColor(0xC44578)
+						.setTitle('Fact of the Day')
+						.setThumbnail('https://kittenangie.com/bots/images/question-mark.png')
+						.addFields(
+							{ name: `${mm}/${dd}/${yyyy}`, value: output.content },
+						)
+						.setTimestamp()
+						.setFooter(
+							{ text: `ID: ${output.id}` },
+						);
+
+					interaction.editReply({ embeds: [embed] });
+				}
+				else {
+					interaction.editReply({ content: 'Something went wrong?' });
+				}
 			})
 			.catch(function(error) {
 				interaction.editReply({ content: `Something went wrong? ${error}` });

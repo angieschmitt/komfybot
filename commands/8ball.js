@@ -28,7 +28,8 @@ module.exports = {
 						.setThumbnail('https://kittenangie.com/bots/images/8ball.png')
 						.addFields(
 							{ name: question, value: output.content },
-						);
+						)
+						.setTimestamp();
 
 					interaction.editReply({ embeds: [embed] });
 				}

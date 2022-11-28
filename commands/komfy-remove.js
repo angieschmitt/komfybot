@@ -3,8 +3,8 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('komfy-add')
-		.setDescription('Command to add content to the database')
+		.setName('komfy-remove')
+		.setDescription('Command to remove content from the database')
 		.addStringOption(option =>
 			option.setName('category')
 				.setDescription('Type of content')
@@ -15,15 +15,15 @@ module.exports = {
 				.setRequired(true))
 		.addStringOption(option =>
 			option
-				.setName('content')
-				.setDescription('The content to add')
+				.setName('content-id')
+				.setDescription('The ID of the content to remove from the database')
 				.setRequired(true)),
 	async execute(interaction) {
 
 		const category = interaction.options.getString('category');
-		const content = interaction.options.getString('content');
+		const contentId = interaction.options.getString('content-id');
 
-		const url = 'https://kittenangie.com/bots/api/insert.php?request=' + encodeURIComponent(category) + '&content=' + encodeURIComponent(content);
+		const url = 'https://kittenangie.com/bots/api/remove.php?request=' + encodeURIComponent(category) + '&content=' + encodeURIComponent(contentId);
 
 		await axios.get(url)
 			.then(function(response) {
@@ -36,18 +36,14 @@ module.exports = {
 						.setColor(0xC44578)
 						.setTitle('Komfy Bot Database Updated')
 						.addFields(
-							{ name: `${ucwords(category)} added`, value: content },
-						)
-						.setFooter(
-							{ text: `Inserted as ID: ${outcome.id}` },
+							{ name: `${ucwords(category)} removed`, value: outcome.content },
 						)
 						.setTimestamp();
 
-					// interaction.editReply({ content: `Successfullkomy added to ${category}s` });
 					interaction.reply({ embeds: [embed], ephemeral: true });
 				}
 				else {
-					interaction.reply({ content: 'There was an issue adding that to the database.', ephemeral: true });
+					interaction.reply({ content: 'There was an issue removing that from the database.', ephemeral: true });
 				}
 
 			})

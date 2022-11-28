@@ -34,7 +34,8 @@ module.exports = {
 		const embed = new EmbedBuilder()
 			.setColor(0xC44578)
 			.setTitle(`FAQs: ${category}`)
-			.addFields(faqsOutput);
+			.addFields(faqsOutput)
+			.setTimestamp();
 
 		interaction.editReply({ embeds: [embed] });
 

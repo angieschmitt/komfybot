@@ -90,7 +90,8 @@ module.exports = {
 			.setThumbnail('https://kittenangie.com/bots/images/dice-roller.png')
 			.addFields(
 				{ name: user.username + ' rolled:', value: output ?? '--' },
-			);
+			)
+			.setTimestamp();
 
 		await interaction.editReply({ embeds: [exampleEmbed] });
 	},
