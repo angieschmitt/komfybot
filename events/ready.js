@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { Events, ActivityType, EmbedBuilder } = require('discord.js');
+const { Events, ActivityType, EmbedBuilder, roleMention } = require('discord.js');
 
 module.exports = {
 	name: Events.ClientReady,
@@ -14,24 +14,22 @@ module.exports = {
 
 			if (x.is_live && started_at !== x.started_at) {
 
+				const twitch = roleMention('1048776612042260540');
 				const embed = new EmbedBuilder()
 					.setColor(0xC44578)
-					.setTitle('KomfyKiwi is Live on Twitch')
-					.setURL('https://www.twitch.tv/komfykiwi')
+					.setAuthor({ name: x.user_name, iconURL: x.user_thumbnail })
+					.setTitle((x.title != '' ? x.title : 'Title goes here'))
+					.setURL('https://www.twitch.tv/' + x.user_login)
+					.setThumbnail(x.user_thumbnail)
 					.setDescription(`Currently playing ${x.game_name}!`)
-					.setThumbnail(x.thumbnail_url)
 					.addFields(
-						{ name: 'Regular field title', value: 'Some value here' },
-						{ name: '\u200B', value: '\u200B' },
-						{ name: 'Inline field title', value: 'Some value here', inline: true },
-						{ name: 'Inline field title', value: 'Some value here', inline: true },
+						{ name: 'Viewers', value: `${x.viewer_count}` },
 					)
-					.setTimestamp()
-					.setFooter({ text: 'Some footer text here', iconURL: 'https://i.imgur.com/AfFp7pu.png' });
+					.setImage(x.thumbnail_url);
 
 				client.channels.fetch('1045318121839407154')
 					.then(channel => {
-						channel.send({ embeds: [embed] });
+						channel.send({ content: `Hey ${twitch}, ${x.user_name} has gone live at https://www.twitch.tv/${x.user_login}.`, embeds: [embed] });
 					});
 
 				started_at = x.started_at;
