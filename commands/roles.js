@@ -1,14 +1,14 @@
 const { SlashCommandBuilder, PermissionFlagsBits, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
-const { pronouns } = require('../config.json');
+const { roles } = require('../config.json');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('pronouns')
-		.setDescription('Command to output pronoun options')
+		.setName('roles')
+		.setDescription('Command to output role options')
 		.setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
 	async execute(interaction) {
 
-		const size = Object.keys(pronouns.buttons).length;
+		const size = Object.keys(roles.buttons).length;
 		const runs = Math.ceil(size / 5);
 
 		const rows = [];
@@ -16,14 +16,14 @@ module.exports = {
 
 			let i = 1;
 			const row = new ActionRowBuilder();
-			for (const [key, data] of Object.entries(pronouns.buttons)) {
+			for (const [key, data] of Object.entries(roles.buttons)) {
 				if (i > (5 * (index - 1)) && i <= (5 * index)) {
 					const unique = key.replace('/', '-');
 					if (data.icon !== '') {
 						row.addComponents(
 							new ButtonBuilder()
-								.setCustomId('pronouns_' + unique)
-								.setLabel(key)
+								.setCustomId('roles_' + unique)
+								.setLabel(ucwords(key))
 								.setStyle(ButtonStyle.Primary)
 								.setEmoji(data.icon),
 						);
@@ -31,8 +31,8 @@ module.exports = {
 					else {
 						row.addComponents(
 							new ButtonBuilder()
-								.setCustomId('pronouns_' + unique)
-								.setLabel(key)
+								.setCustomId('roles_' + unique)
+								.setLabel(ucwords(key))
 								.setStyle(ButtonStyle.Primary),
 						);
 					}
@@ -42,8 +42,13 @@ module.exports = {
 			rows.push(row);
 		}
 
-		// Buttons!
-		interaction.reply({ content: pronouns.message, components: rows });
+		await interaction.reply({ content: roles.message, components: rows });
 
 	},
 };
+
+function ucwords(str) {
+	return (str + '').replace(/^([a-z])|\s+([a-z])/g, function($1) {
+		return $1.toUpperCase();
+	});
+}

@@ -25,19 +25,6 @@ module.exports = {
 			const buttonInfo = interaction.customId.split('_');
 			const member	 = interaction.guild.members.cache.find(m => m.id === interaction.user.id);
 
-			console.log(member);
-
-			// if (messages.includes(message.id)) {
-			// 	const reactedWith = reaction.emoji.name;
-			// 	// console.log('is message');
-			// 	if (reactedWith in roles) {
-			// 		const role = reaction.message.guild.roles.cache.find(r => r.id === roles[reactedWith]);
-			// 		// console.log('is reaction');
-			// 		// console.log(role);
-			// 		member.roles.add(role);
-			// 	}
-			// }
-
 			if (buttonInfo[0] == 'pronouns') {
 				const { pronouns } = require('../config.json');
 				const which = buttonInfo[1].replace('-', '/');
@@ -52,8 +39,22 @@ module.exports = {
 					await interaction.reply({ content: `Adding the ${which} role.`, ephemeral: true });
 				}
 			}
+			else if (buttonInfo[0] == 'roles') {
+				const { roles } = require('../config.json');
+				const which = buttonInfo[1].replace('-', '/');
+				const role	= interaction.guild.roles.cache.find(r => r.id === roles.buttons[which].roleID);
+
+				if (member.roles.cache.some(r => r.id === roles.buttons[which].roleID)) {
+					member.roles.remove(role);
+					await interaction.reply({ content: `Removing the ${ucwords(which)} role.`, ephemeral: true });
+				}
+				else {
+					member.roles.add(role);
+					await interaction.reply({ content: `Adding the ${ucwords(which)} role.`, ephemeral: true });
+				}
+			}
 			else {
-				await interaction.reply({ content: 'WHAT DID YOU CLICK!?', ephemeral: true });
+				await interaction.reply({ content: `You clicked a ${buttonInfo[0]} button. Specifically the ${buttonInfo[1]} one.`, ephemeral: true });
 			}
 
 		}
@@ -77,3 +78,9 @@ module.exports = {
 		}
 	},
 };
+
+function ucwords(str) {
+	return (str + '').replace(/^([a-z])|\s+([a-z])/g, function($1) {
+		return $1.toUpperCase();
+	});
+}
