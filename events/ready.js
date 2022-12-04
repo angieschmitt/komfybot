@@ -39,8 +39,8 @@ module.exports = {
 		});
 
 		client.user.setActivity('activity', { type: ActivityType.Listening });
-		client.user.setPresence(
-			{ activities:
+		client.user.setPresence({
+			activities:
 				[
 					{
 						name: 'lo-fi beats.',
@@ -48,7 +48,7 @@ module.exports = {
 					},
 				],
 			status: 'idle',
-			});
+		});
 
 	},
 };
