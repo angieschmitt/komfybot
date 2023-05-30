@@ -1,5 +1,7 @@
+require('../globals');
+
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { faqs } = require('../config.json');
+const { faqs } = require(configFile); // eslint-disable-line
 
 module.exports = {
 	data: new SlashCommandBuilder()

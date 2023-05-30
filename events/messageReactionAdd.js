@@ -1,5 +1,7 @@
+require('../globals');
+
 const { Events } = require('discord.js');
-const { messages, roles } = require('../config.json');
+const { messages, roles } = require(configFile); // eslint-disable-line
 
 module.exports = {
 	name: Events.MessageReactionAdd,

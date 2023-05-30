@@ -1,5 +1,7 @@
+require('./globals');
+
 const { REST, Routes } = require('discord.js');
-const { clientId, guildId, token } = require('./config.json');
+const { clientId, guildId, token } = require(configFile); // eslint-disable-line
 const fs = require('node:fs');
 
 const commands = [];

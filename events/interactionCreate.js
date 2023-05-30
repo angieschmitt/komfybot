@@ -1,3 +1,5 @@
+require('../globals');
+
 const { Events } = require('discord.js');
 
 module.exports = {
@@ -26,7 +28,7 @@ module.exports = {
 			const member	 = interaction.guild.members.cache.find(m => m.id === interaction.user.id);
 
 			if (buttonInfo[0] == 'pronouns') {
-				const { pronouns } = require('../config.json');
+				const { pronouns } = require(configFile); // eslint-disable-line
 				const which = buttonInfo[1].replace('-', '/');
 				const role	= interaction.guild.roles.cache.find(r => r.id === pronouns.buttons[which].roleID);
 
@@ -40,7 +42,7 @@ module.exports = {
 				}
 			}
 			else if (buttonInfo[0] == 'roles') {
-				const { roles } = require('../config.json');
+				const { roles } = require(configFile); // eslint-disable-line
 				const which = buttonInfo[1].replace('-', '/');
 				const role	= interaction.guild.roles.cache.find(r => r.id === roles.buttons[which].roleID);
 
