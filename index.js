@@ -2,12 +2,17 @@
 const fs = require('node:fs');
 const path = require('node:path');
 
-console.log( process.env );
+console.log( process.env.live );
+let configFile = './config.json';
+if (process.env.live === 'true') {
+    configFile = '/etc/secrets/config.json';
+}
+
+console.log(configFile);
 
 // Require the necessary discord.js classes
 const { Client, Partials, GatewayIntentBits, Collection } = require('discord.js');
-// const { token } = require('/etc/secrets/config.json');
-const { token } = require('./config.json');
+const { token } = require(configFile);
 
 console.log(token);
 
