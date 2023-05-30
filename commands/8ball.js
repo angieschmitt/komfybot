@@ -4,7 +4,7 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('8ball')
-		.setDescription('Command to setup role assignments, run in channel with message')
+		.setDescription('Magic 8 Ball, tell me my future!')
 		.addStringOption(option =>
 			option
 				.setName('question')

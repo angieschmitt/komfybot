@@ -4,10 +4,10 @@ const { faqs } = require('../config.json');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('faqs')
-		.setDescription('Command to setup role assignments, run in channel with message')
+		.setDescription('Frequently Asked Questions')
 		.addStringOption(option =>
 			option.setName('category')
-				.setDescription('The gif category')
+				.setDescription('The FAQ category')
 				.setAutocomplete(true)
 				.setRequired(true)),
 	async autocomplete(interaction) {

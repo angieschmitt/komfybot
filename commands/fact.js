@@ -9,7 +9,7 @@ const yyyy	= today.getFullYear();
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('fact-of-the-day')
-		.setDescription('Command to setup role assignments, run in channel with message'),
+		.setDescription('Fact of the Day, updates daily.'),
 	async execute(interaction) {
 
 		await interaction.deferReply();

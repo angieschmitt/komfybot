@@ -4,7 +4,7 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('puns')
-		.setDescription('Command to setup role assignments, run in channel with message'),
+		.setDescription('Puns. Cause she likes em for some reason.'),
 	async execute(interaction) {
 
 		await interaction.deferReply();

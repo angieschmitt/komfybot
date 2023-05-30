@@ -4,7 +4,7 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('quotes')
-		.setDescription('Command to setup role assignments, run in channel with message'),
+		.setDescription('Quotable quotes.'),
 	async execute(interaction) {
 
 		await interaction.deferReply();

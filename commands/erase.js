@@ -30,24 +30,27 @@ module.exports = {
 			const channel 	= interaction.channel;
 			const quantity	= interaction.options.getInteger('quantity') ?? 1;
 
-			let count = 0;
 			let error = false;
+			let count = 1;
 			channel.messages.fetch({ limit: quantity }).then(messageList => {
 				if (messageList.size > 0) {
 					// Iterate through the messages here with the variable "messages".
 					messageList.forEach(message => {
 						if (!messages.includes(message.id)) {
-							setTimeout(() => {
-								message.delete();
-							}, 1000);
+							setTimeout(() => { message.delete(); }, 1000);
 						}
 						else {
 							error = '\r\nThere was at least one message that couldn\'t be erased.';
 						}
-						count++;
 						if (count === messageList.size) {
-							interaction.editReply(`Erasing ${count} messages, just be patient! \r\n` + (error != false ? error : ''));
+							if (!error) {
+								interaction.editReply(`Erased ${count} messages.`);
+							}
+							else {
+								interaction.editReply(`Erased ${count} messages, but there was an error: \r\n` + (error != false ? error : ''));
+							}
 						}
+						count++;
 					});
 				}
 				else {
