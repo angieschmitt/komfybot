@@ -2,6 +2,8 @@
 const fs = require('node:fs');
 const path = require('node:path');
 
+console.log( process.env );
+
 // Require the necessary discord.js classes
 const { Client, Partials, GatewayIntentBits, Collection } = require('discord.js');
 // const { token } = require('/etc/secrets/config.json');
