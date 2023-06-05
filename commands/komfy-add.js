@@ -5,6 +5,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('komfy-add')
 		.setDescription('Command to add content to the database')
+        .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
 		.addStringOption(option =>
 			option.setName('category')
 				.setDescription('Type of content')

@@ -5,6 +5,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('komfy-remove')
 		.setDescription('Command to remove content from the database')
+        .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
 		.addStringOption(option =>
 			option.setName('category')
 				.setDescription('Type of content')
