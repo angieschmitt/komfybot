@@ -1,11 +1,11 @@
 const axios = require('axios');
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('komfy-add')
 		.setDescription('Command to add content to the database')
-        .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
+		.setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
 		.addStringOption(option =>
 			option.setName('category')
 				.setDescription('Type of content')
