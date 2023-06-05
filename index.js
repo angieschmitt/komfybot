@@ -8,8 +8,6 @@ const path = require('node:path');
 const { Client, Partials, GatewayIntentBits, Collection } = require('discord.js');
 const { token } = require(configFile); // eslint-disable-line
 
-console.log(token);
-
 // Create a new client instance
 const client = new Client({
 	intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMessageReactions],
