@@ -3,8 +3,6 @@ require('../globals');
 const axios = require('axios');
 const { Events, ActivityType, EmbedBuilder, roleMention } = require('discord.js');
 
-const { channels, notifications } = require(configFile); // eslint-disable-line
-
 module.exports = {
 	name: Events.ClientReady,
 	once: true,
@@ -30,7 +28,11 @@ module.exports = {
 
 			if (x.is_live && started_at !== x.started_at) {
 
+				const { channels, notifications } = require(configFile); // eslint-disable-line
+
 				console.log(x);
+				console.log(notifications.twitch);
+				console.log(channels.is_live);
 
 				const twitch = roleMention(notifications.twitch);
 				const embed = new EmbedBuilder()
