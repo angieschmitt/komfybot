@@ -30,6 +30,8 @@ module.exports = {
 
 			if (x.is_live && started_at !== x.started_at) {
 
+				console.log( x );
+
 				const twitch = roleMention(notifications.twitch);
 				const embed = new EmbedBuilder()
 					.setColor(0xC44578)
@@ -55,7 +57,7 @@ module.exports = {
 					activities:
 						[
 							{
-								name: x.user_name,
+								name: '' + x.user_name + '',
 								type: ActivityType.Streaming,
 							},
 						],
