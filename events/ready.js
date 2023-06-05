@@ -55,7 +55,7 @@ module.exports = {
 					activities:
 						[
 							{
-								name: ' '.x.user_name,
+								name: x.user_name,
 								type: ActivityType.Streaming,
 							},
 						],
