@@ -54,31 +54,31 @@ module.exports = {
 
 				started_at = x.started_at;
 
-				client.user.setActivity('activity', { type: ActivityType.Streaming });
-				client.user.setPresence({
-					activities:
-						[
-							{
-								name: x.user_name,
-								type: ActivityType.Streaming,
-							},
-						],
-					status: 'idle',
-				});
+				// client.user.setActivity('activity', { type: ActivityType.Streaming });
+				// client.user.setPresence({
+				// 	activities:
+				// 		[
+				// 			{
+				// 				name: x.user_name,
+				// 				type: ActivityType.Streaming,
+				// 			},
+				// 		],
+				// 	status: 'idle',
+				// });
 
 			}
 			else {
-				client.user.setActivity('activity', { type: ActivityType.Listening });
-				client.user.setPresence({
-					activities:
-						[
-							{
-								name: 'lo-fi beats.',
-								type: ActivityType.Listening,
-							},
-						],
-					status: 'idle',
-				});
+				// client.user.setActivity('activity', { type: ActivityType.Listening });
+				// client.user.setPresence({
+				// 	activities:
+				// 		[
+				// 			{
+				// 				name: 'lo-fi beats.',
+				// 				type: ActivityType.Listening,
+				// 			},
+				// 		],
+				// 	status: 'idle',
+				// });
 			}
 
 		});
