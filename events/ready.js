@@ -27,13 +27,13 @@ module.exports = {
 		checkIfLive(5000, started_at, function(x) {
 
 			if (x.is_live) {
-				client.user.setActivity('activity', { type: ActivityType.Streaming });
+				client.user.setActivity('activity', { type: ActivityType.Watching });
 				client.user.setPresence({
 					activities:
 						[
 							{
 								name: x.user_name,
-								type: ActivityType.Streaming,
+								type: ActivityType.Watching,
 							},
 						],
 					status: 'idle',
