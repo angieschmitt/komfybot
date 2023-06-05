@@ -26,31 +26,19 @@ module.exports = {
 		let started_at = '';
 		checkIfLive(5000, started_at, function(x) {
 
+			// Come back to this since it doesn't currently reset
 			if (x.is_live) {
-				client.user.setActivity('activity', { type: ActivityType.Watching });
-				client.user.setPresence({
-					activities:
-						[
-							{
-								name: x.user_name,
-								type: ActivityType.Watching,
-							},
-						],
-					status: 'idle',
-				});
-			}
-			else {
-				client.user.setActivity('activity', { type: ActivityType.Listening });
-				client.user.setPresence({
-					activities:
-						[
-							{
-								name: 'lo-fi beats.',
-								type: ActivityType.Listening,
-							},
-						],
-					status: 'idle',
-				});
+				// client.user.setActivity('activity', { type: ActivityType.Watching });
+				// client.user.setPresence({
+				// 	activities:
+				// 		[
+				// 			{
+				// 				name: x.user_name,
+				// 				type: ActivityType.Watching,
+				// 			},
+				// 		],
+				// 	status: 'idle',
+				// });
 			}
 
 			if (x.is_live && started_at !== x.started_at) {
