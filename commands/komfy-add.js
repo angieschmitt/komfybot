@@ -44,7 +44,6 @@ module.exports = {
 						)
 						.setTimestamp();
 
-					// interaction.editReply({ content: `Successfullkomy added to ${category}s` });
 					interaction.reply({ embeds: [embed], ephemeral: true });
 				}
 				else {

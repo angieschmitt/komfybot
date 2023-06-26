@@ -1,16 +1,16 @@
 require('../globals');
 
 const { SlashCommandBuilder, PermissionFlagsBits, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
-const { roles } = require(configFile); // eslint-disable-line
+const { stream_roles } = require(configFile); // eslint-disable-line
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('roles')
+		.setName('stream-roles')
 		.setDescription('Command to output role options')
 		.setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
 	async execute(interaction) {
 
-		const size = Object.keys(roles.buttons).length;
+		const size = Object.keys(stream_roles.buttons).length;
 		const runs = Math.ceil(size / 5);
 
 		const rows = [];
@@ -18,13 +18,13 @@ module.exports = {
 
 			let i = 1;
 			const row = new ActionRowBuilder();
-			for (const [key, data] of Object.entries(roles.buttons)) {
+			for (const [key, data] of Object.entries(stream_roles.buttons)) {
 				if (i > (5 * (index - 1)) && i <= (5 * index)) {
 					const unique = key.replace('/', '-');
 					if (data.icon !== '') {
 						row.addComponents(
 							new ButtonBuilder()
-								.setCustomId('roles_' + unique)
+								.setCustomId('stream_roles_' + unique)
 								.setLabel(ucwords(key))
 								.setStyle(ButtonStyle.Primary)
 								.setEmoji(data.icon),
@@ -33,7 +33,7 @@ module.exports = {
 					else {
 						row.addComponents(
 							new ButtonBuilder()
-								.setCustomId('roles_' + unique)
+								.setCustomId('stream_roles_' + unique)
 								.setLabel(ucwords(key))
 								.setStyle(ButtonStyle.Primary),
 						);
@@ -44,7 +44,7 @@ module.exports = {
 			rows.push(row);
 		}
 
-		await interaction.reply({ content: roles.message, components: rows });
+		await interaction.reply({ content: stream_roles.message, components: rows });
 
 	},
 };
