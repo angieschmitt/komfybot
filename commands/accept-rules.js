@@ -45,7 +45,7 @@ module.exports = {
 		}
 
 		// Buttons!
-		interaction.followUp({ content: rule_roles.message, components: rows });
+		interaction.reply({ content: rule_roles.message, components: rows });
 
 	},
 };
