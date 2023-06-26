@@ -5,7 +5,7 @@ const { notify_roles } = require(configFile); // eslint-disable-line
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('stream-roles')
+		.setName('notify-roles')
 		.setDescription('Command to output role options')
 		.setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
 	async execute(interaction) {
