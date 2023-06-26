@@ -41,12 +41,12 @@ module.exports = {
 					await interaction.reply({ content: `Adding the ${which} role.`, ephemeral: true });
 				}
 			}
-			else if (buttonInfo[0] == 'streamRoles') {
-				const { stream_roles } = require(configFile); // eslint-disable-line
+			else if (buttonInfo[0] == 'notifyRoles') {
+				const { notify_roles } = require(configFile); // eslint-disable-line
 				const which = buttonInfo[1].replace('-', '/');
-				const role	= interaction.guild.roles.cache.find(r => r.id === stream_roles.buttons[which].roleID);
+				const role	= interaction.guild.roles.cache.find(r => r.id === notify_roles.buttons[which].roleID);
 
-				if (member.roles.cache.some(r => r.id === stream_roles.buttons[which].roleID)) {
+				if (member.roles.cache.some(r => r.id === notify_roles.buttons[which].roleID)) {
 					member.roles.remove(role);
 					await interaction.reply({ content: `Removing the ${ucwords(which)} role.`, ephemeral: true });
 				}
@@ -61,6 +61,20 @@ module.exports = {
 				const role	= interaction.guild.roles.cache.find(r => r.id === rule_roles.buttons[which].roleID);
 
 				if (member.roles.cache.some(r => r.id === rule_roles.buttons[which].roleID)) {
+					member.roles.remove(role);
+					await interaction.reply({ content: `Removing the ${ucwords(which)} role.`, ephemeral: true });
+				}
+				else {
+					member.roles.add(role);
+					await interaction.reply({ content: `Adding the ${ucwords(which)} role.`, ephemeral: true });
+				}
+			}
+			else if (buttonInfo[0] == 'miscRoles') {
+				const { misc_roles } = require(configFile); // eslint-disable-line
+				const which = buttonInfo[1].replace('-', '/');
+				const role	= interaction.guild.roles.cache.find(r => r.id === misc_roles.buttons[which].roleID);
+
+				if (member.roles.cache.some(r => r.id === misc_roles.buttons[which].roleID)) {
 					member.roles.remove(role);
 					await interaction.reply({ content: `Removing the ${ucwords(which)} role.`, ephemeral: true });
 				}
