@@ -73,7 +73,7 @@ module.exports = {
 			client.channels.fetch(channels.is_live)
 				.then(channel => {
 					channel.send({ content: `Hey ${twitch}, ${x.user_name} has gone live at https://www.twitch.tv/${x.user_login}.`, embeds: [embed] });
-					axios.get('https://www.kittenangie.com/bots/api/twitch_live.php?pinged=' + x.id);
+					axios.get('https://www.kittenangie.com/bots/api/twitch_live.php?pinged=' + x.user_id);
 				});
 		});
 
