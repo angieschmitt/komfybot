@@ -55,7 +55,7 @@ module.exports = {
 		// });
 
 		checkIfLive2(5000, function(x) {
-			console.log(x);
+			console.log(typeof x);
 			// if (x !== undefined) {
 			// 	const { channels, notifications } = require(configFile); // eslint-disable-line
 
