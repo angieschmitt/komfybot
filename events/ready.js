@@ -23,37 +23,6 @@ module.exports = {
 
 		// 5 minutes : 300000
 		// 5 seconds : 5000
-		// let started_at = '';
-		// checkIfLive(5000, started_at, function(x) {
-
-		// 	if (x.is_live && started_at !== x.started_at) {
-
-		// 		const { channels, notifications } = require(configFile); // eslint-disable-line
-
-		// 		const twitch = roleMention(notifications.twitch);
-		// 		const embed = new EmbedBuilder()
-		// 			.setColor(0xC44578)
-		// 			.setAuthor({ name: x.user_name, iconURL: x.user_thumbnail })
-		// 			.setTitle((x.title != '' ? x.title : 'Title goes here'))
-		// 			.setURL('https://www.twitch.tv/' + x.user_login)
-		// 			.setThumbnail(x.user_thumbnail)
-		// 			.setDescription(`Currently playing ${x.game_name}!`)
-		// 			.addFields(
-		// 				{ name: 'Viewers', value: `${x.viewer_count}` },
-		// 			)
-		// 			.setImage(x.thumbnail_url);
-
-		// 		client.channels.fetch(channels.is_live)
-		// 			.then(channel => {
-		// 				channel.send({ content: `Hey ${twitch}, ${x.user_name} has gone live at https://www.twitch.tv/${x.user_login}.`, embeds: [embed] });
-		// 				axios.get('https://www.kittenangie.com/bots/api/twitch_live.php?pinged=' + x.id);
-		// 			});
-
-		// 		started_at = x.started_at;
-		// 	}
-
-		// });
-
 		checkIfLive2(5000, function(x) {
 			if (x !== '') {
 				const { channels, notifications } = require(configFile); // eslint-disable-line
@@ -85,23 +54,6 @@ module.exports = {
 
 	},
 };
-
-function checkIfLive(timing, started_at, callback) {
-	setInterval(function() {
-
-		axios.get('https://www.kittenangie.com/bots/api/twitch_live.php')
-			.then(function(response) {
-				callback(response.data);
-			})
-			.catch(function(error) {
-				console.log(error);
-			})
-			.finally(function() {
-				// always executed
-			});
-
-	}, timing);
-}
 
 function checkIfLive2(timing, callback) {
 	setInterval(function() {
