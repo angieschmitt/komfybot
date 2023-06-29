@@ -56,7 +56,8 @@ module.exports = {
 
 		checkIfLive2(5000, function(x) {
 			console.log(typeof x);
-			// if (x !== undefined) {
+			if (x !== '') {
+				console.log('there is data?');
 			// 	const { channels, notifications } = require(configFile); // eslint-disable-line
 
 			// 	const twitch = roleMention(notifications.twitch);
@@ -77,7 +78,7 @@ module.exports = {
 			// 			channel.send({ content: `Hey ${twitch}, ${x.user_name} has gone live at https://www.twitch.tv/${x.user_login}.`, embeds: [embed] });
 			// 			axios.get('https://www.kittenangie.com/bots/api/twitch_live.php?pinged=' + x.user_id);
 			// 		});
-			// }
+			}
 		});
 
 		setInterval(function() {
