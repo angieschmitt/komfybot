@@ -55,29 +55,28 @@ module.exports = {
 		// });
 
 		checkIfLive2(5000, function(x) {
-			console.log(typeof x);
 			if (x !== '') {
 				console.log('there is data?');
-			// 	const { channels, notifications } = require(configFile); // eslint-disable-line
+				const { channels, notifications } = require(configFile); // eslint-disable-line
 
-			// 	const twitch = roleMention(notifications.twitch);
-			// 	const embed = new EmbedBuilder()
-			// 		.setColor(0xC44578)
-			// 		.setAuthor({ name: x.user_name, iconURL: x.user_thumbnail })
-			// 		.setTitle((x.title != '' ? x.title : 'Title goes here'))
-			// 		.setURL('https://www.twitch.tv/' + x.user_login)
-			// 		.setThumbnail(x.user_thumbnail)
-			// 		.setDescription(`Currently playing ${x.game_name}!`)
-			// 		.addFields(
-			// 			{ name: 'Viewers', value: `${x.viewer_count}` },
-			// 		)
-			// 		.setImage(x.thumbnail_url);
+				const twitch = roleMention(notifications.twitch);
+				const embed = new EmbedBuilder()
+					.setColor(0xC44578)
+					.setAuthor({ name: x.user_name, iconURL: x.user_thumbnail })
+					.setTitle((x.title != '' ? x.title : 'Title goes here'))
+					.setURL('https://www.twitch.tv/' + x.user_login)
+					.setThumbnail(x.user_thumbnail)
+					.setDescription(`Currently playing ${x.game_name}!`)
+					.addFields(
+						{ name: 'Viewers', value: `${x.viewer_count}` },
+					)
+					.setImage(x.thumbnail_url);
 
-			// 	client.channels.fetch(channels.is_live)
-			// 		.then(channel => {
-			// 			channel.send({ content: `Hey ${twitch}, ${x.user_name} has gone live at https://www.twitch.tv/${x.user_login}.`, embeds: [embed] });
-			// 			axios.get('https://www.kittenangie.com/bots/api/twitch_live.php?pinged=' + x.user_id);
-			// 		});
+				client.channels.fetch(channels.is_live)
+					.then(channel => {
+						channel.send({ content: `Hey ${twitch}, ${x.user_name} has gone live at https://www.twitch.tv/${x.user_login}.`, embeds: [embed] });
+						axios.get('https://www.kittenangie.com/bots/api/twitch_live.php?pinged=' + x.user_id);
+					});
 			}
 		});
 
