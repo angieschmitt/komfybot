@@ -56,7 +56,6 @@ module.exports = {
 
 		checkIfLive2(5000, function(x) {
 			if (x !== '') {
-				console.log('there is data?');
 				const { channels, notifications } = require(configFile); // eslint-disable-line
 
 				const twitch = roleMention(notifications.twitch);
