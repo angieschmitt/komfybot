@@ -26,21 +26,6 @@ module.exports = {
 		let started_at = '';
 		checkIfLive(5000, started_at, function(x) {
 
-			// Come back to this since it doesn't currently reset
-			if (x.is_live) {
-				// client.user.setActivity('activity', { type: ActivityType.Watching });
-				// client.user.setPresence({
-				// 	activities:
-				// 		[
-				// 			{
-				// 				name: x.user_name,
-				// 				type: ActivityType.Watching,
-				// 			},
-				// 		],
-				// 	status: 'idle',
-				// });
-			}
-
 			if (x.is_live && started_at !== x.started_at) {
 
 				const { channels, notifications } = require(configFile); // eslint-disable-line
@@ -61,6 +46,7 @@ module.exports = {
 				client.channels.fetch(channels.is_live)
 					.then(channel => {
 						channel.send({ content: `Hey ${twitch}, ${x.user_name} has gone live at https://www.twitch.tv/${x.user_login}.`, embeds: [embed] });
+						axios.get('https://www.kittenangie.com/bots/api/twitch_live.php?pinged=' + x.id);
 					});
 
 				started_at = x.started_at;
