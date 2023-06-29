@@ -70,7 +70,7 @@ module.exports = {
 
 		setInterval(function() {
 			axios.get('https://www.kittenangie.com/bots/api/twitch_channel_points.php');
-		}, 30000);
+		}, 15000);
 
 	},
 };
