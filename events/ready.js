@@ -23,7 +23,7 @@ module.exports = {
 
 		// 5 minutes : 300000
 		// 5 seconds : 5000
-		checkIfLive2(5000, function(x) {
+		checkIfLive2(10000, function(x) {
 			if (x !== '') {
 				const { channels, notifications } = require(configFile); // eslint-disable-line
 
