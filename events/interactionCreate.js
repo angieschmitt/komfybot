@@ -57,17 +57,24 @@ module.exports = {
 			}
 			else if (buttonInfo[0] == 'ruleRoles') {
 				const { rule_roles } = require(configFile); // eslint-disable-line
-				const which = buttonInfo[1].replace('-', '/');
-				const role	= interaction.guild.roles.cache.find(r => r.id === rule_roles.buttons[which].roleID);
 
-				if (member.roles.cache.some(r => r.id === rule_roles.buttons[which].roleID)) {
-					member.roles.remove(role);
-					await interaction.reply({ content: `Removing the ${ucwords(which)} role.`, ephemeral: true });
+				for (let i = 0; i < rule_roles.roles.length; i++) {
+					member.roles.add(rule_roles.roles[i]);
 				}
-				else {
-					member.roles.add(role);
-					await interaction.reply({ content: `Adding the ${ucwords(which)} role.`, ephemeral: true });
-				}
+				await interaction.reply({ content: 'Welcome to the Komfy Krew!', ephemeral: true });
+
+				// if (member.roles.cache.some(r => r.id === rule_roles.roles[0])) {
+				// 	for (let i = 0; i < rule_roles.roles.length; i++) {
+				// 		member.roles.remove(rule_roles.roles[i]);
+				// 	}
+				// 	await interaction.reply({ content: 'It\'s a shame to see you go.', ephemeral: true });
+				// }
+				// else {
+				// 	for (let i = 0; i < rule_roles.roles.length; i++) {
+				// 		member.roles.remove(rule_roles.roles[i]);
+				// 	}
+				// 	await interaction.reply({ content: 'Welcome to the Komfy Krew!', ephemeral: true });
+				// }
 			}
 			else if (buttonInfo[0] == 'miscRoles') {
 				const { misc_roles } = require(configFile); // eslint-disable-line

@@ -10,6 +10,8 @@ module.exports = {
 		.setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
 	async execute(interaction) {
 
+		await interaction.deferReply();
+
 		const size = Object.keys(pronouns.buttons).length;
 		const runs = Math.ceil(size / 5);
 
@@ -45,7 +47,11 @@ module.exports = {
 		}
 
 		// Buttons!
-		interaction.reply({ content: pronouns.message, components: rows });
+		const message = await interaction.fetchReply();
+		interaction.deleteReply();
+
+		const channel = interaction.client.channels.cache.get(message.channelId);
+		channel.send({ content: pronouns.message, components: rows });
 
 	},
 };

@@ -10,6 +10,8 @@ module.exports = {
 		.setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
 	async execute(interaction) {
 
+		await interaction.deferReply();
+
 		const size = Object.keys(misc_roles.buttons).length;
 		const runs = Math.ceil(size / 5);
 
@@ -44,7 +46,12 @@ module.exports = {
 			rows.push(row);
 		}
 
-		await interaction.reply({ content: misc_roles.message, components: rows });
+		// Buttons!
+		const message = await interaction.fetchReply();
+		interaction.deleteReply();
+
+		const channel = interaction.client.channels.cache.get(message.channelId);
+		channel.send({ content: misc_roles.message, components: rows });
 
 	},
 };

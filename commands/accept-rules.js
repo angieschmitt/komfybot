@@ -1,7 +1,7 @@
 require('../globals');
 
 const { SlashCommandBuilder, PermissionFlagsBits, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
-const { rule_roles } = require(configFile); // eslint-disable-line
+const { rule_roles } = require(global.configFile); // eslint-disable-line
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -10,42 +10,24 @@ module.exports = {
 		.setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
 	async execute(interaction) {
 
-		const size = Object.keys(rule_roles.buttons).length;
-		const runs = Math.ceil(size / 5);
+		await interaction.deferReply();
 
 		const rows = [];
-		for (let index = 1; index <= runs; index++) {
-
-			let i = 1;
-			const row = new ActionRowBuilder();
-			for (const [key, data] of Object.entries(rule_roles.buttons)) {
-				if (i > (5 * (index - 1)) && i <= (5 * index)) {
-					const unique = key.replace('/', '-');
-					if (data.icon !== '') {
-						row.addComponents(
-							new ButtonBuilder()
-								.setCustomId('ruleRoles_' + unique)
-								.setLabel('I Accept')
-								.setStyle(ButtonStyle.Primary)
-								.setEmoji(data.icon),
-						);
-					}
-					else {
-						row.addComponents(
-							new ButtonBuilder()
-								.setCustomId('ruleRoles_' + unique)
-								.setLabel('I Accept')
-								.setStyle(ButtonStyle.Primary),
-						);
-					}
-				}
-				i++;
-			}
-			rows.push(row);
-		}
+		const row = new ActionRowBuilder();
+		row.addComponents(
+			new ButtonBuilder()
+				.setCustomId('ruleRoles_accept')
+				.setLabel('I Accept')
+				.setStyle(ButtonStyle.Primary),
+		);
+		rows.push(row);
 
 		// Buttons!
-		interaction.reply({ content: rule_roles.message, components: rows });
+		const message = await interaction.fetchReply();
+		interaction.deleteReply();
+
+		const channel = interaction.client.channels.cache.get(message.channelId);
+		channel.send({ content: rule_roles.message, components: rows });
 
 	},
 };
