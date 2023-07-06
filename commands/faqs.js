@@ -39,7 +39,13 @@ module.exports = {
 			.addFields(faqsOutput)
 			.setTimestamp();
 
-		interaction.editReply({ embeds: [embed] });
+		// Buttons!
+		const message = await interaction.fetchReply();
+		interaction.deleteReply();
+
+		const channel = interaction.client.channels.cache.get(message.channelId);
+		channel.send({ embeds: [embed] });
+		// interaction.editReply({ embeds: [embed] });
 
 	},
 };
