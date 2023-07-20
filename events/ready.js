@@ -28,6 +28,7 @@ module.exports = {
 				const { channels, notifications } = require(configFile); // eslint-disable-line
 
 				const twitch = roleMention(notifications.twitch);
+				const recommends = roleMention(notifications.recommends);
 				const embed = new EmbedBuilder()
 					.setColor(0xC44578)
 					.setAuthor({ name: x.user_name, iconURL: x.user_thumbnail })
@@ -40,11 +41,20 @@ module.exports = {
 					)
 					.setImage(x.thumbnail_url);
 
-				client.channels.fetch(channels.is_live)
-					.then(channel => {
-						channel.send({ content: `Hey ${twitch}, ${x.user_name} has gone live at https://www.twitch.tv/${x.user_login}.`, embeds: [embed] });
-						axios.get('https://www.kittenangie.com/bots/api/twitch_live.php?pinged=' + x.user_id);
-					});
+				if (x.user_name.toLowerCase() == 'komfykiwi') {
+					client.channels.fetch(channels.is_live)
+						.then(channel => {
+							channel.send({ content: `Hey ${twitch}, ${x.user_name} has gone live at https://www.twitch.tv/${x.user_login}.`, embeds: [embed] });
+							axios.get('https://www.kittenangie.com/bots/api/twitch_live.php?pinged=' + x.user_id);
+						});
+				}
+				else {
+					client.channels.fetch(channels.recommends)
+						.then(channel => {
+							channel.send({ content: `Hey ${recommends}, ${x.user_name} has gone live at https://www.twitch.tv/${x.user_login}.`, embeds: [embed] });
+							axios.get('https://www.kittenangie.com/bots/api/twitch_live.php?pinged=' + x.user_id);
+						});
+				}
 			}
 		});
 
