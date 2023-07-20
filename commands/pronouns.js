@@ -52,6 +52,5 @@ module.exports = {
 
 		const channel = interaction.client.channels.cache.get(message.channelId);
 		channel.send({ content: pronouns.message, components: rows });
-
 	},
 };

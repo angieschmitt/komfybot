@@ -27,6 +27,8 @@ module.exports = {
 			const buttonInfo = interaction.customId.split('_');
 			const member	 = interaction.guild.members.cache.find(m => m.id === interaction.user.id);
 
+			await interaction.deferReply({ ephemeral: true });
+
 			if (buttonInfo[0] == 'pronouns') {
 				const { pronouns } = require(configFile); // eslint-disable-line
 				const which = buttonInfo[1].replace('-', '/');
@@ -34,11 +36,11 @@ module.exports = {
 
 				if (member.roles.cache.some(r => r.id === pronouns.buttons[which].roleID)) {
 					member.roles.remove(role);
-					await interaction.reply({ content: `Removing the ${which} role.`, ephemeral: true });
+					interaction.editReply({ content: `Removing the ${which} role.`, ephemeral: true });
 				}
 				else {
 					member.roles.add(role);
-					await interaction.reply({ content: `Adding the ${which} role.`, ephemeral: true });
+					interaction.editReply({ content: `Adding the ${which} role.`, ephemeral: true });
 				}
 			}
 			else if (buttonInfo[0] == 'notifyRoles') {
@@ -48,33 +50,28 @@ module.exports = {
 
 				if (member.roles.cache.some(r => r.id === notify_roles.buttons[which].roleID)) {
 					member.roles.remove(role);
-					await interaction.reply({ content: `Removing the ${ucwords(which)} role.`, ephemeral: true });
+					interaction.editReply({ content: `Removing the ${ucwords(which)} role.`, ephemeral: true });
 				}
 				else {
 					member.roles.add(role);
-					await interaction.reply({ content: `Adding the ${ucwords(which)} role.`, ephemeral: true });
+					interaction.editReply({ content: `Adding the ${ucwords(which)} role.`, ephemeral: true });
 				}
 			}
 			else if (buttonInfo[0] == 'ruleRoles') {
-				const { rule_roles } = require(configFile); // eslint-disable-line
+				const { channels, rule_roles } = require(configFile); // eslint-disable-line
 
 				for (let i = 0; i < rule_roles.roles.length; i++) {
 					member.roles.add(rule_roles.roles[i]);
 				}
-				await interaction.reply({ content: 'Welcome to the Komfy Krew!', ephemeral: true });
 
-				// if (member.roles.cache.some(r => r.id === rule_roles.roles[0])) {
-				// 	for (let i = 0; i < rule_roles.roles.length; i++) {
-				// 		member.roles.remove(rule_roles.roles[i]);
-				// 	}
-				// 	await interaction.reply({ content: 'It\'s a shame to see you go.', ephemeral: true });
-				// }
-				// else {
-				// 	for (let i = 0; i < rule_roles.roles.length; i++) {
-				// 		member.roles.remove(rule_roles.roles[i]);
-				// 	}
-				// 	await interaction.reply({ content: 'Welcome to the Komfy Krew!', ephemeral: true });
-				// }
+				interaction.editReply({ content: 'Welcome to the Komfy Krew!', ephemeral: true });
+
+				if (!member.roles.cache.some(r => r.id === rule_roles.roles[0])) {
+					interaction.client.channels.fetch(channels.just_joined)
+						.then(channel => {
+							channel.send({ content: `Hey everyone, <@${member.user.id}> just joined, make sure to give them a warm welcome! <:KiwiLove:1127968221987868736>` });
+						});
+				}
 			}
 			else if (buttonInfo[0] == 'miscRoles') {
 				const { misc_roles } = require(configFile); // eslint-disable-line
@@ -83,15 +80,15 @@ module.exports = {
 
 				if (member.roles.cache.some(r => r.id === misc_roles.buttons[which].roleID)) {
 					member.roles.remove(role);
-					await interaction.reply({ content: `Removing the ${ucwords(which)} role.`, ephemeral: true });
+					interaction.editReply({ content: `Removing the ${ucwords(which)} role.`, ephemeral: true });
 				}
 				else {
 					member.roles.add(role);
-					await interaction.reply({ content: `Adding the ${ucwords(which)} role.`, ephemeral: true });
+					interaction.editReply({ content: `Adding the ${ucwords(which)} role.`, ephemeral: true });
 				}
 			}
 			else {
-				await interaction.reply({ content: `You clicked a ${buttonInfo[0]} button. Specifically the ${buttonInfo[1]} one.`, ephemeral: true });
+				interaction.editReply({ content: `You clicked a ${buttonInfo[0]} button. Specifically the ${buttonInfo[1]} one.`, ephemeral: true });
 			}
 
 		}
