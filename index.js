@@ -47,7 +47,7 @@ for (const file of eventFiles) {
 }
 
 // Log in to Discord with your client's token
-// client.login(token);
+client.login(token);
 
 // Webserver
 const express = require('express');
