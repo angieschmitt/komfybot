@@ -1,7 +1,7 @@
 require('../globals');
 
 const axios = require('axios');
-const { Events, ActivityType, EmbedBuilder, roleMention } = require('discord.js');
+const { Events, ActivityType, EmbedBuilder, Util, roleMention } = require('discord.js');
 
 module.exports = {
 	name: Events.ClientReady,
@@ -44,14 +44,14 @@ module.exports = {
 				if (x.user_name.toLowerCase() == 'komfykiwi') {
 					client.channels.fetch(channels.is_live)
 						.then(channel => {
-							channel.send({ content: `Hey ${twitch}, ${ client.escapeMarkdown(x.user_name) } has gone live at https://www.twitch.tv/${x.user_login}.`, embeds: [embed] });
+							channel.send({ content: `Hey ${twitch}, ${ Util.escapeMarkdown(x.user_name) } has gone live at https://www.twitch.tv/${x.user_login}.`, embeds: [embed] });
 							axios.get('https://www.kittenangie.com/bots/api/twitch_live.php?pinged=' + x.user_id);
 						});
 				}
 				else {
 					client.channels.fetch(channels.recommends)
 						.then(channel => {
-							channel.send({ content: `Hey ${recommends}, ${ client.escapeMarkdown(x.user_name) } has gone live at https://www.twitch.tv/${x.user_login}.`, embeds: [embed] });
+							channel.send({ content: `Hey ${recommends}, ${ Util.escapeMarkdown(x.user_name) } has gone live at https://www.twitch.tv/${x.user_login}.`, embeds: [embed] });
 							axios.get('https://www.kittenangie.com/bots/api/twitch_live.php?pinged=' + x.user_id);
 						});
 				}
