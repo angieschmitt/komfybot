@@ -36,9 +36,6 @@ module.exports = {
 					.setURL('https://www.twitch.tv/' + x.user_login)
 					.setThumbnail(x.user_thumbnail)
 					.setDescription(`Currently playing ${x.game_name}!`)
-					.addFields(
-						{ name: 'Viewers', value: `${x.viewer_count}` },
-					)
 					.setImage(x.thumbnail_url);
 
 				if (x.user_name.toLowerCase() == 'komfykiwi') {
