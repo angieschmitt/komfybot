@@ -395,6 +395,7 @@ function timeConverter(UNIX_timestamp) {
 	const hour = a.getHours();
 	const min = (a.getMinutes() < 10 ? '0' : '') + a.getMinutes();
 	const sec = (a.getSeconds() < 10 ? '0' : '') + a.getSeconds();
-	const time = month + ' ' + date + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
+	const milli = (a.getMilliseconds() < 10 ? '0' : '') + a.getMilliseconds();
+	const time = month + ' ' + date + ' ' + year + ' ' + hour + ':' + min + ':' + sec + ':' + milli;
 	return time;
 }

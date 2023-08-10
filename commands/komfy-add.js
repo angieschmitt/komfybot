@@ -35,7 +35,7 @@ module.exports = {
 
 					const embed = new EmbedBuilder()
 						.setColor(0xC44578)
-						.setTitle('Komfy Bot Database Updated - NEW API')
+						.setTitle('Komfy Bot Database Updated')
 						.addFields(
 							{ name: `${ucwords(category)} added`, value: content },
 						)

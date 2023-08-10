@@ -24,7 +24,7 @@ module.exports = {
 		const category = interaction.options.getString('category');
 		const contentId = interaction.options.getString('content-id');
 
-		const url = 'https://kittenangie.com/bots/api/remove.php?request=' + encodeURIComponent(category) + '&content=' + encodeURIComponent(contentId);
+		const url = global.baseUrl + 'remove/' + encodeURIComponent(category) + '&content=' + encodeURIComponent(contentId);
 
 		await axios.get(url)
 			.then(function(response) {
@@ -35,7 +35,7 @@ module.exports = {
 
 					const embed = new EmbedBuilder()
 						.setColor(0xC44578)
-						.setTitle('Komfy Bot Database Updated')
+						.setTitle('Komfy Bot Database Updated - NEW API')
 						.addFields(
 							{ name: `${ucwords(category)} removed`, value: outcome.content },
 						)
