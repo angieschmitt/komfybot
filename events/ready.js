@@ -56,11 +56,10 @@ module.exports = {
 		});
 
 		setInterval(function() {
-			axios.get('https://www.kittenangie.com/bots/api_new/insert/channel_points/')
-				.then(function() {
-					console.log('points checked');
-					axios.get('https://www.kittenangie.com/bots/api_new/interactive/lights/');
-				});
+			axios.get('https://www.kittenangie.com/bots/api_new/insert/channel_points/');
+		}, 10000);
+		setInterval(function() {
+			axios.get('https://www.kittenangie.com/bots/api_new/interactive/lights/');
 		}, 10000);
 
 	},
