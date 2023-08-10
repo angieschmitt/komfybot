@@ -55,16 +55,9 @@ module.exports = {
 			}
 		});
 
-		axios.get('https://www.kittenangie.com/bots/api_new/insert/channel_points/')
-			.finally(function() {
-				axios.get('https://www.kittenangie.com/bots/api_new/interactive/lights/');
-			});
-
 		setInterval(function() {
-			axios.get('https://www.kittenangie.com/bots/api_new/insert/channel_points/')
-				.finally(function() {
-					axios.get('https://www.kittenangie.com/bots/api_new/interactive/lights/');
-				});
+			axios.get('https://www.kittenangie.com/bots/api_new/insert/channel_points/');
+			axios.get('https://www.kittenangie.com/bots/api_new/interactive/lights/');
 		}, 10000);
 
 	},
