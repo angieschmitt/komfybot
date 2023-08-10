@@ -43,8 +43,16 @@ module.exports = {
 
 					interaction.reply({ embeds: [embed], ephemeral: true });
 				}
-				else {
-					interaction.reply({ content: 'There was an issue removing that from the database.', ephemeral: true });
+				else if (outcome.status === 'failure') {
+					if (outcome.err_msg === 'no_content') {
+						interaction.reply({ content: 'You didn\'t set an ID.', ephemeral: true });
+					}
+					if (outcome.err_msg === 'content_not_found') {
+						interaction.reply({ content: 'That ID isn\'t in the database.', ephemeral: true });
+					}
+					if (outcome.err_msg === 'db_error') {
+						interaction.reply({ content: 'There was an issue with the database. Tell Angie.', ephemeral: true });
+					}
 				}
 
 			})
