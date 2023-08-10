@@ -24,7 +24,7 @@ module.exports = {
 		const category = interaction.options.getString('category');
 		const contentId = interaction.options.getString('content-id');
 
-		const url = global.baseUrl + 'remove/' + encodeURIComponent(category) + '&content=' + encodeURIComponent(contentId);
+		const url = global.baseUrl + 'remove/' + encodeURIComponent(category) + '/?content=' + encodeURIComponent(contentId);
 
 		await axios.get(url)
 			.then(function(response) {
