@@ -24,7 +24,7 @@ module.exports = {
 		const category = interaction.options.getString('category');
 		const content = interaction.options.getString('content');
 
-		const url = 'https://kittenangie.com/bots/api/insert.php?request=' + encodeURIComponent(category) + '&content=' + encodeURIComponent(content);
+		const url = global.baseUrl + 'insert/' + encodeURIComponent(category) + '/?content=' + encodeURIComponent(content);
 
 		await axios.get(url)
 			.then(function(response) {
@@ -35,7 +35,7 @@ module.exports = {
 
 					const embed = new EmbedBuilder()
 						.setColor(0xC44578)
-						.setTitle('Komfy Bot Database Updated')
+						.setTitle('Komfy Bot Database Updated - NEW API')
 						.addFields(
 							{ name: `${ucwords(category)} added`, value: content },
 						)

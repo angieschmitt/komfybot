@@ -14,7 +14,7 @@ module.exports = {
 
 		await interaction.deferReply();
 
-		await axios.get('https://kittenangie.com/bots/api/endpoint.php?request=fact')
+		await axios.get(global.baseUrl + 'retrieve/fact/')
 			.then(function(response) {
 
 				const output = response.data;

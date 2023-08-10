@@ -47,9 +47,13 @@ axios.get('https://www.kittenangie.com/bots/api/get_key.php')
 			if (tags.subscriber) { perms.sub = true; }
 
 			// console.groupCollapsed('Message');
-			// console.log(tags.username + '->' + channel );
+			// console.log(tags);
 			// console.groupEnd();
 
+			// Timestamp
+			const formattedTime = timeConverter(tags['tmi-sent-ts']);
+
+			console.log(formattedTime);
 			console.log(tags.username);
 			console.log(perms);
 			console.log('- - -');
@@ -72,7 +76,7 @@ axios.get('https://www.kittenangie.com/bots/api/get_key.php')
 				if (commandName.indexOf('!discord') === 0) {
 					client.say(channel, 'Come join us on Discord: https://discord.gg/3YZrUHypk9');
 				}
-				if (commandName === '!kiwiquote') {
+				if (commandName === '!quote') {
 					let content = '';
 					axios.get(baseUrl + 'retrieve/quote/')
 						.then(function(response) {
@@ -91,7 +95,7 @@ axios.get('https://www.kittenangie.com/bots/api/get_key.php')
 							client.say(channel, content);
 						});
 				}
-				if (commandName === '!kiwipun') {
+				if (commandName === '!pun') {
 					let content = '';
 					axios.get(baseUrl + 'retrieve/pun/')
 						.then(function(response) {
@@ -110,13 +114,32 @@ axios.get('https://www.kittenangie.com/bots/api/get_key.php')
 							client.say(channel, content);
 						});
 				}
-				if (commandName.indexOf('!kiwi8') === 0) {
+				if (commandName.indexOf('!8ball') === 0) {
 					let content = '';
 					axios.get(baseUrl + 'retrieve/8ball/')
 						.then(function(response) {
 							const output = response.data;
 							if (output.status === 'success') {
 								content = `@${tags.username} the Magic 8 Ball says... ` + output.content;
+							}
+							else {
+								content = 'Something went wrong, tell @kittenAngie.';
+							}
+						})
+						.catch(function() {
+							content = 'Something went wrong, tell @kittenAngie.';
+						})
+						.finally(function() {
+							client.say(channel, content);
+						});
+				}
+				if (commandName.indexOf('!fotd') === 0) {
+					let content = '';
+					axios.get(baseUrl + 'retrieve/fact/')
+						.then(function(response) {
+							const output = response.data;
+							if (output.status === 'success') {
+								content = `@${tags.username} the Fact of the Day is... ` + output.content;
 							}
 							else {
 								content = 'Something went wrong, tell @kittenAngie.';
@@ -168,22 +191,8 @@ axios.get('https://www.kittenangie.com/bots/api/get_key.php')
 					const args = message.split(' ');
 
 					if (!args[1]) {
-						client.say(channel, 'Valid commands | MODS: !coins add <user> <amt> <reason:optional> | USERS: !coins amt <username:optional>');
+						client.say(channel, 'Valid commands | MODS: !coins add <user> <amt> <reason:optional> | USERS: !coins amt <username:optional>, !coins spend <amt> <reason:optiona');
 						return;
-					}
-
-					let username = '';
-					// Clean for DB
-					if (args[2]) {
-						if (args[2].indexOf('@') === 0) {
-							username = args[2].substring(1);
-						}
-						else {
-							username = args[2];
-						}
-					}
-					else {
-						username = tags.username;
 					}
 
 					if (args[1] === 'add') {
@@ -191,8 +200,10 @@ axios.get('https://www.kittenangie.com/bots/api/get_key.php')
 
 							let amount = 0;
 							let amtCheck = false;
+							let username = false;
 							let userCheck = false;
 							if (args[2]) {
+								username = args[2].replace('@', '');
 								userCheck = true;
 							}
 							if (args[3]) {
@@ -232,7 +243,50 @@ axios.get('https://www.kittenangie.com/bots/api/get_key.php')
 							content = `No. Bad ${tags.username}. That's cheating.`;
 						}
 					}
+
+					if (args[1] === 'spend') {
+						let amount = 0;
+						let amtCheck = false;
+						const username = tags.username;
+						if (args[2]) {
+							amtCheck = true;
+							amount = args[2];
+						}
+						const reason = 'SPENT: ' + message.replace(args[0], '').replace(args[1], '').replace(args[2], '').replace(args[3], '').trim();
+
+						if (amtCheck) {
+							axios.get(baseUrl + 'insert/coins/?username=' + username.toLowerCase() + '&amount=' + (amount * -1) + '&reason=' + reason)
+								.then(function(response) {
+									const output = response.data;
+									if (output.status === 'success') {
+										content = `Congrats @${username} on spending ${amount} KomfyCoins.`;
+									}
+									else {
+										content = 'Something went wrong, tell @kittenAngie.';
+									}
+								})
+								.catch(function() {
+									content = 'Something went wrong, tell @kittenAngie.';
+								})
+								.finally(function() {
+									client.say(channel, content);
+								});
+						}
+						else {
+							client.say(channel, `Hey @${tags.username}, you forgot to enter an amount.`);
+						}
+					}
+
 					if (args[1] === 'amt') {
+
+						let username = false;
+						if (args[2]) {
+							username = args[2].replace('@', '');
+						}
+						else {
+							username = tags.username;
+						}
+
 						axios.get(baseUrl + 'retrieve/coins/?username=' + username)
 							.then(function(response) {
 								const output = response.data;
@@ -331,3 +385,16 @@ axios.get('https://www.kittenangie.com/bots/api/get_key.php')
 			console.log(`* Connected to ${addr}:${port}`);
 		}
 	});
+
+function timeConverter(UNIX_timestamp) {
+	const a = new Date(parseInt(UNIX_timestamp));
+	const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+	const year = a.getFullYear();
+	const month = months[a.getMonth()];
+	const date = a.getDate();
+	const hour = a.getHours();
+	const min = (a.getMinutes() < 10 ? '0' : '') + a.getMinutes();
+	const sec = (a.getSeconds() < 10 ? '0' : '') + a.getSeconds();
+	const time = month + ' ' + date + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
+	return time;
+}
