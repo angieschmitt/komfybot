@@ -9,7 +9,7 @@ module.exports = {
 
 		await interaction.deferReply();
 
-		await axios.get('https://kittenangie.com/bots/api/endpoint.php?request=pun')
+		await axios.get(global.baseUrl + '/retrieve/pun/')
 			.then(function(response) {
 
 				const output = response.data;

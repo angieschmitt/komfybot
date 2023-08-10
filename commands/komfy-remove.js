@@ -21,10 +21,12 @@ module.exports = {
 				.setRequired(true)),
 	async execute(interaction) {
 
+		await interaction.deferReply();
+
 		const category = interaction.options.getString('category');
 		const contentId = interaction.options.getString('content-id');
 
-		const url = global.baseUrl + 'remove/' + encodeURIComponent(category) + '/?content=' + encodeURIComponent(contentId);
+		const url = global.baseUrl + 'remove/' + encodeURIComponent(category) + '/?content=' + contentId;
 
 		await axios.get(url)
 			.then(function(response) {
@@ -35,29 +37,29 @@ module.exports = {
 
 					const embed = new EmbedBuilder()
 						.setColor(0xC44578)
-						.setTitle('Komfy Bot Database Updated - NEW API')
+						.setTitle('Komfy Bot Database Updated')
 						.addFields(
 							{ name: `${ucwords(category)} removed`, value: outcome.content },
 						)
 						.setTimestamp();
 
-					interaction.reply({ embeds: [embed], ephemeral: true });
+					interaction.editReply({ embeds: [embed], ephemeral: true });
 				}
 				else if (outcome.status === 'failure') {
 					if (outcome.err_msg === 'no_content') {
-						interaction.reply({ content: 'You didn\'t set an ID.', ephemeral: true });
+						interaction.editReply({ content: 'You didn\'t set an ID.', ephemeral: true });
 					}
 					if (outcome.err_msg === 'content_not_found') {
-						interaction.reply({ content: 'That ID isn\'t in the database.', ephemeral: true });
+						interaction.editReply({ content: 'That ID isn\'t in the database.', ephemeral: true });
 					}
 					if (outcome.err_msg === 'db_error') {
-						interaction.reply({ content: 'There was an issue with the database. Tell Angie.', ephemeral: true });
+						interaction.editReply({ content: 'There was an issue with the database. Tell Angie.', ephemeral: true });
 					}
 				}
 
 			})
 			.catch(function(error) {
-				interaction.reply({ content: `Something went wrong? ${error}`, ephemeral: true });
+				interaction.editReply({ content: `Something went wrong? ${error}`, ephemeral: true });
 			})
 			.finally(function() {
 				// always executed

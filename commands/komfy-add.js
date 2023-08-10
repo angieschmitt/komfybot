@@ -21,6 +21,8 @@ module.exports = {
 				.setRequired(true)),
 	async execute(interaction) {
 
+		await interaction.deferReply();
+
 		const category = interaction.options.getString('category');
 		const content = interaction.options.getString('content');
 
@@ -44,15 +46,15 @@ module.exports = {
 						)
 						.setTimestamp();
 
-					interaction.reply({ embeds: [embed], ephemeral: true });
+					interaction.editReply({ embeds: [embed], ephemeral: true });
 				}
 				else {
-					interaction.reply({ content: 'There was an issue adding that to the database.', ephemeral: true });
+					interaction.editReply({ content: 'There was an issue adding that to the database.', ephemeral: true });
 				}
 
 			})
 			.catch(function(error) {
-				interaction.reply({ content: `Something went wrong? ${error}`, ephemeral: true });
+				interaction.editReply({ content: `Something went wrong? ${error}`, ephemeral: true });
 			})
 			.finally(function() {
 				// always executed
