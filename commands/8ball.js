@@ -16,7 +16,7 @@ module.exports = {
 
 		await interaction.deferReply();
 
-		await axios.get('https://kittenangie.com/bots/api/endpoint.php?request=8ball')
+		await axios.get(global.baseUrl + 'retrieve/8ball/')
 			.then(function(response) {
 
 				const output = response.data;

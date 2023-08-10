@@ -54,6 +54,8 @@ axios.get('https://www.kittenangie.com/bots/api/get_key.php')
 			console.log(perms);
 			console.log('- - -');
 
+			const baseUrl = 'https://www.kittenangie.com/bots/api_new/';
+
 			if (commandName.indexOf('!') == 0) {
 				if (commandName === '!banana') {
 					if (tags.username === 'kittenangie') {
@@ -72,7 +74,7 @@ axios.get('https://www.kittenangie.com/bots/api/get_key.php')
 				}
 				if (commandName === '!kiwiquote') {
 					let content = '';
-					axios.get('https://kittenangie.com/bots/api/endpoint.php?request=quote')
+					axios.get(baseUrl + 'retrieve/quote/')
 						.then(function(response) {
 							const output = response.data;
 							if (output.status === 'success') {
@@ -91,7 +93,7 @@ axios.get('https://www.kittenangie.com/bots/api/get_key.php')
 				}
 				if (commandName === '!kiwipun') {
 					let content = '';
-					axios.get('https://kittenangie.com/bots/api/endpoint.php?request=pun')
+					axios.get(baseUrl + 'retrieve/pun/')
 						.then(function(response) {
 							const output = response.data;
 							if (output.status === 'success') {
@@ -110,7 +112,7 @@ axios.get('https://www.kittenangie.com/bots/api/get_key.php')
 				}
 				if (commandName.indexOf('!kiwi8') === 0) {
 					let content = '';
-					axios.get('https://kittenangie.com/bots/api/endpoint.php?request=8ball')
+					axios.get(baseUrl + 'retrieve/8ball/')
 						.then(function(response) {
 							const output = response.data;
 							if (output.status === 'success') {
@@ -201,7 +203,7 @@ axios.get('https://www.kittenangie.com/bots/api/get_key.php')
 
 							if (userCheck) {
 								if (amtCheck) {
-									axios.get('https://www.kittenangie.com/bots/api_new/insert/coins.php?username=' + username + '&amount=' + amount + '&reason=' + reason)
+									axios.get(baseUrl + 'insert/coins/?username=' + username.toLowerCase() + '&amount=' + amount + '&reason=' + reason)
 										.then(function(response) {
 											const output = response.data;
 											if (output.status === 'success') {
@@ -231,7 +233,7 @@ axios.get('https://www.kittenangie.com/bots/api/get_key.php')
 						}
 					}
 					if (args[1] === 'amt') {
-						axios.get('https://www.kittenangie.com/bots/api_new/retrieve/coins.php?username=' + username)
+						axios.get(baseUrl + 'retrieve/coins/?username=' + username)
 							.then(function(response) {
 								const output = response.data;
 								if (output.status === 'success') {
@@ -277,9 +279,19 @@ axios.get('https://www.kittenangie.com/bots/api/get_key.php')
 								});
 
 								content = content.substring(0, content.length - 3).trim();
+
+								if (output[0].phonetic) {
+									content += ` It is pronounced like: ${output[0].phonetic}`;
+								}
 							})
-							.catch(function() {
-								content = 'Something went wrong, tell @kittenAngie.';
+							.catch(function(caught) {
+								const output = caught.response.data;
+								if (output.message == 'Sorry pal, we couldn\'t find definitions for the word you were looking for.') {
+									content = `Sorry @${tags.username}, we couldn't find definitions for the word you were looking for.`;
+								}
+								else {
+									content = 'Something went wrong, tell @kittenAngie.';
+								}
 							})
 							.finally(function() {
 								client.say(channel, content);
@@ -289,6 +301,7 @@ axios.get('https://www.kittenangie.com/bots/api/get_key.php')
 			}
 		}
 
+		// Timers
 		const timers = {
 			'discord': {
 				'channel': 'komfykiwi',
