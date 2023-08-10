@@ -1,3 +1,5 @@
+require('../globals');
+
 const axios = require('axios');
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 

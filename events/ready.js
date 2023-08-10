@@ -56,7 +56,7 @@ module.exports = {
 		});
 
 		setInterval(function() {
-			axios.get('https://www.kittenangie.com/bots/api/twitch_channel_points.php');
+			axios.get('https://www.kittenangie.com/bots/api_new/insert/channel_points/');
 		}, 10000);
 
 	},
