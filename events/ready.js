@@ -56,8 +56,13 @@ module.exports = {
 		});
 
 		setInterval(function() {
-			axios.get('https://www.kittenangie.com/bots/api_new/insert/channel_points/');
-			axios.get('https://www.kittenangie.com/bots/api_new/interactive/lights/');
+			axios.get(global.baseUrl + 'insert/channel_points/')
+				.then(function() {
+					axios.get(global.baseUrl + 'interactive/lights/');
+				})
+				.catch(function() {
+					console.log('points error');
+				});
 		}, 10000);
 
 	},
