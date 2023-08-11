@@ -25,9 +25,6 @@ module.exports = {
 		// 5 seconds : 5000
 		checkIfLive2(10000, function(x) {
 			if (x !== '') {
-
-				console.log( x );
-
 				const { channels, notifications } = require(configFile); // eslint-disable-line
 
 				const twitch = roleMention(notifications.twitch);
@@ -59,11 +56,11 @@ module.exports = {
 		});
 
 		setInterval(function() {
-			axios.get(global.baseUrl + 'insert/channel_points/')
+			axios.get(global.baseUrl + 'insert/channel_points/');
 		}, 5000);
-		setInterval(function() {
-			axios.get(global.baseUrl + 'interactive/lights/');
-		}, 10000);
+		// setInterval(function() {
+		// 	axios.get(global.baseUrl + 'interactive/lights/');
+		// }, 10000);
 	},
 };
 
