@@ -67,11 +67,11 @@ module.exports = {
 					}
 				})
 				.catch(err => console.log(err));
-			axios.get(global.baseUrl + 'insert/channel_points/')
-				.then(() => {
-					axios.get(global.baseUrl + 'interactive/lights/');
-				})
-				.catch(err => console.log(err));
+			// axios.get(global.baseUrl + 'insert/channel_points/')
+			// 	.then(() => {
+			// 		axios.get(global.baseUrl + 'interactive/lights/');
+			// 	})
+			// 	.catch(err => console.log(err));
 		}, 10000);
 	},
 };
