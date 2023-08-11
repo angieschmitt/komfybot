@@ -1,18 +1,18 @@
 require('./globals');
 
 // Discord Stuff
-const fs = require('node:fs');
-const path = require('node:path');
+// const fs = require('node:fs');
+// const path = require('node:path');
 
-// Require the necessary discord.js classes
-const { Client, Partials, GatewayIntentBits, Collection } = require('discord.js');
+// // Require the necessary discord.js classes
+// const { Client, Partials, GatewayIntentBits, Collection } = require('discord.js');
 const { token } = require(configFile); // eslint-disable-line
 
-// Create a new client instance
-const client = new Client({
-	intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMessageReactions],
-	partials: [Partials.Message, Partials.Channel, Partials.Reaction],
-});
+// // Create a new client instance
+// const client = new Client({
+// 	intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMessageReactions],
+// 	partials: [Partials.Message, Partials.Channel, Partials.Reaction],
+// });
 
 // Assign Commands
 // client.commands = new Collection();
@@ -46,10 +46,13 @@ const client = new Client({
 // 	}
 // }
 
-console.log(token);
+console.log( global.title );
+console.log( global.baseUrl );
+console.log( global.configFile);
+console.log( token );
 
 // Log in to Discord with your client's token
-client.login(token);
+// client.login(token);
 
 // Webserver
 // const express = require('express');
