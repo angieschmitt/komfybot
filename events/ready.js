@@ -1,7 +1,8 @@
 require('../globals');
 
-const axios = require('axios');
-const { Events, ActivityType, EmbedBuilder, escapeMarkdown, roleMention } = require('discord.js');
+// const axios = require('axios');
+const { Events } = require('discord.js');
+// const { Events, ActivityType, EmbedBuilder, escapeMarkdown, roleMention } = require('discord.js');
 
 module.exports = {
 	name: Events.ClientReady,
@@ -9,17 +10,17 @@ module.exports = {
 	execute(client) {
 		console.log(`Ready! Logged in as ${client.user.tag}`);
 
-		client.user.setActivity('activity', { type: ActivityType.Listening });
-		client.user.setPresence({
-			activities:
-				[
-					{
-						name: 'lo-fi beats.',
-						type: ActivityType.Listening,
-					},
-				],
-			status: 'idle',
-		});
+		// client.user.setActivity('activity', { type: ActivityType.Listening });
+		// client.user.setPresence({
+		// 	activities:
+		// 		[
+		// 			{
+		// 				name: 'lo-fi beats.',
+		// 				type: ActivityType.Listening,
+		// 			},
+		// 		],
+		// 	status: 'idle',
+		// });
 
 		// 5 minutes : 300000
 		// 5 seconds : 5000
