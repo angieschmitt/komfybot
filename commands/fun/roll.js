@@ -1,4 +1,4 @@
-require('../globals');
+require('../../globals');
 
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 // const wait = require('node:timers/promises').setTimeout;

@@ -1,4 +1,4 @@
-require('../globals');
+require('../../globals');
 
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { faqs } = require(configFile); // eslint-disable-line

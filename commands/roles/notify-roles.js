@@ -1,4 +1,4 @@
-require('../globals');
+require('../../globals');
 
 const { SlashCommandBuilder, PermissionFlagsBits, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const { notify_roles } = require(configFile); // eslint-disable-line
