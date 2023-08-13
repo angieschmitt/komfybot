@@ -24,6 +24,7 @@ module.exports = {
 		// 5 minutes : 300000
 		// 5 seconds : 5000
 		setInterval(function() {
+			// Live check
 			axios.get('https://www.kittenangie.com/bots/api/twitch_live.php')
 				.then(function(response) {
 					if (response.data !== '') {
@@ -67,11 +68,16 @@ module.exports = {
 					}
 				})
 				.catch(err => console.log(err));
+
+			// Check for channel points
 			axios.get(global.baseUrl + 'insert/channel_points/')
 				.then(() => {
 					axios.get(global.baseUrl + 'interactive/lights/');
 				})
 				.catch(err => console.log(err));
+
+			// Update chatbot token
+			axios.get(global.baseUrl + 'generate/token.php?key=komfybot_token');
 		}, 10000);
 	},
 };
