@@ -25,7 +25,8 @@ module.exports = {
 		// 5 seconds : 5000
 		setInterval(function() {
 			// Live check
-			axios.get('https://www.kittenangie.com/bots/api/twitch_live.php')
+			const cacheBuster = new Date().getTime();
+			axios.get('https://www.kittenangie.com/bots/api/twitch_live.php?&timestamp=' + cacheBuster)
 				.then(function(response) {
 					if (response.data !== '') {
 

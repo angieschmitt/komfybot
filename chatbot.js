@@ -12,7 +12,7 @@ const opts = {
 		// 'alazysun',
 	],
 	connection: {
-		reconnect: true,
+		reconnect: false,
 	},
 };
 
@@ -29,7 +29,11 @@ axios.get('https://www.kittenangie.com/bots/api/get_key.php')
 		client.on('message', onMessageHandler);
 
 		// Connect to Twitch:
-		client.connect();
+		client.connect()
+			.then(function() {
+				client.say('komfykiwi', 'I\'m here boss! Got my cocoa and blankie!').catch(console.error);
+			})
+			.catch(console.error);
 
 		let last_message = null;
 		// Called every time the bot connects to Twitch chat
@@ -352,6 +356,24 @@ axios.get('https://www.kittenangie.com/bots/api/get_key.php')
 							});
 					}
 				}
+
+				// Explainers
+				if (commandName === '!ads') {
+					let content = '';
+					content += 'Gotta take an AD Break… Trust me, I get it. It sucks. Sorry! ';
+					content += 'I am trying to make this my full time  job so I gotta. ';
+					content += 'I appreciate each and everyone that let’s the ADs run, but why not get up, walk around & stretch your legs a bit. ';
+					content += 'I’ll be right back! Silver lining: With these ADs in place, we get to not have to deal with even more annoying Pre-Roll ADs, which nobody likes at all.';
+					client.say(channel, content);
+				}
+				if (commandName === '!pkmn') {
+					let content = '';
+					content += 'In this Randomizer, Pokemon and their movesets are all randomized. ';
+					content += 'On top of that, all Key Items have been randomized as well, with the caveat that all Badges are still at Gym Leaders, but shuffled up. ';
+					content += 'There is logic baked into it, guaranteeing a game that is still solvable every time. ';
+					content += 'The goal is to collect as many key items as necessary and end up beating Red.';
+					client.say(channel, content);
+				}
 			}
 		}
 
@@ -360,25 +382,53 @@ axios.get('https://www.kittenangie.com/bots/api/get_key.php')
 			'discord': {
 				'channel': 'komfykiwi',
 				'timer': 30,
-				'message': 'Come join us on Discord: https://discord.gg/3YZrUHypk9',
+				'message': 'Come hang with the KomfyKrew on Discord: https://discord.gg/3YZrUHypk9',
+			},
+			'socials': {
+				'channel': 'komfykiwi',
+				'timer': 120,
+				'message': 'Yo, wanna see more komfyness? I would highly appreciate you checking out all my socials and maybe dropping a follow! There is an easy overview list right here: https://komfykiwi.com/socials',
+			},
+			'appreciate': {
+				'channel': 'komfykiwi',
+				'timer': 200,
+				'message': 'Hey, just letting YOU know, that you matter & that you’re appreciated! You deserve to have great things, and it is totally okay to feel exhausted sometimes. You ARE beautiful, and I am SOO happy that you’re here - thank you! Also, ya know, nice butt. ♡',
+			},
+			'tipsandbits': {
+				'channel': 'komfykiwi',
+				'timer': 240,
+				'message': 'Don’t mind me, just humbly reminding you all that Kiwi is trying to make streaming her full time gig! So if you can swing it, she’d highly appreciate any form of support, be it a Twitch Subscription, a Tip or some Bits. No contribution is ever required or expected, but always comes with her never ending, deepest gratitude! Why not gift a Sub to a fren? :3 Or use your Amazon Prime? All the funds go to improving the stream, as well as bills. Remember to always spend responsibly! THANK YOU! ♡',
 			},
 		};
-		const timerList = [];
-		Object.entries(timers).forEach(([key]) => {
-			const interval = (timers[key]['timer'] * 60 * 1000);
-			timerList[key] = setInterval(
-				function() {
-					console.log(interval + '->' + timers[key]['message']);
-					if (last_message !== timers[key]['message']) {
-						client.say(timers[key]['channel'], timers[key]['message']);
+		let minutes = 1;
+		const queue = {};
+		setInterval(
+			function() {
+				console.log('Timer: ' + minutes);
+				Object.entries(timers).forEach(([key]) => {
+					if ((minutes % timers[key]['timer']) == 0) {
+						if (isObjectEmpty(queue)) {
+							queue[key] = timers[key];
+						}
+						else {
+							const first = Object.keys(queue)[0];
+							delete queue[first];
+							queue[key] = timers[key];
+						}
 					}
-					else {
-						console.log(`skipped ${key} timer`);
+				});
+				if (!isObjectEmpty(queue)) {
+					const key = Object.keys(queue)[0];
+					if (last_message !== queue[key]['message']) {
+						client.say(queue[key]['channel'], queue[key]['message'])
+							.then(delete queue[key]);
 					}
-				},
-				parseInt(interval),
-			);
-		});
+					delete queue[key];
+				}
+				minutes++;
+			},
+			60000,
+		);
 
 		// Called every time the bot connects to Twitch chat
 		function onConnectedHandler(addr, port) {
@@ -399,3 +449,7 @@ function timeConverter(UNIX_timestamp) {
 	const time = month + ' ' + date + ' ' + year + ' ' + hour + ':' + min + ':' + sec + ':' + milli;
 	return time;
 }
+
+const isObjectEmpty = (objectName) => {
+	return Object.keys(objectName).length === 0 && objectName.constructor === Object;
+};
