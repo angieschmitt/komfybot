@@ -11,10 +11,15 @@ const opts = {
 		'kittenangie',
 		// 'alazysun',
 	],
+	options: {
+		// debug: true,
+	},
 	connection: {
-		reconnect: false,
+		reconnect: true,
 	},
 };
+
+let optionals = 0;
 
 axios.get('https://www.kittenangie.com/bots/api/get_key.php')
 	.then(function(response) {
@@ -27,13 +32,10 @@ axios.get('https://www.kittenangie.com/bots/api/get_key.php')
 		// Register our event handlers (defined below)
 		client.on('connected', onConnectedHandler);
 		client.on('message', onMessageHandler);
+		client.on('join', onJoinHandler);
 
 		// Connect to Twitch:
-		client.connect()
-			.then(function() {
-				client.say('komfykiwi', 'I\'m here boss! Got my cocoa and blankie!').catch(console.error);
-			})
-			.catch(console.error);
+		client.connect().catch(console.error);
 
 		let last_message = null;
 		// Called every time the bot connects to Twitch chat
@@ -51,6 +53,7 @@ axios.get('https://www.kittenangie.com/bots/api/get_key.php')
 			if (tags.subscriber) { perms.sub = true; }
 
 			// console.groupCollapsed('Message');
+			// console.log(message);
 			// console.log(tags);
 			// console.groupEnd();
 
@@ -118,6 +121,25 @@ axios.get('https://www.kittenangie.com/bots/api/get_key.php')
 							client.say(channel, content);
 						});
 				}
+				if (commandName === '!flirt') {
+					let content = '';
+					axios.get(baseUrl + 'retrieve/pickup/')
+						.then(function(response) {
+							const output = response.data;
+							if (output.status === 'success') {
+								content = output.content;
+							}
+							else {
+								content = 'Something went wrong, tell @kittenAngie.';
+							}
+						})
+						.catch(function() {
+							content = 'Something went wrong, tell @kittenAngie.';
+						})
+						.finally(function() {
+							client.say(channel, content);
+						});
+				}
 				if (commandName.indexOf('!8ball') === 0) {
 					let content = '';
 					axios.get(baseUrl + 'retrieve/8ball/')
@@ -158,6 +180,22 @@ axios.get('https://www.kittenangie.com/bots/api/get_key.php')
 				}
 
 				// Interactive
+				if (commandName.indexOf('!optional') === 0) {
+					let content = '';
+					const args = message.split(' ');
+
+					if (perms.mod) {
+						if (args[1] && args[1] == 'reset') {
+							optionals = 0;
+							content = 'Optional counter reset';
+						}
+						else {
+							optionals++;
+							content = 'OPTIONAL COUNTER: ' + optionals;
+						}
+						client.say(channel, content);
+					}
+				}
 				if (commandName.indexOf('!so') === 0) {
 					let content = '';
 					const args = message.split(' ');
@@ -434,6 +472,13 @@ axios.get('https://www.kittenangie.com/bots/api/get_key.php')
 		function onConnectedHandler(addr, port) {
 			console.log(`* Connected to ${addr}:${port}`);
 		}
+
+		function onJoinHandler(channel, username, isSelf) {
+			if (isSelf) {
+				// client.say('komfykiwi', 'I\'m here boss! Got my cocoa and blankie!');
+			}
+		}
+
 	});
 
 function timeConverter(UNIX_timestamp) {

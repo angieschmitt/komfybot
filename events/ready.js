@@ -38,7 +38,7 @@ module.exports = {
 						const embed = new EmbedBuilder()
 							.setColor(0xC44578)
 							.setAuthor({ name: x.user_name, iconURL: x.user_thumbnail })
-							.setTitle((x.title != '' ? x.title : 'Title goes here'))
+							.setTitle(escapeMarkdown(x.title != '' ? x.title : 'Title goes here'))
 							.setURL('https://www.twitch.tv/' + x.user_login)
 							.setThumbnail(x.user_thumbnail)
 							.setDescription(`Currently playing: ${x.game_name}!`)
@@ -56,14 +56,17 @@ module.exports = {
 								});
 						}
 						else {
-							client.channels.fetch(channels.recommends)
-								.then(channel => {
-									channel.send({
-										content: `Hey ${recommends}, ${ escapeMarkdown(x.user_name) } has gone live at https://www.twitch.tv/${x.user_login}.`,
-										embeds: [embed],
-									}).then(() => {
-										axios.get('https://www.kittenangie.com/bots/api/twitch_live.php?pinged=' + x.user_id);
-									});
+							axios.get('https://www.kittenangie.com/bots/api/twitch_live.php?pinged=' + x.user_id)
+								.then(function(response2) {
+									if (response2.data.status !== 'success') {
+										client.channels.fetch(channels.recommends)
+											.then(channel => {
+												channel.send({
+													content: `Hey ${recommends}, ${ escapeMarkdown(x.user_name) } has gone live at https://www.twitch.tv/${x.user_login}.`,
+													embeds: [embed],
+												});
+											});
+									}
 								});
 						}
 					}
