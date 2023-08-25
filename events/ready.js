@@ -58,7 +58,7 @@ module.exports = {
 						else {
 							axios.get('https://www.kittenangie.com/bots/api/twitch_live.php?pinged=' + x.user_id)
 								.then(function(response2) {
-									if (response2.data.status !== 'success') {
+									if (response2.data.status === 'success') {
 										client.channels.fetch(channels.recommends)
 											.then(channel => {
 												channel.send({
