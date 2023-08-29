@@ -81,7 +81,7 @@ axios.get('https://www.kittenangie.com/bots/api/get_key.php')
 					}
 				}
 				if (commandName.indexOf('!discord') === 0) {
-					client.say(channel, 'Come join us on Discord: https://discord.gg/3YZrUHypk9');
+					client.say(channel, 'Come join us on Discord: https://discord.gg/8T44G4mUFu');
 				}
 				if (commandName === '!quote') {
 					let content = '';
@@ -420,7 +420,7 @@ axios.get('https://www.kittenangie.com/bots/api/get_key.php')
 			'discord': {
 				'channel': 'komfykiwi',
 				'timer': 30,
-				'message': 'Come hang with the KomfyKrew on Discord: https://discord.gg/3YZrUHypk9',
+				'message': 'Come hang with the KomfyKrew on Discord: https://discord.gg/8T44G4mUFu',
 			},
 			'socials': {
 				'channel': 'komfykiwi',
@@ -475,7 +475,9 @@ axios.get('https://www.kittenangie.com/bots/api/get_key.php')
 
 		function onJoinHandler(channel, username, isSelf) {
 			if (isSelf) {
-				// client.say('komfykiwi', 'I\'m here boss! Got my cocoa and blankie!');
+				if (channel === '#komfykiwi') {
+					client.say('komfykiwi', 'I\'m here boss! Got my cocoa and blankie!');
+				}
 			}
 		}
 

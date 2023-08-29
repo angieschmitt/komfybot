@@ -44,31 +44,49 @@ module.exports = {
 							.setDescription(`Currently playing: ${x.game_name}!`)
 							.setImage(x.thumbnail_url);
 
-						if (x.user_name.toLowerCase() == 'komfykiwi') {
-							client.channels.fetch(channels.is_live)
-								.then(channel => {
-									channel.send({
-										content: `Hey ${twitch}, ${ escapeMarkdown(x.user_name) } has gone live at https://www.twitch.tv/${x.user_login}.`,
-										embeds: [embed],
-									}).then(() => {
-										axios.get('https://www.kittenangie.com/bots/api/twitch_live.php?pinged=' + x.user_id);
-									});
-								});
-						}
-						else {
-							axios.get('https://www.kittenangie.com/bots/api/twitch_live.php?pinged=' + x.user_id)
-								.then(function(response2) {
-									if (response2.data.status === 'success') {
-										client.channels.fetch(channels.recommends)
-											.then(channel => {
-												channel.send({
-													content: `Hey ${recommends}, ${ escapeMarkdown(x.user_name) } has gone live at https://www.twitch.tv/${x.user_login}.`,
-													embeds: [embed],
-												});
+						axios.get('https://www.kittenangie.com/bots/api/twitch_live.php?pinged=' + x.user_id)
+							.then(function(response2) {
+								if (response2.data.status === 'success') {
+									const pingChannel = (x.user_name.toLowerCase() == 'komfykiwi' ? channels.is_live : channels.recommends);
+									const pingWho = (x.user_name.toLowerCase() == 'komfykiwi' ? twitch : recommends);
+									client.channels.fetch(pingChannel)
+										.then(channel => {
+											channel.send({
+												content: `Hey ${pingWho}, ${ escapeMarkdown(x.user_name) } has gone live at https://www.twitch.tv/${x.user_login}.`,
+												embeds: [embed],
 											});
-									}
-								});
-						}
+										});
+								}
+							});
+
+						// if (x.user_name.toLowerCase() == 'komfykiwi') {
+						// 	axios.get('https://www.kittenangie.com/bots/api/twitch_live.php?pinged=' + x.user_id)
+						// 		.then(function(response2) {
+						// 			if (response2.data.status === 'success') {
+						// 				client.channels.fetch(channels.is_live)
+						// 					.then(channel => {
+						// 						channel.send({
+						// 							content: `Hey ${recommends}, ${ escapeMarkdown(x.user_name) } has gone live at https://www.twitch.tv/${x.user_login}.`,
+						// 							embeds: [embed],
+						// 						});
+						// 					});
+						// 			}
+						// 		});
+						// }
+						// else {
+						// 	axios.get('https://www.kittenangie.com/bots/api/twitch_live.php?pinged=' + x.user_id)
+						// 		.then(function(response2) {
+						// 			if (response2.data.status === 'success') {
+						// 				client.channels.fetch(channels.recommends)
+						// 					.then(channel => {
+						// 						channel.send({
+						// 							content: `Hey ${recommends}, ${ escapeMarkdown(x.user_name) } has gone live at https://www.twitch.tv/${x.user_login}.`,
+						// 							embeds: [embed],
+						// 						});
+						// 					});
+						// 			}
+						// 		});
+						// }
 					}
 				})
 				.catch(err => console.log(err));
