@@ -180,7 +180,7 @@ axios.get('https://www.kittenangie.com/bots/api/get_key.php')
 				}
 
 				// Interactive
-				if (commandName.indexOf('!optional') === 0) {
+				if (commandName.indexOf('!count') === 0) {
 					let content = '';
 					const args = message.split(' ');
 
@@ -410,6 +410,22 @@ axios.get('https://www.kittenangie.com/bots/api/get_key.php')
 					content += 'On top of that, all Key Items have been randomized as well, with the caveat that all Badges are still at Gym Leaders, but shuffled up. ';
 					content += 'There is logic baked into it, guaranteeing a game that is still solvable every time. ';
 					content += 'The goal is to collect as many key items as necessary and end up beating Red.';
+					client.say(channel, content);
+				}
+				if (commandName === '!race') {
+					let content = '';
+					content += 'We\'re racing Kiva in a !pkmn randomizer! If you wanna tune in to both of us at the same time, feel free to use: ';
+					content += 'https://www.multitwitch.tv/komfykiwi/kiva_';
+					client.say(channel, content);
+				}
+				if (commandName === '!bingo') {
+					let content = '';
+					content += 'In this Randomizer: Pokemon, movesets, and field items are all randomized. ';
+					content += 'A random Bingo board, filled with various \'Goals\', is assembled and only revealed once the run has started. ';
+					content += 'Players must get 5 Goals in a row, column or diagonal to form a set. ';
+					content += 'In CINCO Bingo, the goal is to have 5 sets as fast as possible & click the \'Done Button\'. ';
+					content += 'We start with the bike & allow riding it indoors for convenience.  ';
+					content += 'For TM ## (xyz) Goals, EITHER the Number OR the Move counts, for ease of randomizing. ';
 					client.say(channel, content);
 				}
 			}
