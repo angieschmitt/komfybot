@@ -1,5 +1,5 @@
 module.exports = {
 	name: 'flirt',
 	alias: 'pickup',
-	help: 'Just an alias for !define',
+	help: 'Just an alias for !pickup',
 };

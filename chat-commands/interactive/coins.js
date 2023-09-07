@@ -11,14 +11,14 @@ module.exports = {
 				let content = '';
 
 				let username = tags.username;
-				if (args[1] !== tags.username) {
-					username = args[1];
+				if (args.length > 1 && args[1] !== tags.username) {
+					username = args[1].replace('@', '');
 				}
 				axios.get(baseUrl + 'retrieve/coins/?username=' + username)
 					.then(function(response) {
 						const output = response.data;
 						if (output.status === 'success') {
-							if (args[1] !== tags.username) {
+							if (args.length > 1) {
 								content = `Hey @${tags.username}, ${username} has ${(output.total ? output.total : 0)} KomfyCoins stashed in their wallet!`;
 							}
 							else {

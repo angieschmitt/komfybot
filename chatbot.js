@@ -1,5 +1,7 @@
 const tmi = require('tmi.js');
 const axios = require('axios');
+const fs = require('node:fs');
+const path = require('node:path');
 
 // Define configuration options
 const opts = {
@@ -8,7 +10,7 @@ const opts = {
 	},
 	channels: [
 		'komfykiwi',
-		'kittenangie',
+		// 'kittenangie',
 		// 'alazysun',
 	],
 	options: {
@@ -18,8 +20,6 @@ const opts = {
 		reconnect: true,
 	},
 };
-
-let optionals = 0;
 
 axios.get('https://www.kittenangie.com/bots/api/get_key.php')
 	.then(function(response) {
@@ -36,6 +36,26 @@ axios.get('https://www.kittenangie.com/bots/api/get_key.php')
 
 		// Connect to Twitch:
 		client.connect().catch(console.error);
+
+		// Add optional things to client
+		client.extras = [];
+		client.extras.count = 0;
+		client.extras.race = '';
+
+		// Chat commands?
+		client.commands = new Array();
+		const foldersPath = path.join(__dirname, 'chat-commands');
+		const commandFolders = fs.readdirSync(foldersPath);
+
+		for (const folder of commandFolders) {
+			const commandsPath = path.join(foldersPath, folder);
+			const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+			for (const file of commandFiles) {
+				const filePath = path.join(commandsPath, file);
+				const command = require(filePath);
+				client.commands[command.name] = command;
+			}
+		}
 
 		let last_message = null;
 		// Called every time the bot connects to Twitch chat
@@ -65,368 +85,88 @@ axios.get('https://www.kittenangie.com/bots/api/get_key.php')
 			console.log(perms);
 			console.log('- - -');
 
-			const baseUrl = 'https://www.kittenangie.com/bots/api_new/';
-
 			if (commandName.indexOf('!') == 0) {
-				if (commandName === '!banana') {
-					if (tags.username === 'kittenangie') {
-					// if (perms.mod) {
-						client.say(channel, '🍌🍌🍌🍌🍌🍌🍌');
-					}
-				}
-				if (commandName === '!potato') {
-					if (tags.username === 'kittenangie') {
-						// if (perms.mod) {
-						client.say(channel, '🥔🥔🥔🥔🥔🥔🥔');
-					}
-				}
-				if (commandName.indexOf('!discord') === 0) {
-					client.say(channel, 'Come join us on Discord: https://discord.gg/8T44G4mUFu');
-				}
-				if (commandName === '!quote') {
-					let content = '';
-					axios.get(baseUrl + 'retrieve/quote/')
-						.then(function(response) {
-							const output = response.data;
-							if (output.status === 'success') {
-								content = 'Kiwi once said... ' + output.content;
-							}
-							else {
-								content = 'Something went wrong, tell @kittenAngie.';
-							}
-						})
-						.catch(function() {
-							content = 'Something went wrong, tell @kittenAngie.';
-						})
-						.finally(function() {
-							client.say(channel, content);
-						});
-				}
-				if (commandName === '!pun') {
-					let content = '';
-					axios.get(baseUrl + 'retrieve/pun/')
-						.then(function(response) {
-							const output = response.data;
-							if (output.status === 'success') {
-								content = 'Pun Delivery Service: ' + output.content;
-							}
-							else {
-								content = 'Something went wrong, tell @kittenAngie.';
-							}
-						})
-						.catch(function() {
-							content = 'Something went wrong, tell @kittenAngie.';
-						})
-						.finally(function() {
-							client.say(channel, content);
-						});
-				}
-				if (commandName === '!flirt') {
-					let content = '';
-					axios.get(baseUrl + 'retrieve/pickup/')
-						.then(function(response) {
-							const output = response.data;
-							if (output.status === 'success') {
-								content = output.content;
-							}
-							else {
-								content = 'Something went wrong, tell @kittenAngie.';
-							}
-						})
-						.catch(function() {
-							content = 'Something went wrong, tell @kittenAngie.';
-						})
-						.finally(function() {
-							client.say(channel, content);
-						});
-				}
-				if (commandName.indexOf('!8ball') === 0) {
-					let content = '';
-					axios.get(baseUrl + 'retrieve/8ball/')
-						.then(function(response) {
-							const output = response.data;
-							if (output.status === 'success') {
-								content = `@${tags.username} the Magic 8 Ball says... ` + output.content;
-							}
-							else {
-								content = 'Something went wrong, tell @kittenAngie.';
-							}
-						})
-						.catch(function() {
-							content = 'Something went wrong, tell @kittenAngie.';
-						})
-						.finally(function() {
-							client.say(channel, content);
-						});
-				}
-				if (commandName.indexOf('!fotd') === 0) {
-					let content = '';
-					axios.get(baseUrl + 'retrieve/fact/')
-						.then(function(response) {
-							const output = response.data;
-							if (output.status === 'success') {
-								content = `@${tags.username} the Fact of the Day is... ` + output.content;
-							}
-							else {
-								content = 'Something went wrong, tell @kittenAngie.';
-							}
-						})
-						.catch(function() {
-							content = 'Something went wrong, tell @kittenAngie.';
-						})
-						.finally(function() {
-							client.say(channel, content);
-						});
-				}
+				// Split into parts to handle things
+				const args = message.split(' ');
+				let command = args[0].substring(1);
 
-				// Interactive
-				if (commandName.indexOf('!count') === 0) {
-					let content = '';
-					const args = message.split(' ');
+				if (command in client.commands) {
+					let action = {};
 
-					if (perms.mod) {
-						if (args[1] && args[1] == 'reset') {
-							optionals = 0;
-							content = 'Optional counter reset';
+					// Check for alias
+					if (client.commands[command].alias) {
+						command = client.commands[command].alias;
+					}
+
+					action = client.commands[command].actions.default;
+					if (args.length !== 1) {
+						if (client.commands[command].actions[args[1]]) {
+							action = client.commands[command].actions[args[1]];
 						}
 						else {
-							optionals++;
-							content = 'OPTIONAL COUNTER: ' + optionals;
-						}
-						client.say(channel, content);
-					}
-				}
-				if (commandName.indexOf('!so') === 0) {
-					let content = '';
-					const args = message.split(' ');
-
-					if (!args[1]) {
-						client.say(channel, 'Valid commands | MODS: !so <user> <message:optional>');
-						return;
-					}
-
-					let username = '';
-					// Clean for DB
-					if (args[1]) {
-						if (args[1].indexOf('@') === 0) {
-							username = args[1].substring(1);
-						}
-						else {
-							username = args[1];
+							action = client.commands[command].actions.default;
 						}
 					}
-					else {
-						username = tags.username;
-					}
 
-					if (perms.mod) {
-						content = `Go check out @${username} at https://www.twitch.tv/${username}!`;
-						if (args[2]) {
-							const messageOut = message.replace(args[0], '').replace(args[1], '').trim();
-							content += ' ' + messageOut;
-						}
-						client.say(channel, content);
-					}
-				}
-				if (commandName.indexOf('!coins') === 0) {
-					let content = '';
-					const args = message.split(' ');
-
-					if (!args[1]) {
-						client.say(channel, 'Valid commands | MODS: !coins add <user> <amt> <reason:optional> | USERS: !coins amt <username:optional>, !coins spend <amt> <reason:optiona');
-						return;
-					}
-
-					if (args[1] === 'add') {
-						if (perms.mod) {
-
-							let amount = 0;
-							let amtCheck = false;
-							let username = false;
-							let userCheck = false;
-							if (args[2]) {
-								username = args[2].replace('@', '');
-								userCheck = true;
+					if ('execute' in action) {
+						if (action.perms) {
+							if (!perms[action.perms.levels]) {
+								client.say(channel, `${tags.username}, ${action.perms.error}`);
+								return false;
 							}
-							if (args[3]) {
-								amtCheck = true;
-								amount = args[3];
-							}
-							const reason = message.replace(args[0], '').replace(args[1], '').replace(args[2], '').replace(args[3], '').trim();
-
-							if (userCheck) {
-								if (amtCheck) {
-									axios.get(baseUrl + 'insert/coins/?username=' + username.toLowerCase() + '&amount=' + amount + '&reason=' + reason)
-										.then(function(response) {
-											const output = response.data;
-											if (output.status === 'success') {
-												content = `Congrats @${username} on adding ${amount} KomfyCoins to your wallet.`;
-											}
-											else {
-												content = 'Something went wrong, tell @kittenAngie.';
-											}
-										})
-										.catch(function() {
-											content = 'Something went wrong, tell @kittenAngie.';
-										})
-										.finally(function() {
-											client.say(channel, content);
-										});
-								}
-								else {
-									client.say(channel, `Hey @${tags.username}, you forgot to enter an amount.`);
+						}
+						if (action.args) {
+							// Find out how many required, start at 2 because !command and first arg
+							let count = 2;
+							for (const [key] of Object.entries(action.args)) {
+								if (action.args[key][0] === 'r') {
+									count++;
 								}
 							}
-							else {
-								client.say(channel, `Hey @${tags.username}, you forgot to enter a username.`);
+							// Check full length vs required count
+							if (args.length < count) {
+								client.say(channel, `${tags.username}, ${action.args.error}`);
+								return false;
 							}
 						}
-						else {
-							content = `No. Bad ${tags.username}. That's cheating.`;
-						}
+
+						action.execute(args, tags, message, channel, client);
 					}
+					else if ('say' in action) {
 
-					if (args[1] === 'spend') {
-						let amount = 0;
-						let amtCheck = false;
-						const username = tags.username;
-						if (args[2]) {
-							amtCheck = true;
-							amount = args[2];
-						}
-						const reason = 'SPENT: ' + message.replace(args[0], '').replace(args[1], '').replace(args[2], '').replace(args[3], '').trim();
+						// Probably unused now >.<
 
-						if (amtCheck) {
-							axios.get(baseUrl + 'insert/coins/?username=' + username.toLowerCase() + '&amount=' + (amount * -1) + '&reason=' + reason)
-								.then(function(response) {
-									const output = response.data;
-									if (output.status === 'success') {
-										content = `Congrats @${username} on spending ${amount} KomfyCoins.`;
-									}
-									else {
-										content = 'Something went wrong, tell @kittenAngie.';
-									}
-								})
-								.catch(function() {
-									content = 'Something went wrong, tell @kittenAngie.';
-								})
-								.finally(function() {
-									client.say(channel, content);
-								});
-						}
-						else {
-							client.say(channel, `Hey @${tags.username}, you forgot to enter an amount.`);
-						}
-					}
+						// Setup output
+						let output = action.say;
 
-					if (args[1] === 'amt') {
+						// Probably unused now >.<
+						// Handle the action now
+						if (action.args) {
+							// Find out how many required, start at 2 because !command and first arg
+							let count = 2;
+							for (const [key] of Object.entries(action.args)) {
+								if (action.args[key][0] === 'r') { count++; }
+							}
+							// Check full length vs required count
+							if (args.length < count) {
+								console.log('Missed an argument');
+								return false;
+							}
 
-						let username = false;
-						if (args[2]) {
-							username = args[2].replace('@', '');
-						}
-						else {
-							username = tags.username;
-						}
-
-						axios.get(baseUrl + 'retrieve/coins/?username=' + username)
-							.then(function(response) {
-								const output = response.data;
-								if (output.status === 'success') {
-
-									if (username !== tags.username) {
-										content = `Hey @${tags.username}, ${username} has ${(output.total ? output.total : 0)} KomfyCoins stashed in their wallet!`;
-									}
-									else {
-										content = `Hey @${username}, you have ${(output.total ? output.total : 0)} KomfyCoins stashed in your wallet!`;
+							for (const [key] of Object.entries(action.args)) {
+								if (args[(parseInt(key) + 1)] === undefined) {
+									if (action.args[key][1] === 'tags.username') {
+										output = output.replace('@' + key, tags.username);
 									}
 								}
 								else {
-									content = 'Something went wrong, tell @kittenAngie.';
+									output = output.replace('@' + key, args[(parseInt(key) + 1)]);
 								}
-							})
-							.catch(function() {
-								content = 'Something went wrong, tell @kittenAngie.';
-							})
-							.finally(function() {
-								client.say(channel, content);
-							});
+							}
+						}
+
+						client.say(channel, `${output}`);
 					}
-
-					client.say(channel, content);
-				}
-				if (commandName.indexOf('!define') === 0) {
-					let content = '';
-					const args = message.split(' ');
-
-					if (!args[1]) {
-						client.say(channel, 'Valid commands | !define <word>');
-						return;
-					}
-					else {
-						axios.get('https://api.dictionaryapi.dev/api/v2/entries/en/' + args[1])
-							.then(function(response) {
-								const output = response.data;
-
-								content = `@${tags.username}, ${args[1]} can be defined as a... `;
-								const meanings = output[0].meanings;
-								Object.entries(meanings).forEach(([key]) => {
-									content += `${meanings[key].partOfSpeech} : ${meanings[key].definitions[0].definition} || `;
-								});
-
-								content = content.substring(0, content.length - 3).trim();
-
-								if (output[0].phonetic) {
-									content += ` It is pronounced like: ${output[0].phonetic}`;
-								}
-							})
-							.catch(function(caught) {
-								const output = caught.response.data;
-								if (output.message == 'Sorry pal, we couldn\'t find definitions for the word you were looking for.') {
-									content = `Sorry @${tags.username}, we couldn't find definitions for the word you were looking for.`;
-								}
-								else {
-									content = 'Something went wrong, tell @kittenAngie.';
-								}
-							})
-							.finally(function() {
-								client.say(channel, content);
-							});
-					}
-				}
-
-				// Explainers
-				if (commandName === '!ads') {
-					let content = '';
-					content += 'Gotta take an AD Break… Trust me, I get it. It sucks. Sorry! ';
-					content += 'I am trying to make this my full time  job so I gotta. ';
-					content += 'I appreciate each and everyone that let’s the ADs run, but why not get up, walk around & stretch your legs a bit. ';
-					content += 'I’ll be right back! Silver lining: With these ADs in place, we get to not have to deal with even more annoying Pre-Roll ADs, which nobody likes at all.';
-					client.say(channel, content);
-				}
-				if (commandName === '!pkmn') {
-					let content = '';
-					content += 'In this Randomizer, Pokemon and their movesets are all randomized. ';
-					content += 'On top of that, all Key Items have been randomized as well, with the caveat that all Badges are still at Gym Leaders, but shuffled up. ';
-					content += 'There is logic baked into it, guaranteeing a game that is still solvable every time. ';
-					content += 'The goal is to collect as many key items as necessary and end up beating Red.';
-					client.say(channel, content);
-				}
-				if (commandName === '!race') {
-					let content = '';
-					content += 'We\'re racing Kiva in a !pkmn randomizer! If you wanna tune in to both of us at the same time, feel free to use: ';
-					content += 'https://www.multitwitch.tv/komfykiwi/kiva_';
-					client.say(channel, content);
-				}
-				if (commandName === '!bingo') {
-					let content = '';
-					content += 'In this Randomizer: Pokemon, movesets, and field items are all randomized. ';
-					content += 'A random Bingo board, filled with various \'Goals\', is assembled and only revealed once the run has started. ';
-					content += 'Players must get 5 Goals in a row, column or diagonal to form a set. ';
-					content += 'In CINCO Bingo, the goal is to have 5 sets as fast as possible & click the \'Done Button\'. ';
-					content += 'We start with the bike & allow riding it indoors for convenience.  ';
-					content += 'For TM ## (xyz) Goals, EITHER the Number OR the Move counts, for ease of randomizing. ';
-					client.say(channel, content);
 				}
 			}
 		}
@@ -492,7 +232,7 @@ axios.get('https://www.kittenangie.com/bots/api/get_key.php')
 		function onJoinHandler(channel, username, isSelf) {
 			if (isSelf) {
 				if (channel === '#komfykiwi') {
-					client.say('komfykiwi', 'I\'m here boss! Got my cocoa and blankie!');
+					// client.say('komfykiwi', 'I\'m here boss! Got my cocoa and blankie!');
 				}
 			}
 		}

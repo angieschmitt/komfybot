@@ -1,24 +1,30 @@
+const axios = require('axios');
+const baseUrl = 'https://www.kittenangie.com/bots/api_new/';
+
 module.exports = {
-	name: 'count',
-	description: 'Counter for reasons',
-	help: 'Increases a global counter',
+	name: 'quote',
+	description: 'Quote thing',
+	help: 'Pull a quote from our growing database of silliness',
 	actions: {
 		default: {
 			execute(args, tags, message, channel, client) {
-				client.optionals++;
-				client.say(channel, 'COUNTER: ' + client.optionals);
-			},
-		},
-		set: {
-			execute(args, tags, message, channel, client) {
-				client.optionals = 0;
-				client.say(channel, 'COUNTER RESET TO ' + client.optionals);
-			},
-		},
-		reset: {
-			execute(args, tags, message, channel, client) {
-				client.optionals = 0;
-				client.say(channel, 'COUNTER RESET TO ' + client.optionals);
+				let content = '';
+				axios.get(baseUrl + 'retrieve/quote/')
+					.then(function(response) {
+						const output = response.data;
+						if (output.status === 'success') {
+							content = 'Kiwi once said... ' + output.content;
+						}
+						else {
+							content = 'Something went wrong, tell @kittenAngie.';
+						}
+					})
+					.catch(function() {
+						content = 'Something went wrong, tell @kittenAngie.';
+					})
+					.finally(function() {
+						client.say(channel, content);
+					});
 			},
 		},
 	},
