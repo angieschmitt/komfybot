@@ -37,7 +37,7 @@ module.exports = {
 async function handleLiveCheck(client) {
 	// Live check
 	const cacheBuster = new Date().getTime();
-	axios.get('https://www.kittenangie.com/bots/api/twitch_live.php?&timestamp=' + cacheBuster, {})
+	axios.get('https://www.kittenangie.com/bots/api/twitch_live.php?&timestamp=' + cacheBuster, { signal: AbortSignal.timeout(8000) })
 		.then(function(response) {
 			if (response.data !== '') {
 
@@ -77,7 +77,7 @@ async function handleLiveCheck(client) {
 
 async function handleChannelPoints() {
 	// Check for channel points
-	axios.get(global.baseUrl + 'insert/channel_points/', {})
+	axios.get(global.baseUrl + 'insert/channel_points/', { signal: AbortSignal.timeout(8000) })
 		.then(() => {
 			axios.get(global.baseUrl + 'interactive/lights/');
 		})
