@@ -29,7 +29,7 @@ module.exports = {
 			handleChannelPoints();
 
 			// Update chatbot token
-			axios.get(global.baseUrl + 'generate/token.php?key=komfybot_token', { timeout: 5000 });
+			axios.get(global.baseUrl + 'generate/token.php?key=komfybot_token');
 		}, 10000);
 	},
 };
@@ -37,7 +37,7 @@ module.exports = {
 async function handleLiveCheck(client) {
 	// Live check
 	const cacheBuster = new Date().getTime();
-	axios.get('https://www.kittenangie.com/bots/api/twitch_live.php?&timestamp=' + cacheBuster, { timeout: 5000 })
+	axios.get('https://www.kittenangie.com/bots/api/twitch_live.php?&timestamp=' + cacheBuster, {})
 		.then(function(response) {
 			if (response.data !== '') {
 
@@ -77,7 +77,7 @@ async function handleLiveCheck(client) {
 
 async function handleChannelPoints() {
 	// Check for channel points
-	axios.get(global.baseUrl + 'insert/channel_points/', { timeout: 5000 })
+	axios.get(global.baseUrl + 'insert/channel_points/', {})
 		.then(() => {
 			axios.get(global.baseUrl + 'interactive/lights/');
 		})
