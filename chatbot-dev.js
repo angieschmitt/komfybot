@@ -171,6 +171,11 @@ axios.get('https://www.kittenangie.com/bots/api/get_key.php')
 
 		// Timers
 		const timers = {
+			'subtember': {
+				'channel': 'komfykiwi',
+				'timer': 20,
+				'message': 'It\'s SUBtember on Twitch, so make sure you check out the !subtember and !subotage commands!',
+			},
 			'discord': {
 				'channel': 'komfykiwi',
 				'timer': 30,

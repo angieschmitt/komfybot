@@ -2,6 +2,7 @@ const tmi = require('tmi.js');
 const axios = require('axios');
 const fs = require('node:fs');
 const path = require('node:path');
+const { setTimeout } = require('node:timers/promises');
 
 // Define configuration options
 const opts = {
@@ -33,6 +34,15 @@ axios.get('https://www.kittenangie.com/bots/api/get_key.php')
 		client.on('connected', onConnectedHandler);
 		client.on('message', onMessageHandler);
 		client.on('join', onJoinHandler);
+
+		// Chat catchers
+		client.on('cheer', onCheerHandler);
+		client.on('sub', onSubHandler);
+		client.on('subgift', onSubGiftHandler);
+		client.on('anonsubgift', onAnonSubGiftHandler);
+		client.on('submysterygift', onSubMysteryGiftHandler);
+		client.on('anonsubmysterygift', onAnonSubMysteryGiftHandler);
+		client.on('raided', onRaidedHandler);
 
 		// Connect to Twitch:
 		client.connect().catch(console.error);
@@ -88,7 +98,7 @@ axios.get('https://www.kittenangie.com/bots/api/get_key.php')
 			if (commandName.indexOf('!') == 0) {
 				// Split into parts to handle things
 				const args = message.split(' ');
-				let command = args[0].substring(1);
+				let command = args[0].substring(1).toLowerCase();
 
 				if (command in client.commands) {
 					let action = {};
@@ -109,12 +119,14 @@ axios.get('https://www.kittenangie.com/bots/api/get_key.php')
 					}
 
 					if ('execute' in action) {
+
 						if (action.perms) {
 							if (!perms[action.perms.levels]) {
 								client.say(channel, `${tags.username}, ${action.perms.error}`);
 								return false;
 							}
 						}
+
 						if (action.args) {
 							// Find out how many required, start at 2 because !command and first arg
 							let count = 2;
@@ -133,8 +145,6 @@ axios.get('https://www.kittenangie.com/bots/api/get_key.php')
 						action.execute(args, tags, message, channel, client);
 					}
 					else if ('say' in action) {
-
-						// Probably unused now >.<
 
 						// Setup output
 						let output = action.say;
@@ -171,8 +181,73 @@ axios.get('https://www.kittenangie.com/bots/api/get_key.php')
 			}
 		}
 
+		function onCheerHandler(channel, tags, message) {
+			console.log('caught cheer');
+			console.log(tags);
+			console.log(message);
+		}
+
+		function onRaidedHandler(channel, username, viewers, tags) {
+			client.say(channel, `Holy cocoa and blankies, ${username} is raiding with ${viewers} ${(viewers > 1 ? 'viewers' : 'viewer')}!`)
+				.then(() => {
+					setTimeout(() => {
+						client.say(channel, 'Just a reminder to refresh the stream so that twitch counts the views!');
+					}, 10000);
+				});
+			console.log('caught raid');
+			console.log(username);
+			console.log(viewers);
+			console.log(tags);
+		}
+
+		function onSubHandler(channel, username, methods, message, tags) {
+			console.log('caught subgift');
+			console.log(username);
+			console.log(methods);
+			console.log(message);
+			console.log(tags);
+		}
+
+		function onSubGiftHandler(channel, username, streakMonths, recipient, methods, tags) {
+			console.log('caught subgift');
+			console.log(username);
+			console.log(streakMonths);
+			console.log(recipient);
+			console.log(methods);
+			console.log(tags);
+		}
+
+		function onAnonSubGiftHandler(channel, streakMonths, recipient, methods, tags) {
+			console.log('caught subgift');
+			console.log(streakMonths);
+			console.log(recipient);
+			console.log(methods);
+			console.log(tags);
+		}
+
+		function onSubMysteryGiftHandler(channel, username, giftSubCount, methods, tags) {
+			console.log('caught submysterygift');
+			console.log(username);
+			console.log(giftSubCount);
+			console.log(methods);
+			console.log(tags);
+		}
+
+		function onAnonSubMysteryGiftHandler(channel, giftSubCount, methods, tags) {
+			console.log('caught anonsubmysterygift');
+			console.log(giftSubCount);
+			console.log(methods);
+			console.log(tags);
+		}
+
 		// Timers
 		const timers = {
+			'subtember': {
+				'channel': 'komfykiwi',
+				'timer': 40,
+				// 'message': 'It\'s SUBtember on Twitch, so make sure you check out the !subtember and !subotage commands!',
+				'message': 'WOOHOO IT\'S SUBtember! This year Twitch is offering 20% - 30% discounts on subs! That also includes gifties and upgrades... if you know someone who would LOVE a sub, nows the time to help them (or you) join the KomfyKrew!',
+			},
 			'discord': {
 				'channel': 'komfykiwi',
 				'timer': 30,
