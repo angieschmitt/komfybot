@@ -1,9 +1,5 @@
-.htaccess
-stderr.log
+chat-commands
 node_modules
-.env
 config.json
-
 chatbot.js
 chatbot-dev.js
-chat-commands/
