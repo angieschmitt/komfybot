@@ -1,5 +1,6 @@
 node_modules
 config.json
 chat-commands/
+data/
 chatbot.js
 chatbot-dev.js
