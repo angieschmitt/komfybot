@@ -6,19 +6,19 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('coins')
-		.setDescription('Check a KomfyCoin wallet')
+		.setDescription('Check a KomfyCoin wallet, provide twitch username if different')
 		.addStringOption(option =>
 			option
 				.setName('username')
 				.setDescription('Twitch Username')
-				.setRequired()),
+				.setRequired(false)),
 	async execute(interaction) {
 
 		await interaction.deferReply();
 
-		const twitchUser = interaction.options.getString('username');
+		const user = (interaction.options.getString('username') ? interaction.options.getString('username') : interaction.user.username);
 
-		await axios.get(global.baseUrl + 'retrieve/coins/?username=' + twitchUser)
+		await axios.get(global.baseUrl + 'retrieve/coins/?username=' + user)
 			.then(function(response) {
 
 				const output = response.data;
@@ -26,9 +26,9 @@ module.exports = {
 				if (output.status === 'success') {
 					const embed = new EmbedBuilder()
 						.setColor(0xC44578)
-						.setTitle('KomfyCoin Wallet for ' + twitchUser)
+						.setTitle('KomfyCoin Wallet for ' + user)
 						.addFields(
-							{ name: 'KomfyCoin', value: (output.total ? output.total : 0) },
+							{ name: 'Current KomfyCoin(s)', value: (output.total ? output.total : 0) },
 						)
 						.setTimestamp();
 
