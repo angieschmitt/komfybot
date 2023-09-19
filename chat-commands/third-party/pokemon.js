@@ -200,6 +200,8 @@ function buildEvolutionDetails(data, pkmn) {
 				out += ` into ${evolution}`;
 				out += `${(loop['trigger'] === 'level-up' ? ' when leveled up' : '')}`;
 				out += `${(loop['trigger'] === 'trade' ? ' when traded' : '')}`;
+				out += `${(loop['trigger'] === 'shed' ? ' by shedding' : '')}`;
+				out += `${(loop['trigger'] === 'take-damage' ? ' when taking damage' : '')}`;
 				out += `${(loop['time_of_day'] ? ' during the ' + loop['time_of_day'] : '')}`;
 				out += `${(loop['min_level'] ? ` to level ${loop['min_level']}` : '')}`;
 				out += `${(loop['held_item'] ? ' while holding ' + loop['held_item'] : '')}`;
