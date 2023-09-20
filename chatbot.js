@@ -118,6 +118,12 @@ axios.get('https://www.kittenangie.com/bots/api/get_key.php')
 						}
 					}
 
+					if ('enabled' in action) {
+						if (!action.enabled) {
+							return;
+						}
+					}
+
 					if ('execute' in action) {
 
 						if (action.perms) {

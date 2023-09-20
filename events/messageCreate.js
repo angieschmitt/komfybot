@@ -8,7 +8,7 @@ module.exports = {
 	async execute(message) {
 
 		const chances = [];
-		for (let index = 0; index < 5; index++) {
+		for (let index = 0; index < 10; index++) {
 			chances.push(getRandomNumber(100));
 		}
 		const value = getRandomNumber(100);
