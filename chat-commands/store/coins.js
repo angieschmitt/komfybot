@@ -4,7 +4,7 @@ const baseUrl = 'https://www.kittenangie.com/bots/api_new/';
 module.exports = {
 	name: 'coins',
 	description: 'Handles coin commands',
-	help: 'Shows your (or someone else\'s) total coin amount! Additional arguments: add',
+	help: 'Shows your (or someone else\'s) total coin amount! Additional arguments: add, store, buy',
 	actions: {
 		default: {
 			execute(args, tags, message, channel, client) {
@@ -117,7 +117,7 @@ module.exports = {
 		},
 		store: {
 			enabled: false,
-			help: 'Lists out items available in the KomfyStore',
+			help: 'Lists out items available in the KomfyStore. !coins store',
 			execute(args, tags, message, channel, client) {
 				let content = '';
 				axios.get(baseUrl + 'retrieve/store')
@@ -141,7 +141,7 @@ module.exports = {
 		},
 		buy: {
 			enabled: false,
-			help: 'Buy an item from the KomfyStore',
+			help: 'Buy an item from the KomfyStore. !coins buy <item-name:required>',
 			args: {
 				1: [ 'r' ],
 				error: 'don\'t forgot the item you are purchasing!',

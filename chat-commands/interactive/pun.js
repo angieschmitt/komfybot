@@ -4,7 +4,7 @@ const baseUrl = 'https://www.kittenangie.com/bots/api_new/';
 module.exports = {
 	name: 'pun',
 	description: 'Pun thing',
-	help: 'Pull a pun from our growing database of silliness',
+	help: 'Pull a pun from our growing database of silliness!',
 	actions: {
 		default: {
 			execute(args, tags, message, channel, client) {

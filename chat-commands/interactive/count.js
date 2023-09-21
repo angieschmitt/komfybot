@@ -14,7 +14,7 @@ module.exports = {
 			},
 		},
 		set: {
-			help: 'MOD command to fix the amount on the counter',
+			help: 'MOD command to fix the amount on the counter. !count set <number:required>',
 			perms: {
 				levels: ['mod'],
 				error: 'This is a mod only command',
@@ -25,7 +25,7 @@ module.exports = {
 			},
 		},
 		reset: {
-			help: 'MOD command to reset the amount on the counter',
+			help: 'MOD command to reset the amount on the counter. !count reset',
 			perms: {
 				levels: ['mod'],
 				error: 'This is a mod only command',

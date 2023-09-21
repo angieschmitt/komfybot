@@ -58,7 +58,7 @@ module.exports = {
 			},
 		},
 		evolve: {
-			help: 'Gives evolution info for the pokemon.',
+			help: 'Gives evolution info for the pokemon. !pkmn evolve <pokemon-name:required>',
 			execute(args, tags, message, channel, client) {
 				let output = '';
 				if (!args[2]) {

@@ -18,7 +18,7 @@ module.exports = {
 			},
 		},
 		set: {
-			help: 'Used to set the runner. !race set <username:required>.',
+			help: 'Used to set the runner. !race set <username:required>',
 			perms: {
 				levels: ['mod'],
 				error: 'This is a mod only command',

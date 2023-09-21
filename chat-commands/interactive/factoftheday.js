@@ -3,8 +3,8 @@ const baseUrl = 'https://www.kittenangie.com/bots/api_new/';
 
 module.exports = {
 	name: 'factoftheday',
-	description: 'Pickup lines',
-	help: 'Ooo-la-la, I am zee pickup line queen...',
+	description: 'Fact of the Day',
+	help: 'Displays the fact of the day!',
 	actions: {
 		default: {
 			execute(args, tags, message, channel, client) {
