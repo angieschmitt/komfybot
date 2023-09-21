@@ -116,7 +116,6 @@ module.exports = {
 			},
 		},
 		store: {
-			enabled: false,
 			help: 'Lists out items available in the KomfyStore. !coins store',
 			execute(args, tags, message, channel, client) {
 				let content = '';
@@ -140,7 +139,6 @@ module.exports = {
 			},
 		},
 		buy: {
-			enabled: false,
 			help: 'Buy an item from the KomfyStore. !coins buy <item-name:required>',
 			args: {
 				1: [ 'r' ],
@@ -152,7 +150,7 @@ module.exports = {
 				const username = tags.username;
 				const item = message.replace(args[0], '').replace(args[1], '').trim();
 
-				axios.get(baseUrl + 'retrieve/store/?item=' + item)
+				axios.get(baseUrl + 'retrieve/store/?item=' + item.toLowerCase())
 					.then(function(response) {
 						const data = response.data;
 
@@ -168,7 +166,7 @@ module.exports = {
 									const output = response2.data;
 									if (output.status === 'success') {
 										// Random Hat catch!
-										if (item === 'Random Hat') {
+										if (item.toLowerCase() === 'random hat') {
 											axios.get(baseUrl + 'insert/random_hat?user=' + userID)
 												.then(function(response3) {
 													const output3 = response3.data;

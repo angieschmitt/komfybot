@@ -3,9 +3,13 @@ require('../globals');
 const { Events } = require('discord.js');
 const { messages, roles } = require(configFile); // eslint-disable-line
 
+const axios = require('axios');
+
 module.exports = {
 	name: Events.MessageCreate,
 	async execute(message) {
+		const discordData = { 'id': message.author.id, 'username': message.author.username };
+		await axios.get(global.baseUrl + 'insert/user_reference/?discord=' + encodeURIComponent(JSON.stringify(discordData))).catch(console.error);
 
 		const chances = [];
 		for (let index = 0; index < 10; index++) {

@@ -15,11 +15,17 @@ module.exports = {
 					.then(function(response) {
 						const data = response.data;
 						if (data.status === 'success') {
-							content += 'Here\'s whats in your inventory:';
-							data.content.forEach(element => {
-								content += ' ' + element['name'] + ' ' + element['rarity'] + ' ||';
-							});
-							content = content.substring(0, content.length - 3);
+
+							if (data.content.length > 0) {
+								content += 'Here\'s whats in your inventory:';
+								data.content.forEach(element => {
+									content += ' ' + element['name'] + ' ' + element['rarity'] + ' ||';
+								});
+								content = content.substring(0, content.length - 3);
+							}
+							else {
+								content += 'You don\'t currently have any hats!';
+							}
 						}
 						else {
 							content = 'Something went wrong, tell @kittenAngie.';
@@ -48,7 +54,6 @@ module.exports = {
 					.then(function(response) {
 						const data = response.data;
 						if (data.status === 'success') {
-
 							let matched = false;
 							data.content.forEach(element => {
 								if (element['name'].toLowerCase() === hat.toLowerCase()) {
