@@ -248,12 +248,12 @@ function onAnonSubMysteryGiftHandler(channel, giftSubCount, methods, tags) {
 
 // Timers
 const timers = {
-	'subtember': {
-		'channel': 'komfykiwi',
-		'timer': 40,
-		// 'message': 'It\'s SUBtember on Twitch, so make sure you check out the !subtember and !subotage commands!',
-		'message': 'WOOHOO IT\'S SUBtember! This year Twitch is offering 20% - 30% discounts on subs! That also includes gifties and upgrades... if you know someone who would LOVE a sub, nows the time to help them (or you) join the KomfyKrew!',
-	},
+	// 'subtember': {
+	// 	'channel': 'komfykiwi',
+	// 	'timer': 40,
+	//  'message': 'It\'s SUBtember on Twitch, so make sure you check out the !subtember and !subotage commands!',
+	// 	'message': 'WOOHOO IT\'S SUBtember! This year Twitch is offering 20% - 30% discounts on subs! That also includes gifties and upgrades... if you know someone who would LOVE a sub, nows the time to help them (or you) join the KomfyKrew!',
+	// },
 	'discord': {
 		'channel': 'komfykiwi',
 		'timer': 30,

@@ -7,6 +7,13 @@ module.exports = {
 	help: 'Commands for interacting with Hattington. Additional arguments: set',
 	actions: {
 		default: {
+			say: 'I\'m the HAT ALLOCATION and TRANSFER SERVICE, or HATS for short: ' +
+			'You can use me to give Hattington one of your hats! Need to buy a hat? ' +
+			'Use the command "!coins buy Random Hat" to buy one for 160 KomfyCoins. Want to see ' +
+			'which hats you have? That\'d be "!hats inv". Wanna place one on Hattington? That\'s ' +
+			'!hats set <hat-name>". If you need more help, check out !help coins and !help hats.',
+		},
+		inv: {
 			execute(args, tags, message, channel, client) {
 				let content = '';
 				const userID = tags['user-id'];

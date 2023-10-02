@@ -12,7 +12,7 @@ module.exports = {
 		await axios.get(global.baseUrl + 'insert/user_reference/?discord=' + encodeURIComponent(JSON.stringify(discordData))).catch(console.error);
 
 		const chances = [];
-		for (let index = 0; index < 10; index++) {
+		for (let index = 0; index < 6; index++) {
 			chances.push(getRandomNumber(100));
 		}
 		const value = getRandomNumber(100);

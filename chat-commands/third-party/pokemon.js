@@ -106,6 +106,75 @@ module.exports = {
 				}
 			},
 		},
+		stats: {
+			help: 'Gives stat info for the pokemon. !pkmn evolve <pokemon-name:required>',
+			execute(args, tags, message, channel, client) {
+				let output = '';
+				if (!args[2]) {
+					client.say(channel, 'Please provide a pokemon to lookup!');
+				}
+				else {
+					let stats = false;
+					axios.get('https://pokeapi.co/api/v2/pokemon/' + args[2].toLowerCase())
+						.then(function(response) {
+							const data = response.data;
+							stats = data.stats;
+						})
+						.catch(function() {
+							// const data = caught.response.data;
+							output = 'Something went wrong, tell @kittenAngie.';
+						})
+						.finally(function() {
+
+							if (stats) {
+								const pkmn = ucwords(args[2]);
+								const statList = { 'hp': '', 'atk': '', 'def': '', 'sp-atk': '', 'sp-def': '', 'spd': '' };
+								for (let index = 0; index < stats.length; index++) {
+									Object.entries(stats[index]).forEach(([key, value]) => {
+										if (key === 'stat') {
+											let ref = '';
+											switch (value['name']) {
+											case 'hp':
+												ref = 'hp';
+												break;
+											case 'attack':
+												ref = 'atk';
+												break;
+											case 'defense':
+												ref = 'def';
+												break;
+											case 'special-attack':
+												ref = 'sp-atk';
+												break;
+											case 'special-defense':
+												ref = 'sp-def';
+												break;
+											case 'speed':
+												ref = 'spd';
+												break;
+											default:
+												break;
+											}
+											statList[ref] = stats[index]['base_stat'];
+										}
+									});
+								}
+
+								output += `${pkmn} has the following base stats: `;
+								Object.entries(statList).forEach(([key, value]) => {
+									output += `${key} : ${value} || `;
+								});
+								output = output.substring(0, output.length - 3).trim();
+
+								client.say(channel, output);
+							}
+							else {
+								client.say(channel, output);
+							}
+						});
+				}
+			},
+		},
 	},
 };
 
