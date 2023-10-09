@@ -8,10 +8,12 @@ module.exports = {
 	actions: {
 		default: {
 			execute(args, tags, message, channel, client) {
+				let id = false;
 				let content = '';
 				axios.get(baseUrl + 'retrieve/quote/')
 					.then(function(response) {
 						const output = response.data;
+						id = output.id;
 						if (output.status === 'success') {
 							content = 'Kiwi once said... ' + output.content;
 						}
@@ -23,6 +25,9 @@ module.exports = {
 						content = 'Something went wrong, tell @kittenAngie.';
 					})
 					.finally(function() {
+						if (id === '3') {
+							client.say(channel, content);
+						}
 						client.say(channel, content);
 					});
 			},

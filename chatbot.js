@@ -182,6 +182,30 @@ function onMessageHandler(channel, tags, message, self) {
 		}
 	}
 	else {
+		const whales = [
+			'whale',
+			'whales',
+			'w h a l e',
+			'w h a l e s',
+			'w hales',
+			'wh ales',
+			'wha les',
+			'whal es',
+			'wal',
+			'🐋',
+			'🐳',
+		];
+		let whaleCheck = false;
+		if (tags.username === 'ecusare') {
+			Object.entries(whales).forEach(([key, value]) => {
+				if (key !== false && commandName.toLowerCase().includes(value)) {
+					whaleCheck = true;
+				}
+			});
+			if (whaleCheck) {
+				client.say(channel, 'Hey @ecusare, you\'re a dingus!');
+			}
+		}
 		const twitchData = { 'id': tags['user-id'], 'username': tags.username };
 		axios.get(baseUrl + 'insert/user_reference/?twitch=' + encodeURIComponent(JSON.stringify(twitchData))).catch(console.error);
 	}

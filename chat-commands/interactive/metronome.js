@@ -15,8 +15,6 @@ module.exports = {
 					const lines = data.split('\n');
 					const line = lines[Math.floor(Math.random() * lines.length)].split(',');
 
-					console.log(line);
-
 					const hitChance = parseInt(line[6]);
 					const hitDamage = parseInt(line[5]);
 					content += `${tags.username} used ${line[1]}! `;

@@ -37,10 +37,9 @@ module.exports = {
 async function handleLiveCheck(client) {
 	// Live check
 	const cacheBuster = new Date().getTime();
-	axios.get('https://www.kittenangie.com/bots/api/twitch_live.php?&timestamp=' + cacheBuster, { signal: AbortSignal.timeout(8000) })
+	axios.get(global.baseUrl + 'retrieve/is_live?cache=' + cacheBuster, { signal: AbortSignal.timeout(8000) })
 		.then(function(response) {
 			if (response.data !== '') {
-
 				const x = response.data;
 				const { channels, notifications } = require(configFile); // eslint-disable-line
 
@@ -55,7 +54,7 @@ async function handleLiveCheck(client) {
 					.setDescription(`Currently playing: ${x.game_name}!`)
 					.setImage(x.thumbnail_url);
 
-				axios.get('https://www.kittenangie.com/bots/api/twitch_live.php?pinged=' + x.user_id)
+				axios.get(global.baseUrl + 'retrieve/is_live?pinged=' + x.user_id)
 					.then(function(response2) {
 						if (response2.data.status === 'success') {
 							const pingChannel = (x.user_name.toLowerCase() == 'komfykiwi' ? channels.is_live : channels.recommends);
