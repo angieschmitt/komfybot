@@ -39,7 +39,7 @@ async function handleLiveCheck(client) {
 	const cacheBuster = new Date().getTime();
 	axios.get(global.baseUrl + 'retrieve/is_live?cache=' + cacheBuster, { signal: AbortSignal.timeout(8000) })
 		.then(function(response) {
-			if (response.data !== '') {
+			if (response.data.status !== 'failed') {
 				const x = response.data;
 				const { channels, notifications } = require(configFile); // eslint-disable-line
 
