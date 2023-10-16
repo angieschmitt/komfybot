@@ -2,6 +2,7 @@ module.exports = {
 	name: 'subtember',
 	description: 'SUBtember details',
 	help: 'SUBtember promo',
+	disabled: true,
 	actions: {
 		default: {
 			say: 'WOOHOO IT\'S SUBtember! This year Twitch is offering 20% - 30% discounts on subs! ' +

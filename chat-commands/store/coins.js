@@ -53,12 +53,7 @@ module.exports = {
 				let content = '';
 				const username = args[2].replace('@', '');
 				const amount = args[3];
-				let reason = message.replace(args[0], '').replace(args[1], '').replace(args[2], '').replace(args[3], '').trim();
-
-				// REMOVE AFTER TESTING
-				if (reason == '') {
-					reason = 'testing';
-				}
+				const reason = message.replace(args[0], '').replace(args[1], '').replace(args[2], '').replace(args[3], '').trim();
 
 				axios.get(baseUrl + 'insert/coins/?username=' + username.toLowerCase() + '&amount=' + amount + '&reason=' + reason)
 					.then(function(response) {

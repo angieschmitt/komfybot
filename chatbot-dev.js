@@ -3,6 +3,8 @@ const axios = require('axios');
 const fs = require('node:fs');
 const path = require('node:path');
 
+const baseUrl = 'https://www.kittenangie.com/bots/api_new/';
+
 // Define configuration options
 const opts = {
 	identity: {
@@ -43,7 +45,6 @@ client.on('raided', onRaidedHandler);
 
 // Add optional things to client
 client.extras = [];
-client.extras.count = 0;
 client.extras.race = '';
 
 // Chat commands?
@@ -57,7 +58,9 @@ for (const folder of commandFolders) {
 	for (const file of commandFiles) {
 		const filePath = path.join(commandsPath, file);
 		const command = require(filePath);
-		client.commands[command.name] = command;
+		if (command.disabled !== true) {
+			client.commands[command.name] = command;
+		}
 	}
 }
 
@@ -71,7 +74,10 @@ function onMessageHandler(channel, tags, message, self) {
 	const commandName = message.trim();
 
 	const perms = {};
-	if ('#' + tags.username == channel) { perms.mod = true; }
+	if ('#' + tags.username == channel) {
+		perms.streamer = true;
+		perms.mod = true;
+	}
 	if (tags.mod) { perms.mod = true; }
 	if (tags.vip) { perms.vip = true; }
 	if (tags.subscriber) { perms.sub = true; }
@@ -149,6 +155,13 @@ function onMessageHandler(channel, tags, message, self) {
 				// Setup output
 				let output = action.say;
 
+				if (action.perms !== undefined) {
+					if (!perms[action.perms.levels]) {
+						client.say(channel, `${action.perms.error}`);
+						return false;
+					}
+				}
+
 				// Probably unused now >.<
 				// Handle the action now
 				if (action.args) {
@@ -178,6 +191,39 @@ function onMessageHandler(channel, tags, message, self) {
 				client.say(channel, `${output}`);
 			}
 		}
+	}
+	else {
+		const whales = [
+			'whale',
+			'whales',
+			'w h a l e',
+			'w h a l e s',
+			'w hales',
+			'wh ales',
+			'wha les',
+			'whal es',
+			'wal',
+			'🐋',
+			'🐳',
+		];
+		let whaleCheck = false;
+		if (tags.username === 'ecusare') {
+			Object.entries(whales).forEach(([key, value]) => {
+				if (key !== false && commandName.toLowerCase().includes(value)) {
+					whaleCheck = true;
+				}
+			});
+			if (whaleCheck) {
+				client.say(channel, 'Hey @ecusare, you\'re a dingus!');
+			}
+		}
+
+		if (commandName.toLowerCase().indexOf('comfy') !== -1) {
+			client.say(channel, `Hey ${tags.username}, you misspelled that.`);
+		}
+
+		const twitchData = { 'id': tags['user-id'], 'username': tags.username };
+		axios.get(baseUrl + 'insert/user_reference/?twitch=' + encodeURIComponent(JSON.stringify(twitchData))).catch(console.error);
 	}
 }
 
@@ -242,12 +288,12 @@ function onAnonSubMysteryGiftHandler(channel, giftSubCount, methods, tags) {
 
 // Timers
 const timers = {
-	'subtember': {
-		'channel': 'komfykiwi',
-		'timer': 40,
-		// 'message': 'It\'s SUBtember on Twitch, so make sure you check out the !subtember and !subotage commands!',
-		'message': 'WOOHOO IT\'S SUBtember! This year Twitch is offering 20% - 30% discounts on subs! That also includes gifties and upgrades... if you know someone who would LOVE a sub, nows the time to help them (or you) join the KomfyKrew!',
-	},
+	// 'subtember': {
+	// 	'channel': 'komfykiwi',
+	// 	'timer': 40,
+	//  'message': 'It\'s SUBtember on Twitch, so make sure you check out the !subtember and !subotage commands!',
+	// 	'message': 'WOOHOO IT\'S SUBtember! This year Twitch is offering 20% - 30% discounts on subs! That also includes gifties and upgrades... if you know someone who would LOVE a sub, nows the time to help them (or you) join the KomfyKrew!',
+	// },
 	'discord': {
 		'channel': 'komfykiwi',
 		'timer': 30,

@@ -19,7 +19,7 @@ module.exports = {
 				let content = '';
 				const userID = tags['user-id'];
 
-				axios.get(baseUrl + 'retrieve/hat_inventory?user=' + userID)
+				axios.get(baseUrl + 'retrieve/hat_inventory?twitch_id=' + userID)
 					.then(function(response) {
 						const data = response.data;
 						if (data.status === 'success') {
@@ -149,7 +149,7 @@ module.exports = {
 				const userID = tags['user-id'];
 				const hat = message.replace(args[0], '').replace(args[1], '').trim();
 
-				axios.get(baseUrl + 'retrieve/hat_inventory?user=' + userID)
+				axios.get(baseUrl + 'retrieve/hat_inventory?twitch_id=' + userID)
 					.then(function(response) {
 						const data = response.data;
 						if (data.status === 'success') {

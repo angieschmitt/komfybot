@@ -13,7 +13,14 @@ module.exports = {
 					if (err) { console.log(err); }
 
 					const lines = data.split('\n');
-					const line = lines[Math.floor(Math.random() * lines.length)].split(',');
+					let line = lines[Math.floor(Math.random() * lines.length)].split(',');
+
+					if (tags.username === 'komfykiwi') {
+						const check = randomIntFromInterval(0, 100);
+						if (check >= 75) {
+							line = lines[61].split(',');
+						}
+					}
 
 					const hitChance = parseInt(line[6]);
 					const hitDamage = parseInt(line[5]);
@@ -50,3 +57,4 @@ module.exports = {
 function randomIntFromInterval(min, max) {
 	return Math.floor(Math.random() * (max - min + 1) + min);
 }
+

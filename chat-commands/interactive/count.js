@@ -1,3 +1,6 @@
+const axios = require('axios');
+const baseUrl = 'https://www.kittenangie.com/bots/api_new/';
+
 module.exports = {
 	name: 'count',
 	description: 'Counter for reasons',
@@ -9,8 +12,23 @@ module.exports = {
 				error: 'This is a mod only command',
 			},
 			execute(args, tags, message, channel, client) {
-				client.extras.count++;
-				client.say(channel, 'COUNTER: ' + client.extras.count);
+				let content = '';
+				axios.get(baseUrl + 'insert/count/')
+					.then(function(response) {
+						const output = response.data;
+						if (output.status === 'success') {
+							content = `COUNTER: ${output.content}`;
+						}
+						else {
+							content = 'Something went wrong, tell @kittenAngie.';
+						}
+					})
+					.catch(function() {
+						content = 'Something went wrong, tell @kittenAngie.';
+					})
+					.finally(function() {
+						client.say(channel, content);
+					});
 			},
 		},
 		set: {
@@ -20,8 +38,28 @@ module.exports = {
 				error: 'This is a mod only command',
 			},
 			execute(args, tags, message, channel, client) {
-				client.extras.count = args[2];
-				client.say(channel, 'COUNTER: ' + client.extras.count);
+				if (!args[2]) {
+					client.say(channel, 'You forgot your question!');
+				}
+				else {
+					let content = '';
+					axios.get(baseUrl + 'insert/count/?set=' + parseInt(args[2]))
+						.then(function(response) {
+							const output = response.data;
+							if (output.status === 'success') {
+								content = `COUNTER: ${args[2]}`;
+							}
+							else {
+								content = 'Something went wrong, tell @kittenAngie.';
+							}
+						})
+						.catch(function() {
+							content = 'Something went wrong, tell @kittenAngie.';
+						})
+						.finally(function() {
+							client.say(channel, content);
+						});
+				}
 			},
 		},
 		reset: {
@@ -31,8 +69,23 @@ module.exports = {
 				error: 'This is a mod only command',
 			},
 			execute(args, tags, message, channel, client) {
-				client.extras.count = 0;
-				client.say(channel, 'COUNTER RESET');
+				let content = '';
+				axios.get(baseUrl + 'insert/count/?reset')
+					.then(function(response) {
+						const output = response.data;
+						if (output.status === 'success') {
+							content = 'COUNTER: RESET';
+						}
+						else {
+							content = 'Something went wrong, tell @kittenAngie.';
+						}
+					})
+					.catch(function() {
+						content = 'Something went wrong, tell @kittenAngie.';
+					})
+					.finally(function() {
+						client.say(channel, content);
+					});
 			},
 		},
 	},

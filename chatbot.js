@@ -73,7 +73,10 @@ function onMessageHandler(channel, tags, message, self) {
 	const commandName = message.trim();
 
 	const perms = {};
-	if ('#' + tags.username == channel) { perms.mod = true; }
+	if ('#' + tags.username == channel) {
+		perms.streamer = true;
+		perms.mod = true;
+	}
 	if (tags.mod) { perms.mod = true; }
 	if (tags.vip) { perms.vip = true; }
 	if (tags.subscriber) { perms.sub = true; }
@@ -151,6 +154,13 @@ function onMessageHandler(channel, tags, message, self) {
 				// Setup output
 				let output = action.say;
 
+				if (action.perms !== undefined) {
+					if (!perms[action.perms.levels]) {
+						client.say(channel, `${action.perms.error}`);
+						return false;
+					}
+				}
+
 				// Probably unused now >.<
 				// Handle the action now
 				if (action.args) {
@@ -206,6 +216,11 @@ function onMessageHandler(channel, tags, message, self) {
 				client.say(channel, 'Hey @ecusare, you\'re a dingus!');
 			}
 		}
+
+		if (commandName.toLowerCase().indexOf('comfy') !== -1) {
+			client.say(channel, `Hey ${tags.username}, you misspelled that.`);
+		}
+
 		const twitchData = { 'id': tags['user-id'], 'username': tags.username };
 		axios.get(baseUrl + 'insert/user_reference/?twitch=' + encodeURIComponent(JSON.stringify(twitchData))).catch(console.error);
 	}
