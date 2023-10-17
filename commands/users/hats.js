@@ -6,14 +6,13 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('hats')
-		.setDescription('View the hats you\'ve unlocked for Hattington!')
+		.setDescription('View the hats you\'ve unlocked for Hattington! ')
 		.addBooleanOption(option =>
-			option
-				.setName('public')
-				.setDescription('Should this be public or just for you')),
+			option.setName('public')
+				.setDescription('Whether or not the response should be public')),
 	async execute(interaction) {
 
-		const public = interaction.options.getString('public');
+		const public = interaction.options.getBoolean('public');
 
 		if (public) {
 			await interaction.deferReply();
