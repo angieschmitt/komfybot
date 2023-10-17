@@ -52,7 +52,7 @@ async function handleLiveCheck(client) {
 					.setURL('https://www.twitch.tv/' + x.user_login)
 					.setThumbnail(x.user_thumbnail)
 					.setDescription(`Currently playing: ${x.game_name}!`)
-					.setImage(x.thumbnail_url);
+					.setImage(x.thumbnail_url + '?v=' + Math.random());
 
 				axios.get(global.baseUrl + 'retrieve/is_live?pinged=' + x.user_id)
 					.then(function(response2) {

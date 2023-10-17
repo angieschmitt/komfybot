@@ -6,10 +6,21 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('hats')
-		.setDescription('View the hats you\'ve unlocked for Hattington!'),
+		.setDescription('View the hats you\'ve unlocked for Hattington!')
+		.addBooleanOption(option =>
+			option
+				.setName('public')
+				.setDescription('Should this be public or just for you')),
 	async execute(interaction) {
 
-		await interaction.deferReply();
+		const public = interaction.options.getString('public');
+
+		if (public) {
+			await interaction.deferReply();
+		}
+		else {
+			await interaction.deferReply({ ephemeral: true });
+		}
 
 		const discord_id = interaction.user.id;
 
@@ -19,6 +30,7 @@ module.exports = {
 				const outcome = response.data;
 
 				const hatsList = [];
+				// eslint-disable-next-line no-unused-vars
 				for (const [id, hatData] of Object.entries(outcome.content)) {
 					hatsList.push({ name: hatData.name, value: hatData.rarity, inline: true });
 				}

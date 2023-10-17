@@ -53,16 +53,44 @@ const foldersPath = path.join(__dirname, 'chat-commands');
 const commandFolders = fs.readdirSync(foldersPath);
 
 for (const folder of commandFolders) {
-	const commandsPath = path.join(foldersPath, folder);
-	const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
-	for (const file of commandFiles) {
-		const filePath = path.join(commandsPath, file);
-		const command = require(filePath);
-		if (command.disabled !== true) {
-			client.commands[command.name] = command;
+	if (folder !== 'aliases') {
+		const commandsPath = path.join(foldersPath, folder);
+		const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+		for (const file of commandFiles) {
+			const filePath = path.join(commandsPath, file);
+			const command = require(filePath);
+
+			if (command.disabled !== true) {
+				client.commands[command.name] = command;
+			}
 		}
 	}
 }
+
+// Now we handle aliases
+for (const folder of commandFolders) {
+	if (folder === 'aliases') {
+		const commandsPath = path.join(foldersPath, folder);
+		const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+		for (const file of commandFiles) {
+			const filePath = path.join(commandsPath, file);
+			const command = require(filePath);
+
+			if (command.alias in client.commands) {
+				client.commands[command.name] = command;
+			}
+		}
+	}
+}
+
+const ordered = Object.keys(client.commands).sort().reduce(
+	(obj, key) => {
+		obj[key] = client.commands[key];
+		return obj;
+	},
+	{},
+);
+client.commands = ordered;
 
 let last_message = null;
 // Called every time the bot connects to Twitch chat

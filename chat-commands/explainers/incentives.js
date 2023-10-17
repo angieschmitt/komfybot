@@ -2,6 +2,7 @@ module.exports = {
 	name: 'incentives',
 	description: 'Incentives explainer',
 	help: 'Explainer about Randomizer Bingo',
+	disabled: true,
 	actions: {
 		default: {
 			say: 'During SUBtember SUBotage, I\'m playing games with differnt incentives to allow YOU to mess ' +
