@@ -162,7 +162,7 @@ module.exports = {
 									if (output.status === 'success') {
 										// Random Hat catch!
 										if (item.toLowerCase() === 'random hat') {
-											axios.get(baseUrl + 'insert/random_hat?user=' + userID)
+											axios.get(baseUrl + 'interactive/hats/hat_random?user=' + userID)
 												.then(function(response3) {
 													const output3 = response3.data;
 													if (output3.status === 'success') {

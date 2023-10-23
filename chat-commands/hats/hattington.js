@@ -19,7 +19,7 @@ module.exports = {
 				let content = '';
 				const userID = tags['user-id'];
 
-				axios.get(baseUrl + 'retrieve/hat_inventory?twitch_id=' + userID)
+				axios.get(baseUrl + 'interactive/hats/hat_inventory?twitch_id=' + userID)
 					.then(function(response) {
 						const data = response.data;
 						if (data.status === 'success') {
@@ -74,7 +74,7 @@ module.exports = {
 									if (output.status === 'success') {
 										// Random Hat catch!
 										if (item.toLowerCase() === 'random hat') {
-											axios.get(baseUrl + 'insert/random_hat?user=' + userID)
+											axios.get(baseUrl + 'interactive/hats/hat_random?user=' + userID)
 												.then(function(response3) {
 													const output3 = response3.data;
 													if (output3.status === 'success') {
@@ -138,6 +138,55 @@ module.exports = {
 					});
 			},
 		},
+		sell: {
+			help: 'Sell a hat for KomfyCoins. !hattington sell <hat-name:required>',
+			args: {
+				1: [ 'r' ],
+				error: 'don\'t forgot the hat name!',
+			},
+			execute(args, tags, message, channel, client) {
+				let content = '';
+				const userID = tags['user-id'];
+				const hat = message.replace(args[0], '').replace(args[1], '').trim();
+
+				axios.get(baseUrl + 'interactive/hats/hat_sell?twitch_id=' + userID + 'hat' + hat)
+					.then(function(response) {
+						const data = response.data;
+						if (data.status === 'success') {
+							content = tags['username'] + ', ' + data.content;
+						}
+						else if (data.status === 'failure') {
+
+							switch (data.err_msg) {
+							case 'one_hat':
+								content = 'Sorry, but you can\'t sell your last hat!';
+								break;
+							case 'no_hat':
+								content = 'Seems like you don\'t have a ' + hat + ' in your inventory. You might want to check your spelling.';
+								break;
+							case 'sell_issue':
+								content = 'Something went wrong selling your hat, tell @kittenAngie!';
+								break;
+							case 'coins_issue':
+								content = 'Something went wrong giving you your coins, tell @kittenAngie!';
+								break;
+							default:
+								content = 'Something went wrong, tell @kittenAngie.';
+								break;
+							}
+						}
+						else {
+							content = 'Something went wrong, tell @kittenAngie.';
+						}
+					})
+					.catch(function() {
+						content = 'Something went wrong, tell @kittenAngie.';
+					})
+					.finally(function() {
+						client.say(channel, content);
+					});
+			},
+		},
 		set: {
 			help: 'Put a hat you own on Hattington. !hattington set <hat-name:required>',
 			args: {
@@ -149,7 +198,7 @@ module.exports = {
 				const userID = tags['user-id'];
 				const hat = message.replace(args[0], '').replace(args[1], '').trim();
 
-				axios.get(baseUrl + 'retrieve/hat_inventory?twitch_id=' + userID)
+				axios.get(baseUrl + 'interactive/hats/hat_inventory?twitch_id=' + userID)
 					.then(function(response) {
 						const data = response.data;
 						if (data.status === 'success') {
@@ -161,7 +210,7 @@ module.exports = {
 							});
 
 							if (matched) {
-								axios.get(baseUrl + 'interactive/set_hat?userID=' + userID + '&hat=' + matched['hat_id'])
+								axios.get(baseUrl + 'interactive/hats/hat_set?userID=' + userID + '&hat=' + matched['hat_id'])
 									.then(function(response2) {
 										const data2 = response2.data;
 										if (data2.status === 'success') {
@@ -204,7 +253,7 @@ module.exports = {
 			execute(args, tags, message, channel, client) {
 				let content = '';
 
-				axios.get(baseUrl + 'interactive/set_hat?check')
+				axios.get(baseUrl + 'interactive/hats/hat_set?check')
 					.then(function(response2) {
 						const data2 = response2.data;
 						if (data2.status === 'success') {

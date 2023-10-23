@@ -23,7 +23,7 @@ module.exports = {
 
 		const discord_id = interaction.user.id;
 
-		const url = global.baseUrl + 'retrieve/hat_inventory?discord_id=' + encodeURIComponent(discord_id);
+		const url = global.baseUrl + 'interactive/hats/hat_inventory?discord_id=' + encodeURIComponent(discord_id);
 		await axios.get(url)
 			.then(function(response) {
 				const outcome = response.data;
@@ -34,7 +34,7 @@ module.exports = {
 					hatsList.push({ name: hatData.name, value: hatData.rarity, inline: true });
 				}
 
-				const hatsVisual = 'https://www.kittenangie.com/bots/api_new/interactive/hats_visual?discord_id=' + encodeURIComponent(discord_id) + '&rand=' + Math.random();
+				const hatsVisual = 'https://www.kittenangie.com/bots/api_new/interactive/hats/hats_visual?discord_id=' + encodeURIComponent(discord_id) + '&rand=' + Math.random();
 				const embed = new EmbedBuilder()
 					.setTitle('Hats Inventory')
 					.setColor(0xC44578)
