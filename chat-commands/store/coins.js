@@ -10,19 +10,20 @@ module.exports = {
 			execute(args, tags, message, channel, client) {
 				let content = '';
 
-				let username = tags.username;
+				let url = 'retrieve/coins/?twitch_id=' + tags['user-id'];
 				if (args.length > 1 && args[1] !== tags.username) {
-					username = args[1].replace('@', '');
+					url += '&username=' + args[1].replace('@', '');
 				}
-				axios.get(baseUrl + 'retrieve/coins/?username=' + username)
+
+				axios.get(baseUrl + url)
 					.then(function(response) {
 						const output = response.data;
 						if (output.status === 'success') {
 							if (args.length > 1) {
-								content = `Hey @${tags.username}, ${username} has ${(output.total ? output.total : 0)} KomfyCoins stashed in their wallet!`;
+								content = `Hey @${tags.username}, ${args[1].replace('@', '')} has ${(output.total ? output.total : 0)} KomfyCoins stashed in their wallet!`;
 							}
 							else {
-								content = `Hey @${username}, you have ${(output.total ? output.total : 0)} KomfyCoins stashed in your wallet!`;
+								content = `Hey @${tags.username}, you have ${(output.total ? output.total : 0)} KomfyCoins stashed in your wallet!`;
 							}
 						}
 						else {
@@ -70,6 +71,7 @@ module.exports = {
 					})
 					.finally(function() {
 						client.say(channel, content);
+						axios.post(baseUrl + 'coins_fix');
 					});
 			},
 		},
@@ -197,6 +199,7 @@ module.exports = {
 												})
 												.finally(function() {
 													client.say(channel, content);
+													axios.post(baseUrl + 'coins_fix');
 												});
 										}
 										else {
@@ -215,6 +218,7 @@ module.exports = {
 								})
 								.finally(function() {
 									client.say(channel, content);
+									axios.post(baseUrl + 'coins_fix');
 								});
 						}
 					})
@@ -223,6 +227,7 @@ module.exports = {
 					})
 					.finally(function() {
 						client.say(channel, content);
+						axios.post(baseUrl + 'coins_fix');
 					});
 			},
 		},

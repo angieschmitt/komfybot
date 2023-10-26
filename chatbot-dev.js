@@ -133,6 +133,9 @@ function onMessageHandler(channel, tags, message, self) {
 
 			// Check for alias
 			if (client.commands[command].alias) {
+				if (client.commands[command].arg) {
+					args.splice(1, 0, client.commands[command].arg);
+				}
 				command = client.commands[command].alias;
 			}
 

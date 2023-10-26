@@ -79,6 +79,7 @@ async function handleChannelPoints() {
 	axios.get(global.baseUrl + 'insert/channel_points/', { signal: AbortSignal.timeout(8000) })
 		.then(() => {
 			axios.get(global.baseUrl + 'interactive/lights/');
+			axios.get(global.baseUrl + 'interactive/coins/conversion');
 		})
 		.catch(err => console.log(err));
 }

@@ -136,6 +136,9 @@ function onMessageHandler(channel, tags, message, self) {
 
 			// Check for alias
 			if (client.commands[command].alias) {
+				if (client.commands[command].arg) {
+					args.splice(1, 0, client.commands[command].arg);
+				}
 				command = client.commands[command].alias;
 			}
 
@@ -256,6 +259,9 @@ function onMessageHandler(channel, tags, message, self) {
 		const twitchData = { 'id': tags['user-id'], 'username': tags.username };
 		axios.get(baseUrl + 'insert/user_reference/?twitch=' + encodeURIComponent(JSON.stringify(twitchData))).catch(console.error);
 	}
+
+	// Update coin_log
+	axios.post(baseUrl + 'coins_fix');
 }
 
 function onCheerHandler(channel, tags, message) {

@@ -139,7 +139,7 @@ module.exports = {
 			},
 		},
 		sell: {
-			help: 'Sell a hat for KomfyCoins. !hattington sell <hat-name:required>',
+			help: 'Sell a hat for 40/80/160 KomfyCoins. !hattington sell <hat-name:required>',
 			args: {
 				1: [ 'r' ],
 				error: 'don\'t forgot the hat name!',
@@ -149,7 +149,7 @@ module.exports = {
 				const userID = tags['user-id'];
 				const hat = message.replace(args[0], '').replace(args[1], '').trim();
 
-				axios.get(baseUrl + 'interactive/hats/hat_sell?twitch_id=' + userID + 'hat' + hat)
+				axios.get(baseUrl + 'interactive/hats/hat_sell?twitch_id=' + userID + '&hat=' + hat)
 					.then(function(response) {
 						const data = response.data;
 						if (data.status === 'success') {
@@ -159,7 +159,7 @@ module.exports = {
 
 							switch (data.err_msg) {
 							case 'one_hat':
-								content = 'Sorry, but you can\'t sell your last hat!';
+								content = 'Sorry, but you can\'t sell your last ' + hat + '!';
 								break;
 							case 'no_hat':
 								content = 'Seems like you don\'t have a ' + hat + ' in your inventory. You might want to check your spelling.';

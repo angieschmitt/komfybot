@@ -1,9 +1,10 @@
 const axios = require('axios');
+const baseUrl = 'https://www.kittenangie.com/bots/api_new/';
 
 module.exports = {
 	name: 'pkmn',
 	description: 'PokeAPI pkmn search',
-	help: 'PokeAPI powered pokemon lookup, requires a name. Additional args: evolve',
+	help: 'PokeAPI powered pokemon lookup, requires a name. Additional args: evolve, stats, guess',
 	actions: {
 		default: {
 			execute(args, tags, message, channel, client) {
@@ -107,7 +108,7 @@ module.exports = {
 			},
 		},
 		stats: {
-			help: 'Gives stat info for the pokemon. !pkmn evolve <pokemon-name:required>',
+			help: 'Gives stat info for the pokemon. !pkmn stats <pokemon-name:required>',
 			execute(args, tags, message, channel, client) {
 				let output = '';
 				if (!args[2]) {
@@ -171,6 +172,91 @@ module.exports = {
 							else {
 								client.say(channel, output);
 							}
+						});
+				}
+			},
+		},
+		guess: {
+			help: 'Guess the pokemon for the race. !pkmn guess <pokemon-name:required>',
+			args: {
+				1: [ 'r' ],
+				error: 'don\'t forgot the pokemon!',
+			},
+			execute(args, tags, message, channel, client) {
+				let content = '';
+				const username = tags['username'];
+				const guess = message.replace(args[0], '').replace(args[1], '').trim().toLowerCase();
+
+				if (guess === 'list') {
+					axios.get(baseUrl + 'retrieve/guesses')
+						.then(function(response) {
+							const output = response.data;
+							if (output.status === 'success') {
+								// content = 'Reset the bonks';
+								const list = JSON.parse(output.content);
+								Object.entries(list).forEach(([key, value]) => {
+									content += `${key}: ${value} || `;
+								});
+								content = content.substring(0, (content.length - 3));
+							}
+							else {
+								content = 'Something went wrong, tell @kittenAngie.';
+							}
+						})
+						.catch(function() {
+							content = 'Something went wrong, tell @kittenAngie.';
+						})
+						.finally(function() {
+							client.say(channel, content);
+						});
+				}
+				else if (guess === 'reset') {
+					axios.get(baseUrl + 'insert/guesses?reset')
+						.then(function(response) {
+							const output = response.data;
+							if (output.status === 'success') {
+								content = output.content;
+							}
+							else {
+								content = 'Something went wrong, tell @kittenAngie.';
+							}
+						})
+						.catch(function() {
+							content = 'Something went wrong, tell @kittenAngie.';
+						})
+						.finally(function() {
+							client.say(channel, content);
+						});
+				}
+				else {
+					axios.get(baseUrl + 'insert/guesses?username=' + username + '&guess=' + guess)
+						.then(function(response) {
+							const data = response.data;
+							if (data.status === 'success') {
+								content = data.content;
+							}
+							else if (data.status === 'failure') {
+								switch (data.err_msg) {
+								case 'missing_guess':
+									content = 'Don\'t forget the pokemon!';
+									break;
+								case 'update_failure':
+									content = 'Something went wrong while updating, tell @kittenAngie.';
+									break;
+								default:
+									content = 'Something went wrong, tell @kittenAngie.';
+									break;
+								}
+							}
+							else {
+								content = 'Something went wrong, tell @kittenAngie.';
+							}
+						})
+						.catch(function() {
+							content = 'Something went wrong, tell @kittenAngie.';
+						})
+						.finally(function() {
+							client.say(channel, content);
 						});
 				}
 			},

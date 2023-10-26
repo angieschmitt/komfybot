@@ -7,47 +7,49 @@ module.exports = {
 			execute(args, tags, message, channel, client) {
 
 				let output = '';
+				let input = '';
 				let command = undefined;
 				if (args.length === 1) {
 					output = 'Please specify the command you need help with!';
 				}
 				else if (args.length > 1) {
 					if (args[1].indexOf('!') == 0) {
-						command = client.commands[args[1].substr(1)];
+						input = client.commands[args[1].substr(1)];
 					}
 					else {
-						command = client.commands[args[1]];
+						input = client.commands[args[1]];
 					}
 
-					let alias = false;
-					if (command.alias) {
-						alias = args[1];
-						command = client.commands[command.alias];
-					}
-
-					if (!args[2]) {
-						if (command.help) {
-							if (alias) {
-								const help = command.help.replace('!' + command.name, '!' + alias);
-								output = '!' + alias + ': ' + help;
-							}
-							else {
-								output = '!' + command.name + ': ' + command.help;
-							}
+					let cmdName = false;
+					if (input.alias) {
+						cmdName = input.alias;
+						command = client.commands[input.alias];
+						if (input.arg) {
+							command = client.commands[input.alias]['actions'][input.arg];
 						}
 					}
+					else {
+						cmdName = input.name;
+						command = input;
+					}
 
+					// Check for level 2?
 					if (args[2]) {
-						if (command.actions[args[2]].help) {
-							if (alias) {
-								const help = command.actions[args[2]].help.replace('!' + command.name, '!' + alias);
-								output = help;
-							}
-							else {
-								output = command.actions[args[2]].help;
-							}
+						command = command['actions'][args[2]];
+					}
+
+					// Output
+					let help = command.help;
+					if (input.alias) {
+						help = help.replace('!' + cmdName, '!' + input.name);
+						if (input.arg) {
+							console.log(input.arg);
+							console.log('!' + input.name + ' ' + input.arg);
+							// !guess guess
+							help = help.replace('!' + input.name + ' ' + input.arg, '!' + input.name);
 						}
 					}
+					output = help;
 				}
 
 				client.say(channel, `${output}`);
