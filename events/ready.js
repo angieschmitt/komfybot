@@ -31,6 +31,9 @@ module.exports = {
 			// Update chatbot token
 			axios.get(global.baseUrl + 'generate/token.php?key=komfybot_token');
 		}, 10000);
+		setInterval(function() {
+			handleChannelPoints();
+		}, 5000);
 	},
 };
 
