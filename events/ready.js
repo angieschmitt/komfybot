@@ -1,7 +1,6 @@
 require('../globals');
 
 const axios = require('axios');
-const controller = new AbortController();
 const { Events, ActivityType, EmbedBuilder, escapeMarkdown, roleMention } = require('discord.js');
 const { channels, notifications } = require(configFile); // eslint-disable-line
 
@@ -33,6 +32,7 @@ module.exports = {
 };
 
 async function generateToken() {
+	const controller = new AbortController();
 	axios.get(global.baseUrl + 'generate/token.php?key=komfybot_token', { signal: controller.signal });
 	controller.abort();
 }
@@ -40,7 +40,8 @@ async function generateToken() {
 async function handleLiveCheck(client) {
 	let data = {};
 	const cacheBuster = new Date().getTime();
-	axios.get(global.baseUrl + 'retrieve/is_live?cache=' + cacheBuster, { signal: controller.signal })
+	// axios.get(global.baseUrl + 'retrieve/is_live?cache=' + cacheBuster, { signal: controller.signal })
+	axios.get(global.baseUrl + 'retrieve/is_live?cache=' + cacheBuster)
 		.then(function(response) {
 			if (response.data.status !== 'failed') {
 				data = response.data;
@@ -76,16 +77,17 @@ async function handleLiveCheck(client) {
 				// console.timeEnd('liveCheck');
 			}
 		});
-	controller.abort();
+	// controller.abort();
 }
 
 async function handleChannelPoints() {
 	// Check for channel points
-	axios.get(global.baseUrl + 'insert/channel_points/', { signal: controller.signal })
+	// axios.get(global.baseUrl + 'insert/channel_points/', { signal: controller.signal })
+	axios.get(global.baseUrl + 'insert/channel_points/')
 		.then(() => {
 			axios.get(global.baseUrl + 'interactive/lights/');
 			axios.get(global.baseUrl + 'interactive/coins/conversion');
 		})
 		.catch(err => console.log(err));
-	controller.abort();
+	// controller.abort();
 }
