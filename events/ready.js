@@ -1,7 +1,12 @@
 require('../globals');
 
 const axios = require('axios');
+const controller = new AbortController();
 const { Events, ActivityType, EmbedBuilder, escapeMarkdown, roleMention } = require('discord.js');
+const { channels, notifications } = require(configFile); // eslint-disable-line
+
+const twitch = roleMention(notifications.twitch);
+const recommends = roleMention(notifications.recommends);
 
 module.exports = {
 	name: Events.ClientReady,
@@ -11,25 +16,15 @@ module.exports = {
 
 		client.user.setActivity('activity', { type: ActivityType.Listening });
 		client.user.setPresence({
-			activities:
-				[
-					{
-						name: 'lo-fi beats.',
-						type: ActivityType.Listening,
-					},
-				],
+			activities: [ { name: 'lo-fi beats.', type: ActivityType.Listening } ],
 			status: 'idle',
 		});
 
 		// 5 minutes : 300000
 		// 5 seconds : 5000
 		setInterval(function() {
-
 			handleLiveCheck(client);
-			handleChannelPoints();
-
-			// Update chatbot token
-			axios.get(global.baseUrl + 'generate/token.php?key=komfybot_token');
+			generateToken();
 		}, 10000);
 		setInterval(function() {
 			handleChannelPoints();
@@ -37,52 +32,60 @@ module.exports = {
 	},
 };
 
+async function generateToken() {
+	axios.get(global.baseUrl + 'generate/token.php?key=komfybot_token', { signal: controller.signal });
+	controller.abort();
+}
+
 async function handleLiveCheck(client) {
-	// Live check
+	let data = {};
 	const cacheBuster = new Date().getTime();
-	axios.get(global.baseUrl + 'retrieve/is_live?cache=' + cacheBuster, { signal: AbortSignal.timeout(8000) })
+	axios.get(global.baseUrl + 'retrieve/is_live?cache=' + cacheBuster, { signal: controller.signal })
 		.then(function(response) {
 			if (response.data.status !== 'failed') {
-				const x = response.data;
-				const { channels, notifications } = require(configFile); // eslint-disable-line
+				data = response.data;
 
-				const twitch = roleMention(notifications.twitch);
-				const recommends = roleMention(notifications.recommends);
 				const embed = new EmbedBuilder()
 					.setColor(0xC44578)
-					.setAuthor({ name: x.user_name, iconURL: x.user_thumbnail })
-					.setTitle(escapeMarkdown(x.title != '' ? x.title : 'Title goes here'))
-					.setURL('https://www.twitch.tv/' + x.user_login)
-					.setThumbnail(x.user_thumbnail)
-					.setDescription(`Currently playing: ${x.game_name}!`)
-					.setImage(x.thumbnail_url + '?v=' + Math.random());
+					.setAuthor({ name: data.user_name, iconURL: data.user_thumbnail })
+					.setTitle(escapeMarkdown(data.title != '' ? data.title : 'Title goes here'))
+					.setURL('https://www.twitch.tv/' + data.user_login)
+					.setThumbnail(data.user_thumbnail)
+					.setDescription(`Currently playing: ${data.game_name}!`)
+					.setImage(data.thumbnail_url + '?v=' + Math.random());
 
-				axios.get(global.baseUrl + 'retrieve/is_live?pinged=' + x.user_id)
-					.then(function(response2) {
-						if (response2.data.status === 'success') {
-							const pingChannel = (x.user_name.toLowerCase() == 'komfykiwi' ? channels.is_live : channels.recommends);
-							const pingWho = (x.user_name.toLowerCase() == 'komfykiwi' ? twitch : recommends);
-							client.channels.fetch(pingChannel)
-								.then(channel => {
-									channel.send({
-										content: `Hey ${pingWho}, ${ escapeMarkdown(x.user_name) } has gone live at https://www.twitch.tv/${x.user_login}.`,
-										embeds: [embed],
-									});
+				const pingChannel = (data.user_name.toLowerCase() == 'komfykiwi' ? channels.is_live : channels.recommends);
+				const pingWho = (data.user_name.toLowerCase() == 'komfykiwi' ? twitch : recommends);
+				axios.get(global.baseUrl + 'retrieve/is_live?pinged=' + data.user_id)
+					.then(function() {
+						client.channels.fetch(pingChannel)
+							.then(channel => {
+								channel.send({
+									content: `Hey ${pingWho}, ${ escapeMarkdown(data.user_name) } has gone live at https://www.twitch.tv/${data.user_login}.`,
+									embeds: [embed],
 								});
-						}
+							})
+							.catch(err => console.log(err));
 					})
-					.catch(err => console.log(err));
+					.catch(err => console.log(err))
+					.finally(() => {
+						data = {};
+					});
 			}
-		})
-		.catch(err => console.log(err));
+			else {
+				// console.timeEnd('liveCheck');
+			}
+		});
+	controller.abort();
 }
 
 async function handleChannelPoints() {
 	// Check for channel points
-	axios.get(global.baseUrl + 'insert/channel_points/', { signal: AbortSignal.timeout(8000) })
+	axios.get(global.baseUrl + 'insert/channel_points/', { signal: controller.signal })
 		.then(() => {
 			axios.get(global.baseUrl + 'interactive/lights/');
 			axios.get(global.baseUrl + 'interactive/coins/conversion');
 		})
 		.catch(err => console.log(err));
+	controller.abort();
 }
