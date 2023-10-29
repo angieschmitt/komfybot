@@ -32,9 +32,7 @@ module.exports = {
 };
 
 async function generateToken() {
-	const controller = new AbortController();
-	axios.get(global.baseUrl + 'generate/token.php?key=komfybot_token', { signal: controller.signal });
-	controller.abort();
+	axios.get(global.baseUrl + 'generate/token.php?key=komfybot_token');
 }
 
 async function handleLiveCheck(client) {
