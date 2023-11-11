@@ -5,6 +5,13 @@ const path = require('node:path');
 
 const baseUrl = 'https://www.kittenangie.com/bots/api_new/';
 
+const extArgs = process.argv.slice(2);
+if (Object.keys(extArgs).length !== 0) {
+	if (extArgs[0] === 'reset') {
+		axios.get(baseUrl + 'insert/uptime');
+	}
+}
+
 // Define configuration options
 const opts = {
 	identity: {
