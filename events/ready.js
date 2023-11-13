@@ -89,9 +89,3 @@ async function handleChannelPoints() {
 		.catch(err => console.log(err));
 	// controller.abort();
 }
-
-function newAbortSignal(timeoutMs) {
-	const abortController = new AbortController();
-	setTimeout(() => abortController.abort(), timeoutMs || 0);
-	return abortController.signal;
-}

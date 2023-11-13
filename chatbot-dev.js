@@ -16,7 +16,7 @@ if (Object.keys(extArgs).length !== 0) {
 const opts = {
 	identity: {
 		username: 'komfybot',
-		password: axios.get('https://www.kittenangie.com/bots/api/get_key.php')
+		password: axios.get('https://www.kittenangie.com/bots/api/get_key.php?v=2s2')
 			.then(function(response) { return response.data.key; }),
 	},
 	channels: [
