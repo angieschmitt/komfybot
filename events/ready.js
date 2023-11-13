@@ -39,7 +39,7 @@ async function handleLiveCheck(client) {
 	let data = {};
 	const cacheBuster = new Date().getTime();
 	// axios.get(global.baseUrl + 'retrieve/is_live?cache=' + cacheBuster, { signal: controller.signal })
-	axios.get(global.baseUrl + 'retrieve/is_live?cache=' + cacheBuster, { signal: newAbortSignal(5000) })
+	axios.get(global.baseUrl + 'retrieve/is_live?cache=' + cacheBuster)
 		.then(function(response) {
 			if (response.data.status !== 'failed') {
 				data = response.data;
@@ -81,7 +81,7 @@ async function handleLiveCheck(client) {
 async function handleChannelPoints() {
 	// Check for channel points
 	// axios.get(global.baseUrl + 'insert/channel_points/', { signal: controller.signal })
-	axios.get(global.baseUrl + 'insert/channel_points/', { signal: newAbortSignal(2500) })
+	axios.get(global.baseUrl + 'insert/channel_points/')
 		.then(() => {
 			axios.get(global.baseUrl + 'interactive/lights/');
 			axios.get(global.baseUrl + 'interactive/coins/conversion');
