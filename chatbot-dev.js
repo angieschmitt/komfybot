@@ -5,11 +5,61 @@ const path = require('node:path');
 
 const baseUrl = 'https://www.kittenangie.com/bots/api_new/';
 
+// Timers
+const timers = {
+	// 'subtember': {
+	// 	'channel': 'komfykiwi',
+	// 	'timer': 40,
+	//  'message': 'It\'s SUBtember on Twitch, so make sure you check out the !subtember and !subotage commands!',
+	// 	'message': 'WOOHOO IT\'S SUBtember! This year Twitch is offering 20% - 30% discounts on subs! That also includes gifties and upgrades... if you know someone who would LOVE a sub, nows the time to help them (or you) join the KomfyKrew!',
+	// },
+	'discord': {
+		'channel': 'komfykiwi',
+		'timer': 30,
+		'message': 'Come hang with the KomfyKrew on Discord: https://discord.gg/8T44G4mUFu',
+	},
+	'socials': {
+		'channel': 'komfykiwi',
+		'timer': 120,
+		'message': 'Yo, wanna see more komfyness? I would highly appreciate you checking out all my socials and maybe dropping a follow! There is an easy overview list right here: https://komfykiwi.com/socials',
+	},
+	'appreciate': {
+		'channel': 'komfykiwi',
+		'timer': 200,
+		'message': 'Hey, just letting YOU know, that you matter & that you’re appreciated! You deserve to have great things, and it is totally okay to feel exhausted sometimes. You ARE beautiful, and I am SOO happy that you’re here - thank you! Also, ya know, nice butt. ♡',
+	},
+	'tipsandbits': {
+		'channel': 'komfykiwi',
+		'timer': 240,
+		'message': 'Don’t mind me, just humbly reminding you all that Kiwi is trying to make streaming her full time gig! So if you can swing it, she’d highly appreciate any form of support, be it a Twitch Subscription, a Tip or some Bits. No contribution is ever required or expected, but always comes with her never ending, deepest gratitude! Why not gift a Sub to a fren? :3 Or use your Amazon Prime? All the funds go to improving the stream, as well as bills. Remember to always spend responsibly! THANK YOU! ♡',
+	},
+};
+
+// Check for resets, handle timers
 const extArgs = process.argv.slice(2);
 if (Object.keys(extArgs).length !== 0) {
 	if (extArgs[0] === 'reset') {
-		axios.get(baseUrl + 'insert/uptime');
+		// Handle Reset
+		const handleReset = new Promise((resolve) => {
+			axios.get(baseUrl + 'insert/uptime')
+				.then(() => {
+					axios.get(baseUrl + 'insert/guesses?reset')
+						.then(() => {
+							axios.get(baseUrl + 'insert/count?reset')
+								.then(() => {
+									resolve();
+								});
+						});
+				});
+		});
+
+		handleReset.then(() => {
+			handleTimers(timers);
+		});
 	}
+}
+else {
+	handleTimers(timers);
 }
 
 // Define configuration options
@@ -59,6 +109,7 @@ client.commands = new Array();
 const foldersPath = path.join(__dirname, 'chat-commands');
 const commandFolders = fs.readdirSync(foldersPath);
 
+// Skip aliases
 for (const folder of commandFolders) {
 	if (folder !== 'aliases') {
 		const commandsPath = path.join(foldersPath, folder);
@@ -90,6 +141,7 @@ for (const folder of commandFolders) {
 	}
 }
 
+// Order them alpha
 const ordered = Object.keys(client.commands).sort().reduce(
 	(obj, key) => {
 		obj[key] = client.commands[key];
@@ -100,7 +152,6 @@ const ordered = Object.keys(client.commands).sort().reduce(
 client.commands = ordered;
 
 let last_message = null;
-// Called every time the bot connects to Twitch chat
 function onMessageHandler(channel, tags, message, self) {
 
 	last_message = message;
@@ -126,7 +177,9 @@ function onMessageHandler(channel, tags, message, self) {
 	const formattedTime = timeConverter(tags['tmi-sent-ts']);
 
 	console.log(formattedTime);
+	// console.log(tags);
 	console.log(tags.username);
+	// console.log(tags['badge-info'].predictions);
 	console.log(perms);
 	console.log('- - -');
 
@@ -256,13 +309,16 @@ function onMessageHandler(channel, tags, message, self) {
 			}
 		}
 
-		if (commandName.toLowerCase().indexOf('comfy') !== -1) {
+		if (commandName.toLowerCase().indexOf(' comfy ') !== -1) {
 			client.say(channel, `Hey ${tags.username}, you misspelled that.`);
 		}
 
 		const twitchData = { 'id': tags['user-id'], 'username': tags.username };
 		axios.get(baseUrl + 'insert/user_reference/?twitch=' + encodeURIComponent(JSON.stringify(twitchData))).catch(console.error);
 	}
+
+	// Update coin_log
+	axios.post(baseUrl + 'coins_fix');
 }
 
 function onCheerHandler(channel, tags, message) {
@@ -324,74 +380,6 @@ function onAnonSubMysteryGiftHandler(channel, giftSubCount, methods, tags) {
 	console.log(tags);
 }
 
-// Timers
-const timers = {
-	// 'subtember': {
-	// 	'channel': 'komfykiwi',
-	// 	'timer': 40,
-	//  'message': 'It\'s SUBtember on Twitch, so make sure you check out the !subtember and !subotage commands!',
-	// 	'message': 'WOOHOO IT\'S SUBtember! This year Twitch is offering 20% - 30% discounts on subs! That also includes gifties and upgrades... if you know someone who would LOVE a sub, nows the time to help them (or you) join the KomfyKrew!',
-	// },
-	'discord': {
-		'channel': 'komfykiwi',
-		'timer': 30,
-		'message': 'Come hang with the KomfyKrew on Discord: https://discord.gg/8T44G4mUFu',
-	},
-	'socials': {
-		'channel': 'komfykiwi',
-		'timer': 120,
-		'message': 'Yo, wanna see more komfyness? I would highly appreciate you checking out all my socials and maybe dropping a follow! There is an easy overview list right here: https://komfykiwi.com/socials',
-	},
-	'appreciate': {
-		'channel': 'komfykiwi',
-		'timer': 200,
-		'message': 'Hey, just letting YOU know, that you matter & that you’re appreciated! You deserve to have great things, and it is totally okay to feel exhausted sometimes. You ARE beautiful, and I am SOO happy that you’re here - thank you! Also, ya know, nice butt. ♡',
-	},
-	'tipsandbits': {
-		'channel': 'komfykiwi',
-		'timer': 240,
-		'message': 'Don’t mind me, just humbly reminding you all that Kiwi is trying to make streaming her full time gig! So if you can swing it, she’d highly appreciate any form of support, be it a Twitch Subscription, a Tip or some Bits. No contribution is ever required or expected, but always comes with her never ending, deepest gratitude! Why not gift a Sub to a fren? :3 Or use your Amazon Prime? All the funds go to improving the stream, as well as bills. Remember to always spend responsibly! THANK YOU! ♡',
-	},
-};
-let timerOffset = 1;
-axios.get(baseUrl + 'retrieve/uptime')
-	.then(function(response) {
-		if (response.data.status === 'success') {
-			timerOffset = response.data.minutes;
-		}
-	})
-	.catch(console.error)
-	.finally(() => {
-		const queue = {};
-		setInterval(
-			function() {
-				console.log('Timer: ' + timerOffset);
-				Object.entries(timers).forEach(([key]) => {
-					if ((timerOffset % timers[key]['timer']) == 0) {
-						if (isObjectEmpty(queue)) {
-							queue[key] = timers[key];
-						}
-						else {
-							const first = Object.keys(queue)[0];
-							delete queue[first];
-							queue[key] = timers[key];
-						}
-					}
-				});
-				if (!isObjectEmpty(queue)) {
-					const key = Object.keys(queue)[0];
-					if (last_message !== queue[key]['message']) {
-						client.say(queue[key]['channel'], queue[key]['message'])
-							.then(delete queue[key]);
-					}
-					delete queue[key];
-				}
-				timerOffset++;
-			},
-			60000,
-		);
-	});
-
 // Called every time the bot connects to Twitch chat
 function onConnectedHandler(addr, port) {
 	console.log(`* Connected to ${addr}:${port}`);
@@ -418,6 +406,47 @@ function timeConverter(UNIX_timestamp) {
 	const milli = (a.getMilliseconds() < 10 ? '0' : '') + a.getMilliseconds();
 	const time = month + ' ' + date + ' ' + year + ' ' + hour + ':' + min + ':' + sec + ':' + milli;
 	return time;
+}
+
+function handleTimers() {
+	let timerOffset = 1;
+	axios.get(baseUrl + 'retrieve/uptime')
+		.then(function(response) {
+			if (response.data.status === 'success') {
+				timerOffset = response.data.minutes;
+			}
+		})
+		.catch(console.error)
+		.finally(() => {
+			const queue = {};
+			setInterval(
+				function() {
+					console.log('Timer: ' + timerOffset);
+					Object.entries(timers).forEach(([key]) => {
+						if ((timerOffset % timers[key]['timer']) == 0) {
+							if (isObjectEmpty(queue)) {
+								queue[key] = timers[key];
+							}
+							else {
+								const first = Object.keys(queue)[0];
+								delete queue[first];
+								queue[key] = timers[key];
+							}
+						}
+					});
+					if (!isObjectEmpty(queue)) {
+						const key = Object.keys(queue)[0];
+						if (last_message !== queue[key]['message']) {
+							client.say(queue[key]['channel'], queue[key]['message'])
+								.then(delete queue[key]);
+						}
+						delete queue[key];
+					}
+					timerOffset++;
+				},
+				6000,
+			);
+		});
 }
 
 const isObjectEmpty = (objectName) => {
