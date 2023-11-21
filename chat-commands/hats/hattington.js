@@ -23,11 +23,15 @@ module.exports = {
 					.then(function(response) {
 						const data = response.data;
 						if (data.status === 'success') {
-
-							if (data.content.length > 0) {
-								content += 'Here\'s whats in your inventory: ';
-								data.content.forEach(element => {
-									content += ' ' + element['qty'] + 'x ' + element['name'] + ' ' + element['rarity'] + ' ||';
+							if (Object.keys(data.content).length) {
+								// content += 'Here\'s whats in your inventory: ';
+								Object.entries(data.content).forEach(([rarity, hats]) => {
+									content += `${rarity}: `;
+									Object.entries(hats).forEach(([key, hat]) => {
+										content += `${hat['qty']}x ${hat['name']}, `;
+									});
+									content = content.substring(0, content.length - 2);
+									content += ' || ';
 								});
 								content = content.substring(0, content.length - 3);
 							}
@@ -203,7 +207,7 @@ module.exports = {
 						const data = response.data;
 						if (data.status === 'success') {
 							let matched = false;
-							data.content.forEach(element => {
+							data.reference.forEach(element => {
 								if (element['name'].toLowerCase() === hat.toLowerCase()) {
 									matched = element;
 								}

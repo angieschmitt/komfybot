@@ -16,7 +16,7 @@ if (Object.keys(extArgs).length !== 0) {
 const opts = {
 	identity: {
 		username: 'komfybot',
-		password: axios.get('https://www.kittenangie.com/bots/api/get_key.php?v=2e2ss')
+		password: axios.get(baseUrl + 'retrieve/key?id=komfybot_token')
 			.then(function(response) { return response.data.key; }),
 	},
 	channels: [
@@ -129,7 +129,9 @@ function onMessageHandler(channel, tags, message, self) {
 	const formattedTime = timeConverter(tags['tmi-sent-ts']);
 
 	console.log(formattedTime);
+	// console.log(tags);
 	console.log(tags.username);
+	// console.log(tags['badge-info'].predictions);
 	console.log(perms);
 	console.log('- - -');
 
@@ -259,7 +261,7 @@ function onMessageHandler(channel, tags, message, self) {
 			}
 		}
 
-		if (commandName.toLowerCase().indexOf('comfy') !== -1) {
+		if (commandName.toLowerCase().indexOf(' comfy ') !== -1) {
 			client.say(channel, `Hey ${tags.username}, you misspelled that.`);
 		}
 
@@ -359,35 +361,45 @@ const timers = {
 		'message': 'Don’t mind me, just humbly reminding you all that Kiwi is trying to make streaming her full time gig! So if you can swing it, she’d highly appreciate any form of support, be it a Twitch Subscription, a Tip or some Bits. No contribution is ever required or expected, but always comes with her never ending, deepest gratitude! Why not gift a Sub to a fren? :3 Or use your Amazon Prime? All the funds go to improving the stream, as well as bills. Remember to always spend responsibly! THANK YOU! ♡',
 	},
 };
-let minutes = 1;
-const queue = {};
-setInterval(
-	function() {
-		console.log('Timer: ' + minutes);
-		Object.entries(timers).forEach(([key]) => {
-			if ((minutes % timers[key]['timer']) == 0) {
-				if (isObjectEmpty(queue)) {
-					queue[key] = timers[key];
-				}
-				else {
-					const first = Object.keys(queue)[0];
-					delete queue[first];
-					queue[key] = timers[key];
-				}
-			}
-		});
-		if (!isObjectEmpty(queue)) {
-			const key = Object.keys(queue)[0];
-			if (last_message !== queue[key]['message']) {
-				client.say(queue[key]['channel'], queue[key]['message'])
-					.then(delete queue[key]);
-			}
-			delete queue[key];
+let timerOffset = 1;
+axios.get(baseUrl + 'retrieve/uptime')
+	.then(function(response) {
+		if (response.data.status === 'success') {
+			timerOffset = response.data.minutes;
 		}
-		minutes++;
-	},
-	60000,
-);
+	})
+	.catch(console.error)
+	.finally(() => {
+		const queue = {};
+		setInterval(
+			function() {
+				console.log('Timer: ' + timerOffset);
+				Object.entries(timers).forEach(([key]) => {
+					if ((timerOffset % timers[key]['timer']) == 0) {
+						if (isObjectEmpty(queue)) {
+							queue[key] = timers[key];
+						}
+						else {
+							const first = Object.keys(queue)[0];
+							delete queue[first];
+							queue[key] = timers[key];
+						}
+					}
+				});
+				if (!isObjectEmpty(queue)) {
+					const key = Object.keys(queue)[0];
+					if (last_message !== queue[key]['message']) {
+						client.say(queue[key]['channel'], queue[key]['message'])
+							.then(delete queue[key]);
+					}
+					delete queue[key];
+				}
+				timerOffset++;
+			},
+			60000,
+		);
+	});
+
 
 // Called every time the bot connects to Twitch chat
 function onConnectedHandler(addr, port) {
