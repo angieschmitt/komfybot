@@ -4,7 +4,7 @@ const baseUrl = 'https://www.kittenangie.com/bots/api_new/';
 module.exports = {
 	name: 'hattington',
 	description: 'Hattington commands',
-	help: 'Commands for interacting with Hattington. Additional arguments: inv, buy, set, check',
+	help: 'Commands for interacting with Hattington. Additional arguments: buy, check, inv, sell, set',
 	actions: {
 		default: {
 			say: 'I\'m the HAT ALLOCATION and TRANSFER SERVICE, or HATS for short: ' +
@@ -13,30 +13,20 @@ module.exports = {
 			'which hats you have? That\'d be "!hats inv". Wanna place one on Hattington? That\'s ' +
 			'!hats set <hat-name>". If you need more help, check out !help coins and !help hats.',
 		},
-		inv: {
-			help: 'Shows your inventory of hats. !hattington inv',
+		check: {
+			help: 'Check the timer for hat swapping. !hattington check',
 			execute(args, tags, message, channel, client) {
 				let content = '';
-				const userID = tags['user-id'];
 
-				axios.get(baseUrl + 'interactive/hats/hat_inventory?twitch_id=' + userID)
-					.then(function(response) {
-						const data = response.data;
-						if (data.status === 'success') {
-							if (Object.keys(data.content).length) {
-								// content += 'Here\'s whats in your inventory: ';
-								Object.entries(data.content).forEach(([rarity, hats]) => {
-									content += `${rarity}: `;
-									Object.entries(hats).forEach(([key, hat]) => {
-										content += `${hat['qty']}x ${hat['name']}, `;
-									});
-									content = content.substring(0, content.length - 2);
-									content += ' || ';
-								});
-								content = content.substring(0, content.length - 3);
-							}
-							else {
-								content += 'You don\'t currently have any hats!';
+				axios.get(baseUrl + 'interactive/hats/hat_set?check')
+					.then(function(response2) {
+						const data2 = response2.data;
+						if (data2.status === 'success') {
+							content = 'Looks like Hattington is ready for a new hat!';
+						}
+						else if (data2.status === 'failure') {
+							if (data2.err_msg == 'timeout') {
+								content = `Hattington seems to be enjoying their current hat, give them a little time! (Roughly ${data2.time_left} minutes)`;
 							}
 						}
 						else {
@@ -132,6 +122,84 @@ module.exports = {
 								.finally(function() {
 									client.say(channel, content);
 								});
+						}
+					})
+					.catch(function() {
+						content = 'Something went wrong, tell @kittenAngie.';
+					})
+					.finally(function() {
+						client.say(channel, content);
+					});
+			},
+		},
+		give: {
+			help: 'STREAMER command to give a hat to a user. !hattington give <username:required> <hat-name:required>',
+			perms: {
+				levels: ['streamer'],
+				error: 'This is a streamer only command',
+			},
+			execute(args, tags, message, channel, client) {
+				let content = '';
+				const username = args[2].replace('@', '').trim();
+				const hat = message.replace(args[0], '').replace(args[1], '').replace(args[2], '').trim();
+
+				axios.get(baseUrl + 'interactive/hats/hat_give?username=' + username + '&hat=' + hat)
+					.then(function(response) {
+						const data = response.data;
+						if (data.status === 'success') {
+							content = data.content;
+						}
+						else if (data.status === 'failure') {
+							if (data.err_msg == 'missing_user') {
+								content = 'You forgot to include a user';
+							}
+							else if (data.err_msg == 'missing_hat') {
+								content = 'You forgot to include a hat';
+							}
+							else if (data.err_msg == 'no_hat') {
+								content = `Sorry boss, no "${hat}" in the backstock. You might want to check your spelling.`;
+							}
+						}
+						else {
+							content = 'Something went wrong, tell @kittenAngie.';
+						}
+					})
+					.catch(function() {
+						content = 'Something went wrong, tell @kittenAngie.';
+					})
+					.finally(function() {
+						client.say(channel, content);
+					});
+			},
+		},
+		inv: {
+			help: 'Shows your inventory of hats. !hattington inv',
+			execute(args, tags, message, channel, client) {
+				let content = '';
+				const userID = tags['user-id'];
+
+				axios.get(baseUrl + 'interactive/hats/hat_inventory?twitch_id=' + userID)
+					.then(function(response) {
+						const data = response.data;
+						if (data.status === 'success') {
+							if (Object.keys(data.content).length) {
+								// content += 'Here\'s whats in your inventory: ';
+								Object.entries(data.content).forEach(([rarity, hats]) => {
+									content += `${rarity}: `;
+									Object.entries(hats).forEach(([key, hat]) => {
+										content += `${hat['qty']}x ${hat['name']}, `;
+									});
+									content = content.substring(0, content.length - 2);
+									content += ' || ';
+								});
+								content = content.substring(0, content.length - 3);
+							}
+							else {
+								content += 'You don\'t currently have any hats!';
+							}
+						}
+						else {
+							content = 'Something went wrong, tell @kittenAngie.';
 						}
 					})
 					.catch(function() {
@@ -238,34 +306,6 @@ module.exports = {
 							}
 							else {
 								content = `Seems like you don't have a "${hat}" in your inventory. You might want to check your spelling.`;
-							}
-						}
-						else {
-							content = 'Something went wrong, tell @kittenAngie.';
-						}
-					})
-					.catch(function() {
-						content = 'Something went wrong, tell @kittenAngie.';
-					})
-					.finally(function() {
-						client.say(channel, content);
-					});
-			},
-		},
-		check: {
-			help: 'Check the timer for hat swapping. !hattington check',
-			execute(args, tags, message, channel, client) {
-				let content = '';
-
-				axios.get(baseUrl + 'interactive/hats/hat_set?check')
-					.then(function(response2) {
-						const data2 = response2.data;
-						if (data2.status === 'success') {
-							content = 'Looks like Hattington is ready for a new hat!';
-						}
-						else if (data2.status === 'failure') {
-							if (data2.err_msg == 'timeout') {
-								content = `Hattington seems to be enjoying their current hat, give them a little time! (Roughly ${data2.time_left} minutes)`;
 							}
 						}
 						else {

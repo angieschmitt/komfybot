@@ -3,37 +3,16 @@ const axios = require('axios');
 const fs = require('node:fs');
 const path = require('node:path');
 
-const baseUrl = 'https://www.kittenangie.com/bots/api_new/';
-
-// Timers
-const timers = {
-	// 'subtember': {
-	// 	'channel': 'komfykiwi',
-	// 	'timer': 40,
-	//  'message': 'It\'s SUBtember on Twitch, so make sure you check out the !subtember and !subotage commands!',
-	// 	'message': 'WOOHOO IT\'S SUBtember! This year Twitch is offering 20% - 30% discounts on subs! That also includes gifties and upgrades... if you know someone who would LOVE a sub, nows the time to help them (or you) join the KomfyKrew!',
-	// },
-	'discord': {
-		'channel': 'komfykiwi',
-		'timer': 30,
-		'message': 'Come hang with the KomfyKrew on Discord: https://discord.gg/8T44G4mUFu',
-	},
-	'socials': {
-		'channel': 'komfykiwi',
-		'timer': 120,
-		'message': 'Yo, wanna see more komfyness? I would highly appreciate you checking out all my socials and maybe dropping a follow! There is an easy overview list right here: https://komfykiwi.com/socials',
-	},
-	'appreciate': {
-		'channel': 'komfykiwi',
-		'timer': 200,
-		'message': 'Hey, just letting YOU know, that you matter & that you’re appreciated! You deserve to have great things, and it is totally okay to feel exhausted sometimes. You ARE beautiful, and I am SOO happy that you’re here - thank you! Also, ya know, nice butt. ♡',
-	},
-	'tipsandbits': {
-		'channel': 'komfykiwi',
-		'timer': 240,
-		'message': 'Don’t mind me, just humbly reminding you all that Kiwi is trying to make streaming her full time gig! So if you can swing it, she’d highly appreciate any form of support, be it a Twitch Subscription, a Tip or some Bits. No contribution is ever required or expected, but always comes with her never ending, deepest gratitude! Why not gift a Sub to a fren? :3 Or use your Amazon Prime? All the funds go to improving the stream, as well as bills. Remember to always spend responsibly! THANK YOU! ♡',
-	},
-};
+//  Load in data
+//      - Load config for bot
+const optionFile = require('./data/options_live');
+const options = optionFile.content();
+//      - Define Timers
+const timerFile = require('./data/timers');
+const timers = timerFile.content();
+//      - Define configuration options
+// const shoutoutFile = require('./data/shoutouts');
+// const shoutouts = shoutoutFile.content();
 
 // Check for resets, handle timers
 const extArgs = process.argv.slice(2);
@@ -41,11 +20,11 @@ if (Object.keys(extArgs).length !== 0) {
 	if (extArgs[0] === 'reset') {
 		// Handle Reset
 		const handleReset = new Promise((resolve) => {
-			axios.get(baseUrl + 'insert/uptime')
+			axios.get(options.baseUrl + 'insert/uptime')
 				.then(() => {
-					axios.get(baseUrl + 'insert/guesses?reset')
+					axios.get(options.baseUrl + 'insert/guesses?reset')
 						.then(() => {
-							axios.get(baseUrl + 'insert/count?reset')
+							axios.get(options.baseUrl + 'insert/count?reset')
 								.then(() => {
 									resolve();
 								});
@@ -62,28 +41,8 @@ else {
 	handleTimers(timers);
 }
 
-// Define configuration options
-const opts = {
-	identity: {
-		username: 'komfybot',
-		password: axios.get(baseUrl + 'retrieve/key?id=komfybot_token')
-			.then(function(response) { return response.data.key; }),
-	},
-	channels: [
-		'komfykiwi',
-		// 'kittenangie',
-		// 'alazysun',
-	],
-	options: {
-		// debug: true,
-	},
-	connection: {
-		reconnect: true,
-	},
-};
-
 // Connect to Twitch:
-const client = new tmi.client(opts);
+const client = new tmi.client(options);
 client.connect().catch(console.error);
 
 // Register our event handlers (defined below)
@@ -102,7 +61,7 @@ client.on('raided', onRaidedHandler);
 
 // Add optional things to client
 client.extras = [];
-client.extras.race = '';
+client.extras.race = [];
 
 // Chat commands?
 client.commands = new Array();
@@ -284,7 +243,7 @@ function onMessageHandler(channel, tags, message, self) {
 		}
 	}
 	else {
-		const whales = [
+		const whaleText = [
 			'whale',
 			'whales',
 			'w h a l e',
@@ -294,19 +253,64 @@ function onMessageHandler(channel, tags, message, self) {
 			'wha les',
 			'whal es',
 			'wal',
+			'baleine',
+		];
+		const whaleMoji = [
 			'🐋',
 			'🐳',
 		];
+		const whaleMorse = [
+			'.-- .- .-..',
+			'.-- .... .- .-.. .',
+			'-... .- .-.. . .. -. .',
+		];
+		const whaleBinary = [
+			'01010111 01100001 01101100',
+			'01010111 01101000 01100001 01101100 01100101',
+			'01000010 01100001 01101100 01100101 01101001 01101110 01100101',
+		];
 		let whaleCheck = false;
 		if (tags.username === 'ecusare') {
-			Object.entries(whales).forEach(([key, value]) => {
+			Object.entries(whaleText).forEach(([key, value]) => {
 				if (key !== false && commandName.toLowerCase().includes(value)) {
-					whaleCheck = true;
+					whaleCheck = 'text';
 				}
 			});
-			if (whaleCheck) {
-				client.say(channel, 'Hey @ecusare, you\'re a dingus!');
+			Object.entries(whaleMoji).forEach(([key, value]) => {
+				if (key !== false && commandName.toLowerCase().includes(value)) {
+					whaleCheck = 'emoji';
+				}
+			});
+			Object.entries(whaleMorse).forEach(([key, value]) => {
+				if (key !== false && commandName.toLowerCase().includes(value)) {
+					whaleCheck = 'morse';
+				}
+			});
+			Object.entries(whaleBinary).forEach(([key, value]) => {
+				if (key !== false && commandName.toLowerCase().includes(value)) {
+					whaleCheck = 'binary';
+				}
+			});
+		}
+		if (whaleCheck) {
+			let response = '';
+			switch (whaleCheck) {
+			case 'text':
+				response = 'you\'re a dingus.';
+				break;
+			case 'emoji':
+				response = '🚫🐋‼️';
+				break;
+			case 'morse':
+				response = '-.-- --- ..- .----. .-. . / .- / -.. .. -. --. ..- ...';
+				break;
+			case 'binary':
+				response = '01111001 01101111 01110101 00100111 01110010 01100101 00100000 01100001 00100000 01100100 01101001 01101110 01100111 01110101 01110011';
+				break;
+			default:
+				break;
 			}
+			client.say(channel, 'Hey @ecusare, ' + response);
 		}
 
 		if (commandName.toLowerCase().indexOf(' comfy ') !== -1) {
@@ -314,11 +318,11 @@ function onMessageHandler(channel, tags, message, self) {
 		}
 
 		const twitchData = { 'id': tags['user-id'], 'username': tags.username };
-		axios.get(baseUrl + 'insert/user_reference/?twitch=' + encodeURIComponent(JSON.stringify(twitchData))).catch(console.error);
+		axios.get(options.baseUrl + 'insert/user_reference/?twitch=' + encodeURIComponent(JSON.stringify(twitchData))).catch(console.error);
 	}
 
 	// Update coin_log
-	axios.post(baseUrl + 'coins_fix');
+	axios.post(options.baseUrl + 'coins_fix');
 }
 
 function onCheerHandler(channel, tags, message) {
@@ -410,10 +414,10 @@ function timeConverter(UNIX_timestamp) {
 
 function handleTimers() {
 	let timerOffset = 1;
-	axios.get(baseUrl + 'retrieve/uptime')
+	axios.get(options.baseUrl + 'retrieve/uptime')
 		.then(function(response) {
 			if (response.data.status === 'success') {
-				timerOffset = response.data.minutes;
+				timerOffset = (response.data.minutes > 0 ? response.data.minutes : 1);
 			}
 		})
 		.catch(console.error)
@@ -444,7 +448,7 @@ function handleTimers() {
 					}
 					timerOffset++;
 				},
-				6000,
+				60000,
 			);
 		});
 }
