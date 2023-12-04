@@ -30,7 +30,7 @@ module.exports = {
 
 				const hatsList = [];
 				// eslint-disable-next-line no-unused-vars
-				for (const [id, hatData] of Object.entries(outcome.content)) {
+				for (const [id, hatData] of Object.entries(outcome.reference)) {
 					hatsList.push({ name: hatData.name, value: hatData.rarity, inline: true });
 				}
 
