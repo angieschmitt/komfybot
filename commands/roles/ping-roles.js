@@ -26,7 +26,7 @@ module.exports = {
 					if (data.icon !== '') {
 						row.addComponents(
 							new ButtonBuilder()
-								.setCustomId('miscRoles_' + unique)
+								.setCustomId('pingRoles_' + unique)
 								.setLabel(ucwords(key))
 								.setStyle(ButtonStyle.Primary)
 								.setEmoji(data.icon),
@@ -35,7 +35,7 @@ module.exports = {
 					else {
 						row.addComponents(
 							new ButtonBuilder()
-								.setCustomId('miscRoles_' + unique)
+								.setCustomId('pingRoles_' + unique)
 								.setLabel(ucwords(key))
 								.setStyle(ButtonStyle.Primary),
 						);
