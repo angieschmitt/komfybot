@@ -1,4 +1,4 @@
 module.exports = {
 	name: 'xmas',
-	alias: 'christmas',
+	alias: 'december',
 };

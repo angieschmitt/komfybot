@@ -2,7 +2,7 @@ module.exports = {
 	name: 'december',
 	description: 'December details',
 	help: 'December promo',
-	disabled: true,
+	disabled: false,
 	actions: {
 		default: {
 			say: 'Hey, if you cheer exactly 100 Bits in the Month of December, you can get YOUR NAME ' +

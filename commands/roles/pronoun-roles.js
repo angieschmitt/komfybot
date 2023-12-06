@@ -5,7 +5,7 @@ const { pronouns } = require(configFile); // eslint-disable-line
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('pronouns')
+		.setName('pronoun-roles')
 		.setDescription('Command to output pronoun options')
 		.setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
 	async execute(interaction) {

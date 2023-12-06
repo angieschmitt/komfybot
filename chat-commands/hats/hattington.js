@@ -275,9 +275,9 @@ module.exports = {
 						const data = response.data;
 						if (data.status === 'success') {
 							let matched = false;
-							data.reference.forEach(element => {
-								if (element['name'].toLowerCase() === hat.toLowerCase()) {
-									matched = element;
+							Object.entries(data.reference).forEach(([key, value]) => {
+								if (key.toLowerCase() === hat.toLowerCase()) {
+									matched = value;
 								}
 							});
 
