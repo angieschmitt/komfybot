@@ -105,8 +105,24 @@ const getRandomNumber = function(max) {
 	const rolls3 = [];
 
 	let i;
-	for (i = 0; i < 10000; i++) { rolls.push(Math.floor(Math.random() * max) + 1); }
-	for (i = 0; i < 1000; i++) { rolls2.push(rolls[Math.floor(Math.random() * rolls.length)]); }
-	for (i = 0; i < 100; i++) { rolls3.push(rolls2[Math.floor(Math.random() * rolls2.length)]); }
-	return rolls3[Math.floor(Math.random() * rolls3.length)];
+	// Assign a bunch of "random rolls"
+	for (i = 0; i < 10000; i++) {
+		rolls.push(Math.floor(Math.random() * max) + 1);
+	}
+	// Lets filter that down to less rolls
+	for (i = 0; i < 1000; i++) {
+		const selected = Math.floor(Math.random() * rolls.length);
+		rolls2.push(rolls[selected]);
+		rolls.splice(selected, 1);
+	}
+	// More filtering
+	for (i = 0; i < 100; i++) {
+		const selected = Math.floor(Math.random() * rolls2.length);
+		rolls3.push(rolls2[selected]);
+		rolls2.splice(selected, 1);
+	}
+	// Pick the winner!
+	const winner = rolls3[Math.floor(Math.random() * rolls3.length)];
+
+	return winner;
 };

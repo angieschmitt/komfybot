@@ -23,7 +23,7 @@ module.exports = {
 		// 5 seconds : 5000
 		setInterval(function() {
 			handleLiveCheck(client);
-			generateToken();
+			generateToken(client);
 		}, 10000);
 		setInterval(function() {
 			handleChannelPoints();
@@ -31,8 +31,21 @@ module.exports = {
 	},
 };
 
-async function generateToken() {
-	axios.get(global.baseUrl + 'generate/token.php?key=komfybot_token');
+async function generateToken(client) {
+	axios.get(global.baseUrl + 'generate/token.php?key=komfybot_token')
+		.then(function(response) {
+			console.log(response);
+			if (response.data.status !== 'success') {
+				const data = response.data;
+				client.channels.fetch(channels.bot_log)
+					.then(channel => {
+						channel.send({
+							content: `${data.action}: ${data.token} -> Time Remaining: ${data.content.expires_in}`,
+						});
+					})
+					.catch(err => console.log(err));
+			}
+		});
 }
 
 async function handleLiveCheck(client) {
