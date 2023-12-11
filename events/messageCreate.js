@@ -11,14 +11,21 @@ module.exports = {
 		const discordData = { 'id': message.author.id, 'username': message.author.username };
 		await axios.get(global.baseUrl + 'insert/user_reference/?discord=' + encodeURIComponent(JSON.stringify(discordData))).catch(console.error);
 
-		const chances = [];
-		for (let index = 0; index < 6; index++) {
-			chances.push(getRandomNumber(100));
-		}
-		const value = getRandomNumber(100);
+		const categories = ['1045086819714347119', '1127069748157481020', '1045082408233484331', '1156573567937429514'];
 
-		if (chances.includes(value)) {
-			message.react('🪙');
+		const channel = message.channel;
+		if (categories.includes(channel.parentId)) {
+			if (message.author.username !== 'Komfy Bot') {
+				const chances = [];
+				for (let index = 0; index < 6; index++) {
+					chances.push(getRandomNumber(100));
+				}
+				const value = getRandomNumber(100);
+
+				if (chances.includes(value)) {
+					message.react('🪙');
+				}
+			}
 		}
 	},
 };

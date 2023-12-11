@@ -95,7 +95,7 @@ module.exports = {
 			)
 			.setTimestamp();
 
-		await interaction.editReply({ embeds: [exampleEmbed] });
+		interaction.editReply({ embeds: [exampleEmbed] });
 	},
 };
 
