@@ -32,6 +32,19 @@ module.exports = {
 };
 
 async function generateToken(client) {
+	axios.get(global.baseUrl + 'generate/token.php?key=user_token')
+		.then(function(response) {
+			if (response.data.status === 'success') {
+				const data = response.data;
+				client.channels.fetch(channels.bot_log)
+					.then(channel => {
+						channel.send({
+							content: `${data.action}: ${data.token} -> Time Remaining: ${data.content['expires_in']}`,
+						});
+					})
+					.catch(err => console.log(err));
+			}
+		});
 	axios.get(global.baseUrl + 'generate/token.php?key=komfybot_token')
 		.then(function(response) {
 			if (response.data.status === 'success') {
