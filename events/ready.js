@@ -40,7 +40,7 @@ async function generateToken(client) {
 				client.channels.fetch(channels.bot_log)
 					.then(channel => {
 						channel.send({
-							content: `${data.action}: ${data.token} -> Time Remaining: ${data.content.expires_in}`,
+							content: `${data.action}: ${data.token} -> Time Remaining: ${data.content['expires_in']}`,
 						});
 					})
 					.catch(err => console.log(err));
