@@ -59,7 +59,7 @@ async function handleLiveCheck(client) {
 
 				const embed = new EmbedBuilder()
 					.setColor(0xC44578)
-					.setAuthor({ name: data.user_name })
+					.setAuthor({ name: data.user_name, iconURL: data.user_thumbnail })
 					.setTitle(escapeMarkdown(data.title != '' ? data.title : 'Title goes here'))
 					.setURL('https://www.twitch.tv/' + data.user_login)
 					.setThumbnail(data.user_thumbnail)
