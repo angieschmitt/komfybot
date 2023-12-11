@@ -35,7 +35,7 @@ async function generateToken(client) {
 	axios.get(global.baseUrl + 'generate/token.php?key=komfybot_token')
 		.then(function(response) {
 			console.log(response);
-			if (response.data.status !== 'success') {
+			if (response.data.status === 'success') {
 				const data = response.data;
 				client.channels.fetch(channels.bot_log)
 					.then(channel => {
