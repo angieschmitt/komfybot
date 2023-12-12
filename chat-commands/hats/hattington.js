@@ -62,7 +62,7 @@ module.exports = {
 							const cost = data.content;
 							const reason = 'BOUGHT: ' + item;
 
-							axios.get(baseUrl + 'insert/coins/?username=' + username.toLowerCase() + '&amount=' + (cost * -1) + '&reason=' + reason)
+							axios.get(baseUrl + 'insert/coins/?twitch_id=' + userID + '&username=' + username + '&amount=' + (cost * -1) + '&reason=' + reason)
 								.then(function(response2) {
 									const output = response2.data;
 									if (output.status === 'success') {

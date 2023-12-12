@@ -10,9 +10,12 @@ module.exports = {
 			execute(args, tags, message, channel, client) {
 				let content = '';
 
-				let url = 'retrieve/coins/?twitch_id=' + tags['user-id'];
+				let url = 'retrieve/coins/';
 				if (args.length > 1 && args[1] !== tags.username) {
-					url += '&username=' + args[1].replace('@', '');
+					url += '?username=' + args[1].replace('@', '');
+				}
+				else {
+					url += '?twitch_id=' + tags['user-id'];
 				}
 
 				axios.get(baseUrl + url)
@@ -87,11 +90,6 @@ module.exports = {
 				const amount = args[2];
 				const username = tags.username;
 				let reason = message.replace(args[0], '').replace(args[1], '').replace(args[2], '').trim();
-
-				// REMOVE AFTER TESTING
-				if (reason == '') {
-					reason = 'testing';
-				}
 				reason = `SPENT: ${reason}`;
 
 				axios.get(baseUrl + 'insert/coins/?username=' + username.toLowerCase() + '&amount=' + (amount * -1) + '&reason=' + reason)
