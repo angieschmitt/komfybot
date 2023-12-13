@@ -29,6 +29,11 @@ module.exports = {
 								content = `Hey @${tags.username}, you have ${(output.total ? output.total : 0)} KomfyCoins stashed in your wallet!`;
 							}
 						}
+						else if (output.status === 'failure') {
+							if (output.err_msg === 'no_twitch_id') {
+								content = 'That username doesn\'t seem to be in our system.';
+							}
+						}
 						else {
 							content = 'Something went wrong, tell @kittenAngie.';
 						}
@@ -64,6 +69,11 @@ module.exports = {
 						const output = response.data;
 						if (output.status === 'success') {
 							content = `Congrats @${username} on adding ${amount} KomfyCoins to your wallet.`;
+						}
+						else if (output.status === 'failure') {
+							if (output.err_msg === 'no_twitch_id') {
+								content = 'That username doesn\'t seem to be in our system.';
+							}
 						}
 						else {
 							content = 'Something went wrong, tell @kittenAngie.';
