@@ -130,7 +130,7 @@ module.exports = {
 
 						content += 'Here\'s whats in the store:';
 						data.content.forEach(element => {
-							content += ' ' + element[1] + ' @ ' + element[2] + ' KomfyCoins ||';
+							content += ' ' + element['name'] + ' @ ' + element['value'] + ' KomfyCoins ||';
 						});
 						content = content.substring(0, content.length - 3);
 
