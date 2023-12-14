@@ -222,9 +222,6 @@ module.exports = {
 															content = `Congrats @${username} on buying another ${item} @ ${cost} KomfyCoins. You currently have ${output3.content.qty}.`;
 														}
 													}
-													else if (output.status === 'failure' && output.err_msg === 'not_available') {
-														content = 'That item seems to be out of stock.';
-													}
 													else {
 														content = 'Something went wrong, tell @kittenAngie.';
 													}
