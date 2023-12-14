@@ -34,33 +34,44 @@ module.exports = {
 						.then(function(response) {
 							const output = response.data;
 							if (output.status === 'success') {
-
 								const recent = output.content.recent;
 								let rand = 0;
 								const items = [];
-								rand = randomProp(recent);
-								items.push(recent[rand]);
-								delete recent[rand];
-								rand = randomProp(recent);
-								items.push(recent[rand]);
-								delete recent[rand];
-								rand = randomProp(recent);
-								items.push(recent[rand]);
-								delete recent[rand];
+
+								if (recent.length) {
+									rand = randomProp(recent);
+									items.push(recent[rand]);
+									recent.splice(rand, 1);
+								}
+								if (recent.length) {
+									rand = randomProp(recent);
+									items.push(recent[rand]);
+									recent.splice(rand, 1);
+								}
+								if (recent.length) {
+									rand = randomProp(recent);
+									items.push(recent[rand]);
+									recent.splice(rand, 1);
+								}
 
 								content = `Make sure you check out @${username}, over at https://www.twitch.tv/${username}! `;
-								content += `They were last seen playing ${output.content.latest}, and also play games like: `;
+								content += `They were last seen playing ${output.content.latest} `;
 
-								let games = '';
-								Object.entries(items).forEach(([key, value]) => {
-									if (items.length > (parseInt(key) + 1)) {
-										games += value + ', ';
-									}
-									else {
-										games += ' and ' + value;
-									}
-								});
-								content += games + '.';
+								if (items.length > 1) {
+									let games = '';
+									Object.entries(items).forEach(([key, value]) => {
+										if (items.length > (parseInt(key) + 1)) {
+											games += value + ', ';
+										}
+										else {
+											games += ' and ' + value;
+										}
+									});
+									content += games + '.';
+								}
+								else {
+									content += `and ${items[0]}.`;
+								}
 							}
 							else {
 								content = `Go check out @${username} at https://www.twitch.tv/${username}!`;
@@ -72,14 +83,6 @@ module.exports = {
 						.finally(function() {
 							client.say(channel, content);
 						});
-
-					// content = `Go check out @${username} at https://www.twitch.tv/${username}!`;
-					// if (args[2]) {
-					// 	const messageOut = message.replace(args[0], '').replace(args[1], '').trim();
-					// 	content += ' ' + messageOut;
-					// }
-
-					// client.say(channel, content);
 				}
 			},
 		},
