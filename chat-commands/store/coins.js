@@ -160,7 +160,7 @@ module.exports = {
 						const data = response.data;
 
 						if (data.status === 'failure') {
-							content += `No item named ${item}`;
+							content += `No item named ${item}, or that item isn't available`;
 						}
 						else {
 							const cost = data.content;
