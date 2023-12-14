@@ -1,3 +1,6 @@
+const axios = require('axios');
+const baseUrl = 'https://www.kittenangie.com/bots/api_new/';
+
 module.exports = {
 	name: 'shoutout',
 	description: 'Shout out a user',
@@ -15,7 +18,6 @@ module.exports = {
 				}
 				else {
 					let username = '';
-
 					if (args[1]) {
 						if (args[1].indexOf('@') === 0) {
 							username = args[1].substring(1);
@@ -28,15 +30,60 @@ module.exports = {
 						username = tags.username;
 					}
 
-					content = `Go check out @${username} at https://www.twitch.tv/${username}!`;
-					if (args[2]) {
-						const messageOut = message.replace(args[0], '').replace(args[1], '').trim();
-						content += ' ' + messageOut;
-					}
+					axios.get(baseUrl + 'retrieve/shoutout?twitch_username=' + username)
+						.then(function(response) {
+							const output = response.data;
+							if (output.status === 'success') {
 
-					client.say(channel, content);
+								const recent = output.content.recent;
+								let rand = 0;
+								const items = [];
+								rand = randomProp(recent);
+								items.push(recent[rand]);
+								delete recent[rand];
+								rand = randomProp(recent);
+								items.push(recent[rand]);
+								delete recent[rand];
+								rand = randomProp(recent);
+								items.push(recent[rand]);
+								delete recent[rand];
+
+								content = `Make sure you check out @${username}, over at https://www.twitch.tv/${username}! `;
+								content += `They were last seen playing ${output.content.latest}, and also play games like: `;
+
+								let games = '';
+								Object.entries(items).forEach(([key, value]) => {
+									if (items.length > (parseInt(key) + 1)) {
+										games += value + ', ';
+									}
+									else {
+										games += ' and ' + value;
+									}
+								});
+								content += games + '.';
+							}
+							else {
+								content = `Go check out @${username} at https://www.twitch.tv/${username}!`;
+							}
+						})
+						.catch(function() {
+							content = `Go check out @${username} at https://www.twitch.tv/${username}!`;
+						})
+						.finally(function() {
+							client.say(channel, content);
+						});
+
+					// content = `Go check out @${username} at https://www.twitch.tv/${username}!`;
+					// if (args[2]) {
+					// 	const messageOut = message.replace(args[0], '').replace(args[1], '').trim();
+					// 	content += ' ' + messageOut;
+					// }
+
+					// client.say(channel, content);
 				}
 			},
 		},
 	},
 };
+
+const randomProp = obj => Object.keys(obj)[(Math.random() * Object.keys(obj).length) | 0];
