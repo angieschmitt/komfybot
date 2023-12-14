@@ -260,5 +260,39 @@ module.exports = {
 					});
 			},
 		},
+		inv: {
+			execute(args, tags, message, channel, client) {
+				let content = '';
+
+				const url = 'interactive/coins/store_inventory/?twitch_id=' + tags['user-id'];
+				axios.get(baseUrl + url)
+					.then(function(response) {
+						const data = response.data;
+						if (data.status === 'success') {
+							if (Object.keys(data.content).length) {
+								content += 'Here\'s whats in your inventory: ';
+								Object.entries(data.content).forEach(([key, value]) => {
+									content += `${value['qty']}x ${value['name']}, `;
+								});
+								content = content.substring(0, content.length - 2);
+							}
+						}
+						else if (data.status === 'failure') {
+							if (data.err_msg === 'no_twitch_id') {
+								content = 'That username doesn\'t seem to be in our system.';
+							}
+						}
+						else {
+							content = 'Something went wrong, tell @kittenAngie.';
+						}
+					})
+					.catch(function() {
+						content = 'Something went wrong, tell @kittenAngie.';
+					})
+					.finally(function() {
+						client.say(channel, `${content}`);
+					});
+			},
+		}
 	},
 };
