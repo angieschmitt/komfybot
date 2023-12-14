@@ -211,7 +211,31 @@ module.exports = {
 												});
 										}
 										else {
-											content = `Congrats @${username} on buying a ${item} @ ${cost} KomfyCoins.`;
+											axios.get(baseUrl + 'interactive/coins/store_purchase?twitch_id=' + userID + '&item=' + item)
+												.then(function(response3) {
+													const output3 = response3.data;
+													if (output3.status === 'success') {
+														if (output3.content.qty == 1) {
+															content = `Congrats @${username} on buying a ${item} @ ${cost} KomfyCoins.`;
+														}
+														else {
+															content = `Congrats @${username} on buying another ${item} @ ${cost} KomfyCoins. You currently have ${output3.content.qty}.`;
+														}
+													}
+													else if (output.status === 'failure' && output.err_msg === 'not_available') {
+														content = 'That item seems to be out of stock.';
+													}
+													else {
+														content = 'Something went wrong, tell @kittenAngie.';
+													}
+												})
+												.catch(function() {
+													content = 'Something went wrong, tell @kittenAngie.';
+												})
+												.finally(function() {
+													client.say(channel, content);
+													axios.post(baseUrl + 'coins_fix');
+												});
 										}
 									}
 									else if (output.status === 'failure' && output.err_msg === 'not_enough_coins') {
