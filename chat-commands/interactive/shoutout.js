@@ -67,7 +67,7 @@ module.exports = {
 											games += ' and ' + value;
 										}
 									});
-									content += games + '.';
+									content += 'and other games like: ' + games + '.';
 								}
 								else {
 									content += `and ${items[0]}.`;
