@@ -54,7 +54,7 @@ module.exports = {
 									recent.splice(rand, 1);
 								}
 
-								content = `Make sure you check out @${username}, over at https://www.twitch.tv/${username}! `;
+								content = `Make sure you check out @${username}, over at https://www.twitch.tv/${username} ! `;
 								content += `They were last seen playing ${output.content.latest} `;
 
 								if (items.length > 1) {
