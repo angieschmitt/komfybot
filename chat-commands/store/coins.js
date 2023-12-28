@@ -293,6 +293,6 @@ module.exports = {
 						client.say(channel, `${content}`);
 					});
 			},
-		}
+		},
 	},
 };

@@ -332,12 +332,44 @@ function onCheerHandler(channel, tags, message) {
 }
 
 function onRaidedHandler(channel, username, viewers, tags) {
+	const baseUrl = 'https://www.kittenangie.com/bots/api_new/';
+
 	client.say(channel, `Holy cocoa and blankies, ${username} is raiding with ${viewers} ${(viewers > 1 ? 'viewers' : 'viewer')}!`)
 		.then(() => {
-			setTimeout(() => {
-				client.say(channel, 'Just a reminder to refresh the stream so that twitch counts the views!');
-			}, 10000);
+			// Handle raid hat?
+			if (parseInt(tags['msg-param-viewerCount']) > 1) {
+				let content = '';
+				const userID = tags['user-id'];
+				const amount = 160;
+				const reason = 'RAID HAT!';
+				axios.get(baseUrl + 'insert/coins/?twitch_id=' + userID + '&amount=' + amount + '&reason=' + reason)
+					.then(function(response) {
+						const output = response.data;
+						if (output.status === 'success') {
+							content = `Thanks for the raid @${username}, we added ${amount} KomfyCoins to your wallet!`;
+						}
+						else if (output.status === 'failure') {
+							if (output.err_msg === 'no_twitch_id') {
+								content = 'That username doesn\'t seem to be in our system.';
+							}
+						}
+						else {
+							content = 'Something went wrong, tell @kittenAngie.';
+						}
+					})
+					.catch(function() {
+						content = 'Something went wrong, tell @kittenAngie.';
+					})
+					.finally(function() {
+						client.say(channel, content);
+						axios.post(baseUrl + 'coins_fix');
+					});
+			}
+			// setTimeout(() => {
+			// 	client.say(channel, 'Just a reminder to refresh the stream so that twitch counts the views!');
+			// }, 10000);
 		});
+
 	console.log('caught raid');
 	console.log(username);
 	console.log(viewers);
