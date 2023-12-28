@@ -337,16 +337,15 @@ function onRaidedHandler(channel, username, viewers, tags) {
 	client.say(channel, `Holy cocoa and blankies, ${username} is raiding with ${viewers} ${(viewers > 1 ? 'viewers' : 'viewer')}!`)
 		.then(() => {
 			// Handle raid hat?
-			if (parseInt(tags['msg-param-viewerCount']) > 1) {
+			if (viewers >= 2) {
 				let content = '';
-				const userID = tags['user-id'];
 				const amount = 160;
-				const reason = 'RAID HAT!';
-				axios.get(baseUrl + 'insert/coins/?twitch_id=' + userID + '&amount=' + amount + '&reason=' + reason)
+				const reason = 'AUTO RAID HAT!';
+				axios.get(baseUrl + 'insert/coins/?username=' + username + '&twitch_id=' + tags['user-id'] + '&amount=' + amount + '&reason=' + reason)
 					.then(function(response) {
 						const output = response.data;
 						if (output.status === 'success') {
-							content = `Thanks for the raid @${username}, we added ${amount} KomfyCoins to your wallet!`;
+							content = `WOOOO! Thanks for the raid @${username}, we added ${amount} KomfyCoins to your wallet!`;
 						}
 						else if (output.status === 'failure') {
 							if (output.err_msg === 'no_twitch_id') {
