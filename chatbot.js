@@ -341,7 +341,7 @@ function onRaidedHandler(channel, username, viewers, tags) {
 				let content = '';
 				const amount = 160;
 				const reason = 'AUTO RAID HAT!';
-				axios.get(baseUrl + 'insert/coins/?username=' + username + '&twitch_id=' + tags['user-id'] + '&amount=' + amount + '&reason=' + reason)
+				axios.get(baseUrl + 'insert/coins/?username=' + username.toLowerCase() + '&twitch_id=' + tags['user-id'] + '&amount=' + amount + '&reason=' + reason)
 					.then(function(response) {
 						const output = response.data;
 						if (output.status === 'success') {

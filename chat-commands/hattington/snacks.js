@@ -4,10 +4,100 @@ const baseUrl = 'https://www.kittenangie.com/bots/api_new/';
 module.exports = {
 	name: 'snacks',
 	description: 'Hattington snacks',
-	help: 'Commands for giving snacks to Hattington. Additional arguments: buy, check, inv, sell, set',
+	help: 'Commands for giving snacks to Hattington. Additional arguments: buy, give, inv',
 	actions: {
 		default: {
 			say: 'SOON',
+		},
+		buy: {
+			help: 'Buy an Random Hat from the KomfyStore. !hattington buy',
+			args: {
+				1: [ 'r' ],
+				error: 'don\'t forgot the snack name!',
+			},
+			execute(args, tags, message, channel, client) {
+
+				let content = '';
+				const userID = tags['user-id'];
+				const username = tags.username;
+				let item = message.replace(args[0], '').replace(args[1], '').trim();
+				let itemOut = item;
+
+				if (item.indexOf(':') === -1) {
+					item = 'snacks : ' + item;
+				}
+				else {
+					itemOut = itemOut.substring(itemOut.indexOf(':') + 1).toLowerCase().trim();
+				}
+
+				if (item.toLowerCase() === 'random hat') {
+					content = 'You\'ll need to use the !hat buy command instead.';
+					client.say(channel, content);
+				}
+				else {
+					axios.get(baseUrl + 'retrieve/store/?item=' + item.toLowerCase())
+						.then(function(response) {
+							const data = response.data;
+
+							if (data.status === 'failure') {
+								content += `No item named ${item}, or that item isn't available`;
+							}
+							else {
+								const cost = data.content;
+								const reason = 'BOUGHT: ' + item;
+
+								axios.get(baseUrl + 'insert/coins/?username=' + username.toLowerCase() + '&amount=' + (cost * -1) + '&reason=' + reason)
+									.then(function(response2) {
+										const output = response2.data;
+										if (output.status === 'success') {
+											axios.get(baseUrl + 'interactive/coins/store_purchase?twitch_id=' + userID + '&item=' + item)
+												.then(function(response3) {
+													const output3 = response3.data;
+													if (output3.status === 'success') {
+														if (output3.content.qty == 1) {
+															content = `Congrats @${username} on buying ${itemOut} @ ${cost} KomfyCoins.`;
+														}
+														else {
+															content = `Congrats @${username} on buying more ${itemOut} @ ${cost} KomfyCoins. You currently have ${output3.content.qty}.`;
+														}
+													}
+													else {
+														content = 'Something went wrong, tell @kittenAngie.';
+													}
+												})
+												.catch(function() {
+													content = 'Something went wrong, tell @kittenAngie.';
+												})
+												.finally(function() {
+													client.say(channel, content);
+													axios.post(baseUrl + 'coins_fix');
+												});
+										}
+										else if (output.status === 'failure' && output.err_msg === 'not_enough_coins') {
+											content = 'You seem to be out of KomfyCoins.';
+										}
+										else {
+											content = 'Something went wrong, tell @kittenAngie.';
+										}
+									})
+									.catch(function() {
+										content = 'Something went wrong, tell @kittenAngie.';
+									})
+									.finally(function() {
+										client.say(channel, content);
+										axios.post(baseUrl + 'coins_fix');
+									});
+							}
+						})
+						.catch(function() {
+							content = 'Something went wrong, tell @kittenAngie.';
+						})
+						.finally(function() {
+							client.say(channel, content);
+							axios.post(baseUrl + 'coins_fix');
+						});
+				}
+			},
 		},
 		give: {
 			help: 'Give a snack to Hattington. !snack give <snack-name:required>',
@@ -97,7 +187,7 @@ module.exports = {
 										content += `${details['qty']}x ${details['name']}, `;
 									}
 								});
-								content = content.substring(0, content.length - 3);
+								content = content.substring(0, content.length - 2);
 							}
 							else {
 								content += 'You don\'t currently have any hats!';
