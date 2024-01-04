@@ -80,5 +80,40 @@ module.exports = {
 					});
 			},
 		},
+		inv: {
+			help: 'Shows your inventory of hats. !hattington inv',
+			execute(args, tags, message, channel, client) {
+				let content = '';
+				const userID = tags['user-id'];
+
+				axios.get(baseUrl + 'interactive/snacks/inventory?twitch_id=' + userID)
+					.then(function(response) {
+						const data = response.data;
+						if (data.status === 'success') {
+							if (Object.keys(data.content).length) {
+								content += 'Here\'s whats in your inventory: ';
+								Object.entries(data.content).forEach(([key, details]) => {
+									if (details['qty'] > 0) {
+										content += `${details['qty']}x ${details['name']}, `;
+									}
+								});
+								content = content.substring(0, content.length - 3);
+							}
+							else {
+								content += 'You don\'t currently have any hats!';
+							}
+						}
+						else {
+							content = 'Something went wrong, tell @kittenAngie.';
+						}
+					})
+					.catch(function() {
+						content = 'Something went wrong, tell @kittenAngie.';
+					})
+					.finally(function() {
+						client.say(channel, content);
+					});
+			},
+		},
 	},
 };
