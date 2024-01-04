@@ -281,6 +281,9 @@ module.exports = {
 							if (data.err_msg === 'no_twitch_id') {
 								content = 'That username doesn\'t seem to be in our system.';
 							}
+							else if (data.err_msg === 'no_items') {
+								content = 'Seems like you don\'t have anything in your inventory.';
+							}
 						}
 						else {
 							content = 'Something went wrong, tell @kittenAngie.';
