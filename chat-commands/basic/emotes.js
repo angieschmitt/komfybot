@@ -1,6 +1,5 @@
 module.exports = {
 	name: 'emotes',
-	description: 'Displays the raid text',
 	help: 'Where did you got those cute Kiwi?',
 	actions: {
 		default: {

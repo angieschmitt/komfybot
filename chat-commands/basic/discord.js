@@ -1,6 +1,5 @@
 module.exports = {
 	name: 'discord',
-	description: 'Displays the discord invite link',
 	help: 'Displays the discord invite link',
 	actions: {
 		default: {

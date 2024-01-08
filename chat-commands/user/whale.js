@@ -1,6 +1,5 @@
 module.exports = {
 	name: 'whale',
-	description: 'Whale?',
 	help: '🐳🐳🐳🐳🐳🐳',
 	actions: {
 		default: {

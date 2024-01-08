@@ -1,6 +1,6 @@
 module.exports = {
+	list: false,
 	name: 'ads',
-	description: 'Ad explainer',
 	help: 'Explainer about ads',
 	actions: {
 		default: {

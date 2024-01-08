@@ -1,6 +1,5 @@
 module.exports = {
 	name: 'help',
-	description: 'Handy helper command',
 	help: 'Provides helpful info for commands',
 	actions: {
 		default: {

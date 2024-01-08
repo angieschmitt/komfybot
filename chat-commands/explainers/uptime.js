@@ -3,7 +3,6 @@ const baseUrl = 'https://www.kittenangie.com/bots/api_new/';
 
 module.exports = {
 	name: 'uptime',
-	description: 'Lurk command',
 	help: 'Check how long the streamer\'s been online. ',
 	actions: {
 		default: {

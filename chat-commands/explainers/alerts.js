@@ -1,6 +1,5 @@
 module.exports = {
 	name: 'alerts',
-	description: 'Alerts explainer',
 	help: 'Explainer about bit alerts',
 	actions: {
 		default: {

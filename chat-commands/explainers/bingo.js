@@ -1,6 +1,5 @@
 module.exports = {
 	name: 'bingo',
-	description: 'Bingo explainer',
 	help: 'Explainer about Randomizer Bingo',
 	actions: {
 		default: {

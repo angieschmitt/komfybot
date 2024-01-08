@@ -3,7 +3,6 @@ const baseUrl = 'https://www.kittenangie.com/bots/api_new/';
 
 module.exports = {
 	name: 'snacks',
-	description: 'Hattington snacks',
 	help: 'Commands for giving snacks to Hattington. Additional arguments: buy, give, inv',
 	actions: {
 		default: {

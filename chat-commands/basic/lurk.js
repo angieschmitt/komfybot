@@ -1,6 +1,5 @@
 module.exports = {
 	name: 'lurk',
-	description: 'Lurk command',
 	help: 'Let chat know you\'re going into lurk mode',
 	actions: {
 		default: {

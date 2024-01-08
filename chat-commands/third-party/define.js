@@ -1,8 +1,8 @@
 const axios = require('axios');
 
 module.exports = {
+    list: false,
 	name: 'define',
-	description: 'Handy helper command',
 	help: 'Provides a definition for a word',
 	actions: {
 		default: {

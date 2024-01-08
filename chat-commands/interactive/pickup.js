@@ -3,7 +3,6 @@ const baseUrl = 'https://www.kittenangie.com/bots/api_new/';
 
 module.exports = {
 	name: 'pickup',
-	description: 'Pickup lines',
 	help: 'Ooo-la-la, I am zee pickup line queen...',
 	actions: {
 		default: {

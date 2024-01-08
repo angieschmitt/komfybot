@@ -2,8 +2,8 @@ const axios = require('axios');
 const baseUrl = 'https://www.kittenangie.com/bots/api_new/';
 
 module.exports = {
+	list: false,
 	name: 'hattington',
-	description: 'Hattington commands',
 	help: 'Commands for interacting with Hattington. Additional arguments: buy, check, inv, sell, set',
 	actions: {
 		default: {

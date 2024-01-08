@@ -3,7 +3,6 @@ const baseUrl = 'https://www.kittenangie.com/bots/api_new/';
 
 module.exports = {
 	name: 'pkmn',
-	description: 'PokeAPI pkmn search',
 	help: 'PokeAPI powered pokemon lookup, requires a name. Additional args: evolve, stats, guess',
 	actions: {
 		default: {

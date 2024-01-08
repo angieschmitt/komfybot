@@ -1,6 +1,5 @@
 module.exports = {
 	name: 'hug',
-	description: 'Bonk the streamer!',
 	help: 'Hug someone in a random way.',
 	actions: {
 		default: {

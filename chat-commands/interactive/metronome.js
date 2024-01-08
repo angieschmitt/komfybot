@@ -2,7 +2,6 @@ const fs = require('fs');
 
 module.exports = {
 	name: 'metronome',
-	description: 'PKMN Metronome',
 	help: 'Randomly selects a move from the metronome move set',
 	actions: {
 		default: {

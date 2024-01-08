@@ -1,7 +1,6 @@
 module.exports = {
 	name: 'race',
-	description: 'Key Item Race explainer',
-	help: 'Explainer about Key Item Rando races. Additional arguments: set',
+	help: 'Outputs info about the current race, with a multitwitch link. Additional arguments: set',
 	actions: {
 		default: {
 			execute(args, tags, message, channel, client) {

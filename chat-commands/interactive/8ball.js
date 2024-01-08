@@ -3,7 +3,6 @@ const baseUrl = 'https://www.kittenangie.com/bots/api_new/';
 
 module.exports = {
 	name: '8ball',
-	description: 'Handles coin commands',
 	help: 'Ask the 8 ball anything!',
 	actions: {
 		default: {

@@ -1,6 +1,5 @@
 module.exports = {
 	name: 'raid',
-	description: 'Displays the raid text',
 	help: 'Displays the raid text',
 	actions: {
 		default: {

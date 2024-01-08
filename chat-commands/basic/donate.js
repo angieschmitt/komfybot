@@ -1,6 +1,5 @@
 module.exports = {
 	name: 'donate',
-	description: 'Displays the donate link',
 	help: 'Displays the donate link',
 	actions: {
 		default: {

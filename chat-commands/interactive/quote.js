@@ -3,7 +3,6 @@ const baseUrl = 'https://www.kittenangie.com/bots/api_new/';
 
 module.exports = {
 	name: 'quote',
-	description: 'Quote thing',
 	help: 'Pull a quote from our growing database of silliness!',
 	actions: {
 		default: {

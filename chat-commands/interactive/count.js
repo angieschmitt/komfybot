@@ -3,7 +3,6 @@ const baseUrl = 'https://www.kittenangie.com/bots/api_new/';
 
 module.exports = {
 	name: 'count',
-	description: 'Counter for reasons',
 	help: 'Outputs the current value of the counter. Additional arguments: set, reset',
 	actions: {
 		default: {

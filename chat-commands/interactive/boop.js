@@ -3,7 +3,6 @@ const baseUrl = 'https://www.kittenangie.com/bots/api_new/';
 
 module.exports = {
 	name: 'boop',
-	description: 'Boop the streamer!',
 	help: 'Boop the streamer. Additional arguments: set (mod), reset (mod)',
 	actions: {
 		default: {

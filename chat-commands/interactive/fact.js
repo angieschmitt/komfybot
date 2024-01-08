@@ -2,8 +2,8 @@ const axios = require('axios');
 const baseUrl = 'https://www.kittenangie.com/bots/api_new/';
 
 module.exports = {
+	list: false,
 	name: 'factoftheday',
-	description: 'Fact of the Day',
 	help: 'Displays the fact of the day!',
 	actions: {
 		default: {

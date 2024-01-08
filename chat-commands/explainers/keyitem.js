@@ -1,6 +1,5 @@
 module.exports = {
 	name: 'keyitem',
-	description: 'Key Item explainer',
 	help: 'Explainer about Key Item Rando runs',
 	actions: {
 		default: {
