@@ -182,17 +182,50 @@ module.exports = {
 					.then(function(response) {
 						const data = response.data;
 						if (data.status === 'success') {
-							if (Object.keys(data.content).length) {
-								// content += 'Here\'s whats in your inventory: ';
-								Object.entries(data.content).forEach(([rarity, hats]) => {
-									content += `${rarity}: `;
-									Object.entries(hats).forEach(([key, hat]) => {
-										content += `${hat['qty']}x ${hat['name']}, `;
+							// Change output based on total number of hats
+							if (data.counts['TOTAL'] > 0) {
+								if (data.counts['TOTAL'] < 26) {
+									// content += 'Here\'s what hats you have: ';
+									Object.entries(data.content).forEach(([rarity, hats]) => {
+										content += `${rarity}: `;
+										// eslint-disable-next-line no-unused-vars
+										Object.entries(hats).forEach(([key, hat]) => {
+											content += `${hat['qty']}x ${hat['name']}, `;
+										});
+										content = content.substring(0, content.length - 2);
+										content += ' || ';
 									});
-									content = content.substring(0, content.length - 2);
-									content += ' || ';
-								});
-								content = content.substring(0, content.length - 3);
+									content = content.substring(0, content.length - 3);
+								}
+								else if (data.counts['TOTAL'] >= 26) {
+									if (args.length === 2) {
+										content += 'You currently have ';
+										let i = 1;
+										Object.entries(data.counts).forEach(([rarity, count]) => {
+											if (rarity !== 'TOTAL') {
+												if (i == Object.keys(data.counts).length - 1) {
+													content += `and ${count}x ${ucwords(rarity)} hats. `;
+												}
+												else {
+													content += `${count}x ${ucwords(rarity)} hats, `;
+												}
+											}
+											i++;
+										});
+										content += `That brings you to ${data.counts['TOTAL']} hats in all. `;
+										content += 'Use !hats inv <rarity> to see the specific hats.';
+									}
+									else {
+										content += `Here's the ${args[2].toUpperCase()} hats you have: `;
+										const rarity = args[2].toUpperCase();
+										// eslint-disable-next-line no-unused-vars
+										Object.entries(data.content[rarity]).forEach(([key, hat]) => {
+											content += `${hat['qty']}x ${hat['name']}, `;
+										});
+										content = content.substring(0, content.length - 2);
+									}
+								}
+								console.log(content);
 							}
 							else {
 								content += 'You don\'t currently have any hats!';
@@ -322,3 +355,7 @@ module.exports = {
 		},
 	},
 };
+
+function ucwords(string) {
+	return string.toLowerCase().replace(/(?<= )[^\s]|^./g, a => a.toUpperCase());
+}

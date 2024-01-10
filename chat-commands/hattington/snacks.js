@@ -6,7 +6,13 @@ module.exports = {
 	help: 'Commands for giving snacks to Hattington. Additional arguments: buy, give, inv',
 	actions: {
 		default: {
-			say: 'SOON',
+			say: 'Welcome to SNACS, the Sugary / Nutritious Allocation and Conveyance Service: ' +
+			'You can use me to give Hattington one of your snacks!' +
+			'Curious what snacks we have? Use "!coins store" to see what\'s available!' +
+			'Then you can use "!snack buy <snack-name>" to buy a snack.' +
+			'After that, use "!snacks give <snack-name>" to give it to Hattington.' +
+			'Curious what snacks you currently have? "!snacks inv" will list them out for you!' +
+			'If you need more help, check out !help coins and !help snacks.',
 		},
 		buy: {
 			help: 'Buy an Random Hat from the KomfyStore. !hattington buy',
@@ -181,6 +187,7 @@ module.exports = {
 						if (data.status === 'success') {
 							if (Object.keys(data.content).length) {
 								content += 'Here\'s whats in your inventory: ';
+								// eslint-disable-next-line no-unused-vars
 								Object.entries(data.content).forEach(([key, details]) => {
 									if (details['qty'] > 0) {
 										content += `${details['qty']}x ${details['name']}, `;
