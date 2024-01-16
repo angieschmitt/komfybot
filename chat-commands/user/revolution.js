@@ -3,7 +3,7 @@ module.exports = {
 	help: 'Gotta put this down before it starts',
 	actions: {
 		default: {
-			say: 'The only revolting thing around here is @MisterDoctorXman...',
+			say: 'The only revolting thing around here is @MrDrXMan...',
 		},
 	},
 };

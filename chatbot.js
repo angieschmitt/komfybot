@@ -337,7 +337,7 @@ function onRaidedHandler(channel, username, viewers, tags) {
 	client.say(channel, `Holy cocoa and blankies, ${username} is raiding with ${viewers} ${(viewers > 1 ? 'viewers' : 'viewer')}!`)
 		.then(() => {
 			// Handle raid hat?
-			if (viewers >= 2) {
+			if (viewers >= 1) {
 				let content = '';
 				const amount = 160;
 				const reason = 'AUTO RAID HAT!';
