@@ -43,6 +43,7 @@ else {
 
 // Connect to Twitch:
 const client = new tmi.client(options);
+global.client = client;
 client.connect().catch(console.error);
 
 // Register our event handlers (defined below)

@@ -11,7 +11,7 @@ const options = {
 		// 'komfykiwi',
 		'kittenangie',
 		// 'alazysun',
-		// 'misterdoctorxman',
+		// 'mrdrxman',
 	],
 	options: {
 		// debug: true,
