@@ -221,7 +221,6 @@ module.exports = {
 
 						content += 'Here\'s whats in the store:';
 						data.content.forEach(element => {
-							console.log(element['name'].indexOf('Snack'));
 							if (element['name'].indexOf('Snack') !== -1) {
 								content += ' ' + element['name'].replace('Snacks : ', '') + ' @ ' + element['value'] + ' KomfyCoins ||';
 							}

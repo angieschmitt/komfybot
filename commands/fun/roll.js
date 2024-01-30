@@ -29,24 +29,16 @@ module.exports = {
 		const ops = dice.replace(/[0-9a-zA-Z ]+/gi, '');
 		for (let i = 0; i < ops.length; i++) { operators.push(ops[i]); }
 
-		// console.log(parts);
-		// console.log(operators);
-
 		for (let i = 0; i < parts.length; i++) {
 			const part = parts[i];
 			const operator = operators[i];
 
 			if (parts[i].indexOf('d') > -1) {
 
-				// console.log(part);
-				// console.log(operator);
-
 				// Generate the numbers
 				const bits = parts[i].split('d');
 				const numbers = [];
 				for (let i2 = 0; i2 < bits[0]; i2++) { numbers.push(getRandomNumber(bits[1])); }
-
-				// console.log('Numbers: ' + numbers);
 
 				let rolls = [];
 				let partTotal = 0;
@@ -62,27 +54,15 @@ module.exports = {
 					total += partTotal;
 				}
 
-				// console.log('pTotal: ' + partTotal);
-				// console.log('- - - -');
-
 				const rollsOut = rolls.substr(0, (rolls.length - 1));
 				output += `${bits[0]}d${bits[1]}: ${operators[i]}${rollsOut} (${partTotal})` + '\r\n';
 			}
 			else {
-
-				// console.log('Part: ' + part);
-				// console.log('Operator: ' + operator);
-				// console.log('Numbers: ' + part);
-				// console.log('pTotal: ' + part);
-
 				total = eval(total + operator + part);
 				output += `Mod: ${operators[i]}${parts[i]}` + '\r\n';
-
-				// console.log('- - - -');
 			}
 		}
 
-		// console.log('Total: ' + total);
 		output += '--------' + '\r\n';
 		output += 'Total: ' + total;
 

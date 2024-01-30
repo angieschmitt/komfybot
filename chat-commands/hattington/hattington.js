@@ -225,7 +225,6 @@ module.exports = {
 										content = content.substring(0, content.length - 2);
 									}
 								}
-								console.log(content);
 							}
 							else {
 								content += 'You don\'t currently have any hats!';

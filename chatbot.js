@@ -365,9 +365,6 @@ function onRaidedHandler(channel, username, viewers, tags) {
 						axios.post(baseUrl + 'coins_fix');
 					});
 			}
-			// setTimeout(() => {
-			// 	client.say(channel, 'Just a reminder to refresh the stream so that twitch counts the views!');
-			// }, 10000);
 		});
 	console.log('caught raid');
 	console.log(username);

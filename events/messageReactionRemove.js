@@ -21,23 +21,13 @@ module.exports = {
 
 		const message	= reaction.message;
 		const member	= reaction.message.guild.members.cache.find(m => m.id === user.id);
-		// console.log(member);
 
 		if (messages.includes(message.id)) {
 			const reactedWith = reaction.emoji.name;
-			// console.log('is message');
 			if (reactedWith in roles) {
 				const role = reaction.message.guild.roles.cache.find(r => r.id === roles[reactedWith]);
-				// console.log('is reaction');
-				// console.log(role);
 				member.roles.remove(role);
 			}
 		}
-
-		// // Now the message has been cached and is fully available
-		// console.log(`${reaction.message.author}'s message "${reaction.message.content}" gained a reaction!`);
-		// // The reaction is now also fully available and the properties will be reflected accurately:
-		// console.log(`${reaction.count} user(s) have given the same reaction to this message!`);
-
 	},
 };

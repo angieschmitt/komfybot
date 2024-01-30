@@ -42,9 +42,6 @@ module.exports = {
 					if (input.alias) {
 						help = help.replace('!' + cmdName, '!' + input.name);
 						if (input.arg) {
-							console.log(input.arg);
-							console.log('!' + input.name + ' ' + input.arg);
-							// !guess guess
 							help = help.replace('!' + input.name + ' ' + input.arg, '!' + input.name);
 						}
 					}

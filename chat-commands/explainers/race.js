@@ -5,7 +5,6 @@ module.exports = {
 		default: {
 			execute(args, tags, message, channel, client) {
 				let content = '';
-				console.log(client.extras.race.length);
 				if (client.extras.race.length !== 0) {
 					let text = '';
 					let nameList = '';

@@ -222,7 +222,7 @@ function onMessageHandler(channel, tags, message, self) {
 					}
 					// Check full length vs required count
 					if (args.length < count) {
-						console.log('Missed an argument');
+						// console.log('Missed an argument');
 						return false;
 					}
 
