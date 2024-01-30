@@ -211,5 +211,31 @@ module.exports = {
 					});
 			},
 		},
+		store: {
+			help: 'Lists out items available at the Snack Shack. !snacks store',
+			execute(args, tags, message, channel, client) {
+				let content = '';
+				axios.get(baseUrl + 'retrieve/store')
+					.then(function(response) {
+						const data = response.data;
+
+						content += 'Here\'s whats in the store:';
+						data.content.forEach(element => {
+							console.log(element['name'].indexOf('Snack'));
+							if (element['name'].indexOf('Snack') !== -1) {
+								content += ' ' + element['name'].replace('Snacks : ', '') + ' @ ' + element['value'] + ' KomfyCoins ||';
+							}
+						});
+						content = content.substring(0, content.length - 3);
+
+					})
+					.catch(function() {
+						content = 'Something went wrong, tell @kittenAngie.';
+					})
+					.finally(function() {
+						client.say(channel, content);
+					});
+			},
+		},
 	},
 };

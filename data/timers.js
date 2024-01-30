@@ -4,6 +4,11 @@ const timers = {
 		'timer': 30,
 		'message': 'Come hang with the KomfyKrew on Discord: https://discord.gg/8T44G4mUFu',
 	},
+	'pronouns': {
+		'channel': 'komfykiwi',
+		'timer': 60,
+		'message': 'If you want to set your pronouns in the browser twitch chat for everyone to see you can do so here: https://pronouns.alejo.io/ - to set your own you just need to go to that website. To see other\'s, you\'ll need to install the extension. Thank you!',
+	},
 	'socials': {
 		'channel': 'komfykiwi',
 		'timer': 120,
@@ -16,7 +21,7 @@ const timers = {
 	},
 	'tipsandbits': {
 		'channel': 'komfykiwi',
-		'timer': 240,
+		'timer': 260,
 		'message': 'Don’t mind me, just humbly reminding you all that Kiwi is trying to make streaming her full time gig! So if you can swing it, she’d highly appreciate any form of support, be it a Twitch Subscription, a Tip or some Bits. No contribution is ever required or expected, but always comes with her never ending, deepest gratitude! Why not gift a Sub to a fren? :3 Or use your Amazon Prime? All the funds go to improving the stream, as well as bills. Remember to always spend responsibly! THANK YOU! ♡',
 	},
 };

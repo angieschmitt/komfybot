@@ -254,6 +254,7 @@ function onMessageHandler(channel, tags, message, self) {
 			'whal es',
 			'wal',
 			'baleine',
+			'samir',
 		];
 		const whaleMoji = [
 			'🐋',
@@ -368,7 +369,6 @@ function onRaidedHandler(channel, username, viewers, tags) {
 			// 	client.say(channel, 'Just a reminder to refresh the stream so that twitch counts the views!');
 			// }, 10000);
 		});
-
 	console.log('caught raid');
 	console.log(username);
 	console.log(viewers);
@@ -472,8 +472,17 @@ function handleTimers() {
 					if (!isObjectEmpty(queue)) {
 						const key = Object.keys(queue)[0];
 						if (last_message !== queue[key]['message']) {
-							client.say(queue[key]['channel'], queue[key]['message'])
-								.then(delete queue[key]);
+							console.log('Timer: ' + key);
+							liveCheck('kittenangie').then(res => {
+								if (res === true) {
+									console.log('Timer: SENT');
+									client.say(queue[key]['channel'], queue[key]['message'])
+										.then(delete queue[key]);
+								}
+								else {
+									console.log('Timer: SKIPPED - not live');
+								}
+							});
 						}
 						delete queue[key];
 					}
@@ -481,6 +490,21 @@ function handleTimers() {
 				},
 				60000,
 			);
+		});
+}
+
+function liveCheck(channel) {
+	const chan = channel.toLowerCase();
+	return axios.get('https://www.kittenangie.com/bots/api/v1/live_check/insert')
+		.then(function(response) {
+			const data = response.data;
+			// eslint-disable-next-line
+			if (data.response.hasOwnProperty(chan)) {
+				return true;
+			}
+			else {
+				return false;
+			}
 		});
 }
 

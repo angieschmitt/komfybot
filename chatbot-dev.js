@@ -43,7 +43,6 @@ else {
 
 // Connect to Twitch:
 const client = new tmi.client(options);
-client = client;
 client.connect().catch(console.error);
 
 // Register our event handlers (defined below)
@@ -244,7 +243,7 @@ function onMessageHandler(channel, tags, message, self) {
 		}
 	}
 	else {
-		const whales = [
+		const whaleText = [
 			'whale',
 			'whales',
 			'w h a l e',
@@ -254,19 +253,65 @@ function onMessageHandler(channel, tags, message, self) {
 			'wha les',
 			'whal es',
 			'wal',
+			'baleine',
+			'samir',
+		];
+		const whaleMoji = [
 			'🐋',
 			'🐳',
 		];
+		const whaleMorse = [
+			'.-- .- .-..',
+			'.-- .... .- .-.. .',
+			'-... .- .-.. . .. -. .',
+		];
+		const whaleBinary = [
+			'01010111 01100001 01101100',
+			'01010111 01101000 01100001 01101100 01100101',
+			'01000010 01100001 01101100 01100101 01101001 01101110 01100101',
+		];
 		let whaleCheck = false;
 		if (tags.username === 'ecusare') {
-			Object.entries(whales).forEach(([key, value]) => {
+			Object.entries(whaleText).forEach(([key, value]) => {
 				if (key !== false && commandName.toLowerCase().includes(value)) {
-					whaleCheck = true;
+					whaleCheck = 'text';
 				}
 			});
-			if (whaleCheck) {
-				client.say(channel, 'Hey @ecusare, you\'re a dingus!');
+			Object.entries(whaleMoji).forEach(([key, value]) => {
+				if (key !== false && commandName.toLowerCase().includes(value)) {
+					whaleCheck = 'emoji';
+				}
+			});
+			Object.entries(whaleMorse).forEach(([key, value]) => {
+				if (key !== false && commandName.toLowerCase().includes(value)) {
+					whaleCheck = 'morse';
+				}
+			});
+			Object.entries(whaleBinary).forEach(([key, value]) => {
+				if (key !== false && commandName.toLowerCase().includes(value)) {
+					whaleCheck = 'binary';
+				}
+			});
+		}
+		if (whaleCheck) {
+			let response = '';
+			switch (whaleCheck) {
+			case 'text':
+				response = 'you\'re a dingus.';
+				break;
+			case 'emoji':
+				response = '🚫🐋‼️';
+				break;
+			case 'morse':
+				response = '-.-- --- ..- .----. .-. . / .- / -.. .. -. --. ..- ...';
+				break;
+			case 'binary':
+				response = '01111001 01101111 01110101 00100111 01110010 01100101 00100000 01100001 00100000 01100100 01101001 01101110 01100111 01110101 01110011';
+				break;
+			default:
+				break;
 			}
+			client.say(channel, 'Hey @ecusare, ' + response);
 		}
 
 		if (commandName.toLowerCase().indexOf(' comfy ') !== -1) {
@@ -288,11 +333,41 @@ function onCheerHandler(channel, tags, message) {
 }
 
 function onRaidedHandler(channel, username, viewers, tags) {
+	const baseUrl = 'https://www.kittenangie.com/bots/api_new/';
+
 	client.say(channel, `Holy cocoa and blankies, ${username} is raiding with ${viewers} ${(viewers > 1 ? 'viewers' : 'viewer')}!`)
 		.then(() => {
-			setTimeout(() => {
-				client.say(channel, 'Just a reminder to refresh the stream so that twitch counts the views!');
-			}, 10000);
+			// Handle raid hat?
+			if (viewers >= 1) {
+				let content = '';
+				const amount = 160;
+				const reason = 'AUTO RAID HAT!';
+				axios.get(baseUrl + 'insert/coins/?username=' + username.toLowerCase() + '&twitch_id=' + tags['user-id'] + '&amount=' + amount + '&reason=' + reason)
+					.then(function(response) {
+						const output = response.data;
+						if (output.status === 'success') {
+							content = `WOOOO! Thanks for the raid @${username}, we added ${amount} KomfyCoins to your wallet!`;
+						}
+						else if (output.status === 'failure') {
+							if (output.err_msg === 'no_twitch_id') {
+								content = 'That username doesn\'t seem to be in our system.';
+							}
+						}
+						else {
+							content = 'Something went wrong, tell @kittenAngie.';
+						}
+					})
+					.catch(function() {
+						content = 'Something went wrong, tell @kittenAngie.';
+					})
+					.finally(function() {
+						client.say(channel, content);
+						axios.post(baseUrl + 'coins_fix');
+					});
+			}
+			// setTimeout(() => {
+			// 	client.say(channel, 'Just a reminder to refresh the stream so that twitch counts the views!');
+			// }, 10000);
 		});
 	console.log('caught raid');
 	console.log(username);
@@ -373,7 +448,7 @@ function handleTimers() {
 	axios.get(options.baseUrl + 'retrieve/uptime')
 		.then(function(response) {
 			if (response.data.status === 'success') {
-				timerOffset = response.data.minutes;
+				timerOffset = (response.data.minutes > 0 ? response.data.minutes : 1);
 			}
 		})
 		.catch(console.error)
@@ -397,8 +472,17 @@ function handleTimers() {
 					if (!isObjectEmpty(queue)) {
 						const key = Object.keys(queue)[0];
 						if (last_message !== queue[key]['message']) {
-							// client.say(queue[key]['channel'], queue[key]['message'])
-							// 	.then(delete queue[key]);
+							console.log('Timer: ' + key);
+							liveCheck('kittenangie').then(res => {
+								if (res === true) {
+									console.log('Timer: SENT');
+									client.say(queue[key]['channel'], queue[key]['message'])
+										.then(delete queue[key]);
+								}
+								else {
+									console.log('Timer: SKIPPED - not live');
+								}
+							});
 						}
 						delete queue[key];
 					}
@@ -406,6 +490,21 @@ function handleTimers() {
 				},
 				60000,
 			);
+		});
+}
+
+function liveCheck(channel) {
+	const chan = channel.toLowerCase();
+	return axios.get('https://www.kittenangie.com/bots/api/v1/live_check/insert')
+		.then(function(response) {
+			const data = response.data;
+			// eslint-disable-next-line
+			if (data.response.hasOwnProperty(chan)) {
+				return true;
+			}
+			else {
+				return false;
+			}
 		});
 }
 

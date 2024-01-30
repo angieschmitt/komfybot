@@ -14,7 +14,7 @@ module.exports = {
 						const output = response.data;
 						id = output.id;
 						if (output.status === 'success') {
-							content = 'Kiwi once said... ' + output.content;
+							content = output.content;
 						}
 						else {
 							content = 'Something went wrong, tell @kittenAngie.';
