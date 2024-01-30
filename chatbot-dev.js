@@ -473,11 +473,11 @@ function handleTimers() {
 						const key = Object.keys(queue)[0];
 						if (last_message !== queue[key]['message']) {
 							console.log('Timer: ' + key);
-							liveCheck('kittenangie').then(res => {
-								if (res === true) {
+							liveCheck(queue[key]['channel'], queue[key]).then(res => {
+								console.log(res);
+								if (res.live === true) {
 									console.log('Timer: SENT');
-									client.say(queue[key]['channel'], queue[key]['message'])
-										.then(delete queue[key]);
+									client.say(res.extra['channel'], res.extra['message']);
 								}
 								else {
 									console.log('Timer: SKIPPED - not live');
@@ -493,18 +493,25 @@ function handleTimers() {
 		});
 }
 
-function liveCheck(channel) {
+function liveCheck(channel, extra) {
 	const chan = channel.toLowerCase();
 	return axios.get('https://www.kittenangie.com/bots/api/v1/live_check/insert')
-		.then(function(response) {
-			const data = response.data;
+		.then(function(res) {
+			const data = res.data;
+			const response = [];
 			// eslint-disable-next-line
 			if (data.response.hasOwnProperty(chan)) {
-				return true;
+				response.live = true;
 			}
 			else {
-				return false;
+				response.live = false;
 			}
+
+			if (extra) {
+				response.extra = extra;
+			}
+
+			return response;
 		});
 }
 
