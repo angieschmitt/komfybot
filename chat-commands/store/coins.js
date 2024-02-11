@@ -96,7 +96,7 @@ module.exports = {
 			},
 			execute(args, tags, message, channel, client) {
 				let content = '';
-				const amount = args[2];
+				const amount = Math.abs(args[2]);
 				const username = tags.username;
 				let reason = message.replace(args[0], '').replace(args[1], '').replace(args[2], '').trim();
 				reason = `SPENT: ${reason}`;
@@ -270,6 +270,7 @@ module.exports = {
 						if (data.status === 'success') {
 							if (Object.keys(data.content).length) {
 								content += 'Here\'s whats in your inventory: ';
+								// eslint-disable-next-line
 								Object.entries(data.content).forEach(([key, value]) => {
 									content += `${value['qty']}x ${value['name']}, `;
 								});

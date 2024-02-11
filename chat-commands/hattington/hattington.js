@@ -190,7 +190,9 @@ module.exports = {
 										content += `${rarity}: `;
 										// eslint-disable-next-line no-unused-vars
 										Object.entries(hats).forEach(([key, hat]) => {
-											content += `${hat['qty']}x ${hat['name']}, `;
+											if (hat['qty'] >= 1) {
+												content += `${hat['qty']}x ${hat['name']}, `;
+											}
 										});
 										content = content.substring(0, content.length - 2);
 										content += ' || ';
@@ -207,7 +209,10 @@ module.exports = {
 													content += `and ${count}x ${ucwords(rarity)} hats. `;
 												}
 												else {
-													content += `${count}x ${ucwords(rarity)} hats, `;
+													// eslint-disable-next-line
+													if (count >= 1) {
+														content += `${count}x ${ucwords(rarity)} hats, `;
+													}
 												}
 											}
 											i++;
@@ -216,13 +221,19 @@ module.exports = {
 										content += 'Use !hats inv <rarity> to see the specific hats.';
 									}
 									else {
-										content += `Here's the ${args[2].toUpperCase()} hats you have: `;
 										const rarity = args[2].toUpperCase();
-										// eslint-disable-next-line no-unused-vars
-										Object.entries(data.content[rarity]).forEach(([key, hat]) => {
-											content += `${hat['qty']}x ${hat['name']}, `;
-										});
-										content = content.substring(0, content.length - 2);
+										// eslint-disable-next-line
+										if ( data.counts[rarity] > 0 ){
+											content += `Here's the ${rarity} hats you have: `;
+											// eslint-disable-next-line no-unused-vars
+											Object.entries(data.content[rarity]).forEach(([key, hat]) => {
+												content += `${hat['qty']}x ${hat['name']}, `;
+											});
+											content = content.substring(0, content.length - 2);
+										}
+										else {
+											content = `Seems like you don't have any ${rarity} hats.`;
+										}
 									}
 								}
 							}

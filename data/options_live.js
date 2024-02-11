@@ -2,6 +2,7 @@ const axios = require('axios');
 
 const options = {
 	baseUrl: 'https://www.kittenangie.com/bots/api_new/',
+	newUrl: 'https://www.kittenangie.com/bots/api/v1/',
 	identity: {
 		username: 'komfybot',
 		password: axios.get('https://www.kittenangie.com/bots/api_new/retrieve/key?id=komfybot_token')

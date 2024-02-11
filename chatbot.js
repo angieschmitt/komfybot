@@ -10,6 +10,9 @@ const options = optionFile.content();
 //      - Define Timers
 const timerFile = require('./data/timers');
 const timers = timerFile.content();
+//      - Define Whales
+const whalesFile = require('./data/whales');
+const whales = whalesFile.content();
 //      - Define configuration options
 // const shoutoutFile = require('./data/shoutouts');
 // const shoutouts = shoutoutFile.content();
@@ -62,6 +65,7 @@ client.on('raided', onRaidedHandler);
 // Add optional things to client
 client.extras = [];
 client.extras.race = [];
+client.extras.guessActive = true;
 
 // Chat commands?
 client.commands = new Array();
@@ -243,81 +247,18 @@ function onMessageHandler(channel, tags, message, self) {
 		}
 	}
 	else {
-		const whaleText = [
-			'whale',
-			'whales',
-			'w h a l e',
-			'w h a l e s',
-			'w hales',
-			'wh ales',
-			'wha les',
-			'whal es',
-			'wal',
-			'baleine',
-			'samir',
-		];
-		const whaleMoji = [
-			'🐋',
-			'🐳',
-		];
-		const whaleMorse = [
-			'.-- .- .-..',
-			'.-- .... .- .-.. .',
-			'-... .- .-.. . .. -. .',
-		];
-		const whaleBinary = [
-			'01010111 01100001 01101100',
-			'01010111 01101000 01100001 01101100 01100101',
-			'01000010 01100001 01101100 01100101 01101001 01101110 01100101',
-		];
-		let whaleCheck = false;
 		if (tags.username === 'ecusare') {
-			Object.entries(whaleText).forEach(([key, value]) => {
-				if (key !== false && commandName.toLowerCase().includes(value)) {
-					whaleCheck = 'text';
-				}
-			});
-			Object.entries(whaleMoji).forEach(([key, value]) => {
-				if (key !== false && commandName.toLowerCase().includes(value)) {
-					whaleCheck = 'emoji';
-				}
-			});
-			Object.entries(whaleMorse).forEach(([key, value]) => {
-				if (key !== false && commandName.toLowerCase().includes(value)) {
-					whaleCheck = 'morse';
-				}
-			});
-			Object.entries(whaleBinary).forEach(([key, value]) => {
-				if (key !== false && commandName.toLowerCase().includes(value)) {
-					whaleCheck = 'binary';
-				}
-			});
-		}
-		if (whaleCheck) {
-			let response = '';
-			switch (whaleCheck) {
-			case 'text':
-				response = 'you\'re a dingus.';
-				break;
-			case 'emoji':
-				response = '🚫🐋‼️';
-				break;
-			case 'morse':
-				response = '-.-- --- ..- .----. .-. . / .- / -.. .. -. --. ..- ...';
-				break;
-			case 'binary':
-				response = '01111001 01101111 01110101 00100111 01110010 01100101 00100000 01100001 00100000 01100100 01101001 01101110 01100111 01110101 01110011';
-				break;
-			default:
-				break;
+			const response = handleWhales(tags.username, message);
+			if (response) {
+				client.say(channel, response);
 			}
-			client.say(channel, 'Hey @ecusare, ' + response);
 		}
 
 		if (commandName.toLowerCase().indexOf(' comfy ') !== -1) {
 			client.say(channel, `Hey ${tags.username}, you misspelled that.`);
 		}
 
+		// Shove in user reference data
 		const twitchData = { 'id': tags['user-id'], 'username': tags.username };
 		axios.get(options.baseUrl + 'insert/user_reference/?twitch=' + encodeURIComponent(JSON.stringify(twitchData))).catch(console.error);
 	}
@@ -471,13 +412,14 @@ function handleTimers() {
 						if (last_message !== queue[key]['message']) {
 							console.log('Timer: ' + key);
 							liveCheck(queue[key]['channel'], queue[key]).then(res => {
-								console.log(res);
 								if (res.live === true) {
 									console.log('Timer: SENT');
 									client.say(res.extra['channel'], res.extra['message']);
+									console.log('- - -');
 								}
 								else {
 									console.log('Timer: SKIPPED - not live');
+									console.log('- - -');
 								}
 							});
 						}
@@ -490,9 +432,58 @@ function handleTimers() {
 		});
 }
 
+function handleWhales(user, message) {
+
+	let whaleCheck = false;
+	Object.entries(whales.text).forEach(([key, value]) => {
+		if (key !== false && message.toLowerCase().includes(value)) {
+			whaleCheck = 'text';
+		}
+	});
+	Object.entries(whales.emoji).forEach(([key, value]) => {
+		if (key !== false && message.toLowerCase().includes(value)) {
+			whaleCheck = 'emoji';
+		}
+	});
+	Object.entries(whales.morse).forEach(([key, value]) => {
+		if (key !== false && message.toLowerCase().includes(value)) {
+			whaleCheck = 'morse';
+		}
+	});
+	Object.entries(whales.binary).forEach(([key, value]) => {
+		if (key !== false && message.toLowerCase().includes(value)) {
+			whaleCheck = 'binary';
+		}
+	});
+
+	if (whaleCheck) {
+		let response = '';
+		switch (whaleCheck) {
+		case 'text':
+			response = 'you\'re a dingus.';
+			break;
+		case 'emoji':
+			response = '🚫🐋‼️';
+			break;
+		case 'morse':
+			response = '-.-- --- ..- .----. .-. . / .- / -.. .. -. --. ..- ...';
+			break;
+		case 'binary':
+			response = '01111001 01101111 01110101 00100111 01110010 01100101 00100000 01100001 00100000 01100100 01101001 01101110 01100111 01110101 01110011';
+			break;
+		default:
+			break;
+		}
+
+		return `Hey @${user}, ${response}`;
+	}
+
+	return false;
+}
+
 function liveCheck(channel, extra) {
 	const chan = channel.toLowerCase();
-	return axios.get('https://www.kittenangie.com/bots/api/v1/live_check/insert')
+	return axios.get(options.newUrl + 'live_check/insert')
 		.then(function(res) {
 			const data = res.data;
 			const response = [];
@@ -511,7 +502,6 @@ function liveCheck(channel, extra) {
 			return response;
 		});
 }
-
 
 const isObjectEmpty = (objectName) => {
 	return Object.keys(objectName).length === 0 && objectName.constructor === Object;
