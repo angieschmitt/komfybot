@@ -1,14 +1,17 @@
 {
     "name": "komfy-bot",
     "version": "1.0.0",
-    "description": "Komfy Kiwi's Discord Bot",
+    "description": "Komfy Kiwi's Bots",
     "main": "index.js",
-    "repository": "https://github.com/render-examples/express-hello-world",
+    "repository": "https://github.com/angieschmitt/komfy-bot",
     "author": "Angie Schmitt",
     "license": "MIT",
     "private": true,
     "scripts": {
-        "start": "node index.js"
+        "twitch": "node ./twitch/index.js",
+        "twitch-dev": "node ./twitch/index-dev.js",
+        "discord": "node ./discord/index.js",
+        "discord-dev": "node ./discord/index-dev.js"
     },
     "dependencies": {
         "axios": "^1.2.0",
