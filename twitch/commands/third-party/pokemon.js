@@ -228,14 +228,14 @@ module.exports = {
 						});
 				}
 				else if (guess === 'unlock') {
-					client.extras.guessActive = true;
+					client.extras[channel].guessActive = true;
 					client.say(channel, 'Guesses unlocked!');
 				}
 				else if (guess === 'locked') {
-					client.extras.guessActive = false;
+					client.extras[channel].guessActive = false;
 					client.say(channel, 'Guesses locked!');
 				}
-				else if (client.extras.guessActive == false) {
+				else if (client.extras[channel].guessActive == false) {
 					client.say(channel, 'Seems like you missed the window to guess!');
 				}
 				else {
