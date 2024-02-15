@@ -12,13 +12,17 @@ module.exports = {
 		},
 		oneshot: {
 			say: 'Interested in playing the one shot with your group? Cheer 200 or more bits, ' +
-            'make a donation of $2 or more, or sub today to get it for free!',
+			'make a donation of $2 or more, or sub today to get it for free!',
+		},
+		valentine: {
+			say: 'Wanna be my valentine and have YOUR NAME on a Heart on the wall behind me? ' +
+			'100 Bits or 1$ donation! Also a great gift for your favorite person in Chat as well! :P',
 		},
 		snackwheel: {
 			say: 'Spin spin spin, The Snack Wheel ... OF DOOM! ' +
-            'From gummy hotdogs, to sour snacks, to the ol\' BeanBoozle, ' +
-            'you can find more info here: ' +
-            'https://twitter.com/KomfyKiwi/status/1724098282605985805',
+			'From gummy hotdogs, to sour snacks, to the ol\' BeanBoozle, ' +
+			'you can find more info here: ' +
+			'https://twitter.com/KomfyKiwi/status/1724098282605985805',
 		},
 		subtember: {
 			say: 'WOOHOO IT\'S SUBtember! This year Twitch is offering 20% - 30% discounts on subs! ' +
