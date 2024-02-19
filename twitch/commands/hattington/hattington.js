@@ -21,13 +21,13 @@ module.exports = {
 
 				axios.get(data.settings.baseUrl + 'interactive/hats/hat_set?check')
 					.then(function(response2) {
-						const data2 = response2.data;
-						if (data2.status === 'success') {
+						const resData = response2.data;
+						if (resData.status === 'success') {
 							content = 'Looks like Hattington is ready for a new hat!';
 						}
-						else if (data2.status === 'failure') {
-							if (data2.err_msg == 'timeout') {
-								content = `Hattington seems to be enjoying their current hat, give them a little time! (Roughly ${data2.time_left} minutes)`;
+						else if (resData.status === 'failure') {
+							if (resData.err_msg == 'timeout') {
+								content = `Hattington seems to be enjoying their current hat, give them a little time! (Roughly ${resData.time_left} minutes)`;
 							}
 						}
 						else {
@@ -146,18 +146,18 @@ module.exports = {
 
 				axios.get(data.settings.baseUrl + 'interactive/hats/hat_give?username=' + username + '&hat=' + hat)
 					.then(function(response) {
-						const data = response.data;
-						if (data.status === 'success') {
-							content = data.content;
+						const resData = response.data;
+						if (resData.status === 'success') {
+							content = resData.content;
 						}
-						else if (data.status === 'failure') {
-							if (data.err_msg == 'missing_user') {
+						else if (resData.status === 'failure') {
+							if (resData.err_msg == 'missing_user') {
 								content = 'You forgot to include a user';
 							}
-							else if (data.err_msg == 'missing_hat') {
+							else if (resData.err_msg == 'missing_hat') {
 								content = 'You forgot to include a hat';
 							}
-							else if (data.err_msg == 'no_hat') {
+							else if (resData.err_msg == 'no_hat') {
 								content = `Sorry boss, no "${hat}" in the backstock. You might want to check your spelling.`;
 							}
 						}
@@ -181,13 +181,13 @@ module.exports = {
 
 				axios.get(data.settings.baseUrl + 'interactive/hats/hat_inventory?twitch_id=' + userID)
 					.then(function(response) {
-						const data = response.data;
-						if (data.status === 'success') {
+						const resData = response.data;
+						if (resData.status === 'success') {
 							// Change output based on total number of hats
-							if (data.counts['TOTAL'] > 0) {
-								if (data.counts['TOTAL'] < 26) {
+							if (resData.counts['TOTAL'] > 0) {
+								if (resData.counts['TOTAL'] < 26) {
 									// content += 'Here\'s what hats you have: ';
-									Object.entries(data.content).forEach(([rarity, hats]) => {
+									Object.entries(resData.content).forEach(([rarity, hats]) => {
 										content += `${rarity}: `;
 										// eslint-disable-next-line no-unused-vars
 										Object.entries(hats).forEach(([key, hat]) => {
@@ -200,13 +200,13 @@ module.exports = {
 									});
 									content = content.substring(0, content.length - 3);
 								}
-								else if (data.counts['TOTAL'] >= 26) {
+								else if (resData.counts['TOTAL'] >= 26) {
 									if (args.length === 2) {
 										content += 'You currently have ';
 										let i = 1;
-										Object.entries(data.counts).forEach(([rarity, count]) => {
+										Object.entries(resData.counts).forEach(([rarity, count]) => {
 											if (rarity !== 'TOTAL') {
-												if (i == Object.keys(data.counts).length - 1) {
+												if (i == Object.keys(resData.counts).length - 1) {
 													content += `and ${count}x ${ucwords(rarity)} hats. `;
 												}
 												else {
@@ -218,16 +218,16 @@ module.exports = {
 											}
 											i++;
 										});
-										content += `That brings you to ${data.counts['TOTAL']} hats in all. `;
+										content += `That brings you to ${resData.counts['TOTAL']} hats in all. `;
 										content += 'Use !hats inv <rarity> to see the specific hats.';
 									}
 									else {
 										const rarity = args[2].toUpperCase();
 										// eslint-disable-next-line
-										if ( data.counts[rarity] > 0 ){
+										if ( resData.counts[rarity] > 0 ){
 											content += `Here's the ${rarity} hats you have: `;
 											// eslint-disable-next-line no-unused-vars
-											Object.entries(data.content[rarity]).forEach(([key, hat]) => {
+											Object.entries(resData.content[rarity]).forEach(([key, hat]) => {
 												content += `${hat['qty']}x ${hat['name']}, `;
 											});
 											content = content.substring(0, content.length - 2);
@@ -267,13 +267,13 @@ module.exports = {
 
 				axios.get(data.settings.baseUrl + 'interactive/hats/hat_sell?twitch_id=' + userID + '&hat=' + hat)
 					.then(function(response) {
-						const data = response.data;
-						if (data.status === 'success') {
-							content = tags['username'] + ', ' + data.content;
+						const resData = response.data;
+						if (resData.status === 'success') {
+							content = tags['username'] + ', ' + resData.content;
 						}
-						else if (data.status === 'failure') {
+						else if (resData.status === 'failure') {
 
-							switch (data.err_msg) {
+							switch (resData.err_msg) {
 							case 'one_hat':
 								content = 'Sorry, but you can\'t sell your last ' + hat + '!';
 								break;
@@ -316,10 +316,10 @@ module.exports = {
 
 				axios.get(data.settings.baseUrl + 'interactive/hats/hat_inventory?twitch_id=' + userID)
 					.then(function(response) {
-						const data = response.data;
-						if (data.status === 'success') {
+						const resData = response.data;
+						if (resData.status === 'success') {
 							let matched = false;
-							Object.entries(data.reference).forEach(([key, value]) => {
+							Object.entries(resData.reference).forEach(([key, value]) => {
 								if (key.toLowerCase() === hat.toLowerCase()) {
 									matched = value;
 								}
