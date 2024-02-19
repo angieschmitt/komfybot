@@ -28,7 +28,7 @@ if (Object.keys(extArgs).length !== 0) {
 		});
 
 		handleReset.then(() => {
-			handleTimers(data.data.timers);
+			handleTimers(data.timers);
 		});
 	}
 }

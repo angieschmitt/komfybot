@@ -54,13 +54,13 @@ module.exports = {
 
 				axios.get(data.settings.baseUrl + 'retrieve/store/?item=' + item.toLowerCase())
 					.then(function(response) {
-						const data = response.data;
+						const resData = response.data;
 
-						if (data.status === 'failure') {
+						if (resData.status === 'failure') {
 							content += `No item named ${item}`;
 						}
 						else {
-							const cost = data.content;
+							const cost = resData.content;
 							const reason = 'BOUGHT: ' + item;
 
 							axios.get(data.settings.baseUrl + 'insert/coins/?twitch_id=' + userID + '&username=' + username + '&amount=' + (cost * -1) + '&reason=' + reason)
@@ -96,11 +96,11 @@ module.exports = {
 														}
 													}
 													else {
-														content = 'Something went wrong, tell @kittenAngie.';
+														content = 'Something went wrong, tell @kittenAngie: Hats 5.';
 													}
 												})
 												.catch(function() {
-													content = 'Something went wrong, tell @kittenAngie.';
+													content = 'Something went wrong, tell @kittenAngie: Hats 4.';
 												})
 												.finally(function() {
 													client.say(channel, content);
@@ -114,11 +114,11 @@ module.exports = {
 										content = 'You seem to be out of KomfyCoins.';
 									}
 									else {
-										content = 'Something went wrong, tell @kittenAngie.';
+										content = 'Something went wrong, tell @kittenAngie: Hats 3.';
 									}
 								})
 								.catch(function() {
-									content = 'Something went wrong, tell @kittenAngie.';
+									content = 'Something went wrong, tell @kittenAngie: Hats 2.';
 								})
 								.finally(function() {
 									client.say(channel, content);

@@ -22,10 +22,6 @@ const timers = {
 		},
 	},
 	'kittenangie': {
-		'spam': {
-			'timer': 1,
-			'message': 'Come hang with the KomfyKrew on Discord: https://discord.gg/8T44G4mUFu',
-		},
 	},
 };
 
