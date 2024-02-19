@@ -182,10 +182,12 @@ function handleTimers(timersAll) {
 										console.log('Timer: SENT');
 										client.say(channel, res.extra['message']);
 										console.log('- - -');
+										queue[channel] = [];
 									}
 									else {
 										console.log('Timer: SKIPPED - not live');
 										console.log('- - -');
+										queue[channel] = [];
 									}
 								});
 							}
