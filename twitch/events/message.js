@@ -178,7 +178,7 @@ module.exports = {
 		if (words[userID]) {
 			Object.entries(words[userID]).forEach(([match, response]) => {
 				if (message.toLowerCase().includes(match)) {
-					output = response.replace('<username>', tags.username);
+					output = response.replace('<username>', '@' + tags.username);
 				}
 			});
 		}

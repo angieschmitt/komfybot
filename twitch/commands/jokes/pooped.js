@@ -31,7 +31,6 @@ module.exports = {
 
 				client.say(channel, `${content}`);
 			},
-			say: 'https://clips.twitch.tv/PoliteBrainyInternVoteYea-eVSsDvIPLWCh5MKR',
 		},
 	},
 };

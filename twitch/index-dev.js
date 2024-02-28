@@ -41,8 +41,14 @@ const client = new tmi.client(data.settings[branch]);
 client.connect().catch(console.error);
 
 // Set up local variables
+client.extras = [];
 client.last_message = [];
+
+// Individual versions of those variables
 data.settings[branch]['channels'].forEach(channel => {
+	client.extras[channel.replace('#', '')] = [];
+	client.extras[channel.replace('#', '')].race = [];
+	client.extras[channel.replace('#', '')].guessActive = [];
 	client.last_message[channel.replace('#', '')] = '';
 });
 
@@ -58,17 +64,18 @@ for (const file of eventFolders) {
 
 // Assign Commands
 client.commands = new Array();
-const commandsPath = path.join(__dirname, 'commands');
-const commandsFolders = fs.readdirSync(commandsPath);
+const foldersPath = path.join(__dirname, 'commands');
+const commandFolders = fs.readdirSync(foldersPath);
 
 //	- Skip aliases
-for (const folder of commandsFolders) {
+for (const folder of commandFolders) {
 	if (folder !== 'aliases') {
-		const commandsFolder = path.join(commandsPath, folder);
-		const commandFiles = fs.readdirSync(commandsFolder).filter(file => file.endsWith('.js'));
+		const commandsPath = path.join(foldersPath, folder);
+		const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 		for (const file of commandFiles) {
-			const filePath = path.join(commandsFolder, file);
+			const filePath = path.join(commandsPath, file);
 			const command = require(filePath);
+
 			if (command.disabled !== true) {
 				client.commands[command.name] = command;
 			}
@@ -77,12 +84,12 @@ for (const folder of commandsFolders) {
 }
 
 //  - Now we handle aliases
-for (const folder of commandsFolders) {
+for (const folder of commandFolders) {
 	if (folder === 'aliases') {
-		const commandsFolder = path.join(commandsPath, folder);
-		const commandFiles = fs.readdirSync(commandsFolder).filter(file => file.endsWith('.js'));
+		const commandsPath = path.join(foldersPath, folder);
+		const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 		for (const file of commandFiles) {
-			const filePath = path.join(commandsFolder, file);
+			const filePath = path.join(commandsPath, file);
 			const command = require(filePath);
 
 			if (command.alias in client.commands) {
@@ -175,10 +182,12 @@ function handleTimers(timersAll) {
 										console.log('Timer: SENT');
 										client.say(channel, res.extra['message']);
 										console.log('- - -');
+										queue[channel] = [];
 									}
 									else {
 										console.log('Timer: SKIPPED - not live');
 										console.log('- - -');
+										queue[channel] = [];
 									}
 								});
 							}

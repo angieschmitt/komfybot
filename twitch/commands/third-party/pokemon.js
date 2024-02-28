@@ -186,6 +186,8 @@ module.exports = {
 				const username = tags['username'];
 				const guess = message.replace(args[0], '').replace(args[1], '').trim().toLowerCase();
 
+				const channelClean = channel.replace('#', '');
+
 				if (guess === 'list') {
 					axios.get(baseUrl + 'retrieve/guesses')
 						.then(function(response) {
@@ -228,14 +230,14 @@ module.exports = {
 						});
 				}
 				else if (guess === 'unlock') {
-					client.extras[channel].guessActive = true;
+					client.extras[channelClean].guessActive = true;
 					client.say(channel, 'Guesses unlocked!');
 				}
 				else if (guess === 'locked') {
-					client.extras[channel].guessActive = false;
+					client.extras[channelClean].guessActive = false;
 					client.say(channel, 'Guesses locked!');
 				}
-				else if (client.extras[channel].guessActive == false) {
+				else if (client.extras[channelClean].guessActive == false) {
 					client.say(channel, 'Seems like you missed the window to guess!');
 				}
 				else {

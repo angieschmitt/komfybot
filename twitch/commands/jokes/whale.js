@@ -3,7 +3,15 @@ module.exports = {
 	help: '🐳🐳🐳🐳🐳🐳',
 	actions: {
 		default: {
-			say: 'Hey @ecusare, you\'re a dingus!',
+			execute(args, tags, message, channel, client) {
+				let content = '';
+
+				if (tags['user-id'] !== '16192204') {
+					content = 'Hey @ecusare, you\'re a dingus!';
+				}
+
+				client.say(channel, `${content}`);
+			},
 		},
 	},
 };

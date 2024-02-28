@@ -48,7 +48,7 @@ client.last_message = [];
 data.settings[branch]['channels'].forEach(channel => {
 	client.extras[channel.replace('#', '')] = [];
 	client.extras[channel.replace('#', '')].race = [];
-	client.extras[channel.replace('#', '')].guessActive = [];
+	client.extras[channel.replace('#', '')].guessActive = true;
 	client.last_message[channel.replace('#', '')] = '';
 });
 
