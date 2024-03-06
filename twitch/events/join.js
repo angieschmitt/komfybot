@@ -8,29 +8,17 @@ module.exports = {
 		const client = this;
 
 		if (isSelf) {
-			// if (channel === '#komfykiwi') {
-			// 	// client.say('komfykiwi', 'I\'m here boss! Got my cocoa and blankie!');
-			// }
 			module.exports.handleSpeak(channel, client);
 		}
 	},
 	handleSpeak(channel, client) {
 		channel = channel.replace('#', '');
-		const timerInterval = 1000;
+		const timerInterval = 2000;
 		setInterval(
-			function() {
-				axios.get(data.settings.newUrl + 'speak/retrieve/' + channel)
-					.then(function(response) {
-						if (response.data.status === 'success') {
-							const botSpeak = module.exports.speakConvertor(response.data.response);
-							client.say(channel, botSpeak)
-								.then(() => {
-									axios.get(data.settings.newUrl + 'speak/remove/' + channel);
-								});
-						}
-					});
-			},
+			callApi,
 			timerInterval,
+			channel,
+			client,
 		);
 	},
 	speakConvertor(data) {
@@ -80,3 +68,14 @@ module.exports = {
 		return newString;
 	},
 };
+
+async function callApi(channel, client) {
+	const response = await axios({ url: data.settings.newUrl + 'speak/retrieve/' + channel });
+	if (response.data.status === 'success') {
+		const botSpeak = module.exports.speakConvertor(response.data.response);
+		client.say(channel, botSpeak)
+			.then(() => {
+				axios.get(data.settings.newUrl + 'speak/remove/' + channel);
+			});
+	}
+}

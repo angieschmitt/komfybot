@@ -45,7 +45,7 @@ module.exports = {
 								content += 'https://www.multitwitch.tv/komfykiwi/' + url;
 							}
 							else {
-								content = 'Let a mod know to add the runner(s)!';
+								content = 'Seems like we aren\'t racing anyone yet!';
 							}
 						}
 						else {

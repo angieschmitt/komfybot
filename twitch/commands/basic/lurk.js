@@ -5,7 +5,7 @@ module.exports = {
 		default: {
 			execute(args, tags, message, channel, client) {
 				let content = '';
-				content += `Thank you for lurking, ${tags.username}! Enjoy and have a good time. `;
+				content += `komfykLurk Thank you for lurking, ${tags.username}! Enjoy and have a good time. `;
 				content += 'If you do want to mute the stream, please remember to do so via muting ';
 				content += 'your BROWSER TAB, and NOT via volume control - thank you! <3';
 

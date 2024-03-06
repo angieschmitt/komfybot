@@ -21,7 +21,10 @@ if (Object.keys(extArgs).length !== 0) {
 						.then(() => {
 							axios.get(data.settings.baseUrl + 'insert/count?reset')
 								.then(() => {
-									resolve();
+									axios.get(data.settings.newUrl + 'racers/reset')
+										.then(() => {
+											resolve();
+										});
 								});
 						});
 				});
