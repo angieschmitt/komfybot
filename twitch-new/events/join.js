@@ -1,0 +1,81 @@
+const axios = require('axios');
+const dataFile = require('../data/index');
+const data = dataFile.content();
+
+module.exports = {
+	eventHandler(channel, username, isSelf) {
+		// Get client
+		const client = this;
+
+		if (isSelf) {
+			module.exports.handleSpeak(channel, client);
+		}
+	},
+	handleSpeak(channel, client) {
+		channel = channel.replace('#', '');
+		const timerInterval = 2000;
+		setInterval(
+			callApi,
+			timerInterval,
+			channel,
+			client,
+		);
+	},
+	speakConvertor(data) {
+		const letters = {
+			'a': 'ᴀ',
+			'b': 'ʙ',
+			'c': 'ᴄ',
+			'd': 'ᴅ',
+			'e': 'ᴇ',
+			'f': 'ꜰ',
+			'g': 'ɢ',
+			'h': 'ʜ',
+			'i': 'ɪ',
+			'j': 'ᴊ',
+			'k': 'ᴋ',
+			'l': 'ʟ',
+			'm': 'ᴍ',
+			'n': 'ɴ',
+			'o': 'ᴏ',
+			'p': 'ᴘ',
+			'q': 'Q',
+			'r': 'ʀ',
+			's': 'ꜱ',
+			't': 'ᴛ',
+			'u': 'ᴜ',
+			'v': 'ᴠ',
+			'w': 'ᴡ',
+			'x': 'x',
+			'y': 'ʏ',
+			'z': 'ᴢ',
+		};
+
+		const parts = data.toLowerCase().split('');
+
+		let i = 0;
+		let newString = '';
+		while (i < parts.length) {
+			if (letters[parts[i]] !== undefined) {
+				newString += letters[ parts[i] ];
+			}
+			else {
+				newString += parts[i];
+			}
+			i++;
+		}
+
+		return newString;
+	},
+};
+
+async function callApi(channel, client) {
+	const response = await axios({ url: data.settings.newUrl + 'speak/retrieve/' + channel });
+	if (response.data.status === 'success') {
+		const botSpeak = module.exports.speakConvertor(response.data.response);
+		client.say(channel, botSpeak)
+			.then(() => {
+				axios.get(data.settings.newUrl + 'speak/remove/' + channel);
+			});
+	}
+}

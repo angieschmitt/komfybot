@@ -113,10 +113,6 @@ const ordered = Object.keys(client.commands).sort().reduce(
 client.commands = ordered;
 
 // Extra functions
-const isObjectEmpty = (objectName) => {
-	return Object.keys(objectName).length === 0 && objectName.constructor === Object;
-};
-
 function liveCheck(channel, extra = false) {
 	const chan = channel.toLowerCase();
 	return axios.get(data.settings.newUrl + 'live_check/insert')
@@ -184,12 +180,10 @@ function handleTimers(timersAll) {
 									if (res.live === true) {
 										console.log('Timer: SENT');
 										client.say(channel, res.extra['message']);
-										console.log('- - -');
 										queue[channel] = [];
 									}
 									else {
 										console.log('Timer: SKIPPED - not live');
-										console.log('- - -');
 										queue[channel] = [];
 									}
 								});
@@ -197,8 +191,14 @@ function handleTimers(timersAll) {
 						});
 					});
 					timerOffset++;
+
+					console.log('- - -');
 				},
 				timerInterval,
 			);
 		});
 }
+
+const isObjectEmpty = (objectName) => {
+	return Object.keys(objectName).length === 0 && objectName.constructor === Object;
+};

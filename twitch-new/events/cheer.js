@@ -1,0 +1,10 @@
+// const fs = require('node:fs');
+// const path = require('node:path');
+
+module.exports = {
+	eventHandler(channel, tags, message) {
+		console.log('caught cheer');
+		console.log(tags);
+		console.log(message);
+	},
+};

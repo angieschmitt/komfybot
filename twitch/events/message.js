@@ -30,10 +30,9 @@ module.exports = {
 
 		console.log(formattedTime);
 		// console.log(tags);
-		console.log(tags.username);
+		console.log(tags.username + ' : ' + tags['user-id']);
 		// console.log(tags['badge-info'].predictions);
 		console.log(perms);
-		console.log('- - -');
 
 		// Handle commands
 		if (cleanedMessage.indexOf('!') == 0) {
@@ -43,6 +42,8 @@ module.exports = {
 
 			if (command in client.commands) {
 				let action = {};
+
+				console.log('Used command: ' + command);
 
 				// Check for alias
 				if (client.commands[command].alias) {
@@ -158,9 +159,14 @@ module.exports = {
 		}
 
 		// React to words
-		const reaction = module.exports.handleReactWords(message, tags, data.reactWords[channelName]);
-		if (reaction) {
-			client.say(channel, reaction);
+		if (data.reactWords[channelName]) {
+			const reaction = module.exports.handleReactWords(message, tags, data.reactWords[channelName]);
+			console.log(reaction);
+			if (reaction) {
+				client.say(channel, reaction[1]);
+
+				console.log('Triggered: ' + reaction[0]);
+			}
 		}
 
 		// Shove in user reference data
@@ -169,6 +175,8 @@ module.exports = {
 
 		// Update coin_log
 		axios.post(data.settings.baseUrl + 'coins_fix');
+
+		console.log('- - -');
 	},
 	handleReactWords(message, tags, words) {
 		const userID = tags['user-id'];
@@ -178,7 +186,9 @@ module.exports = {
 		if (words[userID]) {
 			Object.entries(words[userID]).forEach(([match, response]) => {
 				if (message.toLowerCase().includes(match)) {
-					output = response.replace('<username>', '@' + tags.username);
+					output = [];
+					output[0] = 'user: ' + match;
+					output[1] = response.replace('<username>', '@' + tags.username);
 				}
 			});
 		}
@@ -188,7 +198,9 @@ module.exports = {
 			if (words[0]) {
 				Object.entries(words[0]).forEach(([match, response]) => {
 					if (message.toLowerCase().includes(match)) {
-						output = response.replace('<username>', tags.username);
+						output = [];
+						output[0] = 'global: ' + match;
+						output[1] = response.replace('<username>', '@' + tags.username);
 					}
 				});
 			}

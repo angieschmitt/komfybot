@@ -1,0 +1,263 @@
+const axios = require('axios');
+const dataFile = require('../data/index');
+const data = dataFile.content();
+
+module.exports = {
+	eventHandler(channel, tags, message, self) {
+		// Get client
+		const client = this;
+
+		// Clean channel
+		const channelName = channel.replace('#', '');
+
+		// Set last message
+		client.last_message[channelName] = message;
+
+		if (self) { return; }
+
+		const perms = {};
+		if ('#' + tags.username == channel) {
+			perms.streamer = true;
+			perms.mod = true;
+		}
+		if (tags.mod) { perms.mod = true; }
+		if (tags.vip) { perms.vip = true; }
+		if (tags.subscriber) { perms.sub = true; }
+
+		// Timestamp
+		const formattedTime = module.exports.timeConverter(tags['tmi-sent-ts']);
+
+		console.log(formattedTime);
+		// console.log(tags);
+		console.log(tags.username + ' : ' + tags['user-id']);
+		// console.log(tags['badge-info'].predictions);
+		console.log(perms);
+
+		// Let's look for a command
+		const cleanedMessage = message.trim();
+		if (cleanedMessage.indexOf('!') !== false) {
+			// Remove preceding text
+			const commandText = cleanedMessage.substr(cleanedMessage.indexOf('!'));
+
+			// Split remaing text into parts to handle things
+			const args = commandText.split(' ');
+
+			// Define the main command
+			const baseCommand = args[0].substring(1).toLowerCase();
+
+			// Define command buckets
+			const channelCommands = client.commands[channelName];
+			const globalCommands = client.commands['global'];
+
+			let commandData = module.exports.locateCommand(baseCommand, args, channelCommands);
+			if (!commandData) {
+				commandData = module.exports.locateCommand(baseCommand, args, globalCommands, channelName);
+			}
+
+			if (commandData) {
+				if (module.exports.handleCommand(commandData, perms, tags, message, client)) {
+					console.log('Used command: ' + commandData.command.name + ' ' + (commandData.args[1] ? commandData.args[1] : ''));
+				}
+			}
+		}
+
+		// React to words
+		if (data.reactWords[channelName]) {
+			const reaction = module.exports.handleReactWords(message, tags, data.reactWords[channelName]);
+			if (reaction) {
+				client.say(channel, reaction[1]);
+				console.log('Triggered: ' + reaction[0]);
+			}
+		}
+
+		// Shove in user reference data
+		const twitchData = { 'id': tags['user-id'], 'username': tags.username };
+		axios.get(data.settings.baseUrl + 'insert/user_reference/?twitch=' + encodeURIComponent(JSON.stringify(twitchData)));
+
+		// Update coin_log
+		axios.post(data.settings.baseUrl + 'coins_fix');
+
+		console.log('- - -');
+	},
+	locateCommand(command, args, commandMap, channel = false) {
+		if (command in commandMap) {
+			let action = {};
+
+			// Check for alias
+			if ('alias' in commandMap[command]) {
+				if (commandMap[command].arg) {
+					args.splice(1, 0, commandMap[command].arg);
+				}
+				// Swap alias for actual command
+				command = commandMap[command].alias;
+			}
+
+			// Start with the default action
+			action = commandMap[command].actions.default;
+
+			// If global, get channel specific if it exists
+			if (channel) {
+				if (commandMap[command].actions[channel]) {
+					action = commandMap[command].actions[channel];
+				}
+			}
+
+			// Allow override
+			if (args.length !== 1) {
+				if (commandMap[command].actions[args[1]]) {
+					action = commandMap[command].actions[args[1]];
+				}
+			}
+
+			// If not enabled, stop here
+			if ('enabled' in action) {
+				if (!action.enabled) {
+					return false;
+				}
+			}
+
+			return { 'command': commandMap[command], 'action': action, 'args': args, 'channel': (channel ? channel : commandMap[command].channel) };
+		}
+		else {
+			return false;
+		}
+	},
+	handleCommand(command, perms, tags, message, client) {
+		const action = command.action;
+		const args = command.args;
+		const channel = command.channel;
+
+		// Handle basic actions
+		if ('say' in action) {
+			let output = action.say;
+			let proceed = true;
+
+			// Handle perms/proceed, assign output if needed
+			if (action.perms !== undefined) {
+				if (!perms[action.perms.levels]) {
+					output = action.perms.error;
+					proceed = false;
+				}
+			}
+
+			// Handle the action now
+			// TO DO: Args?
+			if (proceed) {
+				if (action.args) {
+					// Find out how many required, start at 2 because !command and first arg
+					let count = 2;
+					for (const [key] of Object.entries(action.args)) {
+						if (action.args[key][0] === 'r') { count++; }
+					}
+					// Check full length vs required count
+					if (args.length < count) {
+						// console.log('Missed an argument');
+						return false;
+					}
+
+					for (const [key] of Object.entries(action.args)) {
+						if (args[(parseInt(key) + 1)] === undefined) {
+							if (action.args[key][1] === 'tags.username') {
+								output = output.replace('@' + key, tags.username);
+							}
+						}
+						else {
+							output = output.replace('@' + key, args[(parseInt(key) + 1)]);
+						}
+					}
+				}
+			}
+
+			// Output output...
+			client.say(channel, `${output}`);
+			return true;
+		}
+		else if ('execute' in action) {
+			let output = '';
+			let proceed = true;
+
+			// Handle perms/proceed, assign output if needed
+			if (action.perms) {
+				if (!perms[action.perms.levels]) {
+					output = `${tags.username}, ${action.perms.error}`;
+					proceed = false;
+				}
+			}
+
+			// Handle the action now
+			if (proceed) {
+				if (action.args) {
+					// Find out how many required, start at 2 because !command and first arg
+					let count = 2;
+					for (const [key] of Object.entries(action.args)) {
+						if (action.args[key][0] === 'r') {
+							count++;
+						}
+					}
+					// Check full length vs required count
+					if (args.length < count) {
+						output = `${tags.username}, ${action.args.error}`;
+						proceed = false;
+					}
+				}
+			}
+
+			// Output... something...
+			if (!output) {
+				action.execute(args, tags, message, channel, client);
+				return true;
+			}
+			else {
+				client.say(channel, `${output}`);
+				return true;
+			}
+		}
+	},
+	handleReactWords(message, tags, words) {
+		const userID = tags['user-id'];
+		let output = false;
+
+		// Check user specific first
+		if (words[userID]) {
+			Object.entries(words[userID]).forEach(([match, response]) => {
+				if (message.toLowerCase().includes(match)) {
+					output = [];
+					output[0] = 'user: ' + match;
+					output[1] = response.replace('<username>', '@' + tags.username);
+				}
+			});
+		}
+
+		// If no user specific, check globals
+		if (!output) {
+			if (words[0]) {
+				Object.entries(words[0]).forEach(([match, response]) => {
+					if (message.toLowerCase().includes(match)) {
+						output = [];
+						output[0] = 'global: ' + match;
+						output[1] = response.replace('<username>', '@' + tags.username);
+					}
+				});
+			}
+		}
+
+		// If output, return.. if not false
+		if (output) {
+			return output;
+		}
+		return false;
+	},
+	timeConverter(UNIX_timestamp) {
+		const a = new Date(parseInt(UNIX_timestamp));
+		const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+		const year = a.getFullYear();
+		const month = months[a.getMonth()];
+		const date = a.getDate();
+		const hour = a.getHours();
+		const min = (a.getMinutes() < 10 ? '0' : '') + a.getMinutes();
+		const sec = (a.getSeconds() < 10 ? '0' : '') + a.getSeconds();
+		const milli = (a.getMilliseconds() < 10 ? '0' : '') + a.getMilliseconds();
+		const time = month + ' ' + date + ' ' + year + ' ' + hour + ':' + min + ':' + sec + ':' + milli;
+		return time;
+	},
+};

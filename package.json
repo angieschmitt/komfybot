@@ -10,6 +10,7 @@
     "scripts": {
         "twitch": "node ./twitch/index.js",
         "twitch-dev": "node ./twitch/index-dev.js",
+        "twitch-new": "node ./twitch-new/index.js",
         "discord": "node ./discord/index.js",
         "discord-dev": "node ./discord/index-dev.js"
     },
