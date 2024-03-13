@@ -3,11 +3,12 @@ const axios = require('axios');
 const fs = require('node:fs');
 const path = require('node:path');
 
-const branch = 'live';
-
 // Load in data
 const dataFile = require('./data/index');
 const data = dataFile.content();
+
+const branch = 'live';
+data.debug.init(branch);
 
 // Handle BAT File args
 const extArgs = process.argv.slice(2);
@@ -202,3 +203,5 @@ function handleTimers(timersAll) {
 const isObjectEmpty = (objectName) => {
 	return Object.keys(objectName).length === 0 && objectName.constructor === Object;
 };
+
+data.debug.write('LAUNCHED');

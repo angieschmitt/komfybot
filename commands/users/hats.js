@@ -38,7 +38,7 @@ module.exports = {
 				const embed = new EmbedBuilder()
 					.setTitle('Hats Inventory')
 					.setColor(0xC44578)
-					.addFields(hatsList)
+					// .addFields(hatsList) Too many fields, rewrite then
 					.setImage(hatsVisual);
 
 				interaction.editReply({ embeds: [embed] });

@@ -3,11 +3,12 @@ const axios = require('axios');
 const fs = require('node:fs');
 const path = require('node:path');
 
-const branch = 'dev';
-
 // Load in data
 const dataFile = require('./data/index');
 const data = dataFile.content();
+
+const branch = 'dev';
+data.debug.init(branch);
 
 // Handle BAT File args
 const extArgs = process.argv.slice(2);
@@ -21,7 +22,10 @@ if (Object.keys(extArgs).length !== 0) {
 						.then(() => {
 							axios.get(data.settings.baseUrl + 'insert/count?reset')
 								.then(() => {
-									resolve();
+									axios.get(data.settings.newUrl + 'racers/reset')
+										.then(() => {
+											resolve();
+										});
 								});
 						});
 				});
@@ -48,7 +52,7 @@ client.last_message = [];
 data.settings[branch]['channels'].forEach(channel => {
 	client.extras[channel.replace('#', '')] = [];
 	client.extras[channel.replace('#', '')].race = [];
-	client.extras[channel.replace('#', '')].guessActive = [];
+	client.extras[channel.replace('#', '')].guessActive = true;
 	client.last_message[channel.replace('#', '')] = '';
 });
 
@@ -199,3 +203,5 @@ function handleTimers(timersAll) {
 const isObjectEmpty = (objectName) => {
 	return Object.keys(objectName).length === 0 && objectName.constructor === Object;
 };
+
+data.debug.write('LAUNCHED');

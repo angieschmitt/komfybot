@@ -70,7 +70,11 @@ module.exports = {
 };
 
 async function callApi(channel, client) {
-	const response = await axios({ url: data.settings.newUrl + 'speak/retrieve/' + channel });
+	const response = await axios({ url: data.settings.newUrl + 'speak/retrieve/' + channel })
+		.catch(function(error) {
+			data.debug.write('SPEAK ERROR: ');
+			data.debug.write(error.toJSON());
+		});
 	if (response.data.status === 'success') {
 		const botSpeak = module.exports.speakConvertor(response.data.response);
 		client.say(channel, botSpeak)

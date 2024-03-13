@@ -161,7 +161,7 @@ module.exports = {
 		// React to words
 		if (data.reactWords[channelName]) {
 			const reaction = module.exports.handleReactWords(message, tags, data.reactWords[channelName]);
-			console.log(reaction);
+			// console.log(reaction);
 			if (reaction) {
 				client.say(channel, reaction[1]);
 
