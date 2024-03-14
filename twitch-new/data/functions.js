@@ -95,7 +95,7 @@ const functions = {
 			client.commands[channel] = ordered;
 		});
 
-		console.log(client.commands);
+		// console.log(client.commands);
 
 		return client;
 	},
@@ -204,6 +204,52 @@ const functions = {
 	},
 	isObjectEmpty(objectName) {
 		return Object.keys(objectName).length === 0 && objectName.constructor === Object;
+	},
+	speakConvertor(data) {
+		const letters = {
+			'a': 'ᴀ',
+			'b': 'ʙ',
+			'c': 'ᴄ',
+			'd': 'ᴅ',
+			'e': 'ᴇ',
+			'f': 'ꜰ',
+			'g': 'ɢ',
+			'h': 'ʜ',
+			'i': 'ɪ',
+			'j': 'ᴊ',
+			'k': 'ᴋ',
+			'l': 'ʟ',
+			'm': 'ᴍ',
+			'n': 'ɴ',
+			'o': 'ᴏ',
+			'p': 'ᴘ',
+			'q': 'Q',
+			'r': 'ʀ',
+			's': 'ꜱ',
+			't': 'ᴛ',
+			'u': 'ᴜ',
+			'v': 'ᴠ',
+			'w': 'ᴡ',
+			'x': 'x',
+			'y': 'ʏ',
+			'z': 'ᴢ',
+		};
+
+		const parts = data.toLowerCase().split('');
+
+		let i = 0;
+		let newString = '';
+		while (i < parts.length) {
+			if (letters[parts[i]] !== undefined) {
+				newString += letters[ parts[i] ];
+			}
+			else {
+				newString += parts[i];
+			}
+			i++;
+		}
+
+		return newString;
 	},
 };
 

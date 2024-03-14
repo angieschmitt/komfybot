@@ -3,7 +3,7 @@ const tmi = require('tmi.js');
 // const fs = require('node:fs');
 // const path = require('node:path');
 
-const branch = 'live';
+const branch = 'dev';
 
 // Load in data
 const dataFile = require('./data/index');

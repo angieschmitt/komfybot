@@ -38,6 +38,7 @@ module.exports = {
 				}
 			});
 		console.log('caught raid');
+		console.log(channel);
 		console.log(username);
 		console.log(viewers);
 		console.log(tags);
