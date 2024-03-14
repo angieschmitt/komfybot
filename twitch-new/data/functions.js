@@ -114,6 +114,7 @@ const functions = {
 		return commands;
 	},
 	liveCheck(data, channel, extra = false) {
+		console.log(channel);
 		const chan = channel.toLowerCase();
 		return axios.get(data.settings.newUrl + 'live_check/insert')
 			.then(function(res) {
@@ -134,73 +135,75 @@ const functions = {
 				return response;
 			});
 	},
-	handleTimers(data, channel, timers, client) {
-		console.log('seperate timers');
-		console.log(data);
-		console.log(channel);
-		console.log(timers);
-		console.log(client);
-		// const timerInterval = 60000;
-		// let timerOffset = 1;
-		// axios.get(data.settings.baseUrl + 'retrieve/uptime')
-		// 	.then(function(response) {
-		// 		if (response.data.status === 'success') {
-		// 			timerOffset = (response.data.minutes > 0 ? response.data.minutes : 1);
-		// 		}
-		// 	})
-		// 	.catch(console.error)
-		// 	.finally(() => {
-		// 		const queue = {};
-		// 		Object.entries(timers).forEach(([channel]) => {
-		// 			queue[channel] = [];
-		// 		});
-		// 		setInterval(
-		// 			function() {
-		// 				console.log('Timer: ' + timerOffset);
+	handleTimers(data, timers, client) {
+		const parent = this;
+		const timerInterval = 60000;
+		let timerOffset = 1;
 
-		// 				// Enter messages into queue
-		// 				Object.entries(timers).forEach(([channel]) => {
-		// 					const timers = timers[channel];
-		// 					Object.entries(timers).forEach(([key]) => {
-		// 						if ((timerOffset % timers[key]['timer']) == 0) {
-		// 							if (this.isObjectEmpty(queue[channel])) {
-		// 								queue[channel][key] = timers[key];
-		// 							}
-		// 							else {
-		// 								const first = Object.keys(queue[channel])[0];
-		// 								delete queue[channel][first];
-		// 								queue[channel][key] = timers[key];
-		// 							}
-		// 						}
-		// 					});
-		// 				});
+		axios.get(data.settings.baseUrl + 'retrieve/uptime')
+			.then(function(response) {
+				if (response.data.status === 'success') {
+					timerOffset = (response.data.minutes > 0 ? response.data.minutes : 1);
+				}
+			})
+			.catch(console.error)
+			.finally(() => {
+				const queue = {};
+				Object.entries(timers).forEach(([channel]) => {
+					queue[channel] = [];
+				});
+				setInterval(
+					function() {
+						console.log('Timer: ' + timerOffset);
 
-		// 				// Handle queue
-		// 				Object.entries(queue).forEach(([channel]) => {
-		// 					Object.entries(queue[channel]).forEach(([ident]) => {
-		// 						const messageData = queue[channel][ident];
-		// 						if (client.last_message !== messageData['message']) {
-		// 							this.liveCheck(channel, messageData).then(res => {
-		// 								if (res.live === true) {
-		// 									console.log('Timer: SENT');
-		// 									client.say(channel, res.extra['message']);
-		// 									queue[channel] = [];
-		// 								}
-		// 								else {
-		// 									console.log('Timer: SKIPPED - not live');
-		// 									queue[channel] = [];
-		// 								}
-		// 							});
-		// 						}
-		// 					});
-		// 				});
-		// 				timerOffset++;
+						// Enter messages into queue
+						Object.entries(timers).forEach(([channel]) => {
+							const channelTimers = timers[channel];
+							Object.entries(channelTimers).forEach(([key]) => {
+								if ((timerOffset % channelTimers[key]['timer']) == 0) {
+									if (parent.isObjectEmpty(queue[channel])) {
+										queue[channel][key] = channelTimers[key];
+									}
+									else {
+										const first = Object.keys(queue[channel])[0];
+										delete queue[channel][first];
+										queue[channel][key] = channelTimers[key];
+									}
+								}
+							});
+						});
 
-		// 				console.log('- - -');
-		// 			},
-		// 			timerInterval,
-		// 		);
-		// 	});
+						// Handle queue
+						Object.entries(queue).forEach(([channel]) => {
+							if (Object.keys(queue[channel]).length > 0) {
+								Object.entries(queue[channel]).forEach(([ident]) => {
+									const messageData = queue[channel][ident];
+									console.log(channel + ' => ' + ident + ' => ' + messageData);
+									if (client.last_message[channel] !== messageData['message']) {
+										parent.liveCheck(data, channel, messageData).then(res => {
+											if (res.live === true) {
+												console.log('Timer: SENT ' + ident + ' IN ' + channel);
+												client.say(channel, res.extra['message']);
+												queue[channel] = [];
+											}
+											else {
+												console.log('Timer: SKIPPED - ' + ident + ' IN ' + channel);
+												queue[channel] = [];
+											}
+										});
+									}
+								});
+							}
+						});
+
+						timerOffset++;
+
+						console.log('- - -');
+					},
+					timerInterval,
+				);
+			});
+
 	},
 	isObjectEmpty(objectName) {
 		return Object.keys(objectName).length === 0 && objectName.constructor === Object;

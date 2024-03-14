@@ -22,6 +22,10 @@ const timers = {
 		},
 	},
 	'kittenangie': {
+		'discord': {
+			'timer': 10,
+			'message': 'Come hang with the KomfyKrew on Discord: https://discord.gg/8T44G4mUFu',
+		},
 	},
 };
 
