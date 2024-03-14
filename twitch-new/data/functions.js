@@ -79,6 +79,12 @@ const functions = {
 					}
 					else {
 						client.commands['global'][command.name] = command;
+
+						if (command.aliases !== undefined && Object.keys(command.aliases).length > 0) {
+							Object.entries(command.aliases).forEach(([key, data]) => {
+								this.handleAlias(command, key, data, client.commands['global']);
+							});
+						}
 					}
 				}
 			}
@@ -114,7 +120,6 @@ const functions = {
 		return commands;
 	},
 	liveCheck(data, channel, extra = false) {
-		console.log(channel);
 		const chan = channel.toLowerCase();
 		return axios.get(data.settings.newUrl + 'live_check/insert')
 			.then(function(res) {
@@ -178,7 +183,6 @@ const functions = {
 							if (Object.keys(queue[channel]).length > 0) {
 								Object.entries(queue[channel]).forEach(([ident]) => {
 									const messageData = queue[channel][ident];
-									console.log(channel + ' => ' + ident + ' => ' + messageData);
 									if (client.last_message[channel] !== messageData['message']) {
 										parent.liveCheck(data, channel, messageData).then(res => {
 											if (res.live === true) {
@@ -197,7 +201,6 @@ const functions = {
 						});
 
 						timerOffset++;
-
 						console.log('- - -');
 					},
 					timerInterval,

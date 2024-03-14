@@ -30,11 +30,13 @@ async function callApi(channel, client) {
 			data.debug.write('SPEAK ERROR: ');
 			data.debug.write(error.toJSON());
 		});
-	if (response.data.status === 'success') {
-		const botSpeak = data.functions.speakConvertor(response.data.response);
-		client.say(channel, botSpeak)
-			.then(() => {
-				axios.get(data.settings.newUrl + 'speak/remove/' + channel);
-			});
+	if (response) {
+		if (response.data.status === 'success') {
+			const botSpeak = data.functions.speakConvertor(response.data.response);
+			client.say(channel, botSpeak)
+				.then(() => {
+					axios.get(data.settings.newUrl + 'speak/remove/' + channel);
+				});
+		}
 	}
 }

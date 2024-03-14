@@ -42,6 +42,7 @@ if (Object.keys(extArgs).length !== 0) {
 
 		handleReset.then(() => {
 			data.functions.handleTimers(data, data.timers, client);
+			data.debug.write('TRIGGERED: RESET');
 		});
 	}
 }

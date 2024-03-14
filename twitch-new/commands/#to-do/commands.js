@@ -2,6 +2,11 @@ module.exports = {
 	list: false,
 	name: 'commands',
 	help: 'Outputs a list of available commands',
+	aliases: {
+		'cmds': {
+			arg: false,
+		},
+	},
 	actions: {
 		default: {
 			execute(args, tags, message, channel, client) {

@@ -10,14 +10,14 @@ module.exports = {
 
 				let iter = 0;
 				const clap = setInterval(() => {
-					if (iter <= 2) {
+					if (iter <= 1) {
 						client.say(channel, `${content}`);
 					}
 					else {
 						clearInterval(clap);
 					}
 					iter++;
-				}, 6000);
+				}, 5000);
 			},
 		},
 	},
