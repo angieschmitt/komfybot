@@ -6,11 +6,8 @@ module.exports = {
 	channel: 'komfykiwi',
 	help: 'Shows your (or someone else\'s) total coin amount! Additional arguments: add, store, buy',
 	aliases: {
-		'ari': {
+		'coin': {
 			arg: false,
-		},
-		'zona': {
-			arg: 'test',
 			list: false,
 		},
 	},

@@ -194,6 +194,7 @@ const functions = {
 												console.log('Timer: SKIPPED - ' + ident + ' IN ' + channel);
 												queue[channel] = [];
 											}
+											console.log('- - -');
 										});
 									}
 								});

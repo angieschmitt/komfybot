@@ -12,7 +12,7 @@ module.exports = {
 					.then(function(response) {
 						const output = response.data;
 						if (output.status === 'success') {
-							content = `@${channel.substring(1)} has been live for: ` + output.content;
+							content = `@${channel.replace('#', '')} has been live for: ` + output.content;
 						}
 						else {
 							content = 'Something went wrong, tell @kittenAngie.';

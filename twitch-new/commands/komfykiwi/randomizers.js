@@ -1,5 +1,6 @@
 module.exports = {
 	name: 'randomizers',
+	list: false,
 	channel: 'komfykiwi',
 	help: 'Randomizer explainer',
 	aliases: {

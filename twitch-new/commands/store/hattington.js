@@ -10,6 +10,7 @@ module.exports = {
 	aliases: {
 		'hat': {
 			arg: false,
+			list: false,
 		},
 		'hats': {
 			arg: false,

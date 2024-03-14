@@ -11,6 +11,7 @@
         "twitch": "node ./twitch/index.js",
         "twitch-dev": "node ./twitch/index-dev.js",
         "twitch-new": "node ./twitch-new/index.js",
+        "twitch-new-dev": "node ./twitch-new/index-dev.js",
         "discord": "node ./discord/index.js",
         "discord-dev": "node ./discord/index-dev.js"
     },

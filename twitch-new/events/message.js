@@ -50,7 +50,10 @@ module.exports = {
 			const channelCommands = client.commands[channelName];
 			const globalCommands = client.commands['global'];
 
-			let commandData = module.exports.locateCommand(baseCommand, args, channelCommands);
+			let commandData = false;
+			if (channelCommands) {
+				commandData = module.exports.locateCommand(baseCommand, args, channelCommands);
+			}
 			if (!commandData) {
 				commandData = module.exports.locateCommand(baseCommand, args, globalCommands, channelName);
 			}

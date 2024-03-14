@@ -22,6 +22,10 @@ const timers = {
 		},
 	},
 	'kittenangie': {
+		'discord': {
+			'timer': 10,
+			'message': 'Test timer',
+		},
 	},
 };
 
