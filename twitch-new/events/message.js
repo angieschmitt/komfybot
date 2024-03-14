@@ -29,6 +29,7 @@ module.exports = {
 
 		console.log(formattedTime);
 		// console.log(tags);
+		console.log(channelName);
 		console.log(tags.username + ' : ' + tags['user-id']);
 		// console.log(tags['badge-info'].predictions);
 		console.log(perms);
@@ -187,8 +188,8 @@ module.exports = {
 			// Handle the action now
 			if (proceed) {
 				if (action.args) {
-					// Find out how many required, start at 2 because !command and first arg
-					let count = 2;
+					// Find out how many required, start at 1 because !command
+					let count = 1;
 					for (const [key] of Object.entries(action.args)) {
 						if (action.args[key][0] === 'r') {
 							count++;

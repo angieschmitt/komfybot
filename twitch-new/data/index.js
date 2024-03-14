@@ -1,5 +1,6 @@
 const functions = require('./functions');
 const settings = require('./settings');
+const debug = require('./debug');
 const metronome = require('./metronome');
 const reactWords = require('./react-words');
 const timers = require('./timers');
@@ -10,6 +11,7 @@ const data = {
 	metronome: metronome.content(),
 	reactWords: reactWords.content(),
 	timers: timers.content(),
+	debug: debug.content(),
 };
 
 module.exports = {

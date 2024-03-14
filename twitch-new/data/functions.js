@@ -11,6 +11,8 @@ const functions = {
 		// Create global commands
 		client.commands['global'] = [];
 
+		data.debug.init(branch);
+
 		data.settings[branch]['channels'].forEach(channel => {
 			// Create channel commands
 			client.commands[channel.replace('#', '')] = [];
@@ -36,7 +38,19 @@ const functions = {
 		}
 		return client;
 	},
-	loadCommands(client) {
+	loadCommands(client, reset = false) {
+
+		if (reset) {
+			Object.entries(client.commands).forEach(([channel]) => {
+				client.commands[channel] = [];
+				// Wipe out exisiting commands, and cache of them
+				client.commands[channel] = new Array();
+			});
+			for (const i in require.cache) {
+				delete require.cache[i];
+			}
+		}
+
 		// Assign Commands
 		const foldersPath = path.join(__dirname, '../commands');
 		const commandFolders = fs.readdirSync(foldersPath);
@@ -50,6 +64,11 @@ const functions = {
 
 				if (command.disabled !== true) {
 					if (command.channel !== '' && command.channel !== undefined) {
+
+						if (!(command.channel in client.commands)) {
+							client.commands[command.channel] = [];
+						}
+
 						client.commands[command.channel][command.name] = command;
 
 						if (command.aliases !== undefined && Object.keys(command.aliases).length > 0) {
@@ -76,17 +95,21 @@ const functions = {
 			client.commands[channel] = ordered;
 		});
 
+		console.log(client.commands);
+
 		return client;
 	},
 	handleAlias(baseCommand, name, details, commands) {
-		commands[name] = {
-			'alias': baseCommand['name'],
-		};
-		if (details.arg) {
-			commands[name]['arg'] = details.arg;
-		}
-		if (details.list === false) {
-			commands[name]['list'] = false;
+		if (!('disabled' in details)) {
+			commands[name] = {
+				'alias': baseCommand['name'],
+			};
+			if (details.arg) {
+				commands[name]['arg'] = details.arg;
+			}
+			if (details.list === false) {
+				commands[name]['list'] = false;
+			}
 		}
 		return commands;
 	},

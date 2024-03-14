@@ -4,7 +4,7 @@ module.exports = {
 	help: 'Explainer about ads',
 	actions: {
 		default: {
-			say: 'Forgive the ads',
+			say: 'Please forgive the ads!',
 		},
 		komfykiwi: {
 			say: 'Gotta take an AD Break… Trust me, I get it. It sucks. Sorry! ' +

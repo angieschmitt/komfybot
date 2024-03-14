@@ -1,15 +1,6 @@
 module.exports = {
 	name: 'arizona',
 	channel: 'komfykiwi',
-	aliases: {
-		'ari': {
-			arg: false,
-		},
-		'zona': {
-			arg: 'test',
-			list: false,
-		},
-	},
 	help: 'The official drink of KomfyKiwi #NotSponsoredYet',
 	actions: {
 		default: {

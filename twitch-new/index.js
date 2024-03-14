@@ -3,11 +3,19 @@ const tmi = require('tmi.js');
 // const fs = require('node:fs');
 // const path = require('node:path');
 
-const branch = 'dev';
+const branch = 'live';
 
 // Load in data
 const dataFile = require('./data/index');
 const data = dataFile.content();
+
+// Connect to Twitch:
+const client = new tmi.client(data.settings[branch]);
+client.connect().catch(console.error);
+
+data.functions.loadBranch(client, data, branch);
+data.functions.loadEvents(client);
+data.functions.loadCommands(client);
 
 // Handle BAT File args
 // const extArgs = process.argv.slice(2);
@@ -39,12 +47,4 @@ const data = dataFile.content();
 //     data.functions.handleTimers(data, channel, timers, client);
 // }
 
-// Connect to Twitch:
-const client = new tmi.client(data.settings[branch]);
-client.connect().catch(console.error);
-
-data.functions.loadBranch(client, data, branch);
-data.functions.loadEvents(client);
-data.functions.loadCommands(client);
-
-// console.log(client.commands);
+data.debug.write('LAUNCHED');

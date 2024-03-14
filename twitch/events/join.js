@@ -9,6 +9,7 @@ module.exports = {
 
 		if (isSelf) {
 			module.exports.handleSpeak(channel, client);
+			data.debug.write('JOINED: ' + channel);
 		}
 	},
 	handleSpeak(channel, client) {

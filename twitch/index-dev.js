@@ -32,12 +32,12 @@ if (Object.keys(extArgs).length !== 0) {
 		});
 
 		handleReset.then(() => {
-			handleTimers(data.timers);
+			// handleTimers(data.timers);
 		});
 	}
 }
 else {
-	handleTimers(data.timers);
+	// handleTimers(data.timers);
 }
 
 // Connect to Twitch:

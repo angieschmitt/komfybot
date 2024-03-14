@@ -30,6 +30,7 @@ module.exports = {
 
 		console.log(formattedTime);
 		// console.log(tags);
+		console.log(channelName);
 		console.log(tags.username + ' : ' + tags['user-id']);
 		// console.log(tags['badge-info'].predictions);
 		console.log(perms);
