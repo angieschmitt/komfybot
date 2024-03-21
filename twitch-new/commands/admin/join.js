@@ -16,7 +16,7 @@ module.exports = {
 				error: 'don\'t forgot your channel to join!',
 			},
 			execute(args, tags, message, channel, client) {
-				const channelToJoin = args[1];
+				const channelToJoin = args[1].replace('@', '');
 				client.join(channelToJoin)
 					.catch((error) => {
 						data.debug.write('JOIN ERROR: ');

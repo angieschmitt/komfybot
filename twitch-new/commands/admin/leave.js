@@ -16,7 +16,7 @@ module.exports = {
 				error: 'don\'t forgot your channel to leave!',
 			},
 			execute(args, tags, message, channel, client) {
-				const channelToJoin = args[1];
+				const channelToJoin = args[1].replace('@', '');
 				client.leave(channelToJoin)
 					.catch((error) => {
 						data.debug.write('LEAVE ERROR: ');

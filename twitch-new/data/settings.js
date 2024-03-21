@@ -5,6 +5,7 @@ const settings = {
 	newUrl: 'https://www.kittenangie.com/bots/api/v1/',
 	live : {
 		channels: [
+			'komfybot',
 			'komfykiwi',
 			// 'kittenangie',
 			// 'alazysun',
@@ -20,6 +21,7 @@ const settings = {
 	},
 	dev: {
 		channels: [
+			'komfybot',
 			// 'komfykiwi',
 			'kittenangie',
 			// 'alazysun',

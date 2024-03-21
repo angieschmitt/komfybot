@@ -17,7 +17,7 @@ module.exports = {
 						.then(function(response) {
 							const output = response.data;
 							if (output.status === 'success') {
-								content = `WOOOO! Thanks for the raid @${username}, we added ${amount} KomfyCoins to your wallet!`;
+								content = `WOOOO! Thanks for the raid @${username}, we added ${amount} KomfyCoins to your wallet! You can use !hat buy to get a hat for Hattington!`;
 							}
 							else if (output.status === 'failure') {
 								if (output.err_msg === 'no_twitch_id') {
