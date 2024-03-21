@@ -8,7 +8,7 @@ module.exports = {
 		const client = this;
 
 		if (isSelf) {
-			module.exports.handleSpeak(channel, client);
+			// module.exports.handleSpeak(channel, client);
 			data.debug.write('JOINED: ' + channel);
 		}
 	},
