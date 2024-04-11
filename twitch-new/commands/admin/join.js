@@ -19,8 +19,7 @@ module.exports = {
 				const channelToJoin = args[1].replace('@', '');
 				client.join(channelToJoin)
 					.catch((error) => {
-						data.debug.write('JOIN ERROR: ');
-						data.debug.write(error);
+						data.debug.write(channel, 'JOIN_ERROR', error);
 					})
 					.then(() => {
 						client.say(channel, `Joined ${channelToJoin}.`);

@@ -41,13 +41,13 @@ if (Object.keys(extArgs).length !== 0) {
 		});
 
 		handleReset.then(() => {
-			data.functions.handleTimers(data, data.timers, client);
-			data.debug.write('TRIGGERED: RESET');
+			// data.functions.handleTimers(data, data.timers, client);
+			data.debug.write('global', 'RESET');
 		});
 	}
 }
 else {
-	data.functions.handleTimers(data, data.timers, client);
+	// data.functions.handleTimers(data, data.timers, client);
 }
 
-data.debug.write('LAUNCHED');
+data.debug.write('global', 'LAUNCHED');

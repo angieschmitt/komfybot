@@ -14,9 +14,9 @@ const debug = {
 		debug.file = path.join(__dirname, '../debug/') + today + '_debug-' + debug.branch + '.txt';
 		debug.stream = fs.createWriteStream(debug.file, { flags: 'a' });
 	},
-	write: function(d) {
+	write: function(channel, event, comment = null) {
 		const now = new Date().toLocaleString('sv-SE', { timeZone: 'America/New_York' }).replace(' ', '_');
-		debug.stream.write(now + ' : ' + util.format(d) + '\n');
+		debug.stream.write(now + ',' + util.format(channel) + ',' + util.format(event) + ',' + util.format(comment) + '\n');
 	},
 };
 

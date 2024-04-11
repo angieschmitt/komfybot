@@ -5,11 +5,13 @@ const data = dataFile.content();
 module.exports = {
 	eventHandler(channel, username, isSelf) {
 		// Get client
-		const client = this;
+		// const client = this;
+
+		// Log people joining
+		data.debug.write(channel, 'USER_JOIN', username);
 
 		if (isSelf) {
 			// module.exports.handleSpeak(channel, client);
-			data.debug.write('JOINED: ' + channel);
 		}
 	},
 	handleSpeak(channel, client) {
@@ -27,8 +29,7 @@ module.exports = {
 async function callApi(channel, client) {
 	const response = await axios({ url: data.settings.newUrl + 'speak/retrieve/' + channel })
 		.catch(function(error) {
-			data.debug.write('SPEAK ERROR: ');
-			data.debug.write(error.toJSON());
+			data.debug.write(channel, 'SPEAK_ERROR', error.toJSON());
 		});
 	if (response) {
 		if (response.data.status === 'success') {
