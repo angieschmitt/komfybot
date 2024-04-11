@@ -12,7 +12,7 @@ module.exports = {
 					.then(function(response) {
 						const output = response.data;
 						if (output.status === 'success') {
-							content += `BOP BOP @${channel.substring(1)} got bonked by ${tags.username} || `;
+							content += `BOP BOP @${channel} got bonked by ${tags.username} || `;
 							content += `They've been bonked ${output.content} times!`;
 						}
 						else {
