@@ -7,5 +7,8 @@ module.exports = {
 		komfykiwi: {
 			say: 'Looking for sweet KomfyKiwi swag? Check out https://streamlabs.com/komfykiwi/merch !',
 		},
+		kittenangie: {
+			say: 'Looking for sweet kittenAngie swag? Check out https://streamlabs.com/kittenangie/merch !',
+		},
 	},
 };
