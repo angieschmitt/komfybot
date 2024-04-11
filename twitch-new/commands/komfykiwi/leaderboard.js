@@ -5,7 +5,7 @@ const data = dataFile.content();
 module.exports = {
 	list: false,
 	name: 'leaderboard',
-	channel: 'kittenangie',
+	channel: 'komfykiwi',
 	help: 'Shows who is in the lead for different things! Additional arguments: hoarders, spenders',
 	aliases: {
 		'top': {
