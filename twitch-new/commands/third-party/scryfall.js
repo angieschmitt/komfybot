@@ -17,34 +17,47 @@ module.exports = {
 						.then(function(response) {
 							const data = response.data;
 
-							output += `${data.name}: `;
-							if (data.mana_cost !== '') {
-								output += `Mana :: ${data.mana_cost} || `;
-							}
-							output += `Type :: ${data.type_line} || `;
-							if (data.oracle_text !== '') {
-								output += `Text :: ${data.oracle_text} || `;
-							}
-							if ('power' in data || 'toughness' in data) {
-								output += 'P/T :: ';
-								if ('power' in data) {
-									output += `${data.power}`;
+							if (data.object === 'card') {
+								output += `${data.name}: `;
+								if (data.mana_cost !== '') {
+									output += `Mana :: ${data.mana_cost} || `;
 								}
-								if ('power' in data && 'toughness' in data) {
-									output += '/';
+								output += `Type :: ${data.type_line} || `;
+								if (data.oracle_text !== '') {
+									output += `Text :: ${data.oracle_text} || `;
 								}
-								if ('toughness' in data) {
-									output += `${data.toughness}`;
+								if ('power' in data || 'toughness' in data) {
+									output += 'P/T :: ';
+									if ('power' in data) {
+										output += `${data.power}`;
+									}
+									if ('power' in data && 'toughness' in data) {
+										output += '/';
+									}
+									if ('toughness' in data) {
+										output += `${data.toughness}`;
+									}
+									output += ' || ';
 								}
-								output += ' || ';
+								if ('gatherer' in data.related_uris) {
+									output += `More Info :: ${data.related_uris.gatherer} || `;
+								}
+								output = output.substring(0, (output.length - 4));
 							}
-							if ('gatherer' in data.related_uris) {
-								output += `More Info :: ${data.related_uris.gatherer} || `;
-							}
-							output = output.substring(0, (output.length - 4));
 						})
-						.catch(function() {
-							output = 'Something went wrong, tell @kittenAngie.';
+						.catch(function(error) {
+							const data = error.response.data;
+							if (data.object == 'error') {
+								if (data.details != '') {
+									output = data.details;
+								}
+								else {
+									output = 'Something went wrong, tell @kittenAngie.';
+								}
+							}
+							else {
+								output = 'Something went wrong, tell @kittenAngie.';
+							}
 						})
 						.finally(function() {
 							client.say(channel, output);

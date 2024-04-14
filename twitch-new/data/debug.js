@@ -11,7 +11,7 @@ const debug = {
 	stream: false,
 	init: function(branch = 'dev') {
 		debug.branch = branch;
-		debug.file = path.join(__dirname, '../debug/') + today + '_debug-' + debug.branch + '.txt';
+		debug.file = path.join(__dirname, '../debug/') + today + '_debug-' + debug.branch + '.csv';
 		debug.stream = fs.createWriteStream(debug.file, { flags: 'a' });
 	},
 	write: function(channel, event, comment = null) {
