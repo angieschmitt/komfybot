@@ -11,7 +11,7 @@ module.exports = {
 		const discordData = { 'id': message.author.id, 'username': message.author.username };
 		await axios.get(global.baseUrl + 'insert/user_reference/?discord=' + encodeURIComponent(JSON.stringify(discordData))).catch(console.error);
 
-		const categories = ['1045086819714347119', '1127069748157481020', '1045082408233484331', '1156573567937429514'];
+		const categories = ['1127069748157481020', '1045082408233484331', '1156573567937429514'];
 
 		const channel = message.channel;
 		if (categories.includes(channel.parentId)) {
