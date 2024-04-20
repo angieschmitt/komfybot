@@ -1,9 +1,15 @@
 const axios = require('axios');
 
 module.exports = {
-    list: false,
+	list: false,
 	name: 'define',
 	help: 'Provides a definition for a word',
+	aliases: {
+		'def': {
+			arg: false,
+			list: false,
+		},
+	},
 	actions: {
 		default: {
 			execute(args, tags, message, channel, client) {

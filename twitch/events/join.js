@@ -5,11 +5,13 @@ const data = dataFile.content();
 module.exports = {
 	eventHandler(channel, username, isSelf) {
 		// Get client
-		const client = this;
+		// const client = this;
+
+		// Log people joining
+		data.debug.write(channel, 'USER_JOIN', username);
 
 		if (isSelf) {
-			module.exports.handleSpeak(channel, client);
-			data.debug.write('JOINED: ' + channel);
+			// module.exports.handleSpeak(channel, client);
 		}
 	},
 	handleSpeak(channel, client) {
@@ -22,65 +24,20 @@ module.exports = {
 			client,
 		);
 	},
-	speakConvertor(data) {
-		const letters = {
-			'a': 'ᴀ',
-			'b': 'ʙ',
-			'c': 'ᴄ',
-			'd': 'ᴅ',
-			'e': 'ᴇ',
-			'f': 'ꜰ',
-			'g': 'ɢ',
-			'h': 'ʜ',
-			'i': 'ɪ',
-			'j': 'ᴊ',
-			'k': 'ᴋ',
-			'l': 'ʟ',
-			'm': 'ᴍ',
-			'n': 'ɴ',
-			'o': 'ᴏ',
-			'p': 'ᴘ',
-			'q': 'Q',
-			'r': 'ʀ',
-			's': 'ꜱ',
-			't': 'ᴛ',
-			'u': 'ᴜ',
-			'v': 'ᴠ',
-			'w': 'ᴡ',
-			'x': 'x',
-			'y': 'ʏ',
-			'z': 'ᴢ',
-		};
-
-		const parts = data.toLowerCase().split('');
-
-		let i = 0;
-		let newString = '';
-		while (i < parts.length) {
-			if (letters[parts[i]] !== undefined) {
-				newString += letters[ parts[i] ];
-			}
-			else {
-				newString += parts[i];
-			}
-			i++;
-		}
-
-		return newString;
-	},
 };
 
 async function callApi(channel, client) {
 	const response = await axios({ url: data.settings.newUrl + 'speak/retrieve/' + channel })
 		.catch(function(error) {
-			data.debug.write('SPEAK ERROR: ');
-			data.debug.write(error.toJSON());
+			data.debug.write(channel, 'SPEAK_ERROR', error.toJSON());
 		});
-	if (response.data.status === 'success') {
-		const botSpeak = module.exports.speakConvertor(response.data.response);
-		client.say(channel, botSpeak)
-			.then(() => {
-				axios.get(data.settings.newUrl + 'speak/remove/' + channel);
-			});
+	if (response) {
+		if (response.data.status === 'success') {
+			const botSpeak = data.functions.speakConvertor(response.data.response);
+			client.say(channel, botSpeak)
+				.then(() => {
+					axios.get(data.settings.newUrl + 'speak/remove/' + channel);
+				});
+		}
 	}
 }

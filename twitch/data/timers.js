@@ -22,6 +22,14 @@ const timers = {
 		},
 	},
 	'kittenangie': {
+		'discord': {
+			'timer': 30,
+			'message': 'Come hang with the KomfyKrew on Discord: https://discord.gg/8T44G4mUFu',
+		},
+		'merch':{
+			'timer': 120,
+			'message': 'Looking for sweet kittenAngie swag? Check out https://streamlabs.com/kittenangie/merch !',
+		},
 	},
 };
 
