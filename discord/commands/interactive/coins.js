@@ -13,10 +13,16 @@ module.exports = {
 				.setDescription('Twitch Username')
 				.setRequired(false)),
 	async execute(interaction) {
+		const client = interaction.client;
 
 		await interaction.deferReply();
+		let user = (interaction.options.getString('username') ? interaction.options.getString('username') : interaction.user.username);
 
-		const user = (interaction.options.getString('username') ? interaction.options.getString('username') : interaction.user.username);
+		if (user.startsWith('<')) {
+			const temp = user.replaceAll(/[<>@]/gi, '');
+			const userData = await client.users.fetch(temp).catch(console.error);
+			user = userData.username;
+		}
 
 		await axios.get(global.baseUrl + 'retrieve/coins/?username=' + user)
 			.then(function(response) {
