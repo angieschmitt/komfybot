@@ -17,6 +17,10 @@ module.exports = {
 				if (!args[1]) {
 					client.say(channel, 'Please provide a word to define!');
 				}
+				else if (args[1] === 'nerd') {
+					output = `@${tags.username}, ${args[1]} can be defined as a... noun : (sometimes derogatory) A person who is intellectual but generally introverted. See @MrDrXMan .`;
+					client.say(channel, output);
+				}
 				else {
 					axios.get('https://api.dictionaryapi.dev/api/v2/entries/en/' + args[1])
 						.then(function(response) {
