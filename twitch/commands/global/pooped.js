@@ -6,7 +6,6 @@ const links = {
 
 module.exports = {
 	name: 'poop',
-	channel: 'komfykiwi',
 	help: '💩💩💩💩💩',
 	actions: {
 		default: {
