@@ -1,7 +1,7 @@
 require('../data/globals');
 
 const { Events } = require('discord.js');
-const { messages, roles } = require(configFile); // eslint-disable-line
+const { channels, messages, roles } = require(configFile); // eslint-disable-line
 
 const axios = require('axios');
 
@@ -12,6 +12,7 @@ module.exports = {
 		await axios.get(global.baseUrl + 'insert/user_reference/?discord=' + encodeURIComponent(JSON.stringify(discordData))).catch(console.error);
 
 		const categories = ['1127069748157481020', '1045082408233484331', '1156573567937429514'];
+		// const categories = ['1045086819714347119'];
 
 		const channel = message.channel;
 		if (categories.includes(channel.parentId)) {
@@ -27,7 +28,27 @@ module.exports = {
 				const data = { 'amt': 10, 'ident_type': 'discord_username', 'ident': message.author.username, 'reason': 'Chatting in discord' };
 				if (chances.includes(value)) {
 					message.react('🪙');
-					await axios.get(global.baseUrl2 + 'coins/insert/json/' + encodeURIComponent(JSON.stringify(data))).catch(console.error);
+					await axios.get(global.baseUrl2 + 'coins/insert/json/' + encodeURIComponent(JSON.stringify(data)))
+						.then(function(response) {
+							const outcome = response.data;
+
+							let content = '';
+							if (outcome.status === 'success') {
+								content = `KC_HANDOUT, SUCCESS, <@${message.author.id}>, 10, false`;
+							}
+							else if (outcome.status === 'failure') {
+								content = `KC_HANDOUT, FAILURE, <@${message.author.id}>, 0, ${outcome.response}`;
+							}
+
+							message.channel.client.channels.fetch(channels.bot_log)
+								.then(channel => {
+									channel.send({
+										content: `${content}`,
+									});
+								})
+								.catch(err => console.log(err));
+						})
+						.catch(console.error);
 				}
 			}
 		}
