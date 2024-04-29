@@ -38,9 +38,9 @@ async function generateToken(client) {
 				const data = response.data;
 				client.channels.fetch(channels.bot_log)
 					.then(channel => {
-						channel.send({
-							content: `KC_HANDOUT, success, ${data.token}, ${data.content['expires_in']}, false`,
-						});
+						// channel.send({
+						// 	content: `KC_HANDOUT, success, ${data.token}, ${data.content['expires_in']}, false`,
+						// });
 					})
 					.catch(err => console.log(err));
 			}
@@ -51,9 +51,9 @@ async function generateToken(client) {
 				const data = response.data;
 				client.channels.fetch(channels.bot_log)
 					.then(channel => {
-						channel.send({
-							content: `KC_HANDOUT, success, ${data.token}, ${data.content['expires_in']}, false`,
-						});
+						// channel.send({
+						// 	content: `KC_HANDOUT, success, ${data.token}, ${data.content['expires_in']}, false`,
+						// });
 					})
 					.catch(err => console.log(err));
 			}
