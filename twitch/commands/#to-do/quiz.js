@@ -31,6 +31,7 @@ module.exports = {
 			execute(args, tags, message, channel, client) {
 				// Define stuff
 				let qa = false;
+				let content = '';
 
 				// Check if existing question is set
 				const now = Date.now();
@@ -48,10 +49,15 @@ module.exports = {
 					qa = trivia[ randomIntFromInterval(0, trivia.length) ];
 					// Set it as the current question, set the timeout
 					module.exports.data.qa = qa;
-					module.exports.data.time = new Date(Date.now() + 5 * 60000);
+					module.exports.data.time = new Date(Date.now() + 1 * 60000);
 				}
 
-				const content = `Trivia time: ${qa['q']} Use !answer to answer!`;
+				if (qa) {
+					content = `Trivia time: ${qa['q']} Use !answer to answer!`;
+				}
+				else {
+					content = 'Uh... something went wrong. Tell @kittenangie.';
+				}
 
 				client.say(channel, `${content}`);
 			},

@@ -4,6 +4,11 @@ const baseUrl = 'https://www.kittenangie.com/bots/api_new/';
 module.exports = {
 	name: 'count',
 	help: 'Outputs the current value of the counter. Additional arguments: set, reset',
+	aliases: {
+		'counter': {
+			arg: false,
+		},
+	},
 	actions: {
 		default: {
 			perms: {
