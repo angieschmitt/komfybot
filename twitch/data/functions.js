@@ -118,8 +118,6 @@ const functions = {
 			client.commands[channel] = ordered;
 		});
 
-		// console.log(client.commands);
-
 		return client;
 	},
 	handleAlias(baseCommand, name, details, commands) {

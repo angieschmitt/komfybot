@@ -1,9 +1,10 @@
 const axios = require('axios');
-const baseUrl = 'https://www.kittenangie.com/bots/api_new/';
+const dataFile = require('../../data/index');
+const data = dataFile.content();
 
 module.exports = {
 	name: 'snacks',
-	channel: 'komfykiwi',
+	channel: ['komfykiwi', 'komfybot'],
 	help: 'Commands for giving snacks to Hattington. Additional arguments: buy, give, inv',
 	aliases: {
 		'snack': {
@@ -38,6 +39,7 @@ module.exports = {
 				const username = tags.username;
 				let item = message.replace(args[0], '').replace(args[1], '').trim();
 				let itemOut = item;
+				let bought = false;
 
 				if (item.indexOf(':') === -1) {
 					item = 'snacks : ' + item;
@@ -51,22 +53,23 @@ module.exports = {
 					client.say(channel, content);
 				}
 				else {
-					axios.get(baseUrl + 'retrieve/store/?item=' + item.toLowerCase())
+					axios.get(data.settings.baseUrl + 'retrieve/store/?item=' + item.toLowerCase())
 						.then(function(response) {
-							const data = response.data;
+							const data2 = response.data;
 
-							if (data.status === 'failure') {
+							if (data2.status === 'failure') {
 								content += `No item named ${item}, or that item isn't available`;
 							}
 							else {
-								const cost = data.content;
+								const cost = data2.content;
 								const reason = 'BOUGHT: ' + item;
+								bought = true;
 
-								axios.get(baseUrl + 'insert/coins/?username=' + username.toLowerCase() + '&amount=' + (cost * -1) + '&reason=' + reason)
+								axios.get(data.settings.baseUrl + 'insert/coins/?username=' + username.toLowerCase() + '&amount=' + (cost * -1) + '&reason=' + reason)
 									.then(function(response2) {
 										const output = response2.data;
 										if (output.status === 'success') {
-											axios.get(baseUrl + 'interactive/coins/store_purchase?twitch_id=' + userID + '&item=' + item)
+											axios.get(data.settings.baseUrl + 'interactive/coins/store_purchase?twitch_id=' + userID + '&item=' + item)
 												.then(function(response3) {
 													const output3 = response3.data;
 													if (output3.status === 'success') {
@@ -74,43 +77,57 @@ module.exports = {
 															content = `Congrats @${username} on buying ${itemOut} @ ${cost} KomfyCoins.`;
 														}
 														else {
-															content = `Congrats @${username} on buying more ${itemOut} @ ${cost} KomfyCoins. You currently have ${output3.content.qty}.`;
+															content = `Congrats @${username} on buying more ${itemOut} @ ${cost} KomfyCoins. You now have ${output3.content.qty} of them.`;
 														}
 													}
 													else {
-														content = 'Something went wrong, tell @kittenAngie.';
+														content = 'e Something went wrong, tell @kittenAngie.';
 													}
 												})
 												.catch(function() {
-													content = 'Something went wrong, tell @kittenAngie.';
+													content = 'd Something went wrong, tell @kittenAngie.';
 												})
 												.finally(function() {
-													client.say(channel, content);
-													axios.post(baseUrl + 'coins_fix');
+													// Get coin count
+													if (bought) {
+														client.commands[channel.replace('#', '')].coins.actions.coincount.execute(tags)
+															.then((coinAmt) => {
+																if (coinAmt) {
+																	content += ` You have ${(coinAmt ? coinAmt : 0)} KomfyCoins remaining!`;
+																}
+															})
+															.finally(function() {
+																client.say(channel, `${content}`);
+															});
+													}
+													else {
+														client.say(channel, `${content}`);
+													}
+													axios.post(data.settings.baseUrl + 'coins_fix');
 												});
 										}
 										else if (output.status === 'failure' && output.err_msg === 'not_enough_coins') {
 											content = 'You seem to be out of KomfyCoins.';
 										}
 										else {
-											content = 'Something went wrong, tell @kittenAngie.';
+											content = 'c Something went wrong, tell @kittenAngie.';
 										}
 									})
 									.catch(function() {
-										content = 'Something went wrong, tell @kittenAngie.';
+										content = 'b Something went wrong, tell @kittenAngie.';
 									})
 									.finally(function() {
 										client.say(channel, content);
-										axios.post(baseUrl + 'coins_fix');
+										axios.post(data.settings.baseUrl + 'coins_fix');
 									});
 							}
 						})
 						.catch(function() {
-							content = 'Something went wrong, tell @kittenAngie.';
+							content = 'a Something went wrong, tell @kittenAngie.';
 						})
 						.finally(function() {
 							client.say(channel, content);
-							axios.post(baseUrl + 'coins_fix');
+							axios.post(data.settings.baseUrl + 'coins_fix');
 						});
 				}
 			},
@@ -134,7 +151,7 @@ module.exports = {
 					snackOut = snackOut.substring(snackOut.indexOf(':') + 1).toLowerCase().trim();
 				}
 
-				axios.get(baseUrl + 'interactive/snacks/inventory?twitch_id=' + userID)
+				axios.get(data.settings.baseUrl + 'interactive/snacks/inventory?twitch_id=' + userID)
 					.then(function(response) {
 						const data = response.data;
 						if (data.status === 'success') {
@@ -148,7 +165,7 @@ module.exports = {
 							});
 
 							if (matched) {
-								axios.get(baseUrl + 'interactive/snacks/insert?userID=' + userID + '&snack=' + matched['snack_id'] + '&item_id=' + matched['item_id'])
+								axios.get(data.settings.baseUrl + 'interactive/snacks/insert?userID=' + userID + '&snack=' + matched['snack_id'] + '&item_id=' + matched['item_id'])
 									.then(function(response2) {
 										const data2 = response2.data;
 										if (data2.status === 'success') {
@@ -192,7 +209,7 @@ module.exports = {
 				let content = '';
 				const userID = tags['user-id'];
 
-				axios.get(baseUrl + 'interactive/snacks/inventory?twitch_id=' + userID)
+				axios.get(data.settings.baseUrl + 'interactive/snacks/inventory?twitch_id=' + userID)
 					.then(function(response) {
 						const data = response.data;
 						if (data.status === 'success') {
@@ -226,7 +243,7 @@ module.exports = {
 			help: 'Lists out items available at the Snack Shack. !snacks store',
 			execute(args, tags, message, channel, client) {
 				let content = '';
-				axios.get(baseUrl + 'retrieve/store')
+				axios.get(data.settings.baseUrl + 'retrieve/store')
 					.then(function(response) {
 						const data = response.data;
 

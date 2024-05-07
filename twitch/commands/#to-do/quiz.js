@@ -1,11 +1,9 @@
 // const axios = require('axios');
-const dataFile = require('../../data/index');
-const data = dataFile.content();
+// const dataFile = require('../../data/index');
+// const data = dataFile.content();
 
 const triviaFile = require('../../data/trivia');
 const trivia = triviaFile.content();
-
-console.log(data.settings.baseUrl);
 
 module.exports = {
 	name: 'quiz',
@@ -72,8 +70,6 @@ module.exports = {
 				// Define stuff
 				let qa = false;
 				let content = '';
-
-				console.log(args);
 
 				if (!args[2]) {
 					content += `@${tags.username}, you forgot your answer.`;

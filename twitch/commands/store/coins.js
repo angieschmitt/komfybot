@@ -1,9 +1,10 @@
 const axios = require('axios');
-const baseUrl = 'https://www.kittenangie.com/bots/api_new/';
+const dataFile = require('../../data/index');
+const data = dataFile.content();
 
 module.exports = {
 	name: 'coins',
-	channel: ['komfykiwi'],
+	channel: ['komfykiwi', 'komfybot'],
 	help: 'Shows your (or someone else\'s) total coin amount! Additional arguments: add, store, buy',
 	aliases: {
 		'coin': {
@@ -24,7 +25,7 @@ module.exports = {
 					url += '?twitch_id=' + tags['user-id'];
 				}
 
-				axios.get(baseUrl + url)
+				axios.get(data.settings.baseUrl + url)
 					.then(function(response) {
 						const output = response.data;
 						if (output.status === 'success') {
@@ -70,7 +71,7 @@ module.exports = {
 				const amount = args[3];
 				const reason = message.replace(args[0], '').replace(args[1], '').replace(args[2], '').replace(args[3], '').trim();
 
-				axios.get(baseUrl + 'insert/coins/?username=' + username.toLowerCase() + '&amount=' + amount + '&reason=' + reason)
+				axios.get(data.settings.baseUrl + 'insert/coins/?username=' + username.toLowerCase() + '&amount=' + amount + '&reason=' + reason)
 					.then(function(response) {
 						const output = response.data;
 						if (output.status === 'success') {
@@ -90,7 +91,7 @@ module.exports = {
 					})
 					.finally(function() {
 						client.say(channel, content);
-						axios.post(baseUrl + 'coins_fix');
+						axios.post(data.settings.baseUrl + 'coins_fix');
 					});
 			},
 		},
@@ -108,7 +109,7 @@ module.exports = {
 				let reason = message.replace(args[0], '').replace(args[1], '').replace(args[2], '').trim();
 				reason = `SPENT: ${reason}`;
 
-				axios.get(baseUrl + 'insert/coins/?username=' + username.toLowerCase() + '&amount=' + (amount * -1) + '&reason=' + reason)
+				axios.get(data.settings.baseUrl + 'insert/coins/?username=' + username.toLowerCase() + '&amount=' + (amount * -1) + '&reason=' + reason)
 					.then(function(response) {
 						const output = response.data;
 						if (output.status === 'success') {
@@ -130,7 +131,7 @@ module.exports = {
 			help: 'Lists out items available in the KomfyStore. !coins store',
 			execute(args, tags, message, channel, client) {
 				let content = '';
-				axios.get(baseUrl + 'retrieve/store')
+				axios.get(data.settings.baseUrl + 'retrieve/store')
 					.then(function(response) {
 						const data = response.data;
 
@@ -161,7 +162,7 @@ module.exports = {
 				const username = tags.username;
 				const item = message.replace(args[0], '').replace(args[1], '').trim();
 
-				axios.get(baseUrl + 'retrieve/store/?item=' + item.toLowerCase())
+				axios.get(data.settings.baseUrl + 'retrieve/store/?item=' + item.toLowerCase())
 					.then(function(response) {
 						const data = response.data;
 
@@ -172,13 +173,13 @@ module.exports = {
 							const cost = data.content;
 							const reason = 'BOUGHT: ' + item;
 
-							axios.get(baseUrl + 'insert/coins/?username=' + username.toLowerCase() + '&amount=' + (cost * -1) + '&reason=' + reason)
+							axios.get(data.settings.baseUrl + 'insert/coins/?username=' + username.toLowerCase() + '&amount=' + (cost * -1) + '&reason=' + reason)
 								.then(function(response2) {
 									const output = response2.data;
 									if (output.status === 'success') {
 										// Random Hat catch!
 										if (item.toLowerCase() === 'random hat') {
-											axios.get(baseUrl + 'interactive/hats/hat_random?user=' + userID)
+											axios.get(data.settings.baseUrl + 'interactive/hats/hat_random?user=' + userID)
 												.then(function(response3) {
 													const output3 = response3.data;
 													if (output3.status === 'success') {
@@ -213,11 +214,11 @@ module.exports = {
 												})
 												.finally(function() {
 													client.say(channel, content);
-													axios.post(baseUrl + 'coins_fix');
+													axios.post(data.settings.baseUrl + 'coins_fix');
 												});
 										}
 										else {
-											axios.get(baseUrl + 'interactive/coins/store_purchase?twitch_id=' + userID + '&item=' + item)
+											axios.get(data.settings.baseUrl + 'interactive/coins/store_purchase?twitch_id=' + userID + '&item=' + item)
 												.then(function(response3) {
 													const output3 = response3.data;
 													if (output3.status === 'success') {
@@ -237,7 +238,7 @@ module.exports = {
 												})
 												.finally(function() {
 													client.say(channel, content);
-													axios.post(baseUrl + 'coins_fix');
+													axios.post(data.settings.baseUrl + 'coins_fix');
 												});
 										}
 									}
@@ -253,7 +254,7 @@ module.exports = {
 								})
 								.finally(function() {
 									client.say(channel, content);
-									axios.post(baseUrl + 'coins_fix');
+									axios.post(data.settings.baseUrl + 'coins_fix');
 								});
 						}
 					})
@@ -262,7 +263,7 @@ module.exports = {
 					})
 					.finally(function() {
 						client.say(channel, content);
-						axios.post(baseUrl + 'coins_fix');
+						axios.post(data.settings.baseUrl + 'coins_fix');
 					});
 			},
 		},
@@ -271,7 +272,7 @@ module.exports = {
 				let content = '';
 
 				const url = 'interactive/coins/store_inventory/?twitch_id=' + tags['user-id'];
-				axios.get(baseUrl + url)
+				axios.get(data.settings.baseUrl + url)
 					.then(function(response) {
 						const data = response.data;
 						if (data.status === 'success') {
@@ -302,6 +303,27 @@ module.exports = {
 					.finally(function() {
 						client.say(channel, `${content}`);
 					});
+			},
+		},
+		coincount: {
+			async execute(tags) {
+				let coinCount = false;
+
+				const p1 = new Promise((resolve) => {
+					axios.get(data.settings.baseUrl + 'retrieve/coins/?twitch_id=' + tags['user-id'])
+						.then(function(response) {
+							const output = response.data;
+							if (output.status === 'success') {
+								coinCount = (output.total ? output.total : 0);
+							}
+						})
+						.finally(function() {
+							resolve(coinCount);
+						});
+				});
+
+				const results = await p1;
+				return results;
 			},
 		},
 	},

@@ -5,7 +5,7 @@ const data = dataFile.content();
 module.exports = {
 	list: false,
 	name: 'hattington',
-	channel: ['komfykiwi'],
+	channel: ['komfykiwi', 'komfybot'],
 	help: 'Commands for interacting with Hattington. Additional arguments: buy, check, inv, sell, set',
 	aliases: {
 		'hat': {
@@ -65,6 +65,7 @@ module.exports = {
 				const userID = tags['user-id'];
 				const username = tags.username;
 				const item = args[1];
+				let bought = false;
 
 				axios.get(data.settings.baseUrl + 'retrieve/store/?item=' + item.toLowerCase())
 					.then(function(response) {
@@ -76,6 +77,7 @@ module.exports = {
 						else {
 							const cost = resData.content;
 							const reason = 'BOUGHT: ' + item;
+							bought = true;
 
 							axios.get(data.settings.baseUrl + 'insert/coins/?twitch_id=' + userID + '&username=' + username + '&amount=' + (cost * -1) + '&reason=' + reason)
 								.then(function(response2) {
@@ -103,10 +105,10 @@ module.exports = {
 														}
 														content = `Congrats @${username} on buying a ${item} @ ${cost} KomfyCoins.`;
 														if (parseInt(output3.content.qty) <= 1) {
-															content += ` You unwrapped a ${output3.content.item} (${rarityText}) !`;
+															content += ` You unwrapped a ${output3.content.item} (${rarityText})!`;
 														}
 														else {
-															content += ` You unwrapped another ${output3.content.item} (${rarityText}) !`;
+															content += ` You unwrapped another ${output3.content.item} (${rarityText})!`;
 														}
 													}
 													else {
@@ -117,7 +119,21 @@ module.exports = {
 													content = 'Something went wrong, tell @kittenAngie: Hats 4.';
 												})
 												.finally(function() {
-													client.say(channel, content);
+													// Get coin count
+													if (bought) {
+														client.commands[channel.replace('#', '')].coins.actions.coincount.execute(tags)
+															.then((coinAmt) => {
+																if (coinAmt) {
+																	content += ` You have ${(coinAmt ? coinAmt : 0)} KomfyCoins remaining!`;
+																}
+															})
+															.finally(function() {
+																client.say(channel, `${content}`);
+															});
+													}
+													else {
+														client.say(channel, `${content}`);
+													}
 												});
 										}
 										else {
@@ -183,7 +199,6 @@ module.exports = {
 						content = 'Something went wrong, tell @kittenAngie.';
 					})
 					.finally(function() {
-						// console.log( tags.silent );
 						if ('silent' in tags) {
 							if (tags.silent !== true) {
 								client.say(channel, content);
@@ -327,11 +342,10 @@ module.exports = {
 					.finally(function() {
 						// Get coin count
 						if (sold) {
-							axios.get(data.settings.baseUrl + 'retrieve/coins/?twitch_id=' + tags['user-id'])
-								.then(function(response) {
-									const output = response.data;
-									if (output.status === 'success') {
-										content += ` You have ${(output.total ? output.total : 0)} KomfyCoins stashed in your wallet!`;
+							client.commands[channel.replace('#', '')].coins.actions.coincount.execute(tags)
+								.then((coinAmt) => {
+									if (coinAmt) {
+										content += ` You have ${(coinAmt ? coinAmt : 0)} KomfyCoins stashed in your wallet!`;
 									}
 								})
 								.finally(function() {
