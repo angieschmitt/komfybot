@@ -62,7 +62,7 @@ module.exports = {
 			}
 
 			if (commandData) {
-				if (module.exports.handleCommand(commandData, perms, tags, message, client)) {
+				if (module.exports.handleCommand(commandData, channel, perms, tags, message, client)) {
 					console.log('Used command: ' + commandData.command.name + ' ' + (commandData.args[1] ? commandData.args[1] : ''));
 				}
 			}
@@ -129,10 +129,10 @@ module.exports = {
 			return false;
 		}
 	},
-	handleCommand(command, perms, tags, message, client) {
+	handleCommand(command, channel, perms, tags, message, client) {
 		const action = command.action;
 		const args = command.args;
-		const channel = command.channel;
+		// const channel = command.channel;
 
 		// Handle basic actions
 		if ('say' in action) {

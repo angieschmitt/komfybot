@@ -65,16 +65,33 @@ const functions = {
 				if (command.disabled !== true) {
 					if (command.channel !== '' && command.channel !== undefined) {
 
-						if (!(command.channel in client.commands)) {
-							client.commands[command.channel] = [];
-						}
+						if (typeof command.channel == 'object') {
+							// eslint-disable-next-line no-unused-vars
+							Object.entries(command.channel).forEach(([key, channel]) => {
+								if (!(channel in client.commands)) {
+									client.commands[channel] = [];
+								}
+								client.commands[channel][command.name] = command;
 
-						client.commands[command.channel][command.name] = command;
-
-						if (command.aliases !== undefined && Object.keys(command.aliases).length > 0) {
-							Object.entries(command.aliases).forEach(([key, data]) => {
-								this.handleAlias(command, key, data, client.commands[command.channel]);
+								if (command.aliases !== undefined && Object.keys(command.aliases).length > 0) {
+									Object.entries(command.aliases).forEach(([key, data]) => {
+										this.handleAlias(command, key, data, client.commands[channel]);
+									});
+								}
 							});
+						}
+						else if (typeof command.channel == 'string') {
+
+							if (!(command.channel in client.commands)) {
+								client.commands[command.channel] = [];
+							}
+							client.commands[command.channel][command.name] = command;
+
+							if (command.aliases !== undefined && Object.keys(command.aliases).length > 0) {
+								Object.entries(command.aliases).forEach(([key, data]) => {
+									this.handleAlias(command, key, data, client.commands[command.channel]);
+								});
+							}
 						}
 					}
 					else {

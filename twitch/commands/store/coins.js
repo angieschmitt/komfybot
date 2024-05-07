@@ -3,7 +3,7 @@ const baseUrl = 'https://www.kittenangie.com/bots/api_new/';
 
 module.exports = {
 	name: 'coins',
-	channel: 'komfykiwi',
+	channel: ['komfykiwi'],
 	help: 'Shows your (or someone else\'s) total coin amount! Additional arguments: add, store, buy',
 	aliases: {
 		'coin': {

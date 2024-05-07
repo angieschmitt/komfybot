@@ -5,7 +5,7 @@ const data = dataFile.content();
 module.exports = {
 	list: false,
 	name: 'hattington',
-	channel: 'komfykiwi',
+	channel: ['komfykiwi'],
 	help: 'Commands for interacting with Hattington. Additional arguments: buy, check, inv, sell, set',
 	aliases: {
 		'hat': {
@@ -183,7 +183,15 @@ module.exports = {
 						content = 'Something went wrong, tell @kittenAngie.';
 					})
 					.finally(function() {
-						client.say(channel, content);
+						// console.log( tags.silent );
+						if ('silent' in tags) {
+							if (tags.silent !== true) {
+								client.say(channel, content);
+							}
+						}
+						else {
+							client.say(channel, content);
+						}
 					});
 			},
 		},
@@ -192,6 +200,8 @@ module.exports = {
 			execute(args, tags, message, channel, client) {
 				let content = '';
 				const userID = tags['user-id'];
+
+				console.log(channel);
 
 				axios.get(data.settings.baseUrl + 'interactive/hats/hat_inventory?twitch_id=' + userID)
 					.then(function(response) {
@@ -278,12 +288,14 @@ module.exports = {
 				let content = '';
 				const userID = tags['user-id'];
 				const hat = message.replace(args[0], '').replace(args[1], '').trim();
+				let sold = false;
 
 				axios.get(data.settings.baseUrl + 'interactive/hats/hat_sell?twitch_id=' + userID + '&hat=' + hat)
 					.then(function(response) {
 						const resData = response.data;
 						if (resData.status === 'success') {
-							content = tags['username'] + ', ' + resData.content;
+							sold = true;
+							content = tags['username'] + ', ' + resData.content + '.';
 						}
 						else if (resData.status === 'failure') {
 
@@ -313,7 +325,22 @@ module.exports = {
 						content = 'Something went wrong, tell @kittenAngie.';
 					})
 					.finally(function() {
-						client.say(channel, content);
+						// Get coin count
+						if (sold) {
+							axios.get(data.settings.baseUrl + 'retrieve/coins/?twitch_id=' + tags['user-id'])
+								.then(function(response) {
+									const output = response.data;
+									if (output.status === 'success') {
+										content += ` You have ${(output.total ? output.total : 0)} KomfyCoins stashed in your wallet!`;
+									}
+								})
+								.finally(function() {
+									client.say(channel, `${content}`);
+								});
+						}
+						else {
+							client.say(channel, `${content}`);
+						}
 					});
 			},
 		},
