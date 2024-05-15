@@ -158,71 +158,95 @@ const functions = {
 	handleTimers(data, timers, client) {
 		const parent = this;
 		const timerInterval = 60000;
-		let timerOffset = 1;
+		// const timerInterval = 10000;
 
-		axios.get(data.settings.baseUrl + 'retrieve/uptime')
-			.then(function(response) {
-				if (response.data.status === 'success') {
-					timerOffset = (response.data.minutes > 0 ? response.data.minutes : 1);
-				}
-			})
-			.catch(console.error)
-			.finally(() => {
-				const queue = {};
-				Object.entries(timers).forEach(([channel]) => {
-					queue[channel] = [];
-				});
-				setInterval(
-					function() {
-						console.log('Timer: ' + timerOffset);
+		// If not set up, set it up
+		if (!('timerOffset' in client)) {
+			client.timerOffset = [];
+			Object.entries(timers).forEach(([channel]) => {
+				client.timerOffset[channel] = 1;
+			});
+		}
 
-						// Enter messages into queue
-						Object.entries(timers).forEach(([channel]) => {
-							const channelTimers = timers[channel];
-							Object.entries(channelTimers).forEach(([key]) => {
-								if ((timerOffset % channelTimers[key]['timer']) == 0) {
-									if (parent.isObjectEmpty(queue[channel])) {
-										queue[channel][key] = channelTimers[key];
-									}
-									else {
-										const first = Object.keys(queue[channel])[0];
-										delete queue[channel][first];
-										queue[channel][key] = channelTimers[key];
-									}
-								}
-							});
-						});
+		// Now load in the timerOffsets
+		if ('timerOffset' in client) {
+			Object.entries(timers).forEach(([channel]) => {
+				axios.get(data.settings.newUrl + 'uptime/retrieve/' + channel)
+					.then(function(response) {
+						if (response.data.status === 'success') {
+							client.timerOffset[channel] = (response.data.minutes > 0 ? response.data.minutes : 1);
+						}
+					})
+					.catch(console.error)
+					.finally(() => {
+						const queue = {};
+						queue[channel] = [];
 
-						// Handle queue
-						Object.entries(queue).forEach(([channel]) => {
-							if (Object.keys(queue[channel]).length > 0) {
-								Object.entries(queue[channel]).forEach(([ident]) => {
-									const messageData = queue[channel][ident];
-									if (client.last_message[channel] !== messageData['message']) {
-										parent.liveCheck(data, channel, messageData).then(res => {
-											if (res.live === true) {
-												console.log('Timer: SENT ' + ident + ' IN ' + channel);
-												client.say(channel, res.extra['message']);
-												queue[channel] = [];
-											}
-											else {
-												console.log('Timer: SKIPPED - ' + ident + ' IN ' + channel);
-												queue[channel] = [];
-											}
-											console.log('- - -');
-										});
+						setInterval(
+							function() {
+								console.log('Timer - ' + channel + ' : ' + client.timerOffset[channel]);
+
+								// Enter messages into queue
+								const channelTimers = timers[channel];
+								Object.entries(channelTimers).forEach(([key]) => {
+									if ((client.timerOffset[channel] % channelTimers[key]['timer']) == 0) {
+										if (parent.isObjectEmpty(queue[channel])) {
+											queue[channel][key] = channelTimers[key];
+										}
+										else {
+											const first = Object.keys(queue[channel])[0];
+											delete queue[channel][first];
+											queue[channel][key] = channelTimers[key];
+										}
 									}
 								});
-							}
-						});
 
-						timerOffset++;
-						console.log('- - -');
-					},
-					timerInterval,
-				);
+								// Handle queue
+								if (Object.keys(queue[channel]).length > 0) {
+									Object.entries(queue[channel]).forEach(([ident]) => {
+										const messageData = queue[channel][ident];
+										if (client.last_message[channel] !== messageData['message']) {
+											parent.liveCheck(data, channel, messageData).then(res => {
+												if (res.live === true) {
+													console.log('Timer: SENT ' + ident + ' IN ' + channel);
+													client.say(channel, res.extra['message']);
+													queue[channel] = [];
+												}
+												else {
+													console.log('Timer: SKIPPED - ' + ident + ' IN ' + channel);
+													queue[channel] = [];
+												}
+												console.log('- - -');
+											});
+										}
+									});
+								}
+
+								if ((client.timerOffset[channel] % 5) == 0) {
+									console.log('-- rechecking timer');
+									parent.refreshTimer(channel, data, client);
+								}
+								else {
+									client.timerOffset[channel]++;
+								}
+								console.log('- - -');
+							},
+							timerInterval,
+						);
+					});
 			});
-
+		}
+	},
+	refreshTimer(channel, data, client) {
+		if ('timerOffset' in client) {
+			axios.get(data.settings.newUrl + 'uptime/retrieve/' + channel)
+				.then(function(response) {
+					if (response.data.status === 'success') {
+						client.timerOffset[channel] = (response.data.minutes > 0 ? response.data.minutes : 1);
+					}
+				})
+				.catch(console.error);
+		}
 	},
 	isObjectEmpty(objectName) {
 		return Object.keys(objectName).length === 0 && objectName.constructor === Object;
