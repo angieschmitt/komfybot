@@ -15,41 +15,41 @@ module.exports = {
 					const cardName = message.replace(args[0], '').trim();
 					axios.get('https://api.scryfall.com/cards/named?fuzzy=' + cardName.toLowerCase())
 						.then(function(response) {
-							const data = response.data;
+							const resData = response.data;
 
-							if (data.object === 'card') {
-								output += `${data.name}: `;
-								if (data.mana_cost !== '') {
-									output += `Mana :: ${data.mana_cost} || `;
+							if (resData.object === 'card') {
+								output += `${resData.name}: `;
+								if (resData.mana_cost !== '') {
+									output += `Mana :: ${resData.mana_cost} || `;
 								}
-								output += `Type :: ${data.type_line} || `;
-								if (data.oracle_text !== '') {
-									output += `Text :: ${data.oracle_text} || `;
+								output += `Type :: ${resData.type_line} || `;
+								if (resData.oracle_text !== '') {
+									output += `Text :: ${resData.oracle_text} || `;
 								}
-								if ('power' in data || 'toughness' in data) {
+								if ('power' in resData || 'toughness' in resData) {
 									output += 'P/T :: ';
-									if ('power' in data) {
-										output += `${data.power}`;
+									if ('power' in resData) {
+										output += `${resData.power}`;
 									}
-									if ('power' in data && 'toughness' in data) {
+									if ('power' in resData && 'toughness' in resData) {
 										output += '/';
 									}
-									if ('toughness' in data) {
-										output += `${data.toughness}`;
+									if ('toughness' in resData) {
+										output += `${resData.toughness}`;
 									}
 									output += ' || ';
 								}
-								if ('gatherer' in data.related_uris) {
-									output += `More Info :: ${data.related_uris.gatherer} || `;
+								if ('gatherer' in resData.related_uris) {
+									output += `More Info :: ${resData.related_uris.gatherer} || `;
 								}
 								output = output.substring(0, (output.length - 4));
 							}
 						})
 						.catch(function(error) {
-							const data = error.response.data;
-							if (data.object == 'error') {
-								if (data.details != '') {
-									output = data.details;
+							const resData = error.response.data;
+							if (resData.object == 'error') {
+								if (resData.details != '') {
+									output = resData.details;
 								}
 								else {
 									output = 'Something went wrong, tell @kittenAngie.';

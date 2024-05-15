@@ -55,29 +55,29 @@ module.exports = {
 				else {
 					axios.get(data.settings.baseUrl + 'retrieve/store/?item=' + item.toLowerCase())
 						.then(function(response) {
-							const data2 = response.data;
+							const resData = response.data;
 
-							if (data2.status === 'failure') {
+							if (resData.status === 'failure') {
 								content += `No item named ${item}, or that item isn't available`;
 							}
 							else {
-								const cost = data2.content;
+								const cost = resData.content;
 								const reason = 'BOUGHT: ' + item;
 								bought = true;
 
 								axios.get(data.settings.baseUrl + 'insert/coins/?username=' + username.toLowerCase() + '&amount=' + (cost * -1) + '&reason=' + reason)
 									.then(function(response2) {
-										const output = response2.data;
-										if (output.status === 'success') {
+										const resData2 = response2.data;
+										if (resData2.status === 'success') {
 											axios.get(data.settings.baseUrl + 'interactive/coins/store_purchase?twitch_id=' + userID + '&item=' + item)
 												.then(function(response3) {
-													const output3 = response3.data;
-													if (output3.status === 'success') {
-														if (output3.content.qty == 1) {
+													const resData3 = response3.data;
+													if (resData3.status === 'success') {
+														if (resData3.content.qty == 1) {
 															content = `Congrats @${username} on buying ${itemOut} @ ${cost} KomfyCoins.`;
 														}
 														else {
-															content = `Congrats @${username} on buying more ${itemOut} @ ${cost} KomfyCoins. You now have ${output3.content.qty} of them.`;
+															content = `Congrats @${username} on buying more ${itemOut} @ ${cost} KomfyCoins. You now have ${resData3.content.qty} of them.`;
 														}
 													}
 													else {
@@ -106,7 +106,7 @@ module.exports = {
 													axios.post(data.settings.baseUrl + 'coins_fix');
 												});
 										}
-										else if (output.status === 'failure' && output.err_msg === 'not_enough_coins') {
+										else if (resData2.status === 'failure' && resData2.err_msg === 'not_enough_coins') {
 											content = 'You seem to be out of KomfyCoins.';
 										}
 										else {
@@ -151,12 +151,14 @@ module.exports = {
 					snackOut = snackOut.substring(snackOut.indexOf(':') + 1).toLowerCase().trim();
 				}
 
+				// Get user inventory...
 				axios.get(data.settings.baseUrl + 'interactive/snacks/inventory?twitch_id=' + userID)
 					.then(function(response) {
-						const data = response.data;
-						if (data.status === 'success') {
+						const resData = response.data;
+						if (resData.status === 'success') {
+							// Check if snack in inv...
 							let matched = false;
-							Object.entries(data.reference).forEach(([key, value]) => {
+							Object.entries(resData.reference).forEach(([key, value]) => {
 								if (key.toLowerCase() === snack.toLowerCase()) {
 									if (parseInt(value.qty) > 0) {
 										matched = value;
@@ -167,21 +169,21 @@ module.exports = {
 							if (matched) {
 								axios.get(data.settings.baseUrl + 'interactive/snacks/insert?userID=' + userID + '&snack=' + matched['snack_id'] + '&item_id=' + matched['item_id'])
 									.then(function(response2) {
-										const data2 = response2.data;
-										if (data2.status === 'success') {
+										const resData2 = response2.data;
+										if (resData2.status === 'success') {
 											content = 'Found your snack, giving it to Hattington!';
 										}
-										else if (data2.status === 'failure') {
-											if (data2.err_msg == 'timeout') {
-												content = `Hattington seems to be enjoying their last snack, give them a little time! (Roughly ${data2.time_left} minutes)`;
+										else if (resData2.status === 'failure') {
+											if (resData2.err_msg == 'timeout') {
+												content = `Hattington seems to be enjoying their last snack, give them a little time! (Roughly ${resData2.time_left} minutes)`;
 											}
 										}
 										else {
-											content = 'Something went wrong, tell @kittenAngie.';
+											content = 'Something went wrong, tell @kittenAngie "snacks-d" :)';
 										}
 									})
 									.catch(function() {
-										content = 'Something went wrong, tell @kittenAngie.';
+										content = 'Something went wrong, tell @kittenAngie "snacks-c" :)';
 									})
 									.finally(function() {
 										client.say(channel, content);
@@ -192,11 +194,11 @@ module.exports = {
 							}
 						}
 						else {
-							content = 'Something went wrong, tell @kittenAngie.';
+							content = 'Something went wrong, tell @kittenAngie  "snacks-b" :)';
 						}
 					})
 					.catch(function() {
-						content = 'Something went wrong, tell @kittenAngie.';
+						content = 'Something went wrong, tell @kittenAngie "snacks-a" :)';
 					})
 					.finally(function() {
 						client.say(channel, content);
@@ -211,12 +213,12 @@ module.exports = {
 
 				axios.get(data.settings.baseUrl + 'interactive/snacks/inventory?twitch_id=' + userID)
 					.then(function(response) {
-						const data = response.data;
-						if (data.status === 'success') {
-							if (Object.keys(data.content).length) {
+						const resData = response.data;
+						if (resData.status === 'success') {
+							if (Object.keys(resData.content).length) {
 								content += 'Here\'s whats in your inventory: ';
 								// eslint-disable-next-line no-unused-vars
-								Object.entries(data.content).forEach(([key, details]) => {
+								Object.entries(resData.content).forEach(([key, details]) => {
 									if (details['qty'] > 0) {
 										content += `${details['qty']}x ${details['name']}, `;
 									}
@@ -245,10 +247,10 @@ module.exports = {
 				let content = '';
 				axios.get(data.settings.baseUrl + 'retrieve/store')
 					.then(function(response) {
-						const data = response.data;
+						const resData = response.data;
 
 						content += 'Here\'s whats in the store:';
-						data.content.forEach(element => {
+						resData.content.forEach(element => {
 							if (element['name'].indexOf('Snack') !== -1) {
 								content += ' ' + element['name'].replace('Snacks : ', '') + ' @ ' + element['value'] + ' KomfyCoins ||';
 							}

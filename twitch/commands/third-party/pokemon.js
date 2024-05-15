@@ -14,10 +14,10 @@ module.exports = {
 				else {
 					axios.get('https://pokeapi.co/api/v2/pokemon-species/' + args[1].toLowerCase())
 						.then(function(response) {
-							const data = response.data;
+							const resData = response.data;
 
 							const flavorTexts = [];
-							data.flavor_text_entries.forEach(item => {
+							resData.flavor_text_entries.forEach(item => {
 								if (item.language.name === 'en') {
 									flavorTexts.push(item.flavor_text);
 								}
@@ -32,14 +32,14 @@ module.exports = {
 								.replace('\n', ' ');
 
 							let natDex = 0;
-							data.pokedex_numbers.forEach(dex => {
+							resData.pokedex_numbers.forEach(dex => {
 								if (dex.pokedex.name === 'national') {
 									natDex = dex.entry_number;
 								}
 							});
 
 							let genus = '';
-							data.genera.forEach(genera => {
+							resData.genera.forEach(genera => {
 								if (genera.language.name === 'en') {
 									genus = genera.genus;
 								}
@@ -68,11 +68,10 @@ module.exports = {
 					let evoTree = false;
 					axios.get('https://pokeapi.co/api/v2/pokemon-species/' + args[2].toLowerCase())
 						.then(function(response) {
-							const data = response.data;
-							evoTree = data.evolution_chain.url;
+							const resData = response.data;
+							evoTree = resData.evolution_chain.url;
 						})
 						.catch(function() {
-							// const data = caught.response.data;
 							output = 'Something went wrong, tell @kittenAngie.';
 						})
 						.finally(function() {
@@ -117,11 +116,10 @@ module.exports = {
 					let stats = false;
 					axios.get('https://pokeapi.co/api/v2/pokemon/' + args[2].toLowerCase())
 						.then(function(response) {
-							const data = response.data;
-							stats = data.stats;
+							const resData = response.data;
+							stats = resData.stats;
 						})
 						.catch(function() {
-							// const data = caught.response.data;
 							output = 'Something went wrong, tell @kittenAngie.';
 						})
 						.finally(function() {

@@ -1,5 +1,6 @@
 const axios = require('axios');
-const baseUrl = 'https://www.kittenangie.com/bots/api_new/';
+const dataFile = require('../../data/index');
+const data = dataFile.content();
 
 module.exports = {
 	name: 'guess',
@@ -19,14 +20,14 @@ module.exports = {
 				const channelClean = channel.replace('#', '');
 
 				if (client.extras[channelClean].guessActive != false) {
-					axios.get(baseUrl + 'insert/guesses?username=' + username + '&guess=' + guess)
+					axios.get(data.settings.baseUrl + 'insert/guesses?username=' + username + '&guess=' + guess)
 						.then(function(response) {
-							const data = response.data;
-							if (data.status === 'success') {
-								content = data.content;
+							const resData = response.data;
+							if (resData.status === 'success') {
+								content = resData.content;
 							}
-							else if (data.status === 'failure') {
-								switch (data.err_msg) {
+							else if (resData.status === 'failure') {
+								switch (resData.err_msg) {
 								case 'missing_guess':
 									content = 'Don\'t forget the pokemon!';
 									break;
@@ -57,7 +58,7 @@ module.exports = {
 		list: {
 			execute(args, tags, message, channel, client) {
 				let content = '';
-				axios.get(baseUrl + 'retrieve/guesses')
+				axios.get(data.settings.baseUrl + 'retrieve/guesses')
 					.then(function(response) {
 						const output = response.data;
 						if (output.status === 'success') {
@@ -87,7 +88,7 @@ module.exports = {
 			},
 			execute(args, tags, message, channel, client) {
 				let content = '';
-				axios.get(baseUrl + 'insert/guesses?reset')
+				axios.get(data.settings.baseUrl + 'insert/guesses?reset')
 					.then(function(response) {
 						const output = response.data;
 						if (output.status === 'success') {

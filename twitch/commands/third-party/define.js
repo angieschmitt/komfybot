@@ -24,23 +24,23 @@ module.exports = {
 				else {
 					axios.get('https://api.dictionaryapi.dev/api/v2/entries/en/' + args[1])
 						.then(function(response) {
-							const data = response.data;
+							const resData = response.data;
 
 							output = `@${tags.username}, ${args[1]} can be defined as a... `;
-							const meanings = data[0].meanings;
+							const meanings = resData[0].meanings;
 							Object.entries(meanings).forEach(([key]) => {
 								output += `${meanings[key].partOfSpeech} : ${meanings[key].definitions[0].definition} || `;
 							});
 
 							output = output.substring(0, output.length - 3).trim();
 
-							if (data[0].phonetic) {
-								output += ` It is pronounced like: ${data[0].phonetic}`;
+							if (resData[0].phonetic) {
+								output += ` It is pronounced like: ${resData[0].phonetic}`;
 							}
 						})
 						.catch(function(caught) {
-							const data = caught.response.data;
-							if (data.message == 'Sorry pal, we couldn\'t find definitions for the word you were looking for.') {
+							const resData = caught.response.data;
+							if (resData.message == 'Sorry pal, we couldn\'t find definitions for the word you were looking for.') {
 								output = `Sorry @${tags.username}, we couldn't find definitions for the word you were looking for.`;
 							}
 							else {

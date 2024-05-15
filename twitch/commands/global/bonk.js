@@ -1,5 +1,6 @@
 const axios = require('axios');
-const baseUrl = 'https://www.kittenangie.com/bots/api/v1/';
+const dataFile = require('../../data/index');
+const data = dataFile.content();
 
 module.exports = {
 	name: 'bonk',
@@ -11,15 +12,15 @@ module.exports = {
 
 				let twitchData, user = false;
 				if (!args[1]) {
-					user = channel;
-					twitchData = { 'ident_type':'twitch_username', 'ident':channel };
+					user = channel.replace('#', '');
+					twitchData = { 'ident_type':'twitch_username', 'ident':user };
 				}
 				else {
 					user = args[1].replace('@', '');
 					twitchData = { 'ident_type':'twitch_username', 'ident':user };
 				}
 
-				axios.get(baseUrl + 'bonk/insert/json/' + encodeURIComponent(JSON.stringify(twitchData)))
+				axios.get(data.settings.newUrl + 'bonk/insert/json/' + encodeURIComponent(JSON.stringify(twitchData)))
 					.then(function(response) {
 						const output = response.data;
 						if (output.status === 'success') {

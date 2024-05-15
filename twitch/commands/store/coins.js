@@ -133,10 +133,10 @@ module.exports = {
 				let content = '';
 				axios.get(data.settings.baseUrl + 'retrieve/store')
 					.then(function(response) {
-						const data = response.data;
+						const resData = response.data;
 
 						content += 'Here\'s whats in the store:';
-						data.content.forEach(element => {
+						resData.content.forEach(element => {
 							content += ' ' + element['name'] + ' @ ' + element['value'] + ' KomfyCoins ||';
 						});
 						content = content.substring(0, content.length - 3);
@@ -164,27 +164,27 @@ module.exports = {
 
 				axios.get(data.settings.baseUrl + 'retrieve/store/?item=' + item.toLowerCase())
 					.then(function(response) {
-						const data = response.data;
+						const resData = response.data;
 
-						if (data.status === 'failure') {
+						if (resData.status === 'failure') {
 							content += `No item named ${item}, or that item isn't available`;
 						}
 						else {
-							const cost = data.content;
+							const cost = resData.content;
 							const reason = 'BOUGHT: ' + item;
 
 							axios.get(data.settings.baseUrl + 'insert/coins/?username=' + username.toLowerCase() + '&amount=' + (cost * -1) + '&reason=' + reason)
 								.then(function(response2) {
-									const output = response2.data;
-									if (output.status === 'success') {
+									const resData2 = response2.data;
+									if (resData2.status === 'success') {
 										// Random Hat catch!
 										if (item.toLowerCase() === 'random hat') {
 											axios.get(data.settings.baseUrl + 'interactive/hats/hat_random?user=' + userID)
 												.then(function(response3) {
-													const output3 = response3.data;
-													if (output3.status === 'success') {
+													const resData3 = response3.data;
+													if (resData3.status === 'success') {
 														let rarityText = '';
-														switch (output3.content.rarity) {
+														switch (resData3.content.rarity) {
 														case '1':
 															rarityText = 'Common';
 															break;
@@ -198,11 +198,11 @@ module.exports = {
 															break;
 														}
 														content = `Congrats @${username} on buying a ${item} @ ${cost} KomfyCoins.`;
-														if (parseInt(output3.content.qty) <= 1) {
-															content += ` You unwrapped a ${output3.content.item} (${rarityText}) !`;
+														if (parseInt(resData3.content.qty) <= 1) {
+															content += ` You unwrapped a ${resData3.content.item} (${rarityText}) !`;
 														}
 														else {
-															content += ` You unwrapped another ${output3.content.item} (${rarityText}) !`;
+															content += ` You unwrapped another ${resData3.content.item} (${rarityText}) !`;
 														}
 													}
 													else {
@@ -219,14 +219,14 @@ module.exports = {
 										}
 										else {
 											axios.get(data.settings.baseUrl + 'interactive/coins/store_purchase?twitch_id=' + userID + '&item=' + item)
-												.then(function(response3) {
-													const output3 = response3.data;
-													if (output3.status === 'success') {
-														if (output3.content.qty == 1) {
+												.then(function(response4) {
+													const resData4 = response4.data;
+													if (resData4.status === 'success') {
+														if (resData4.content.qty == 1) {
 															content = `Congrats @${username} on buying a ${item} @ ${cost} KomfyCoins.`;
 														}
 														else {
-															content = `Congrats @${username} on buying another ${item} @ ${cost} KomfyCoins. You currently have ${output3.content.qty}.`;
+															content = `Congrats @${username} on buying another ${item} @ ${cost} KomfyCoins. You currently have ${resData4.content.qty}.`;
 														}
 													}
 													else {
@@ -242,7 +242,7 @@ module.exports = {
 												});
 										}
 									}
-									else if (output.status === 'failure' && output.err_msg === 'not_enough_coins') {
+									else if (resData2.status === 'failure' && resData2.err_msg === 'not_enough_coins') {
 										content = 'You seem to be out of KomfyCoins.';
 									}
 									else {
@@ -274,22 +274,22 @@ module.exports = {
 				const url = 'interactive/coins/store_inventory/?twitch_id=' + tags['user-id'];
 				axios.get(data.settings.baseUrl + url)
 					.then(function(response) {
-						const data = response.data;
-						if (data.status === 'success') {
-							if (Object.keys(data.content).length) {
+						const resData = response.data;
+						if (resData.status === 'success') {
+							if (Object.keys(resData.content).length) {
 								content += 'Here\'s whats in your inventory: ';
 								// eslint-disable-next-line
-								Object.entries(data.content).forEach(([key, value]) => {
+								Object.entries(resData.content).forEach(([key, value]) => {
 									content += `${value['qty']}x ${value['name']}, `;
 								});
 								content = content.substring(0, content.length - 2);
 							}
 						}
-						else if (data.status === 'failure') {
-							if (data.err_msg === 'no_twitch_id') {
+						else if (resData.status === 'failure') {
+							if (resData.err_msg === 'no_twitch_id') {
 								content = 'That username doesn\'t seem to be in our system.';
 							}
-							else if (data.err_msg === 'no_items') {
+							else if (resData.err_msg === 'no_items') {
 								content = 'Seems like you don\'t have anything in your inventory.';
 							}
 						}
