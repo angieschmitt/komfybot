@@ -92,7 +92,6 @@ module.exports = {
 										client.say(channel, `${output}`);
 									})
 									.catch(function() {
-										// const data = caught.response.data;
 										client.say(channel, '2Something went wrong, tell @kittenAngie.');
 									});
 							}
