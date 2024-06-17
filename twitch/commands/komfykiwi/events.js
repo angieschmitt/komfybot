@@ -4,6 +4,11 @@ module.exports = {
 	channel: 'komfykiwi',
 	help: 'Event Promos',
 	aliases: {
+		'1year': {
+			arg: 'oneyear',
+			list: false,
+			disabled: true,
+		},
 		'24h': {
 			arg: 'twentyfourhour',
 			list: false,
@@ -46,6 +51,9 @@ module.exports = {
 		oneshot: {
 			say: 'Interested in playing the one shot with your group? Cheer 200 or more bits, ' +
 			'make a donation of $2 or more, or sub today to get it for free!',
+		},
+		oneyear: {
+			say: '🚨🚨 THIS COMING SATURDAY: KIWI STREAMIVERSARY STREAM! COMMUNITY SHENANIGANS, BYO-POPCORN, AND FUN! BE THERE OR BE NOT THERE!! 🚨🚨',
 		},
 		valentine: {
 			say: 'Wanna be my valentine and have YOUR NAME on a Heart on the wall behind me? ' +

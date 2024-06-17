@@ -11,6 +11,10 @@ module.exports = {
 			arg: false,
 			list: false,
 		},
+		'store': {
+			arg: 'store',
+			list: false,
+		},
 	},
 	actions: {
 		default: {
@@ -90,7 +94,14 @@ module.exports = {
 						content = 'Something went wrong, tell @kittenAngie.';
 					})
 					.finally(function() {
-						client.say(channel, content);
+						if ('silent' in tags) {
+							if (tags.silent !== true) {
+								client.say(channel, content);
+							}
+						}
+						else {
+							client.say(channel, content);
+						}
 						axios.post(data.settings.baseUrl + 'coins_fix');
 					});
 			},

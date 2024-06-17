@@ -14,6 +14,7 @@ module.exports = {
 		client.last_message[channelName] = message;
 
 		if (self) { return; }
+		if (tags['user-id'] === '934821771') { return; }
 
 		const perms = {};
 		if ('#' + tags.username == channel) {

@@ -25,6 +25,7 @@ module.exports = {
 					}
 				}
 				const value = getRandomNumber(100);
+				// const value = chances[0];
 				const data = { 'amt': 10, 'ident_type': 'discord_username', 'ident': message.author.username, 'reason': 'Chatting in discord' };
 				if (chances.includes(value)) {
 					message.react('🪙');
@@ -37,6 +38,7 @@ module.exports = {
 								content = `KC_HANDOUT, SUCCESS, <@${message.author.id}>, 10, false`;
 							}
 							else if (outcome.status === 'failure') {
+								message.react('❌');
 								content = `KC_HANDOUT, FAILURE, <@${message.author.id}>, 0, ${outcome.response}`;
 							}
 

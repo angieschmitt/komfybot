@@ -25,7 +25,8 @@ if (Object.keys(extArgs).length !== 0) {
 	if (extArgs[0] === 'reset') {
 		// Handle Reset
 		const handleReset = new Promise((resolve) => {
-			axios.get(data.settings.baseUrl + 'insert/uptime')
+			const twitchData = { 'ident_type':'twitch_username', 'ident':'komfykiwi' };
+			axios.get(data.settings.newUrl + 'uptime/insert/json/' + encodeURIComponent(JSON.stringify(twitchData)))
 				.then(() => {
 					axios.get(data.settings.baseUrl + 'insert/guesses?reset')
 						.then(() => {

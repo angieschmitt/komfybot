@@ -1,11 +1,11 @@
-const axios = require('axios');
-const dataFile = require('../../data/index');
-const data = dataFile.content();
+// const axios = require('axios');
+// const dataFile = require('../../data/index');
+// const data = dataFile.content();
 
 module.exports = {
 	name: 'slots',
 	channel: ['komfykiwi', 'komfybot'],
-	help: 'Shows your (or someone else\'s) total coin amount! Additional arguments: add, store, buy',
+	help: 'Spin the slots and (optionally) wager some of your KomfyCoins!',
 	aliases: {
 		// 'slots': {
 		// 	arg: false,
@@ -15,31 +15,9 @@ module.exports = {
 	actions: {
 		default: {
 			execute(args, tags, message, channel, client) {
-				// if (args.length < 1) {
-				// 	client.say(channel, 'You\'ll need to choose an amount to risk! ');
-				// }
-				// else {
-				let content = '';
-				const risk = args[1];
-				// Weight = matching X in X PER reel.
-				//    - Increases chances, but I can't figure out the math
-				//    - 1 = 100%, 2 = 50%, 3 = 33%
-				const reel = [];
-				reel[0] = getWeightedSlot(5);
-				reel[1] = getWeightedSlot(5, 3, reel[0]);
-				reel[2] = getWeightedSlot(5, 2, reel[1]);
 
-				let num = false;
-				let win = true;
-				// eslint-disable-next-line no-unused-vars
-				Object.entries(reel).forEach(([key, value]) => {
-					if (!num) {
-						num = value;
-					}
-					else if (num !== value) {
-						win = false;
-					}
-				});
+				// client.say(channel, `TEMPORARILY DISABLED`);
+				// return;
 
 				const icons = {
 					1 : 'BrainSlug',
@@ -49,22 +27,117 @@ module.exports = {
 					5 : 'RaccAttack',
 				};
 
-				console.log(`Risking ${risk} `);
-				console.log(reel);
+				let content = '';
+				if (args.length < 2) {
+					args[1] = 0;
+					// content += 'No risk means no reward... but ';
+				}
 
-				const outcome = `${icons[reel[0]]} | ${icons[reel[1]]} | ${icons[reel[2]]}`;
-				content += `@${tags.username}, you got ${outcome} `;
-				if (win) {
-					content += 'and won!';
+				if (args.length == 2) {
+					const risk = parseInt(args[1]);
+
+					if (!isNumeric(args[1])) {
+						client.say(channel, `@${tags.username}, you can only wager whole numbers of KomfyCoins.`);
+						return;
+					}
+
+					// If the risk is ACTUALLY a number...
+					if (isFinite(risk) || risk === 0) {
+						if (risk >= 0 && risk <= 80) {
+							// Now we get their current coin amount
+							client.commands[channel.replace('#', '')].coins.actions.coincount.execute(tags)
+								.then((coinAmt) => {
+									coinAmt = parseInt(coinAmt);
+									if (coinAmt) {
+										if (risk <= parseInt(coinAmt)) {
+
+											// Weight = matching X in X PER reel.
+											//    - Increases chances, but I can't figure out the math
+											//    - 1 = 100%, 2 = 50%, 3 = 33%
+											const reel = [];
+											reel[0] = getWeightedSlot(5);
+											reel[1] = getWeightedSlot(5, 3, reel[0]);
+											reel[2] = getWeightedSlot(5, 2, reel[1]);
+
+											let num = false;
+											let win = true;
+											// eslint-disable-next-line no-unused-vars
+											Object.entries(reel).forEach(([key, value]) => {
+												if (!num) {
+													num = value;
+												}
+												else if (num !== value) {
+													win = false;
+												}
+											});
+
+											console.log(`Risking ${risk} `);
+											console.log(reel);
+
+											const outcome = `${icons[reel[0]]} | ${icons[reel[1]]} | ${icons[reel[2]]}`;
+											content += `@${tags.username}, you got ${outcome} `;
+
+											// Output text
+											if (risk > 0) {
+												if (win) {
+													content += `and won ${risk} KomfyCoins! Total KomfyCoins: ${coinAmt + risk}.`;
+
+													// Add coins
+													const args2 = ['!coins', 'add', tags.username, risk, `Slots Win: ${risk}` ];
+													const message2 = `!coins add ${tags.username} ${risk} Slots Win: ${risk}`;
+													tags['silent'] = true;
+													client.commands[channel.replace('#', '')].coins.actions.add.execute(args2, tags, message2, channel, client);
+												}
+												else {
+													content += `and lost ${risk} KomfyCoins! Total KomfyCoins: ${coinAmt - risk}.`;
+
+													// Remove coins
+													const args2 = ['!coins', 'add', tags.username, '-' + risk, `Slots Loss: -${risk}` ];
+													const message2 = `!coins add ${tags.username} -${risk} Slots Loss: -${risk}`;
+													tags['silent'] = true;
+													client.commands[channel.replace('#', '')].coins.actions.add.execute(args2, tags, message2, channel, client);
+												}
+											}
+											else {
+												/* eslint-disable-next-line no-lonely-if */
+												if (win) {
+													content += 'and won!';
+												}
+												else {
+													content += 'and lost!';
+												}
+											}
+										}
+										else {
+											content += `@${tags.username}, you can't wager more KomfyCoins than you have! (${coinAmt})`;
+										}
+									}
+								})
+								.finally(function() {
+									client.say(channel, `${content}`);
+								});
+						}
+						else {
+							client.say(channel, `@${tags.username}, you can only wager between 0 and 80 KomfyCoins`);
+						}
+					}
+					else {
+						const what = message.replace(args[0], '').trim();
+						client.say(channel, `@${tags.username}, you can't wager ${what}...`);
+					}
 				}
 				else {
-					content += 'and lost!';
+					const what = message.replace(args[0], '').trim();
+					client.say(channel, `@${tags.username}, you can't wager ${what}...`);
 				}
-				client.say(channel, content);
-				// }
 			},
 		},
 	},
+};
+
+const isNumeric = function(num) {
+	const temp = num.toString();
+	return !isNaN(parseFloat(num)) && isFinite(num) && (temp.indexOf('.') == -1);
 };
 
 const getWeightedSlot = function(max, weight = false, match = false) {

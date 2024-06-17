@@ -21,10 +21,10 @@ module.exports = {
 					let command = false;
 					let location = false;
 					// -- Check channel commands, if there are any
-					if (client.commands[channel]) {
-						if (input in client.commands[channel]) {
-							command = client.commands[channel][input];
-							location = channel;
+					if (client.commands[channel.replace('#', '')]) {
+						if (input in client.commands[channel.replace('#', '')]) {
+							command = client.commands[channel.replace('#', '')][input];
+							location = channel.replace('#', '');
 						}
 					}
 					// -- If it hasn't been located, check global commands

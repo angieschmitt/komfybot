@@ -7,7 +7,7 @@ module.exports = {
 	help: 'Add your guesses to the list. Additional args: list, reset, lock, unlock',
 	actions: {
 		default: {
-			help: 'Add your guess to the list. !pkmn guess <pokemon-name:required>',
+			help: 'Add your guess to the list. !guess <thing:required>',
 			args: {
 				1: [ 'r' ],
 				error: 'don\'t forgot your guess!',
@@ -56,6 +56,7 @@ module.exports = {
 			},
 		},
 		list: {
+			help: 'Lists out the guesses.',
 			execute(args, tags, message, channel, client) {
 				let content = '';
 				axios.get(data.settings.baseUrl + 'retrieve/guesses')
@@ -82,6 +83,7 @@ module.exports = {
 			},
 		},
 		reset: {
+			help: 'MOD command to reset the guesses.',
 			perms: {
 				levels: ['mod'],
 				error: 'This is a mod only command',
@@ -107,6 +109,11 @@ module.exports = {
 			},
 		},
 		lock: {
+			help: 'MOD command to lock the guesses.',
+			perms: {
+				levels: ['mod'],
+				error: 'This is a mod only command',
+			},
 			execute(args, tags, message, channel, client) {
 				const channelClean = channel.replace('#', '');
 
@@ -115,6 +122,11 @@ module.exports = {
 			},
 		},
 		unlock: {
+			help: 'MOD command to unlock the guesses.',
+			perms: {
+				levels: ['mod'],
+				error: 'This is a mod only command',
+			},
 			execute(args, tags, message, channel, client) {
 				const channelClean = channel.replace('#', '');
 
@@ -124,11 +136,3 @@ module.exports = {
 		},
 	},
 };
-
-// function ucwords(string) {
-// 	return string.toLowerCase().replace(/(?<= )[^\s]|^./g, a => a.toUpperCase());
-// }
-
-// function randomIntFromInterval(min, max) {
-// 	return Math.floor(Math.random() * (max - min + 1) + min);
-// }

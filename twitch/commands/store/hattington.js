@@ -216,8 +216,6 @@ module.exports = {
 				let content = '';
 				const userID = tags['user-id'];
 
-				console.log(channel);
-
 				axios.get(data.settings.baseUrl + 'interactive/hats/hat_inventory?twitch_id=' + userID)
 					.then(function(response) {
 						const resData = response.data;
@@ -261,7 +259,16 @@ module.exports = {
 										content += 'Use !hats inv <rarity> to see the specific hats.';
 									}
 									else {
-										const rarity = args[2].toUpperCase();
+										let rarity = args[2].toUpperCase();
+
+										if (
+											rarity == 'DUPLICATES' ||
+											rarity == 'DUPES' ||
+											rarity == 'DUPE'
+										) {
+											rarity = 'DUPLICATE';
+										}
+
 										// eslint-disable-next-line
 										if ( resData.counts[rarity] > 0 ){
 											content += `Here's the ${rarity} hats you have: `;
@@ -305,57 +312,116 @@ module.exports = {
 				const hat = message.replace(args[0], '').replace(args[1], '').trim();
 				let sold = false;
 
-				axios.get(data.settings.baseUrl + 'interactive/hats/hat_sell?twitch_id=' + userID + '&hat=' + hat)
-					.then(function(response) {
-						const resData = response.data;
-						if (resData.status === 'success') {
-							sold = true;
-							content = tags['username'] + ', ' + resData.content + '.';
-						}
-						else if (resData.status === 'failure') {
+				if (hat === 'duplicates') {
+					axios.get(data.settings.baseUrl + 'interactive/hats/hat_inventory?twitch_id=' + userID)
+						.then(function(response) {
+							const resData = response.data;
+							if (resData.status === 'success') {
+								if (Object.keys(resData.content['DUPLICATE']).length > 0) {
+									content += 'You\'ve sold the following hats: ';
+									Object.entries(resData.content['DUPLICATE']).forEach(([hat, data]) => {
+										const toSell = (parseInt(data.qty) - 1);
 
-							switch (resData.err_msg) {
-							case 'one_hat':
-								content = 'Sorry, but you can\'t sell your last ' + hat + '!';
-								break;
-							case 'no_hat':
-								content = 'Seems like you don\'t have a ' + hat + ' in your inventory. You might want to check your spelling.';
-								break;
-							case 'sell_issue':
-								content = 'Something went wrong selling your hat, tell @kittenAngie!';
-								break;
-							case 'coins_issue':
-								content = 'Something went wrong giving you your coins, tell @kittenAngie!';
-								break;
-							default:
-								content = 'Something went wrong, tell @kittenAngie.';
-								break;
+										for (let index = 0; index < toSell; index++) {
+											// const element = array[index];
+											// client.commands
+											const newArgs = ['!hat', 'sell', hat];
+											const newMess = '!hat sell ' + hat;
+											tags['silent'] = true;
+
+											client.commands[channel.replace('#', '')].hattington.actions.sell.execute(newArgs, tags, newMess, channel, client);
+											sold = true;
+										}
+										content += toSell + 'x ' + hat + ' || ';
+									});
+
+									content = content.substring(0, content.length - 3).trim();
+								}
+								else {
+									content = 'Seems like you don\'t have a duplicates to sell.';
+								}
 							}
-						}
-						else {
-							content = 'Something went wrong, tell @kittenAngie.';
-						}
-					})
-					.catch(function() {
-						content = 'Something went wrong, tell @kittenAngie.';
-					})
-					.finally(function() {
-						// Get coin count
-						if (sold) {
-							client.commands[channel.replace('#', '')].coins.actions.coincount.execute(tags)
-								.then((coinAmt) => {
-									if (coinAmt) {
-										content += ` You have ${(coinAmt ? coinAmt : 0)} KomfyCoins stashed in your wallet!`;
-									}
-								})
-								.finally(function() {
-									client.say(channel, `${content}`);
-								});
-						}
-						else {
+						})
+						.catch(function() {
+							content = 'Something went wrong, tell @kittenAngie. 2';
+						})
+						.finally(function() {
 							client.say(channel, `${content}`);
-						}
-					});
+						});
+				}
+				else {
+					axios.get(data.settings.baseUrl + 'interactive/hats/hat_sell?twitch_id=' + userID + '&hat=' + hat)
+						.then(function(response) {
+							const resData = response.data;
+							if (resData.status === 'success') {
+								sold = true;
+								content = tags['username'] + ', ' + resData.content + '.';
+							}
+							else if (resData.status === 'failure') {
+
+								switch (resData.err_msg) {
+								case 'one_hat':
+									content = 'Sorry, but you can\'t sell your last ' + hat + '!';
+									break;
+								case 'no_hat':
+									content = 'Seems like you don\'t have a ' + hat + ' in your inventory. You might want to check your spelling.';
+									break;
+								case 'sell_issue':
+									content = 'Something went wrong selling your hat, tell @kittenAngie!';
+									break;
+								case 'coins_issue':
+									content = 'Something went wrong giving you your coins, tell @kittenAngie!';
+									break;
+								default:
+									content = 'Something went wrong, tell @kittenAngie.';
+									break;
+								}
+							}
+							else {
+								content = 'Something went wrong, tell @kittenAngie.';
+							}
+						})
+						.catch(function() {
+							content = 'Something went wrong, tell @kittenAngie.';
+						})
+						.finally(function() {
+							if ('silent' in tags) {
+								if (tags.silent !== true) {
+									if (sold) {
+										client.commands[channel.replace('#', '')].coins.actions.coincount.execute(tags)
+											.then((coinAmt) => {
+												if (coinAmt) {
+													content += ` You have ${(coinAmt ? coinAmt : 0)} KomfyCoins stashed in your wallet!`;
+												}
+											})
+											.finally(function() {
+												client.say(channel, `${content}`);
+											});
+									}
+									else {
+										client.say(channel, `${content}`);
+									}
+								}
+							}
+							else {
+								/* eslint-disable-next-line no-lonely-if */
+								if (sold) {
+									client.commands[channel.replace('#', '')].coins.actions.coincount.execute(tags)
+										.then((coinAmt) => {
+											if (coinAmt) {
+												content += ` You have ${(coinAmt ? coinAmt : 0)} KomfyCoins stashed in your wallet!`;
+											}
+										})
+										.finally(function() {
+											client.say(channel, `${content}`);
+										});
+								}
+								else {
+									client.say(channel, `${content}`);
+								}
+							}
+						});
+				}
 			},
 		},
 		set: {
