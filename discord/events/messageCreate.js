@@ -38,7 +38,7 @@ module.exports = {
 								content = `KC_HANDOUT, SUCCESS, <@${message.author.id}>, 10, false`;
 							}
 							else if (outcome.status === 'failure') {
-								message.react('❌');
+								message.react('⛔');
 								content = `KC_HANDOUT, FAILURE, <@${message.author.id}>, 0, ${outcome.response}`;
 							}
 

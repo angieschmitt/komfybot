@@ -2,6 +2,7 @@ require('../../data/globals');
 
 const axios = require('axios');
 const { SlashCommandBuilder } = require('discord.js');
+const { channels } = require(configFile); // eslint-disable-line
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -22,21 +23,33 @@ module.exports = {
 		const url = global.baseUrl + 'insert/link/?discord_id=' + encodeURIComponent(discord_id) + '&twitch_username=' + encodeURIComponent(twitch_username);
 		await axios.get(url)
 			.then(function(response) {
+				let content = '';
 				const outcome = response.data;
 				if (outcome.status === 'success') {
 					interaction.editReply({ content: `Account successfully linked to https://twitch.tv/${twitch_username}.`, ephemeral: true });
+					content = `LINKED, SUCCESS, <@${interaction.user.id}>, ${twitch_username}, false`;
 				}
 				else if (outcome.status === 'failure') {
 					if (outcome.err_msg === 'already_linked') {
 						interaction.editReply({ content: `Looks like your account is already linked to https://twitch.tv/${outcome.content}.`, ephemeral: true });
+						content = `LINKED, FAILURE, <@${interaction.user.id}>, ${outcome.content}, already_linked`;
 					}
 					else if (outcome.err_msg === 'no_match') {
 						interaction.editReply({ content: 'Username not found in our database. Make sure you chat in Kiwi\'s stream to fix that!', ephemeral: true });
+						content = `LINKED, FAILURE, <@${interaction.user.id}>, ${twitch_username}, no_match`;
 					}
 				}
 				else {
 					interaction.editReply({ content: 'There was an issue adding that to the database.', ephemeral: true });
 				}
+
+				interaction.channel.client.channels.fetch(channels.bot_log)
+					.then(channel => {
+						channel.send({
+							content: `${content}`,
+						});
+					})
+					.catch(err => console.log(err));
 			})
 			.catch(function(error) {
 				interaction.editReply({ content: `Something went wrong? ${error}`, ephemeral: true });
