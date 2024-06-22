@@ -27,20 +27,20 @@ module.exports = {
 				const outcome = response.data;
 				if (outcome.status === 'success') {
 					interaction.editReply({ content: `Account successfully linked to https://twitch.tv/${twitch_username}.`, ephemeral: true });
-					content = `LINKED, SUCCESS, <@${interaction.user.id}>, ${twitch_username}, false`;
+					content = `LINK, SUCCESS, <@${interaction.user.id}>, ${twitch_username}, false`;
 				}
 				else if (outcome.status === 'failure') {
 					if (outcome.err_msg === 'already_linked') {
 						interaction.editReply({ content: `Looks like your account is already linked to https://twitch.tv/${outcome.content}.`, ephemeral: true });
-						content = `LINKED, FAILURE, <@${interaction.user.id}>, ${outcome.content}, already_linked`;
+						content = `LINK, FAILURE, <@${interaction.user.id}>, ${outcome.content}, already_linked`;
 					}
 					else if (outcome.err_msg === 'no_match') {
 						interaction.editReply({ content: 'Username not found in our database. Make sure you chat in Kiwi\'s stream to fix that!', ephemeral: true });
-						content = `LINKED, FAILURE, <@${interaction.user.id}>, ${twitch_username}, no_match`;
+						content = `LINK, FAILURE, <@${interaction.user.id}>, ${twitch_username}, no_match`;
 					}
 				}
 				else {
-					interaction.editReply({ content: 'There was an issue adding that to the database.', ephemeral: true });
+					interaction.editReply({ content: 'There was an issue adding that to the database. Tell kittenAngie.', ephemeral: true });
 				}
 
 				interaction.channel.client.channels.fetch(channels.bot_log)
