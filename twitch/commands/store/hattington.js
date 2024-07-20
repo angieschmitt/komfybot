@@ -301,7 +301,7 @@ module.exports = {
 			},
 		},
 		sell: {
-			help: 'Sell a hat for 40/80/160 KomfyCoins. !hattington sell <hat-name:required>',
+			help: 'Sell a hat for 40/80/160 KomfyCoins. !hattington sell <hat-name:required || duplicate(s)>',
 			args: {
 				1: [ 'r' ],
 				error: 'don\'t forgot the hat name!',
@@ -312,7 +312,7 @@ module.exports = {
 				const hat = message.replace(args[0], '').replace(args[1], '').trim();
 				let sold = false;
 
-				if (hat === 'duplicates') {
+				if (hat === 'duplicates' || hat === 'duplicate') {
 					axios.get(data.settings.baseUrl + 'interactive/hats/hat_inventory?twitch_id=' + userID)
 						.then(function(response) {
 							const resData = response.data;

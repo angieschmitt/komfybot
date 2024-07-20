@@ -1,5 +1,6 @@
 const axios = require('axios');
-// const baseUrl = 'https://www.kittenangie.com/bots/api_new/';
+// const dataFile = require('../../data/index');
+// const data = dataFile.content();
 
 module.exports = {
 	name: 'scry',

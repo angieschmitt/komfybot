@@ -1,5 +1,6 @@
 const axios = require('axios');
-const baseUrl = 'https://www.kittenangie.com/bots/api_new/';
+const dataFile = require('../../data/index');
+const data = dataFile.content();
 
 module.exports = {
 	name: '8ball',
@@ -12,11 +13,11 @@ module.exports = {
 				}
 				else {
 					let content = '';
-					axios.get(baseUrl + 'retrieve/8ball/')
+					axios.get(data.settings.newUrl + '8ball/retrieve/')
 						.then(function(response) {
 							const output = response.data;
 							if (output.status === 'success') {
-								content = `@${tags.username} the Magic 8 Ball says... ` + output.content;
+								content = `@${tags.username} the Magic 8 Ball says... ` + output.response;
 							}
 							else {
 								content = 'Something went wrong, tell @kittenAngie.';

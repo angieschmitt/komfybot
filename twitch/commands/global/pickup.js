@@ -1,5 +1,6 @@
 const axios = require('axios');
-const baseUrl = 'https://www.kittenangie.com/bots/api_new/';
+const dataFile = require('../../data/index');
+const data = dataFile.content();
 
 module.exports = {
 	name: 'pickup',
@@ -14,11 +15,11 @@ module.exports = {
 		default: {
 			execute(args, tags, message, channel, client) {
 				let content = '';
-				axios.get(baseUrl + 'retrieve/pickup/')
+				axios.get(data.settings.newUrl + 'flirt/retrieve')
 					.then(function(response) {
 						const output = response.data;
 						if (output.status === 'success') {
-							content = `Hey ${tags.username}, ${output.content}`;
+							content = `Hey ${tags.username}, ${output.response}`;
 						}
 						else {
 							content = 'Something went wrong, tell @kittenAngie.';

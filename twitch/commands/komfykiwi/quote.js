@@ -1,21 +1,22 @@
 const axios = require('axios');
-const baseUrl = 'https://www.kittenangie.com/bots/api_new/';
+const dataFile = require('../../data/index');
+const data = dataFile.content();
 
 module.exports = {
 	name: 'quote',
-	channel: 'komfykiwi',
+	channel: ['komfykiwi'],
 	help: 'Pull a quote from our growing database of silliness!',
 	actions: {
 		default: {
 			execute(args, tags, message, channel, client) {
 				let id = false;
 				let content = '';
-				axios.get(baseUrl + 'retrieve/quote/')
+				axios.get(data.settings.newUrl + 'quote/retrieve')
 					.then(function(response) {
 						const output = response.data;
 						id = output.id;
 						if (output.status === 'success') {
-							content = output.content;
+							content = output.response;
 						}
 						else {
 							content = 'Something went wrong, tell @kittenAngie.';

@@ -1,5 +1,6 @@
 const axios = require('axios');
-const baseUrl = 'https://www.kittenangie.com/bots/api_new/';
+const dataFile = require('../../data/index');
+const data = dataFile.content();
 
 module.exports = {
 	list: false,
@@ -15,11 +16,11 @@ module.exports = {
 		default: {
 			execute(args, tags, message, channel, client) {
 				let content = '';
-				axios.get(baseUrl + 'retrieve/fact/')
+				axios.get(data.settings.newUrl + 'fact/retrieve')
 					.then(function(response) {
 						const output = response.data;
 						if (output.status === 'success') {
-							content = `@${tags.username} the Fact of the Day is... ` + output.content;
+							content = `@${tags.username} the Fact of the Day is... ` + output.response;
 						}
 						else {
 							content = 'Something went wrong, tell @kittenAngie.';

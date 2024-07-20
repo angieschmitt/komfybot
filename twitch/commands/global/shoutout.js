@@ -1,5 +1,6 @@
 const axios = require('axios');
-const baseUrl = 'https://www.kittenangie.com/bots/api_new/';
+const dataFile = require('../../data/index');
+const data = dataFile.content();
 
 module.exports = {
 	list: false,
@@ -36,55 +37,81 @@ module.exports = {
 						username = tags.username;
 					}
 
-					axios.get(baseUrl + 'retrieve/shoutout?twitch_username=' + username)
+					axios.get(data.settings.newUrl + 'shoutout/insert/' + username)
 						.then(function(response) {
 							const output = response.data;
+							console.log(output);
 							if (output.status === 'success') {
-								const recent = output.content.recent;
-								let rand = 0;
-								const items = [];
+								axios.get(data.settings.newUrl + 'shoutout/retrieve/' + username)
+									.then(function(response) {
+										const output = response.data;
+										if (output.status === 'success') {
 
-								if (recent.length) {
-									rand = randomProp(recent);
-									items.push(recent[rand]);
-									recent.splice(rand, 1);
-								}
-								if (recent.length) {
-									rand = randomProp(recent);
-									items.push(recent[rand]);
-									recent.splice(rand, 1);
-								}
-								if (recent.length) {
-									rand = randomProp(recent);
-									items.push(recent[rand]);
-									recent.splice(rand, 1);
-								}
+											// Start the content
+											content = `Make sure you check out @${output.response.name}, over at https://www.twitch.tv/${output.response.name} ! `;
 
-								content = `Make sure you check out @${username}, over at https://www.twitch.tv/${username} ! `;
-								content += `They were last seen playing ${output.content.latest} `;
+											// Slap in the last game
+											if (output.response.last) {
+												content += `They were last seen playing ${output.response.last} `;
+											}
 
-								if (items.length > 1) {
-									let games = '';
-									Object.entries(items).forEach(([key, value]) => {
-										if (items.length > (parseInt(key) + 1)) {
-											games += value + ', ';
+											// Next we work on recents
+											let rand = 0;
+											const items = [];
+											const recent = JSON.parse(output.response.game_log);
+
+											// If last is set, remove from recent
+											if (output.response.last) {
+												const index = recent.indexOf(output.response.last);
+												if (index !== false) {
+													recent.splice(index, 1);
+												}
+											}
+
+											// Select 3 randoms
+											if (recent.length) {
+												rand = randomProp(recent);
+												items.push(recent[rand]);
+												recent.splice(rand, 1);
+											}
+											if (recent.length) {
+												rand = randomProp(recent);
+												items.push(recent[rand]);
+												recent.splice(rand, 1);
+											}
+											if (recent.length) {
+												rand = randomProp(recent);
+												items.push(recent[rand]);
+												recent.splice(rand, 1);
+											}
+
+											if (items.length > 1) {
+												let games = '';
+												Object.entries(items).forEach(([key, value]) => {
+													if (items.length > (parseInt(key) + 1)) {
+														games += value + ', ';
+													}
+													else {
+														games += ' and ' + value;
+													}
+												});
+												content += 'and other games like: ' + games + '.';
+											}
+											else {
+												content += `and ${items[0]}.`;
+											}
 										}
-										else {
-											games += ' and ' + value;
-										}
+									})
+									.catch(function() {
+										content = `Go check out @${username} at https://www.twitch.tv/${username}!`;
+									})
+									.finally(function() {
+										client.say(channel, content);
 									});
-									content += 'and other games like: ' + games + '.';
-								}
-								else {
-									content += `and ${items[0]}.`;
-								}
-							}
-							else {
-								content = `Go check out @${username} at https://www.twitch.tv/${username}!`;
 							}
 						})
 						.catch(function() {
-							content = `Go check out @${username} at https://www.twitch.tv/${username}!`;
+							content = 'Something went wrong, tell @kittenAngie.';
 						})
 						.finally(function() {
 							client.say(channel, content);
