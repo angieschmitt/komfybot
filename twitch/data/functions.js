@@ -20,7 +20,6 @@ const functions = {
 			// Create channel extras
 			client.extras[channel.replace('#', '')] = [];
 			client.extras[channel.replace('#', '')].race = [];
-			client.extras[channel.replace('#', '')].guessActive = true;
 
 			// Create channel last_message
 			client.last_message[channel.replace('#', '')] = '';
