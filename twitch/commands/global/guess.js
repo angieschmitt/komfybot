@@ -13,58 +13,67 @@ module.exports = {
 				error: 'don\'t forgot your guess!',
 			},
 			execute(args, tags, message, channel, client) {
-				let content = '';
-				const username = tags['username'];
+
+				// Get guesser and guess
+				const user = channel.replace('#', '');
+				const guesser = tags['username'];
 				const guess = message.replace(args[0], '').trim().toLowerCase();
 
-				const channelClean = channel.replace('#', '');
-
-				if (client.extras[channelClean].guessActive != false) {
-					axios.get(data.settings.baseUrl + 'insert/guesses?username=' + username + '&guess=' + guess)
-						.then(function(response) {
-							const resData = response.data;
-							if (resData.status === 'success') {
-								content = resData.content;
-							}
-							else if (resData.status === 'failure') {
-								switch (resData.err_msg) {
-								case 'missing_guess':
-									content = 'Don\'t forget the pokemon!';
-									break;
-								case 'update_failure':
-									content = 'Something went wrong while updating, tell @kittenAngie.';
-									break;
-								default:
-									content = 'Something went wrong, tell @kittenAngie.';
-									break;
-								}
-							}
-							else {
-								content = 'Something went wrong, tell @kittenAngie.';
-							}
-						})
-						.catch(function() {
-							content = 'Something went wrong, tell @kittenAngie.';
-						})
-						.finally(function() {
-							client.say(channel, content);
-						});
+				// Setup JSON to pass through
+				let twitchData = false;
+				if (!args[1]) {
+					twitchData = { 'ident_type':'twitch_username', 'ident':user, 'guesser':guesser, 'guess':guess };
 				}
 				else {
-					client.say(channel, 'Seems like you missed the window to guess!');
+					twitchData = { 'ident_type':'twitch_username', 'ident':user, 'guesser':guesser, 'guess':guess };
 				}
+
+				let content = '';
+				axios.get(data.settings.newUrl + 'guess/insert/json/' + encodeURIComponent(JSON.stringify(twitchData)))
+					.then(function(response) {
+						const resData = response.data;
+						if (resData.status === 'success') {
+							content = `@${guesser} guessed ${resData.response}!`;
+						}
+						else if (resData.status === 'failure') {
+							switch (resData.err_msg) {
+							case 'guesses_locked':
+								content = `@${guesser}, it looks like you missed the window to guess!`;
+								break;
+							case 'missing_guess':
+								content = `Don't forget the pokemon, @${guesser}!`;
+								break;
+							case 'update_failure':
+								content = 'Something went wrong while updating, tell @kittenAngie.';
+								break;
+							default:
+								content = 'Something went wrong, tell @kittenAngie.';
+								break;
+							}
+						}
+						else {
+							content = 'Something went wrong, tell @kittenAngie.';
+						}
+					}).catch(function() {
+						content = 'Something went wrong, tell @kittenAngie.';
+					})
+					.finally(function() {
+						client.say(channel, content);
+					});
 			},
 		},
 		list: {
 			help: 'Lists out the guesses.',
 			execute(args, tags, message, channel, client) {
+				const channelName = channel.replace('#', '');
+
 				let content = '';
-				axios.get(data.settings.baseUrl + 'retrieve/guesses')
+				axios.get(data.settings.newUrl + 'guess/retrieve/' + channelName)
 					.then(function(response) {
 						const output = response.data;
 						if (output.status === 'success') {
 							// content = 'Reset the bonks';
-							const list = JSON.parse(output.content);
+							const list = JSON.parse(output.response);
 							Object.entries(list).forEach(([key, value]) => {
 								content += `${key}: ${value} || `;
 							});
@@ -89,12 +98,14 @@ module.exports = {
 				error: 'This is a mod only command',
 			},
 			execute(args, tags, message, channel, client) {
+				const channelName = channel.replace('#', '');
+
 				let content = '';
-				axios.get(data.settings.baseUrl + 'insert/guesses?reset')
+				axios.get(data.settings.newUrl + 'guess/reset/' + channelName)
 					.then(function(response) {
 						const output = response.data;
 						if (output.status === 'success') {
-							content = output.content;
+							content = 'Reset the guesses!';
 						}
 						else {
 							content = 'Something went wrong, tell @kittenAngie.';
@@ -115,10 +126,27 @@ module.exports = {
 				error: 'This is a mod only command',
 			},
 			execute(args, tags, message, channel, client) {
-				const channelClean = channel.replace('#', '');
 
-				client.extras[channelClean].guessActive = false;
-				client.say(channel, 'Guesses locked!');
+				// Get guesser and guess
+				const user = channel.replace('#', '');
+				const twitchData = { 'ident_type':'twitch_username', 'ident':user, 'lock':1 };
+
+				let content = '';
+				axios.get(data.settings.newUrl + 'guess/lock/json/' + encodeURIComponent(JSON.stringify(twitchData)))
+					.then(function(response) {
+						const resData = response.data;
+						if (resData.status === 'success') {
+							content = `Guesses are now ${resData.response}!`;
+						}
+						else {
+							content = 'Something went wrong, tell @kittenAngie.';
+						}
+					}).catch(function() {
+						content = 'Something went wrong, tell @kittenAngie.';
+					})
+					.finally(function() {
+						client.say(channel, content);
+					});
 			},
 		},
 		unlock: {
@@ -128,10 +156,27 @@ module.exports = {
 				error: 'This is a mod only command',
 			},
 			execute(args, tags, message, channel, client) {
-				const channelClean = channel.replace('#', '');
 
-				client.extras[channelClean].guessActive = true;
-				client.say(channel, 'Guesses unlocked!');
+				// Get guesser and guess
+				const user = channel.replace('#', '');
+				const twitchData = { 'ident_type':'twitch_username', 'ident':user, 'lock':0 };
+
+				let content = '';
+				axios.get(data.settings.newUrl + 'guess/lock/json/' + encodeURIComponent(JSON.stringify(twitchData)))
+					.then(function(response) {
+						const resData = response.data;
+						if (resData.status === 'success') {
+							content = `Guesses are now ${resData.response}!`;
+						}
+						else {
+							content = 'Something went wrong, tell @kittenAngie.';
+						}
+					}).catch(function() {
+						content = 'Something went wrong, tell @kittenAngie.';
+					})
+					.finally(function() {
+						client.say(channel, content);
+					});
 			},
 		},
 	},
