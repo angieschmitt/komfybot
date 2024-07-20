@@ -74,10 +74,15 @@ module.exports = {
 						if (output.status === 'success') {
 							// content = 'Reset the bonks';
 							const list = JSON.parse(output.response);
-							Object.entries(list).forEach(([key, value]) => {
-								content += `${key}: ${value} || `;
-							});
-							content = content.substring(0, (content.length - 3));
+							if (Object.keys(list).length) {
+								Object.entries(list).forEach(([key, value]) => {
+									content += `${key}: ${value} || `;
+								});
+								content = content.substring(0, (content.length - 3));
+							}
+							else {
+								content = 'Seems like there aren\'t any guesses!';
+							}
 						}
 						else {
 							content = 'Something went wrong, tell @kittenAngie.';
