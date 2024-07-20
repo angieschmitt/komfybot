@@ -28,9 +28,9 @@ if (Object.keys(extArgs).length !== 0) {
 			const twitchData = { 'ident_type':'twitch_username', 'ident':'komfykiwi' };
 			axios.get(data.settings.newUrl + 'uptime/insert/json/' + encodeURIComponent(JSON.stringify(twitchData)))
 				.then(() => {
-					axios.get(data.settings.baseUrl + 'insert/guesses?reset')
+					axios.get(data.settings.newUrl + 'guess/reset/komfykiwi')
 						.then(() => {
-							axios.get(data.settings.baseUrl + 'insert/count?reset')
+							axios.get(data.settings.newUrl + 'count/reset/komfykiwi')
 								.then(() => {
 									axios.get(data.settings.newUrl + 'racers/reset')
 										.then(() => {
