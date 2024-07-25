@@ -11,14 +11,16 @@ module.exports = {
 		default: {
 			execute(args, tags, message, channel, client) {
 				let output = 'KomfyBot has the following commands: ';
+				const channelName = channel.replace('#', '');
 
 				// Build out the command list
 				let commandList = [];
 
 				// If channel has commands, add them to the list
-				if (client.commands[channel]) {
-					Object.entries(client.commands[channel]).forEach(([key, value]) => {
+				if (client.commands[channelName]) {
+					Object.entries(client.commands[channelName]).forEach(([key, value]) => {
 						let cmdOut = true;
+						console.log(value);
 						if ('disabled' in value) {
 							if (value.disabled == true) {
 								cmdOut = false;
