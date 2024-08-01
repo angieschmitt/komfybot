@@ -8,6 +8,12 @@ module.exports = {
 	list: false,
 	name: 'reloadcmds',
 	help: 'Reloads the commands',
+	aliases: {
+		'reload': {
+			arg: false,
+			list: false,
+		},
+	},
 	actions: {
 		default: {
 			perms: {

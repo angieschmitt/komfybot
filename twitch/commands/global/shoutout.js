@@ -40,7 +40,6 @@ module.exports = {
 					axios.get(data.settings.newUrl + 'shoutout/insert/' + username)
 						.then(function(response) {
 							const output = response.data;
-							console.log(output);
 							if (output.status === 'success') {
 								axios.get(data.settings.newUrl + 'shoutout/retrieve/' + username)
 									.then(function(response) {

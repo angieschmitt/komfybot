@@ -100,7 +100,11 @@ module.exports = {
 														case '3':
 															rarityText = 'RARE';
 															break;
+														case '4':
+															rarityText = 'SUPER RARE';
+															break;
 														default:
+															rarityText = 'Um.. ???';
 															break;
 														}
 														content = `Congrats @${username} on buying a ${item} @ ${cost} KomfyCoins.`;
