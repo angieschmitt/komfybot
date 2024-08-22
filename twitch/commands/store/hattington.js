@@ -6,7 +6,7 @@ module.exports = {
 	list: false,
 	name: 'hattington',
 	channel: ['komfykiwi', 'komfybot'],
-	help: 'Commands for interacting with Hattington. Additional arguments: buy, check, inv, sell, set',
+	help: 'Commands for interacting with Hattington. Additional arguments: buy, current, inv, sell, set',
 	aliases: {
 		'hat': {
 			arg: false,
@@ -19,6 +19,10 @@ module.exports = {
 			arg: 'buy',
 			list: false,
 		},
+		'check': {
+			arg: 'current',
+			list: false,
+		},
 	},
 	actions: {
 		default: {
@@ -28,20 +32,21 @@ module.exports = {
 			'which hats you have? That\'d be "!hats inv". Wanna place one on Hattington? That\'s ' +
 			'!hats set <hat-name>". If you need more help, check out !help coins and !help hats.',
 		},
-		check: {
-			help: 'Check the timer for hat swapping. !hattington check',
+		current: {
+			help: 'Get info about the current hat and how soon it can be swapped. !hattington current',
 			execute(args, tags, message, channel, client) {
 				let content = '';
 
-				axios.get(data.settings.baseUrl + 'interactive/hats/hat_set?check')
+				axios.get(data.settings.newUrl + 'hats/retrieve/current')
 					.then(function(response2) {
 						const resData = response2.data;
 						if (resData.status === 'success') {
-							content = 'Looks like Hattington is ready for a new hat!';
-						}
-						else if (resData.status === 'failure') {
-							if (resData.err_msg == 'timeout') {
-								content = `Hattington seems to be enjoying their current hat, give them a little time! (Roughly ${resData.time_left} minutes)`;
+							content = 'Hattington is currently wearing the "' + resData['hat_name'] + '", provided by @' + resData['username'];
+							if (resData.time_left > 0) {
+								content += `! They only recently put it on, so give them a little time! (Roughly ${resData.time_left} minutes)`;
+							}
+							else {
+								content += ', and it looks like they are ready for a new hat!';
 							}
 						}
 						else {
@@ -145,7 +150,21 @@ module.exports = {
 										}
 									}
 									else if (output.status === 'failure' && output.err_msg === 'not_enough_coins') {
-										content = 'You seem to be out of KomfyCoins.';
+										client.commands[channel.replace('#', '')].coins.actions.coincount.execute(tags)
+											.then((coinAmt) => {
+												if (coinAmt) {
+													const difference = (160 - coinAmt);
+													const responses = [
+														'Really? You thought you had enough coins to buy a hat? Better check under the couch cushions for ' + difference + ' coins, ya broke fool.',
+														'HueHueHue, no price tag on it. Must be free, right? No. It costs ' + difference + ' more KomfyCoins than you have.',
+														'Like, hats cost 160 KomfyCoins, and like, you only gave me ' + coinAmt + '. That\'s not enough.',
+													];
+													content = responses[ randomItem(0, (Object.keys(responses).length - 1)) ];
+												}
+											})
+											.finally(function() {
+												client.say(channel, `${content}`);
+											});
 									}
 									else {
 										content = 'Something went wrong, tell @kittenAngie: Hats 3.';
@@ -491,6 +510,10 @@ module.exports = {
 		},
 	},
 };
+
+function randomItem(min, max) {
+	return Math.floor(Math.random() * (max - min + 1) + min);
+}
 
 function ucwords(string) {
 	return string.toLowerCase().replace(/(?<= )[^\s]|^./g, a => a.toUpperCase());

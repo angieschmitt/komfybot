@@ -6,7 +6,16 @@ module.exports = {
 	name: 'checkin',
 	help: 'Command to checkin to a stream. Additional arguments: set',
 	aliases: {
-		'counter': {
+        'ch': {
+			arg: false,
+		},
+        'shrekin': {
+			arg: false,
+		},
+        'checking': {
+			arg: false,
+		},
+        'chicken': {
 			arg: false,
 		},
 	},

@@ -69,6 +69,28 @@ module.exports = {
 			}
 		}
 
+		// React to first message
+		if (data.firstMessage[channelName]) {
+
+			const userID = tags['user-id'];
+			const firsts = client.extras[channelName].firstMessage;
+			if (Object.values(firsts).indexOf(userID) == -1) {
+				client.extras[channelName].firstMessage.push(userID);
+				console.log('first-message');
+
+				const reaction = module.exports.handleFirstMessage(message, tags, data.firstMessage[channelName]);
+				if (reaction) {
+					if ('say' in reaction) {
+						client.say(channel, reaction['say']);
+					}
+					if ('execute' in reaction) {
+						eval(reaction['execute']);
+					}
+					console.log('Triggered: first_message');
+				}
+			}
+		}
+
 		// React to words
 		if (data.reactWords[channelName]) {
 			const reaction = module.exports.handleReactWords(message, tags, data.reactWords[channelName]);
@@ -253,6 +275,29 @@ module.exports = {
 					}
 				});
 			}
+		}
+
+		// If output, return.. if not false
+		if (output) {
+			return output;
+		}
+		return false;
+	},
+	handleFirstMessage(message, tags, data) {
+		const userID = tags['user-id'];
+		let output = false;
+
+		// Check user specific first
+		if (data[userID]) {
+			Object.entries(data[userID]).forEach(([action, response]) => {
+				console.log(action);
+				if (action == 'say') {
+					output = { 'say' : response };
+				}
+				else if (action == 'execute') {
+					output = { 'execute' : response };
+				}
+			});
 		}
 
 		// If output, return.. if not false
