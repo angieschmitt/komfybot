@@ -18,13 +18,13 @@ module.exports = {
 		if (categories.includes(channel.parentId)) {
 			if (message.author.username !== 'Komfy Bot') {
 				const chances = [];
-				for (let index = 0; chances.length < 5; index++) {
-					const check = getRandomNumber(100);
+				for (let index = 0; chances.length < 10; index++) {
+					const check = getRandomNumber(50);
 					if (!chances.includes(check)) {
 						chances.push(check);
 					}
 				}
-				const value = getRandomNumber(100);
+				const value = getRandomNumber(50);
 				// const value = chances[0];
 				const data = { 'amt': 10, 'ident_type': 'discord_username', 'ident': message.author.username, 'reason': 'Chatting in discord' };
 				if (chances.includes(value)) {
@@ -61,10 +61,67 @@ const getRandomNumber = function(max) {
 	const rolls = [];
 	const rolls2 = [];
 	const rolls3 = [];
+	const rolls4 = [];
+	const rolls5 = [];
+	let finalRolls = [];
 
 	let i;
-	for (i = 0; i < 10000; i++) { rolls.push(Math.floor(Math.random() * max) + 1); }
-	for (i = 0; i < 1000; i++) { rolls2.push(rolls[Math.floor(Math.random() * rolls.length)]); }
-	for (i = 0; i < 100; i++) { rolls3.push(rolls2[Math.floor(Math.random() * rolls2.length)]); }
-	return rolls3[Math.floor(Math.random() * rolls3.length)];
+	for (i = 0; i < max; i++) {
+		rolls.push(Math.floor(Math.random() * max) + 1);
+	}
+
+	if (rolls.length > 2) {
+		// Reduce those
+		const rollsLength = Math.floor(rolls.length / 2);
+		for (i = 0; rolls2.length < rollsLength; i++) {
+			const selected = Math.floor(Math.random() * rolls.length);
+			const value = rolls[selected];
+			rolls2.push(value);
+			rolls.splice(selected, 1);
+		}
+		finalRolls = rolls2;
+	}
+
+	if (rolls2.length > 2) {
+		const rolls2Length = Math.floor(rolls2.length / 2);
+		for (i = 0; rolls3.length < rolls2Length; i++) {
+			const selected = Math.floor(Math.random() * rolls2.length);
+			const value = rolls2[selected];
+
+			rolls3.push(value);
+			rolls2.splice(selected, 1);
+		}
+		finalRolls = rolls3;
+	}
+
+	if (rolls3.length > 2) {
+		// Reduce those
+		const rolls3Length = Math.floor(rolls3.length / 2);
+		for (i = 0; rolls4.length < rolls3Length; i++) {
+			const selected = Math.floor(Math.random() * rolls3.length);
+			const value = rolls3[selected];
+
+			rolls4.push(value);
+			rolls3.splice(selected, 1);
+		}
+		finalRolls = rolls4;
+	}
+
+	if (rolls4.length > 2) {
+		// Reduce those
+		const rolls4Length = Math.floor(rolls4.length / 2);
+		for (i = 0; rolls5.length < rolls4Length; i++) {
+			const selected = Math.floor(Math.random() * rolls4.length);
+			const value = rolls4[selected];
+
+			rolls5.push(value);
+			rolls4.splice(selected, 1);
+		}
+		finalRolls = rolls5;
+	}
+
+	// Pick the winner!
+	const winner = finalRolls[Math.floor(Math.random() * finalRolls.length)];
+
+	return winner;
 };
