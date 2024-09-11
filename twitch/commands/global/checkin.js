@@ -6,16 +6,16 @@ module.exports = {
 	name: 'checkin',
 	help: 'Command to checkin to a stream. Additional arguments: set',
 	aliases: {
-        'ch': {
+		'ch': {
 			arg: false,
 		},
-        'shrekin': {
+		'shrekin': {
 			arg: false,
 		},
-        'checking': {
+		'checking': {
 			arg: false,
 		},
-        'chicken': {
+		'chicken': {
 			arg: false,
 		},
 	},
@@ -61,7 +61,7 @@ module.exports = {
 			},
 		},
 		set: {
-			help: 'Set a users amount of checkins.',
+			help: 'MOD command to set a users amount of checkins. !checkin set <username:required> <value:required>',
 			args: {
 				1: [ 'r' ],
 				2: [ 'r' ],

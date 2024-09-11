@@ -4,6 +4,10 @@ const timers = {
 			'timer': 30,
 			'message': 'Come hang with the KomfyKrew on Discord: https://discord.gg/8T44G4mUFu',
 		},
+		'subtember': {
+			'timer': 45,
+			'message': 'CHAT! Did you know that it\'s SUBtember?! All this month you can save up to 30% on new subs, so nows the best time to do the thing!',
+		},
 		'pronouns': {
 			'timer': 60,
 			'message': 'If you want to set your pronouns in the browser twitch chat for everyone to see you can do so here: https://pronouns.alejo.io/ - to set your own you just need to go to that website. To see other\'s, you\'ll need to install the extension. Thank you!',
