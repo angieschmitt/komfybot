@@ -18,7 +18,7 @@ module.exports = {
 		if (categories.includes(channel.parentId)) {
 			if (message.author.username !== 'Komfy Bot') {
 				const chances = [];
-				for (let index = 0; chances.length < 10; index++) {
+				for (let index = 0; chances.length < 8; index++) {
 					const check = getRandomNumber(50);
 					if (!chances.includes(check)) {
 						chances.push(check);
