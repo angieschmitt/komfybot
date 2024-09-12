@@ -120,6 +120,45 @@ const functions = {
 
 		return client;
 	},
+	loadExternalCommands(client, data) {
+		Object.entries(client.opts.channels).forEach(([index, channel]) => { // eslint-disable-line no-unused-vars
+			channel = channel.replace('#', '');
+			axios.get(data.settings.newUrl + 'commands/retrieve/' + channel)
+				.then(function(res) {
+					if (res.data.status == 'success') {
+						const commands = res.data.response;
+						Object.entries(commands).forEach(([index, command]) => { // eslint-disable-line no-unused-vars
+							Object.entries(command).forEach(([name, data]) => {
+								if (name in client.commands['global']) {
+									if (!(channel in client.commands['global'][name]['actions'])) {
+										client.commands['global'][name]['actions'][channel] = [];
+										client.commands['global'][name]['actions'][channel] = data[channel];
+									}
+								}
+								else if (!(name in client.commands[channel])) {
+									client.commands[channel][name] = [];
+									client.commands[channel][name]['name'] = name;
+									client.commands[channel][name]['channel'] = [ channel ];
+									client.commands[channel][name]['actions'] = [];
+									client.commands[channel][name]['actions']['default'] = data[channel];
+								}
+
+								// Handle Aliases
+								if ('aliases' in data) {
+									Object.entries(data['aliases']).forEach(([alias]) => {
+										client.commands[channel][alias] = [];
+										client.commands[channel][alias]['alias'] = name;
+										client.commands[channel][alias]['arg'] = false;
+										client.commands[channel][alias]['list'] = false;
+									});
+								}
+							});
+						});
+					}
+				})
+				.catch(console.error);
+		});
+	},
 	handleAlias(baseCommand, name, details, commands) {
 		if (!('disabled' in details)) {
 			commands[name] = {

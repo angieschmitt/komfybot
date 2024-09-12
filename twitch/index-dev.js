@@ -16,6 +16,7 @@ client.connect().catch(console.error);
 data.functions.loadBranch(client, data, branch);
 data.functions.loadEvents(client);
 data.functions.loadCommands(client);
+data.functions.loadExternalCommands(client, data);
 
 // Handle BAT File args
 // These resets need to be made channel specific, as does the API

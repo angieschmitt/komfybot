@@ -164,9 +164,17 @@ module.exports = {
 
 			// Handle perms/proceed, assign output if needed
 			if (action.perms !== undefined) {
-				if (!perms[action.perms.levels]) {
-					output = action.perms.error;
-					proceed = false;
+				if (action.perms) {
+					let hasPerm = false;
+					for (const [key] of Object.entries(perms)) {
+						if (action.perms['levels'].includes(key)) {
+							hasPerm = true;
+						}
+					}
+					if (!hasPerm) {
+						output = `${tags.username}, ${action.perms.error}`;
+						proceed = false;
+					}
 				}
 			}
 
