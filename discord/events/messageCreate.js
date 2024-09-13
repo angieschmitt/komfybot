@@ -18,8 +18,8 @@ module.exports = {
 		if (categories.includes(channel.parentId)) {
 			if (message.author.username !== 'Komfy Bot') {
 				const chances = [];
-				for (let index = 0; chances.length < 8; index++) {
-					const check = getRandomNumber(50);
+				for (let index = 0; chances.length < 10; index++) {
+					const check = getRandomNumber(80);
 					if (!chances.includes(check)) {
 						chances.push(check);
 					}
@@ -66,8 +66,9 @@ const getRandomNumber = function(max) {
 	let finalRolls = [];
 
 	let i;
-	for (i = 0; i < max; i++) {
-		rolls.push(Math.floor(Math.random() * max) + 1);
+	for (i = 1; i <= max; i++) {
+		// rolls.push(Math.floor(Math.random() * max) + 1);
+		rolls.push(i);
 	}
 
 	if (rolls.length > 2) {
@@ -87,7 +88,6 @@ const getRandomNumber = function(max) {
 		for (i = 0; rolls3.length < rolls2Length; i++) {
 			const selected = Math.floor(Math.random() * rolls2.length);
 			const value = rolls2[selected];
-
 			rolls3.push(value);
 			rolls2.splice(selected, 1);
 		}
@@ -100,7 +100,6 @@ const getRandomNumber = function(max) {
 		for (i = 0; rolls4.length < rolls3Length; i++) {
 			const selected = Math.floor(Math.random() * rolls3.length);
 			const value = rolls3[selected];
-
 			rolls4.push(value);
 			rolls3.splice(selected, 1);
 		}
@@ -113,7 +112,6 @@ const getRandomNumber = function(max) {
 		for (i = 0; rolls5.length < rolls4Length; i++) {
 			const selected = Math.floor(Math.random() * rolls4.length);
 			const value = rolls4[selected];
-
 			rolls5.push(value);
 			rolls4.splice(selected, 1);
 		}
