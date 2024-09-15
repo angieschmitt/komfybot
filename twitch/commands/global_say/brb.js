@@ -10,7 +10,7 @@ module.exports = {
 			},
 			say: 'I\'ll be right back!',
 		},
-		komfybot: {
+		komfykiwi: {
 			perms: {
 				levels: ['streamer'],
 				error: 'This is a streamer only command!',
