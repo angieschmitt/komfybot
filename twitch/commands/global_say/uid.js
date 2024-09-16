@@ -1,4 +1,3 @@
-// 661349034
 module.exports = {
 	name: 'uid',
 	help: 'List out the UID\'s for different games.',
