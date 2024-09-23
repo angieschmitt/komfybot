@@ -28,10 +28,10 @@ module.exports = {
 						// Only output on failure
 						if (output.status === 'failure') {
 							if (output.err_msg == 'no_giveaway_exists') {
-								content = 'Seems like there isn\'t a giveaway running right now.';
+								content = `@${tags['username']}, seems like there isn't a giveaway running right now.`;
 							}
 							else if (output.err_msg == 'already_entered') {
-								content = 'Seems like you\'ve already entered this giveaway!';
+								content = `@${tags['username']}, seems like you've already entered this giveaway!`;
 							}
 							else {
 								content = 'Something went wrong, tell @kittenAngie.';
@@ -113,7 +113,7 @@ module.exports = {
 						console.log(output);
 
 						if (output.status === 'success') {
-							content = `Giveaway ended! The winner is ${output.response}, netting ${output.value} KomfyCoins!`;
+							content = `Giveaway ended! The winner is @${output.response}, netting ${output.value} KomfyCoins!`;
 
 							const args2 = ['!coins', 'add', output.response, output.value, 'Giveaway' ];
 							const message2 = `!coins add ${output.response} ${output.value} Giveaway`;
@@ -163,6 +163,7 @@ module.exports = {
 							const list = JSON.parse(output.response);
 							if (Object.keys(list).length) {
 								content = 'Current entrees: ';
+								// eslint-disable-next-line no-unused-vars
 								Object.entries(list).forEach(([key, value]) => {
 									content += `@${value} || `;
 								});
