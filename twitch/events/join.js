@@ -5,18 +5,18 @@ const data = dataFile.content();
 module.exports = {
 	eventHandler(channel, username, isSelf) {
 		// Get client
-		// const client = this;
+		const client = this;
 
 		// Log people joining
 		data.debug.write(channel, 'USER_JOIN', username);
 
 		if (isSelf) {
-			// module.exports.handleSpeak(channel, client);
+			module.exports.handleSpeak(channel, client);
 		}
 	},
 	handleSpeak(channel, client) {
 		channel = channel.replace('#', '');
-		const timerInterval = 2000;
+		const timerInterval = 5000;
 		setInterval(
 			callApi,
 			timerInterval,

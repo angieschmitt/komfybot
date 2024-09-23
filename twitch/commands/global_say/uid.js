@@ -4,8 +4,5 @@ module.exports = {
 	actions: {
 		default: {
 		},
-		komfykiwi: {
-			say: 'Genshin Impact (NA): 661349034',
-		},
 	},
 };

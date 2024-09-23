@@ -1,5 +1,6 @@
 const axios = require('axios');
-const newUrl = 'https://www.kittenangie.com/bots/api/v1/';
+const dataFile = require('../../data/index');
+const data = dataFile.content();
 
 module.exports = {
 	name: 'race',
@@ -10,7 +11,7 @@ module.exports = {
 			execute(args, tags, message, channel, client) {
 				let content = '';
 
-				axios.get(newUrl + '/racers/retrieve')
+				axios.get(data.settings.newUrl + 'quote/retrieve')
 					.then(function(response) {
 						const output = response.data;
 						if (output.status === 'success') {
@@ -80,7 +81,7 @@ module.exports = {
 					racers += '/' + args[index].replace('@', '');
 				}
 
-				axios.get(newUrl + '/racers/insert' + racers)
+				axios.get(data.settings.newUrl + 'racers/insert' + racers)
 					.then(function(response) {
 						const output = response.data;
 						if (output.status === 'success') {
@@ -107,7 +108,7 @@ module.exports = {
 			execute(args, tags, message, channel, client) {
 
 				let content = '';
-				axios.get(newUrl + 'racers/reset')
+				axios.get(data.settings.newUrl + 'racers/reset')
 					.then(function(response) {
 						const output = response.data;
 						if (output.status === 'success') {
