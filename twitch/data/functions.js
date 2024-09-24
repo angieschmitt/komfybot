@@ -159,6 +159,42 @@ const functions = {
 				.catch(console.error);
 		});
 	},
+	loadSettings(client, reset = false) {
+
+		if (reset) {
+			Object.entries(client.opts.channels).forEach(([index, channel]) => { // eslint-disable-line no-unused-vars
+				channel = channel.replace('#', '');
+				client.settings[channel] = [];
+			});
+			for (const i in require.cache) {
+				delete require.cache[i];
+			}
+		}
+
+	},
+	loadExternalSettings(client, data) {
+
+		// Set up the container
+		client.settings = [];
+
+		// Loop over the channels and get the settings
+		Object.entries(client.opts.channels).forEach(([index, channel]) => { // eslint-disable-line no-unused-vars
+			channel = channel.replace('#', '');
+			axios.get(data.settings.newUrl + 'settings/retrieve/' + channel)
+				.then(function(res) {
+					client.settings[channel] = [];
+
+					if (res.data.status == 'success') {
+						// Lets assign the settings to the channel
+						const settings = res.data.response;
+						Object.entries(settings).forEach(([key, value]) => { // eslint-disable-line no-unused-vars
+							client.settings[channel][key] = value;
+						});
+					}
+				})
+				.catch(console.error);
+		});
+	},
 	handleAlias(baseCommand, name, details, commands) {
 		if (!('disabled' in details)) {
 			commands[name] = {

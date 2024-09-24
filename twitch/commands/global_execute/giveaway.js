@@ -4,8 +4,7 @@ const data = dataFile.content();
 
 module.exports = {
 	name: 'giveaway',
-	help: 'Command to interact with the giveaway. Additional arguments: start, end ',
-	channel: ['komfykiwi', 'komfybot'],
+	help: 'Command to interact with the giveaway. Additional arguments: start, end',
 	aliases: {
 		'g': {
 			arg: false,
@@ -22,8 +21,6 @@ module.exports = {
 				axios.get(data.settings.newUrl + 'giveaway/update/json/' + encodeURIComponent(JSON.stringify(twitchData)))
 					.then(function(response) {
 						const output = response.data;
-
-						console.log(output);
 
 						// Only output on failure
 						if (output.status === 'failure') {
@@ -66,14 +63,16 @@ module.exports = {
 					value = 100;
 				}
 
-				const twitchData = { 'ident_type':'twitch_username', 'ident':channel.replace('#', ''), 'value':value };
+				const channelName = channel.replace('#', '');
+				const twitchData = { 'ident_type':'twitch_username', 'ident':channelName, 'value':value };
+				const currencyOut = module.exports.currencyHandler(value, channelName, client);
 
 				let content = '';
 				axios.get(data.settings.newUrl + 'giveaway/insert/json/' + encodeURIComponent(JSON.stringify(twitchData)))
 					.then(function(response) {
 						const output = response.data;
 						if (output.status === 'success') {
-							content = `Giveaway started! Do !giveaway to enter for your chance to win ${value} KomfyCoins!`;
+							content = `Giveaway started! Do !giveaway to enter for your chance to win ${value} ${currencyOut}!`;
 						}
 						else if (output.status === 'failure') {
 							if (output.err_msg == 'giveaway_exists') {
@@ -103,22 +102,26 @@ module.exports = {
 			},
 			execute(args, tags, message, channel, client) {
 
-				const twitchData = { 'ident_type':'twitch_username', 'ident':channel.replace('#', ''), 'action':'end' };
+				const channelName = channel.replace('#', '');
+				const twitchData = { 'ident_type':'twitch_username', 'ident':channelName, 'action':'end' };
+				const currencyEnabled = module.exports.currencyEnabled(channelName, client);
 
 				let content = '';
 				axios.get(data.settings.newUrl + 'giveaway/update/json/' + encodeURIComponent(JSON.stringify(twitchData)))
 					.then(function(response) {
 						const output = response.data;
 
-						console.log(output);
-
 						if (output.status === 'success') {
-							content = `Giveaway ended! The winner is @${output.response}, netting ${output.value} KomfyCoins!`;
+							const currencyOut = module.exports.currencyHandler(output.value, channelName, client);
 
-							const args2 = ['!coins', 'add', output.response, output.value, 'Giveaway' ];
-							const message2 = `!coins add ${output.response} ${output.value} Giveaway`;
-							tags['silent'] = true;
-							client.commands.komfykiwi.coins.actions.add.execute(args2, tags, message2, channel, client);
+							content = `Giveaway ended! The winner is @${output.response}, netting ${output.value} ${currencyOut}!`;
+
+							if (currencyEnabled) {
+								const args2 = ['!coins', 'add', output.response, output.value, 'Giveaway' ];
+								const message2 = `!coins add ${output.response} ${output.value} Giveaway`;
+								tags['silent'] = true;
+								client.commands.komfykiwi.coins.actions.add.execute(args2, tags, message2, channel, client);
+							}
 						}
 						else if (output.status === 'failure') {
 							if (output.err_msg == 'no_giveaway_exists') {
@@ -157,8 +160,6 @@ module.exports = {
 					.then(function(response) {
 						const output = response.data;
 
-						console.log(output);
-
 						if (output.status === 'success') {
 							const list = JSON.parse(output.response);
 							if (Object.keys(list).length) {
@@ -196,5 +197,34 @@ module.exports = {
 					});
 			},
 		},
+	},
+	currencyEnabled(channel, client) {
+		let currencyEnabled = false;
+		if ('currency_enabled' in client.settings[channel]) {
+			if (client.settings[channel]['currency_enabled'] == 'on') {
+				currencyEnabled = true;
+			}
+		}
+		return currencyEnabled;
+	},
+	currencyHandler(value, channel, client) {
+		let currencyOut = false;
+		if (value > 1) {
+			if ('currency_name_plural' in client.settings[channel]) {
+				currencyOut = client.settings[channel].currency_name_plural;
+			}
+			else {
+				currencyOut = 'Coins';
+			}
+		}
+		else if (value == 1) {
+			if ('currency_name_single' in client.settings[channel]) {
+				currencyOut = client.settings[channel].currency_name_single;
+			}
+			else {
+				currencyOut = 'Coin';
+			}
+		}
+		return currencyOut;
 	},
 };
