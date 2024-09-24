@@ -104,7 +104,7 @@ module.exports = {
 
 				const channelName = channel.replace('#', '');
 				const twitchData = { 'ident_type':'twitch_username', 'ident':channelName, 'action':'end' };
-				const currencyEnabled = module.exports.currencyEnabled(channelName, client);
+				const currencyEnabled = module.exports.currencyCheck(channelName, client);
 
 				let content = '';
 				axios.get(data.settings.newUrl + 'giveaway/update/json/' + encodeURIComponent(JSON.stringify(twitchData)))
@@ -198,10 +198,13 @@ module.exports = {
 			},
 		},
 	},
-	currencyEnabled(channel, client) {
+	currencyCheck(channel, client) {
 		let currencyEnabled = false;
 		if ('currency_enabled' in client.settings[channel]) {
 			if (client.settings[channel]['currency_enabled'] == 'on') {
+				currencyEnabled = true;
+			}
+			else if (client.settings[channel]['currency_enabled'] == true) {
 				currencyEnabled = true;
 			}
 		}
