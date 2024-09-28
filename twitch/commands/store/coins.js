@@ -85,9 +85,12 @@ module.exports = {
 							if (output.err_msg === 'no_twitch_id') {
 								content = 'That username doesn\'t seem to be in our system.';
 							}
-						}
-						else {
-							content = 'Something went wrong, tell @kittenAngie.';
+							else if (output.err_msg === 'not_enough_coins') {
+								content = 'That would put you into the negatives.';
+							}
+							else {
+								content = 'Something went wrong, tell @kittenAngie.';
+							}
 						}
 					})
 					.catch(function() {

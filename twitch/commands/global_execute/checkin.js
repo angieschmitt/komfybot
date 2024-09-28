@@ -18,6 +18,9 @@ module.exports = {
 		'chicken': {
 			arg: false,
 		},
+		'signin': {
+			arg: false,
+		},
 	},
 	actions: {
 		default: {

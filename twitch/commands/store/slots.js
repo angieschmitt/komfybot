@@ -48,8 +48,8 @@ module.exports = {
 							client.commands[channel.replace('#', '')].coins.actions.coincount.execute(tags)
 								.then((coinAmt) => {
 									coinAmt = parseInt(coinAmt);
-									if (coinAmt) {
-										if (risk <= parseInt(coinAmt)) {
+									if (coinAmt || coinAmt === 0) {
+										if ((risk <= parseInt(coinAmt)) || risk === 0) {
 
 											// Weight = matching X in X PER reel.
 											//    - Increases chances, but I can't figure out the math
