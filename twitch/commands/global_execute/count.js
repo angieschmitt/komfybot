@@ -47,8 +47,6 @@ module.exports = {
 			help: 'Lists out the guesses.',
 			execute(args, tags, message, channel, client) {
 
-				console.log(args);
-
 				// Get guesser and guess
 				const user = channel.replace('#', '');
 

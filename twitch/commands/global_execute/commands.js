@@ -20,7 +20,7 @@ module.exports = {
 				if (client.commands[channelName]) {
 					Object.entries(client.commands[channelName]).forEach(([key, value]) => {
 						let cmdOut = true;
-						console.log(value);
+
 						if ('disabled' in value) {
 							if (value.disabled == true) {
 								cmdOut = false;

@@ -57,8 +57,6 @@ module.exports = {
 					.then(function(response) {
 						const output = response.data;
 
-						console.log(output);
-
 						if (output.status === 'success') {
 							if (Object.keys(output.response).length) {
 								content += 'Top 5 Coin Spenders: ';

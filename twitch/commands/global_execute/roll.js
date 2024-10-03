@@ -26,8 +26,6 @@ module.exports = {
 				const username = tags['username'];
 				const dice = message.replace(args[0], '').trim().toLowerCase();
 
-				console.log(dice);
-
 				const operators = [''];
 				let total = 0;
 
