@@ -19,12 +19,12 @@ module.exports = {
 			if (message.author.username !== 'Komfy Bot') {
 				const chances = [];
 				for (let index = 0; chances.length < 10; index++) {
-					const check = getRandomNumber(80);
+					const check = getRandomNumber(100);
 					if (!chances.includes(check)) {
 						chances.push(check);
 					}
 				}
-				const value = getRandomNumber(50);
+				const value = getRandomNumber(100);
 				// const value = chances[0];
 				const data = { 'amt': 10, 'ident_type': 'discord_username', 'ident': message.author.username, 'reason': 'Chatting in discord' };
 				if (chances.includes(value)) {
