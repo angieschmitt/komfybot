@@ -63,6 +63,36 @@ module.exports = {
 					});
 			},
 		},
+		brag: {
+			help: 'Brag about how many times you checked in. !checkin brag',
+			execute(args, tags, message, channel, client) {
+				// Get channel and userID
+				const channelName = channel.replace('#', '');
+				const user = tags['username'];
+				const userID = tags['user-id'];
+
+				// Setup JSON to pass through
+				const twitchData = { 'ident_type':'twitch_username', 'ident':channelName, 'userID':userID };
+
+				let content = '';
+				axios.get(data.settings.newUrl + 'checkin/retrieve/json/' + encodeURIComponent(JSON.stringify(twitchData)))
+					.then(function(response) {
+						const resData = response.data;
+						const swapText = (resData.response > 1 ? 'times' : 'time');
+						if (resData.status === 'success') {
+							content = `Yeah, well, @${user} has checked in ${resData.response} ${swapText}!`;
+						}
+						else {
+							content = 'Something went wrong, tell @kittenAngie.';
+						}
+					}).catch(function() {
+						content = 'Something went wrong, tell @kittenAngie.';
+					})
+					.finally(function() {
+						client.say(channel, content);
+					});
+			},
+		},
 		set: {
 			help: 'MOD command to set a users amount of checkins. !checkin set <username:required> <value:required>',
 			args: {

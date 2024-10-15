@@ -105,7 +105,7 @@ module.exports = {
 		axios.get(data.settings.baseUrl + 'insert/user_reference/?twitch=' + encodeURIComponent(JSON.stringify(twitchData)));
 
 		// Update coin_log
-		axios.post(data.settings.baseUrl + 'coins_fix');
+		// axios.post(data.settings.baseUrl + 'coins_fix');
 
 		console.log('- - -');
 	},

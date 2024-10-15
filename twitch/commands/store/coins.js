@@ -54,6 +54,7 @@ module.exports = {
 					})
 					.finally(function() {
 						client.say(channel, `${content}`);
+						axios.post(data.settings.baseUrl + 'coins_fix');
 					});
 			},
 		},

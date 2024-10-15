@@ -39,7 +39,7 @@ module.exports = {
 							}
 							else if (outcome.status === 'failure') {
 								message.react('⛔');
-								content = `KC_HANDOUT, FAILURE, <@${message.author.id}>, 0, ${outcome.response}`;
+								content = `KC_HANDOUT, FAILURE, <@${message.author.id}>, 0, ${outcome.err_msg}`;
 							}
 
 							message.channel.client.channels.fetch(channels.bot_log)

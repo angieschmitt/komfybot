@@ -3,6 +3,9 @@ const on_first_message = {
 		'488465989': {
 			execute: 'client.commands[\'global\'].checkin.actions.default.execute(false, tags, message, channel, client)',
 		},
+		'37718291': {
+			execute: 'client.commands[\'global\'].checkin.actions.default.execute(false, tags, message, channel, client)',
+		},
 	},
 };
 
