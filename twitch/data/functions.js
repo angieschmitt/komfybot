@@ -211,20 +211,19 @@ const functions = {
 	},
 	liveCheck(data, channel, extra = false) {
 		const chan = channel.toLowerCase();
-		return axios.get(data.settings.newUrl + 'live_check/insert')
+		return axios.get(data.settings.newUrl + 'live_check/retrieve/' + chan)
 			.then(function(res) {
 				const resData = res.data;
-				const response = [];
-				// eslint-disable-next-line
-				if (resData.response.hasOwnProperty(chan)) {
-					response.live = true;
-				}
-				else {
-					response.live = false;
-				}
 
-				if (extra) {
-					response.extra = extra;
+				const response = [];
+				response.live = false;
+				if (resData.status === 'success') {
+					if (resData.response === '1') {
+						response.live = true;
+						if (extra) {
+							response.extra = extra;
+						}
+					}
 				}
 
 				return response;
