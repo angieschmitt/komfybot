@@ -7,10 +7,10 @@ module.exports = {
 	channel: ['komfykiwi', 'komfybot'],
 	help: 'Spin the slots and (optionally) wager some of your KomfyCoins!',
 	aliases: {
-		// 'slots': {
-		// 	arg: false,
-		// 	list: false,
-		// },
+		'slot': {
+			arg: false,
+			list: false,
+		},
 	},
 	actions: {
 		default: {

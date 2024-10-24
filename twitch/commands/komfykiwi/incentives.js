@@ -1,7 +1,7 @@
 module.exports = {
-	disabled: true,
 	name: 'incentives',
 	channel: 'komfykiwi',
+	disabled: true,
 	help: 'Incentives explainer! Additional arguments: bingo, keyitem',
 	aliases: {
 		'subotage': {
