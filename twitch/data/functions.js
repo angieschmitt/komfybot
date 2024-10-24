@@ -371,6 +371,28 @@ const functions = {
 
 		return newString;
 	},
+	checkForCommandRefresh(data, client) {
+		const timerInterval = 5000;
+
+		setInterval(
+			function() {
+				axios.get(data.settings.baseUrl + 'debug/force_refresh/')
+					.then(function(res) {
+						if (res.data.status === 'success') {
+							if (res.data.content === 'commands') {
+								console.log('Commands - Refreshed');
+								const tags = [];
+								tags['silent'] = true;
+								client.commands.global.reload.actions.commands.execute(false, tags, false, false, client);
+								axios.get(data.settings.baseUrl + 'debug/force_refresh/?clear');
+							}
+						}
+					})
+					.catch(console.error);
+			},
+			timerInterval,
+		);
+	},
 };
 
 // mymodule.js

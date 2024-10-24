@@ -20,6 +20,9 @@ data.functions.loadExternalCommands(client, data);
 data.functions.loadSettings(client);
 data.functions.loadExternalSettings(client, data);
 
+// Start the command refresh check
+data.functions.checkForCommandRefresh(data, client);
+
 // Handle BAT File args
 // These resets need to be made channel specific, as does the API
 //  -- fun

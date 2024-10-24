@@ -33,7 +33,16 @@ module.exports = {
 			execute(args, tags, message, channel, client) {
 				data.functions.loadCommands(client, true);
 				data.functions.loadExternalCommands(client, data);
-				client.say(channel, 'Reloaded commands.');
+
+				const content = 'Reloaded commands.';
+				if ('silent' in tags) {
+					if (tags.silent !== true) {
+						client.say(channel, content);
+					}
+				}
+				else {
+					client.say(channel, content);
+				}
 			},
 		},
 		settings: {
