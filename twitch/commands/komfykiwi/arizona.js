@@ -1,6 +1,6 @@
 module.exports = {
 	name: 'arizona',
-	channel: 'komfykiwi',
+	channel: ['komfykiwi', 'yourpalmal'],
 	help: 'The official drink of KomfyKiwi #NotSponsoredYet',
 	actions: {
 		default: {
