@@ -2,7 +2,9 @@ module.exports = {
 	name: 'lurk',
 	help: 'Let chat know you\'re going into lurk mode',
 	actions: {
-		default:{},
+		default:{
+			say: 'Enjoy your lurk!',
+		},
 		komfykiwi: {
 			execute(args, tags, message, channel, client) {
 				let content = '';
