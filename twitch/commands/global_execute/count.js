@@ -8,6 +8,7 @@ module.exports = {
 	aliases: {
 		'counter': {
 			arg: false,
+			list: false,
 		},
 	},
 	actions: {

@@ -11,9 +11,11 @@ module.exports = {
 	aliases: {
 		'trivia': {
 			arg: false,
+			list: false,
 		},
 		'answer': {
 			arg: 'answer',
+			list: false,
 		},
 	},
 	data: {

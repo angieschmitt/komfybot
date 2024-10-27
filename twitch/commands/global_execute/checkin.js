@@ -8,18 +8,23 @@ module.exports = {
 	aliases: {
 		'ch': {
 			arg: false,
+			list: false,
 		},
 		'shrekin': {
 			arg: false,
+			list: false,
 		},
 		'checking': {
 			arg: false,
+			list: false,
 		},
 		'chicken': {
 			arg: false,
+			list: false,
 		},
 		'signin': {
 			arg: false,
+			list: false,
 		},
 	},
 	actions: {
