@@ -1,7 +1,3 @@
-// const axios = require('axios');
-// const dataFile = require('../../data/index');
-// const data = dataFile.content();
-
 const triviaFile = require('../../data/trivia');
 const trivia = triviaFile.content();
 

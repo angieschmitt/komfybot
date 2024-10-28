@@ -9,6 +9,9 @@ const branch = 'dev';
 const dataFile = require('./data/index');
 const data = dataFile.content();
 
+// Define auth for axios stuff
+axios.defaults.headers.common['Authorization'] = data.settings.apiKey;
+
 // Connect to Twitch:
 const client = new tmi.client(data.settings[branch]);
 client.connect().catch(console.error);

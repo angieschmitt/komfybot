@@ -2,6 +2,8 @@ const axios = require('axios');
 const dataFile = require('../../data/index');
 const data = dataFile.content();
 
+axios.defaults.headers.common['Authorization'] = data.settings.apiKey;
+
 module.exports = {
 	name: 'uptime',
 	help: 'Check how long the streamer\'s been online. ',

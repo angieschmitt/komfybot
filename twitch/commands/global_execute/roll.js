@@ -1,7 +1,3 @@
-// const axios = require('axios');
-// const dataFile = require('../../data/index');
-// const data = dataFile.content();
-
 module.exports = {
 	name: 'roll',
 	help: 'Roll a die and get a number!',

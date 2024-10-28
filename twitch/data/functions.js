@@ -2,6 +2,11 @@ const fs = require('node:fs');
 const path = require('node:path');
 const axios = require('axios');
 
+// Load settings, assign apiKey
+const settingsFile = require('./settings');
+const settings = settingsFile.content();
+axios.defaults.headers.common['Authorization'] = settings.apiKey;
+
 const functions = {
 	loadBranch(client, data, branch) {
 		client.commands = [];

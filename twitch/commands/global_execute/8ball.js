@@ -2,6 +2,8 @@ const axios = require('axios');
 const dataFile = require('../../data/index');
 const data = dataFile.content();
 
+axios.defaults.headers.common['Authorization'] = data.settings.apiKey;
+
 module.exports = {
 	name: '8ball',
 	help: 'Ask the 8 ball anything!',
@@ -13,7 +15,7 @@ module.exports = {
 				}
 				else {
 					let content = '';
-					axios.get(data.settings.newUrl + '8ball/retrieve/')
+					axios.get(data.settings.finalUrl + '8ball/retrieve/')
 						.then(function(response) {
 							const output = response.data;
 							if (output.status === 'success') {
