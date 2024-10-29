@@ -1,7 +1,7 @@
 require('../data/globals');
 
 const { Events } = require('discord.js');
-const { channels, messages, roles } = require(configFile); // eslint-disable-line
+const { channels, messages, roles, urls } = require(configFile); // eslint-disable-line
 
 const axios = require('axios');
 
@@ -9,7 +9,7 @@ module.exports = {
 	name: Events.MessageCreate,
 	async execute(message) {
 		const discordData = { 'id': message.author.id, 'username': message.author.username };
-		await axios.get(global.baseUrl + 'insert/user_reference/?discord=' + encodeURIComponent(JSON.stringify(discordData))).catch(console.error);
+		await axios.get(urls.baseUrl + 'insert/user_reference/?discord=' + encodeURIComponent(JSON.stringify(discordData))).catch(console.error);
 
 		const categories = ['1127069748157481020', '1045082408233484331', '1156573567937429514'];
 		// const categories = ['1045086819714347119'];
@@ -29,7 +29,7 @@ module.exports = {
 				const data = { 'amt': 10, 'ident_type': 'discord_username', 'ident': message.author.username, 'reason': 'Chatting in discord' };
 				if (chances.includes(value)) {
 					message.react('🪙');
-					await axios.get(global.baseUrl2 + 'coins/insert/json/' + encodeURIComponent(JSON.stringify(data)))
+					await axios.get(urls.baseUrl2 + 'coins/insert/json/' + encodeURIComponent(JSON.stringify(data)))
 						.then(function(response) {
 							const outcome = response.data;
 

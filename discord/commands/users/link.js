@@ -2,7 +2,7 @@ require('../../data/globals');
 
 const axios = require('axios');
 const { SlashCommandBuilder } = require('discord.js');
-const { channels } = require(configFile); // eslint-disable-line
+const { channels, urls, apiKey } = require(configFile); // eslint-disable-line
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -20,7 +20,7 @@ module.exports = {
 		const discord_id = interaction.user.id;
 		const twitch_username = interaction.options.getString('twitch_username');
 
-		const url = global.baseUrl + 'insert/link/?discord_id=' + encodeURIComponent(discord_id) + '&twitch_username=' + encodeURIComponent(twitch_username);
+		const url = urls.baseUrl + 'insert/link/?discord_id=' + encodeURIComponent(discord_id) + '&twitch_username=' + encodeURIComponent(twitch_username);
 		await axios.get(url)
 			.then(function(response) {
 				let content = '';

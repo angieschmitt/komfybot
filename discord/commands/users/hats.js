@@ -2,6 +2,7 @@ require('../../data/globals');
 
 const axios = require('axios');
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { urls, apiKey } = require(configFile); // eslint-disable-line
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -23,7 +24,7 @@ module.exports = {
 
 		const discord_id = interaction.user.id;
 
-		const url = global.baseUrl + 'interactive/hats/hat_inventory?discord_id=' + encodeURIComponent(discord_id);
+		const url = urls.baseUrl + 'interactive/hats/hat_inventory?discord_id=' + encodeURIComponent(discord_id);
 		await axios.get(url)
 			.then(function(response) {
 				const outcome = response.data;

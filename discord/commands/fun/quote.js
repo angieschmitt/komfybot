@@ -2,6 +2,7 @@ require('../../data/globals');
 
 const axios = require('axios');
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { urls, apiKey } = require(configFile); // eslint-disable-line
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -11,7 +12,7 @@ module.exports = {
 
 		await interaction.deferReply();
 
-		await axios.get(global.baseUrl + '/retrieve/quote/')
+		await axios.get(urls.baseUrl + '/retrieve/quote/')
 			.then(function(response) {
 
 				const output = response.data;

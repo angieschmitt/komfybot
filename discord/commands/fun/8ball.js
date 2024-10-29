@@ -2,6 +2,9 @@ require('../../data/globals');
 
 const axios = require('axios');
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { urls, apiKey } = require(configFile); // eslint-disable-line
+
+axios.defaults.headers.common['Authorization'] = apiKey;
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -18,7 +21,7 @@ module.exports = {
 
 		await interaction.deferReply();
 
-		await axios.get(global.baseUrl + 'retrieve/8ball/')
+		await axios.get(urls.finalUrl + '8ball/retrieve')
 			.then(function(response) {
 
 				const output = response.data;
@@ -29,7 +32,7 @@ module.exports = {
 						.setTitle('Magic 8 Ball')
 						.setThumbnail('https://kittenangie.com/bots/images/8ball.png')
 						.addFields(
-							{ name: question, value: output.content },
+							{ name: question, value: output.response },
 						)
 						.setTimestamp();
 

@@ -2,7 +2,7 @@ require('../data/globals');
 
 const axios = require('axios');
 const { Events, ActivityType, EmbedBuilder, escapeMarkdown, roleMention } = require('discord.js');
-const { channels, notifications } = require(configFile); // eslint-disable-line
+const { channels, notifications, urls } = require(configFile); // eslint-disable-line
 
 const twitch = roleMention(notifications.twitch);
 const recommends = roleMention(notifications.recommends);
@@ -32,29 +32,19 @@ module.exports = {
 };
 
 async function generateToken(client) {
-	axios.get(global.baseUrl + 'generate/token.php?key=user_token')
+	axios.get(urls.baseUrl + 'generate/token.php?key=user_token')
 		.then(function(response) {
 			if (response.data.status === 'success') {
-				const data = response.data;
 				client.channels.fetch(channels.bot_log)
-					.then(channel => {
-						// channel.send({
-						// 	content: `KC_HANDOUT, success, ${data.token}, ${data.content['expires_in']}, false`,
-						// });
-					})
+					.then()
 					.catch(err => console.log(err));
 			}
 		});
-	axios.get(global.baseUrl + 'generate/token.php?key=komfybot_token')
+	axios.get(urls.baseUrl + 'generate/token.php?key=komfybot_token')
 		.then(function(response) {
 			if (response.data.status === 'success') {
-				const data = response.data;
 				client.channels.fetch(channels.bot_log)
-					.then(channel => {
-						// channel.send({
-						// 	content: `KC_HANDOUT, success, ${data.token}, ${data.content['expires_in']}, false`,
-						// });
-					})
+					.then()
 					.catch(err => console.log(err));
 			}
 		});
@@ -63,10 +53,10 @@ async function generateToken(client) {
 async function handleLiveCheck(client) {
 	let data = {};
 	const cacheBuster = new Date().getTime();
-	axios.get(global.baseUrl2 + 'live_check/insert?cache=' + cacheBuster)
+	axios.get(urls.baseUrl2 + 'live_check/insert?cache=' + cacheBuster)
 		.then(function(response) {
 			if (response.data.status !== 'failure') {
-				axios.get(global.baseUrl2 + 'live_check/retrieve?cache=' + cacheBuster)
+				axios.get(urls.baseUrl2 + 'live_check/retrieve?cache=' + cacheBuster)
 					.then(function(response) {
 						if (response.data.status !== 'failure') {
 							data = response.data.stream_data;
@@ -82,7 +72,7 @@ async function handleLiveCheck(client) {
 
 							const pingChannel = (data.user_name.toLowerCase() == 'komfykiwi' ? channels.is_live : channels.recommends);
 							const pingWho = (data.user_name.toLowerCase() == 'komfykiwi' ? twitch : recommends);
-							axios.get(global.baseUrl + 'retrieve/is_live?pinged=' + data.user_id)
+							axios.get(urls.baseUrl + 'retrieve/is_live?pinged=' + data.user_id)
 								.then(function() {
 									client.channels.fetch(pingChannel)
 										.then(channel => {
@@ -106,11 +96,10 @@ async function handleLiveCheck(client) {
 
 async function handleChannelPoints() {
 	// Check for channel points
-	// axios.get(global.baseUrl + 'insert/channel_points/', { signal: controller.signal })
-	axios.get(global.baseUrl + 'insert/channel_points/')
+	axios.get(urls.baseUrl + 'insert/channel_points/')
 		.then(() => {
-			axios.get(global.baseUrl + 'interactive/lights/');
-			axios.get(global.baseUrl + 'interactive/coins/conversion');
+			axios.get(urls.baseUrl + 'interactive/lights/');
+			axios.get(urls.baseUrl + 'interactive/coins/conversion');
 		})
 		.catch(err => console.log(err));
 	// controller.abort();

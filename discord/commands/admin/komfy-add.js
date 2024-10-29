@@ -2,6 +2,7 @@ require('../../data/globals');
 
 const axios = require('axios');
 const { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits } = require('discord.js');
+const { urls, apiKey } = require(configFile); // eslint-disable-line
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -28,7 +29,7 @@ module.exports = {
 		const category = interaction.options.getString('category');
 		const content = interaction.options.getString('content');
 
-		const url = global.baseUrl + 'insert/' + encodeURIComponent(category) + '/?content=' + encodeURIComponent(content);
+		const url = urls.baseUrl + 'insert/' + encodeURIComponent(category) + '/?content=' + encodeURIComponent(content);
 
 		await axios.get(url)
 			.then(function(response) {
