@@ -116,10 +116,10 @@ module.exports = {
 														}
 														content = `Congrats @${username} on buying a ${item} @ ${cost} KomfyCoins.`;
 														if (parseInt(output3.content.qty) <= 1) {
-															content += ` You unwrapped a ${output3.content.item} (${rarityText})!`;
+															content += ` You unwrapped a ${output3.content.item} (${rarityText}) from Set #${output3.content.set}!`;
 														}
 														else {
-															content += ` You unwrapped another ${output3.content.item} (${rarityText})!`;
+															content += ` You unwrapped another ${output3.content.item} (${rarityText}) from Set #${output3.content.set}!`;
 														}
 													}
 													else {
