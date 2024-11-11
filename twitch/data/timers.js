@@ -1,7 +1,7 @@
 const timers = {
 	'komfykiwi' : {
 		'checkin': {
-			'timer': 15,
+			'timer': 25,
 			'message': 'Don\'t forget to !checkin, !chicken, or !shrekin!',
 		},
 		'discord': {
@@ -26,6 +26,10 @@ const timers = {
 		},
 	},
 	'kittenangie': {
+		'checkin': {
+			'timer': 25,
+			'message': 'Don\'t forget to !checkin, !chicken, or !shrekin!',
+		},
 		'discord': {
 			'timer': 30,
 			'message': 'Come hang with the KomfyKrew on Discord: https://discord.gg/8T44G4mUFu',

@@ -7,6 +7,14 @@ const on_first_message = {
 			execute: 'client.commands[\'global\'].checkin.actions.default.execute(false, tags, message, channel, client)',
 		},
 	},
+	'kittenangie': {
+		'488465989': {
+			execute: 'client.commands[\'global\'].checkin.actions.default.execute(false, tags, message, channel, client)',
+		},
+		'37718291': {
+			execute: 'client.commands[\'global\'].checkin.actions.default.execute(false, tags, message, channel, client)',
+		},
+	},
 };
 
 module.exports = {
