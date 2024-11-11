@@ -9,8 +9,5 @@ module.exports = {
 	},
 	actions: {
 		default: {},
-		komfykiwi: {
-			say: 'Appreciate what you see and want to donate? Head here: https://streamlabs.com/komfykiwi/tip',
-		},
 	},
 };
