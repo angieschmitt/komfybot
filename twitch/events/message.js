@@ -6,6 +6,15 @@ axios.defaults.headers.common['Authorization'] = data.settings.apiKey;
 
 module.exports = {
 	eventHandler(channel, tags, message, self) {
+
+		// Shared chat is active...
+		if ('source-room-id' in tags) {
+			// If these ids aren't the same, we don't do anything...
+			if (tags['room-id'] !== tags['source-room-id']) {
+				return;
+			}
+		}
+
 		// Get client
 		const client = this;
 

@@ -16,7 +16,9 @@ const debug = {
 	},
 	write: function(channel, event, comment = null) {
 		const now = new Date().toLocaleString('sv-SE', { timeZone: 'America/New_York' }).replace(' ', '_');
-		debug.stream.write(now + ',' + util.format(channel) + ',' + util.format(event) + ',' + util.format(comment) + '\n');
+		if (typeof debug.stream.write === 'function') {
+			debug.stream.write(now + ',' + util.format(channel) + ',' + util.format(event) + ',' + util.format(comment) + '\n');
+		}
 	},
 };
 

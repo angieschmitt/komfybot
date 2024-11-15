@@ -394,7 +394,9 @@ const functions = {
 							}
 						}
 					})
-					.catch(console.error);
+					.catch(function(error) {
+						console.log(error.code);
+					});
 			},
 			timerInterval,
 		);
