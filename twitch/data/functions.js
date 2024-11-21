@@ -301,7 +301,7 @@ const functions = {
 									});
 								}
 
-								if ((client.timerOffset[channel] % 5) == 0) {
+								if ((client.timerOffset[channel] % 3) == 0) {
 									console.log('-- rechecking timer');
 									parent.refreshTimer(channel, data, client);
 								}

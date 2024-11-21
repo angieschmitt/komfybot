@@ -28,13 +28,24 @@ module.exports = {
 				// Do some stuff!
 				const parts = dice.split(/[+/*-]+/);
 				const ops = dice.replace(/[0-9a-zA-Z ]+/gi, '');
-				for (let i = 0; i < ops.length; i++) { operators.push(ops[i]); }
+
+				// Check for missing roll count
+				for (let i = 0; i < parts.length; i++) {
+					const check = parts[i].split('d');
+					if (check[0] == '') {
+						parts[i] = '1' + parts[i];
+					}
+				}
+
+				for (let i = 0; i < ops.length; i++) {
+					operators.push(ops[i]);
+				}
 
 				for (let i = 0; i < parts.length; i++) {
 					const part = parts[i];
 					const operator = operators[i];
 
-					// Overflow check
+					// Begin overflow check
 					const check = parts[i].split('d');
 					if (parseInt(check[0]) > 10) {
 						client.say(channel, `@${username}, that's too many dice.`);
@@ -45,8 +56,8 @@ module.exports = {
 						return;
 					}
 
+					// Now do rolly stuff
 					if (parts[i].indexOf('d') > -1) {
-
 						// Generate the numbers
 						const bits = parts[i].split('d');
 

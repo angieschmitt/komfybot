@@ -36,6 +36,7 @@ module.exports = {
 										else {
 											content = 'Reset Uptime, Guesses, and the counter!';
 										}
+										data.functions.refreshTimer(channelName, data, client);
 									})
 									.finally(function() {
 										client.say(channel, content);
