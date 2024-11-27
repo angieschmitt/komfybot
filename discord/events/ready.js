@@ -100,6 +100,7 @@ async function handleChannelPoints() {
 		.then(() => {
 			axios.get(urls.baseUrl + 'interactive/lights/');
 			axios.get(urls.baseUrl + 'interactive/coins/conversion');
+			axios.get(urls.finalUrl + 'redeems/vip/manage');
 		})
 		.catch(err => console.log(err));
 	// controller.abort();
