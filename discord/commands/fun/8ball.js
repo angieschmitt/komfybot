@@ -21,7 +21,7 @@ module.exports = {
 
 		await interaction.deferReply();
 
-		await axios.get(urls.finalUrl + '8ball/retrieve')
+		await axios.get(urls.finalUrl + 'v1/8ball/retrieve')
 			.then(function(response) {
 
 				const output = response.data;
