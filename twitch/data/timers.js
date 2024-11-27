@@ -1,7 +1,7 @@
 const timers = {
 	'komfykiwi' : {
 		'checkin': {
-			'timer': 25,
+			'timer': 45,
 			'message': 'Don\'t forget to !checkin, !chicken, or !shrekin!',
 		},
 		'discord': {

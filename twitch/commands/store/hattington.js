@@ -110,6 +110,9 @@ module.exports = {
 														case '4':
 															rarityText = 'SUPER RARE';
 															break;
+														case '5':
+															rarityText = 'Custom';
+															break;
 														default:
 															rarityText = 'Um.. ???';
 															break;
