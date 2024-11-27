@@ -4,6 +4,7 @@ const axios = require('axios');
 
 // Load settings, assign apiKey
 const settingsFile = require('./settings');
+const e = require('express');
 const settings = settingsFile.content();
 axios.defaults.headers.common['Authorization'] = settings.apiKey;
 
@@ -360,21 +361,26 @@ const functions = {
 			'z': 'ᴢ',
 		};
 
-		const parts = data.toLowerCase().split('');
+		if (data.indexOf('@') === -1) {
+			const parts = data.toLowerCase().split('');
 
-		let i = 0;
-		let newString = '';
-		while (i < parts.length) {
-			if (letters[parts[i]] !== undefined) {
-				newString += letters[ parts[i] ];
+			let i = 0;
+			let newString = '';
+			while (i < parts.length) {
+				if (letters[parts[i]] !== undefined) {
+					newString += letters[ parts[i] ];
+				}
+				else {
+					newString += parts[i];
+				}
+				i++;
 			}
-			else {
-				newString += parts[i];
-			}
-			i++;
+
+			return newString;
 		}
-
-		return newString;
+		else {
+			return data;
+		}
 	},
 	checkForCommandRefresh(data, client) {
 		const timerInterval = 5000;
