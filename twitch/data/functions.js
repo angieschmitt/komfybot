@@ -4,7 +4,7 @@ const axios = require('axios');
 
 // Load settings, assign apiKey
 const settingsFile = require('./settings');
-const e = require('express');
+// const e = require('express');
 const settings = settingsFile.content();
 axios.defaults.headers.common['Authorization'] = settings.apiKey;
 

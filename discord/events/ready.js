@@ -23,7 +23,7 @@ module.exports = {
 		// 5 seconds : 5000
 		setInterval(function() {
 			handleLiveCheck(client);
-			generateToken(client);
+			// generateToken(client);
 		}, 10000);
 		setInterval(function() {
 			handleChannelPoints();
