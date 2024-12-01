@@ -129,7 +129,7 @@ const functions = {
 	loadExternalCommands(client, data) {
 		Object.entries(client.opts.channels).forEach(([index, channel]) => { // eslint-disable-line no-unused-vars
 			channel = channel.replace('#', '');
-			axios.get(data.settings.newUrl + 'commands/retrieve/' + channel)
+			axios.get(data.settings.finalUrl + 'commands/retrieve/' + channel)
 				.then(function(res) {
 					if (res.data.status == 'success') {
 						const commands = res.data.response;
@@ -186,7 +186,7 @@ const functions = {
 		// Loop over the channels and get the settings
 		Object.entries(client.opts.channels).forEach(([index, channel]) => { // eslint-disable-line no-unused-vars
 			channel = channel.replace('#', '');
-			axios.get(data.settings.newUrl + 'settings/retrieve/' + channel)
+			axios.get(data.settings.finalUrl + 'settings/retrieve/' + channel)
 				.then(function(res) {
 					client.settings[channel] = [];
 
@@ -217,7 +217,7 @@ const functions = {
 	},
 	liveCheck(data, channel, extra = false) {
 		const chan = channel.toLowerCase();
-		return axios.get(data.settings.newUrl + 'live_check/retrieve/' + chan)
+		return axios.get(data.settings.finalUrl + 'live_check/retrieve/' + chan)
 			.then(function(res) {
 				const resData = res.data;
 
@@ -251,7 +251,7 @@ const functions = {
 		// Now load in the timerOffsets
 		if ('timerOffset' in client) {
 			Object.entries(timers).forEach(([channel]) => {
-				axios.get(data.settings.newUrl + 'uptime/retrieve/' + channel)
+				axios.get(data.settings.finalUrl + 'uptime/retrieve/' + channel)
 					.then(function(response) {
 						if (response.data.status === 'success') {
 							client.timerOffset[channel] = (response.data.minutes > 0 ? response.data.minutes : 1);
@@ -319,7 +319,7 @@ const functions = {
 	},
 	refreshTimer(channel, data, client) {
 		if ('timerOffset' in client) {
-			axios.get(data.settings.newUrl + 'uptime/retrieve/' + channel)
+			axios.get(data.settings.finalUrl + 'uptime/retrieve/' + channel)
 				.then(function(response) {
 					if (response.data.status === 'success') {
 						client.timerOffset[channel] = (response.data.minutes > 0 ? response.data.minutes : 1);

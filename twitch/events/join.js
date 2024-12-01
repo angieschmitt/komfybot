@@ -29,7 +29,7 @@ module.exports = {
 };
 
 async function callApi(channel, client) {
-	const response = await axios({ url: data.settings.newUrl + 'speak/retrieve/' + channel })
+	const response = await axios({ url: data.settings.finalUrl + 'speak/retrieve/' + channel })
 		.catch(function(error) {
 			data.debug.write(channel, 'SPEAK_ERROR', error.toJSON());
 		});
@@ -38,7 +38,7 @@ async function callApi(channel, client) {
 			const botSpeak = data.functions.speakConvertor(response.data.response);
 			client.say(channel, botSpeak)
 				.then(() => {
-					axios.get(data.settings.newUrl + 'speak/remove/' + channel);
+					axios.get(data.settings.finalUrl + 'speak/remove/' + channel);
 				});
 		}
 	}

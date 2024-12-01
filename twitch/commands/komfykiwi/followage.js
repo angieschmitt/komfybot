@@ -13,14 +13,22 @@ module.exports = {
 		default: {
 			execute(args, tags, message, channel, client) {
 				let content = '';
-				axios.get(data.settings.newUrl + 'followage/retrieve/' + tags['user-id'])
+				axios.get(data.settings.finalUrl + 'followage/retrieve/' + tags['user-id'])
 					.then(function(response) {
-						const output = response.data;
-						if (output.status === 'success') {
-							content += `Hey ${tags['username']}, you've been following Kiwi for ${output.response}!`;
+						const resData = response.data;
+						if (resData.status === 'success') {
+							content += `Hey ${tags['username']}, you've been following Kiwi for ${resData.response}!`;
+						}
+						else if (resData.status === 'failure') {
+							if (resData.err_msg === 'missing_authorization') {
+								content = 'Authorization issue. Tell @kittenAngie.';
+							}
+							else {
+								content = 'Something went wrong, tell @kittenAngie 3.';
+							}
 						}
 						else {
-							content += 'Sorry about that, something went wrong...';
+							content = 'Something went wrong, tell @kittenAngie 2.';
 						}
 					})
 					.catch(function() {

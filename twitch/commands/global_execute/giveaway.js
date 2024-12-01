@@ -20,20 +20,25 @@ module.exports = {
 				const twitchData = { 'ident_type':'twitch_username', 'ident':channel.replace('#', ''), 'action':'join', 'username':tags['username'] };
 
 				let content = '';
-				axios.get(data.settings.newUrl + 'giveaway/update/json/' + encodeURIComponent(JSON.stringify(twitchData)))
+				axios.get(data.settings.finalUrl + 'giveaway/update/json/' + encodeURIComponent(JSON.stringify(twitchData)))
 					.then(function(response) {
-						const output = response.data;
+						const resData = response.data;
 
 						// Only output on failure
-						if (output.status === 'failure') {
-							if (output.err_msg == 'no_giveaway_exists') {
+						if (resData.status === 'failure') {
+							if (resData.err_msg == 'no_giveaway_exists') {
 								content = `@${tags['username']}, seems like there isn't a giveaway running right now.`;
 							}
-							else if (output.err_msg == 'already_entered') {
+							else if (resData.err_msg == 'already_entered') {
 								content = `@${tags['username']}, seems like you've already entered this giveaway!`;
 							}
-							else {
-								content = 'Something went wrong, tell @kittenAngie.';
+							else if (resData.status === 'failure') {
+								if (resData.err_msg === 'missing_authorization') {
+									content = 'Authorization issue. Tell @kittenAngie.';
+								}
+								else {
+									content = 'Something went wrong, tell @kittenAngie.';
+								}
 							}
 						}
 					})
@@ -70,15 +75,18 @@ module.exports = {
 				const currencyOut = module.exports.currencyHandler(value, channelName, client);
 
 				let content = '';
-				axios.get(data.settings.newUrl + 'giveaway/insert/json/' + encodeURIComponent(JSON.stringify(twitchData)))
+				axios.get(data.settings.finalUrl + 'giveaway/insert/json/' + encodeURIComponent(JSON.stringify(twitchData)))
 					.then(function(response) {
-						const output = response.data;
-						if (output.status === 'success') {
+						const resData = response.data;
+						if (resData.status === 'success') {
 							content = `Giveaway started! Do !giveaway to enter for your chance to win ${value} ${currencyOut}!`;
 						}
-						else if (output.status === 'failure') {
-							if (output.err_msg == 'giveaway_exists') {
+						else if (resData.status === 'failure') {
+							if (resData.err_msg == 'giveaway_exists') {
 								content = 'Seems like there is already a giveaway running.';
+							}
+							else if (resData.err_msg === 'missing_authorization') {
+								content = 'Authorization issue. Tell @kittenAngie.';
 							}
 							else {
 								content = 'Something went wrong, tell @kittenAngie.';
@@ -109,28 +117,31 @@ module.exports = {
 				const currencyEnabled = module.exports.currencyCheck(channelName, client);
 
 				let content = '';
-				axios.get(data.settings.newUrl + 'giveaway/update/json/' + encodeURIComponent(JSON.stringify(twitchData)))
+				axios.get(data.settings.finalUrl + 'giveaway/update/json/' + encodeURIComponent(JSON.stringify(twitchData)))
 					.then(function(response) {
-						const output = response.data;
+						const resData = response.data;
 
-						if (output.status === 'success') {
-							const currencyOut = module.exports.currencyHandler(output.value, channelName, client);
+						if (resData.status === 'success') {
+							const currencyOut = module.exports.currencyHandler(resData.value, channelName, client);
 
-							content = `Giveaway ended! The winner is @${output.response}, netting ${output.value} ${currencyOut}!`;
+							content = `Giveaway ended! The winner is @${resData.response}, netting ${resData.value} ${currencyOut}!`;
 
 							if (currencyEnabled) {
-								const args2 = ['!coins', 'add', output.response, output.value, 'Giveaway' ];
-								const message2 = `!coins add ${output.response} ${output.value} Giveaway`;
+								const args2 = ['!coins', 'add', resData.response, resData.value, 'Giveaway' ];
+								const message2 = `!coins add ${resData.response} ${resData.value} Giveaway`;
 								tags['silent'] = true;
 								client.commands.komfykiwi.coins.actions.add.execute(args2, tags, message2, channel, client);
 							}
 						}
-						else if (output.status === 'failure') {
-							if (output.err_msg == 'no_giveaway_exists') {
+						else if (resData.status === 'failure') {
+							if (resData.err_msg == 'no_giveaway_exists') {
 								content = 'Seems like there is not a giveaway running.';
 							}
-							else if (output.err_msg == 'not_enough_entrees') {
+							else if (resData.err_msg == 'not_enough_entrees') {
 								content = 'Giveaway ended, but it seems like there weren\'t enough entrees to choose a winner.';
+							}
+							else if (resData.err_msg === 'missing_authorization') {
+								content = 'Authorization issue. Tell @kittenAngie.';
 							}
 							else {
 								content = 'Something went wrong, tell @kittenAngie.';
@@ -158,12 +169,12 @@ module.exports = {
 				const channelName = channel.replace('#', '');
 
 				let content = '';
-				axios.get(data.settings.newUrl + 'giveaway/retrieve/' + channelName)
+				axios.get(data.settings.finalUrl + 'giveaway/retrieve/' + channelName)
 					.then(function(response) {
-						const output = response.data;
+						const resData = response.data;
 
-						if (output.status === 'success') {
-							const list = JSON.parse(output.response);
+						if (resData.status === 'success') {
+							const list = JSON.parse(resData.response);
 							if (Object.keys(list).length) {
 								content = 'Current entrees: ';
 								// eslint-disable-next-line no-unused-vars
@@ -176,12 +187,15 @@ module.exports = {
 								content = 'Seems like there aren\'t any guesses!';
 							}
 						}
-						else if (output.status === 'failure') {
-							if (output.err_msg == 'no_giveaway_exists') {
+						else if (resData.status === 'failure') {
+							if (resData.err_msg == 'no_giveaway_exists') {
 								content = 'Seems like there is not a giveaway running.';
 							}
-							else if (output.err_msg == 'no_entrees_exists') {
+							else if (resData.err_msg == 'no_entrees_exists') {
 								content = 'There are currently no entrees in the giveaway.';
+							}
+							else if (resData.err_msg === 'missing_authorization') {
+								content = 'Authorization issue. Tell @kittenAngie.';
 							}
 							else {
 								content = 'Something went wrong, tell @kittenAngie.';

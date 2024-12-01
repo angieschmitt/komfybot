@@ -22,15 +22,20 @@ module.exports = {
 					twitchData = { 'ident_type':'twitch_username', 'ident':user };
 				}
 
-				axios.get(data.settings.newUrl + 'bonk/insert/json/' + encodeURIComponent(JSON.stringify(twitchData)))
+				axios.get(data.settings.finalUrl + 'bonk/insert/json/' + encodeURIComponent(JSON.stringify(twitchData)))
 					.then(function(response) {
-						const output = response.data;
-						if (output.status === 'success') {
+						const resData = response.data;
+						if (resData.status === 'success') {
 							content += `BOP BOP @${user} got bonked by ${tags.username} || `;
-							content += `They've been bonked ${output.response} times!`;
+							content += `They've been bonked ${resData.response} times!`;
 						}
-						else {
-							content = 'Something went wrong, tell @kittenAngie.';
+						else if (resData.status === 'failure') {
+							if (resData.err_msg === 'missing_authorization') {
+								content = 'Authorization issue. Tell @kittenAngie.';
+							}
+							else {
+								content = 'Something went wrong, tell @kittenAngie.';
+							}
 						}
 					})
 					.catch(function() {

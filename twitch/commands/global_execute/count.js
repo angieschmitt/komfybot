@@ -29,11 +29,19 @@ module.exports = {
 				const twitchData = { 'ident_type':'twitch_username', 'ident':user, 'count': 1 };
 
 				let content = '';
-				axios.get(data.settings.newUrl + 'count/insert/json/' + encodeURIComponent(JSON.stringify(twitchData)))
+				axios.get(data.settings.finalUrl + 'count/insert/json/' + encodeURIComponent(JSON.stringify(twitchData)))
 					.then(function(response) {
 						const resData = response.data;
 						if (resData.status === 'success') {
 							content = `COUNTER: ${resData.response}`;
+						}
+						else if (resData.status === 'failure') {
+							if (resData.err_msg === 'missing_authorization') {
+								content = 'Authorization issue. Tell @kittenAngie.';
+							}
+							else {
+								content = 'Something went wrong, tell @kittenAngie.';
+							}
 						}
 						else {
 							content = 'Something went wrong, tell @kittenAngie.';
@@ -63,11 +71,19 @@ module.exports = {
 				}
 
 				let content = '';
-				axios.get(data.settings.newUrl + 'count/set/json/' + encodeURIComponent(JSON.stringify(twitchData)))
+				axios.get(data.settings.finalUrl + 'count/set/json/' + encodeURIComponent(JSON.stringify(twitchData)))
 					.then(function(response) {
 						const resData = response.data;
 						if (resData.status === 'success') {
 							content = `COUNTER: ${resData.response}`;
+						}
+						else if (resData.status === 'failure') {
+							if (resData.err_msg === 'missing_authorization') {
+								content = 'Authorization issue. Tell @kittenAngie.';
+							}
+							else {
+								content = 'Something went wrong, tell @kittenAngie.';
+							}
 						}
 						else {
 							content = 'Something went wrong, tell @kittenAngie.';
@@ -90,11 +106,19 @@ module.exports = {
 				const channelName = channel.replace('#', '');
 
 				let content = '';
-				axios.get(data.settings.newUrl + 'count/reset/' + channelName)
+				axios.get(data.settings.finalUrl + 'count/reset/' + channelName)
 					.then(function(response) {
-						const output = response.data;
-						if (output.status === 'success') {
+						const resData = response.data;
+						if (resData.status === 'success') {
 							content = 'Reset the counter!';
+						}
+						else if (resData.status === 'failure') {
+							if (resData.err_msg === 'missing_authorization') {
+								content = 'Authorization issue. Tell @kittenAngie.';
+							}
+							else {
+								content = 'Something went wrong, tell @kittenAngie.';
+							}
 						}
 						else {
 							content = 'Something went wrong, tell @kittenAngie.';

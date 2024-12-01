@@ -18,14 +18,19 @@ module.exports = {
 		default: {
 			execute(args, tags, message, channel, client) {
 				let content = '';
-				axios.get(data.settings.newUrl + 'fact/retrieve')
+				axios.get(data.settings.finalUrl + 'fact/retrieve')
 					.then(function(response) {
-						const output = response.data;
-						if (output.status === 'success') {
-							content = `@${tags.username} the Fact of the Day is... ` + output.response;
+						const resData = response.data;
+						if (resData.status === 'success') {
+							content = `@${tags.username} the Fact of the Day is... ` + resData.response;
 						}
-						else {
-							content = 'Something went wrong, tell @kittenAngie.';
+						else if (resData.status === 'failure') {
+							if (resData.err_msg === 'missing_authorization') {
+								content = 'Authorization issue. Tell @kittenAngie.';
+							}
+							else {
+								content = 'Something went wrong, tell @kittenAngie.';
+							}
 						}
 					})
 					.catch(function() {

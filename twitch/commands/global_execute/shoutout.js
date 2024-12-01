@@ -39,68 +39,81 @@ module.exports = {
 						username = tags.username;
 					}
 
-					axios.get(data.settings.newUrl + 'shoutout/insert/' + username)
+					axios.get(data.settings.finalUrl + 'shoutout/insert/' + username)
 						.then(function(response) {
-							const output = response.data;
-							if (output.status === 'success') {
-								axios.get(data.settings.newUrl + 'shoutout/retrieve/' + username)
-									.then(function(response) {
-										const output = response.data;
-										if (output.status === 'success') {
+							const resData = response.data;
+							if (resData.status === 'success') {
+								axios.get(data.settings.finalUrl + 'shoutout/retrieve/' + username)
+									.then(function(response2) {
+										const resData2 = response2.data;
+										if (resData2.status === 'success') {
 
 											// Start the content
-											content = `Make sure you check out @${output.response.name}, over at https://www.twitch.tv/${output.response.name} ! `;
+											content = `Make sure you check out @${resData2.response.name}, over at https://www.twitch.tv/${resData2.response.name} !`;
 
 											// Slap in the last game
-											if (output.response.last) {
-												content += `They were last seen playing ${output.response.last} `;
+											if (resData2.response.last) {
+												content += ` They were last seen playing ${resData2.response.last}`;
 											}
 
 											// Next we work on recents
 											let rand = 0;
 											const items = [];
-											const recent = JSON.parse(output.response.game_log);
+											const recent = JSON.parse(resData2.response.game_log);
 
-											// If last is set, remove from recent
-											if (output.response.last) {
-												const index = recent.indexOf(output.response.last);
-												if (index !== false) {
-													recent.splice(index, 1);
+											if (recent !== null) {
+												// If last is set, remove from recent
+												if (resData2.response.last) {
+													const index = recent.indexOf(resData2.response.last);
+													if (index !== false) {
+														recent.splice(index, 1);
+													}
+												}
+
+												// Select 3 randoms
+												if (recent.length) {
+													rand = randomProp(recent);
+													items.push(recent[rand]);
+													recent.splice(rand, 1);
+												}
+												if (recent.length) {
+													rand = randomProp(recent);
+													items.push(recent[rand]);
+													recent.splice(rand, 1);
+												}
+												if (recent.length) {
+													rand = randomProp(recent);
+													items.push(recent[rand]);
+													recent.splice(rand, 1);
+												}
+
+												if (items.length > 1) {
+													let games = '';
+													Object.entries(items).forEach(([key, value]) => {
+														if (items.length > (parseInt(key) + 1)) {
+															games += value + ', ';
+														}
+														else {
+															games += ' and ' + value;
+														}
+													});
+													content += ' and other games like: ' + games + '.';
+												}
+												else {
+													content += ` and ${items[0]}.`;
 												}
 											}
-
-											// Select 3 randoms
-											if (recent.length) {
-												rand = randomProp(recent);
-												items.push(recent[rand]);
-												recent.splice(rand, 1);
-											}
-											if (recent.length) {
-												rand = randomProp(recent);
-												items.push(recent[rand]);
-												recent.splice(rand, 1);
-											}
-											if (recent.length) {
-												rand = randomProp(recent);
-												items.push(recent[rand]);
-												recent.splice(rand, 1);
-											}
-
-											if (items.length > 1) {
-												let games = '';
-												Object.entries(items).forEach(([key, value]) => {
-													if (items.length > (parseInt(key) + 1)) {
-														games += value + ', ';
-													}
-													else {
-														games += ' and ' + value;
-													}
-												});
-												content += 'and other games like: ' + games + '.';
+										}
+										else if (resData2.status === 'failure') {
+											if (resData2.err_msg === 'missing_authorization') {
+												content = 'Authorization issue. Tell @kittenAngie.';
 											}
 											else {
-												content += `and ${items[0]}.`;
+												content = 'Something went wrong, tell @kittenAngie.';
 											}
+										}
+										else {
+											content = 'Something went wrong, tell @kittenAngie.';
 										}
 									})
 									.catch(function() {
@@ -109,6 +122,17 @@ module.exports = {
 									.finally(function() {
 										client.say(channel, content);
 									});
+							}
+							else if (resData.status === 'failure') {
+								if (resData.err_msg === 'missing_authorization') {
+									content = 'Authorization issue. Tell @kittenAngie.';
+								}
+								else {
+									content = 'Something went wrong, tell @kittenAngie.';
+								}
+							}
+							else {
+								content = 'Something went wrong, tell @kittenAngie.';
 							}
 						})
 						.catch(function() {

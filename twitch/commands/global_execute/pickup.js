@@ -17,11 +17,19 @@ module.exports = {
 		default: {
 			execute(args, tags, message, channel, client) {
 				let content = '';
-				axios.get(data.settings.newUrl + 'flirt/retrieve')
+				axios.get(data.settings.finalUrl + 'flirt/retrieve')
 					.then(function(response) {
-						const output = response.data;
-						if (output.status === 'success') {
-							content = `Hey ${tags.username}, ${output.response}`;
+						const resData = response.data;
+						if (resData.status === 'success') {
+							content = `Hey ${tags.username}, ${resData.response}`;
+						}
+						else if (resData.status === 'failure') {
+							if (resData.err_msg === 'missing_authorization') {
+								content = 'Authorization issue. Tell @kittenAngie.';
+							}
+							else {
+								content = 'Something went wrong, tell @kittenAngie.';
+							}
 						}
 						else {
 							content = 'Something went wrong, tell @kittenAngie.';

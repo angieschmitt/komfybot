@@ -2,7 +2,7 @@ const axios = require('axios');
 const dataFile = require('../../data/index');
 const data = dataFile.content();
 
-axios.defaults.headers.common['Authorization'] = data.settings.apiKey;
+// axios.defaults.headers.common['Authorization'] = data.settings.apiKey;
 
 module.exports = {
 	name: 'boop',
@@ -22,15 +22,20 @@ module.exports = {
 					twitchData = { 'ident_type':'twitch_username', 'ident':user };
 				}
 
-				axios.get(data.settings.newUrl + 'boop/insert/json/' + encodeURIComponent(JSON.stringify(twitchData)))
+				axios.get(data.settings.finalUrl + 'boop/insert/json/' + encodeURIComponent(JSON.stringify(twitchData)))
 					.then(function(response) {
-						const output = response.data;
-						if (output.status === 'success') {
+						const resData = response.data;
+						if (resData.status === 'success') {
 							content += `BegWan BegWan ${tags.username} booped @${user} on the snoot || `;
-							content += `They've been booped ${output.response} times!`;
+							content += `They've been booped ${resData.response} times!`;
 						}
-						else {
-							content = 'Something went wrong, tell @kittenAngie.';
+						else if (resData.status === 'failure') {
+							if (resData.err_msg === 'missing_authorization') {
+								content = 'Authorization issue. Tell @kittenAngie.';
+							}
+							else {
+								content = 'Something went wrong, tell @kittenAngie.';
+							}
 						}
 					})
 					.catch(function() {

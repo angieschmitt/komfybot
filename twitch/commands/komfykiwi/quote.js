@@ -13,12 +13,20 @@ module.exports = {
 			execute(args, tags, message, channel, client) {
 				let id = false;
 				let content = '';
-				axios.get(data.settings.newUrl + 'quote/retrieve')
+				axios.get(data.settings.finalUrl + 'quote/retrieve')
 					.then(function(response) {
-						const output = response.data;
-						id = output.id;
-						if (output.status === 'success') {
-							content = output.response;
+						const resData = response.data;
+						id = resData.id;
+						if (resData.status === 'success') {
+							content = resData.response;
+						}
+						else if (resData.status === 'failure') {
+							if (resData.err_msg === 'missing_authorization') {
+								content = 'Authorization issue. Tell @kittenAngie.';
+							}
+							else {
+								content = 'Something went wrong, tell @kittenAngie.';
+							}
 						}
 						else {
 							content = 'Something went wrong, tell @kittenAngie.';

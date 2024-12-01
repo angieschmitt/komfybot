@@ -6,20 +6,19 @@ axios.defaults.headers.common['Authorization'] = data.settings.apiKey;
 
 module.exports = {
 	name: 'race',
-	channel: 'komfykiwi',
+	channel: ['komfykiwi'],
 	help: 'Outputs info about the current race, with a multitwitch link. Additional arguments: set',
 	actions: {
 		default: {
 			execute(args, tags, message, channel, client) {
 				let content = '';
 
-				axios.get(data.settings.newUrl + 'quote/retrieve')
+				axios.get(data.settings.finalUrl + 'racers/retrieve')
 					.then(function(response) {
-						const output = response.data;
-						if (output.status === 'success') {
-							const runners = JSON.parse(output.response);
-
-							if (runners.length !== 0) {
+						const resData = response.data;
+						if (resData.status === 'success') {
+							const runners = JSON.parse(resData.response);
+							if (runners.length !== undefined && runners.length !== 0) {
 								let text = '';
 								let nameList = '';
 								let url = '';
@@ -52,18 +51,24 @@ module.exports = {
 								content = 'Seems like we aren\'t racing anyone yet!';
 							}
 						}
+						else if (resData.status === 'failure') {
+							if (resData.err_msg === 'missing_authorization') {
+								content = 'Authorization issue. Tell @kittenAngie.';
+							}
+							else {
+								content = 'Something went wrong, tell @kittenAngie 3.';
+							}
+						}
 						else {
-							content = 'Something went wrong, tell @kittenAngie.';
+							content = 'Something went wrong, tell @kittenAngie 2.';
 						}
 					})
 					.catch(function() {
-						content = 'Something went wrong, tell @kittenAngie.';
+						content = 'Something went wrong, tell @kittenAngie 1.';
 					})
 					.finally(function() {
 						client.say(channel, content);
 					});
-
-				client.say(channel, `${content}`);
 			},
 		},
 		set: {
@@ -83,14 +88,22 @@ module.exports = {
 					racers += '/' + args[index].replace('@', '');
 				}
 
-				axios.get(data.settings.newUrl + 'racers/insert' + racers)
+				axios.get(data.settings.finalUrl + 'racers/insert' + racers)
 					.then(function(response) {
-						const output = response.data;
-						if (output.status === 'success') {
+						const resData = response.data;
+						if (resData.status === 'success') {
 							content = 'Set the racers!';
 						}
+						else if (resData.status === 'failure') {
+							if (resData.err_msg === 'missing_authorization') {
+								content = 'Authorization issue. Tell @kittenAngie.';
+							}
+							else {
+								content = 'Something went wrong, tell @kittenAngie 3.';
+							}
+						}
 						else {
-							content = 'Something went wrong, tell @kittenAngie.';
+							content = 'Something went wrong, tell @kittenAngie 2.';
 						}
 					})
 					.catch(function() {
@@ -110,14 +123,22 @@ module.exports = {
 			execute(args, tags, message, channel, client) {
 
 				let content = '';
-				axios.get(data.settings.newUrl + 'racers/reset')
+				axios.get(data.settings.finalUrl + 'racers/reset')
 					.then(function(response) {
-						const output = response.data;
-						if (output.status === 'success') {
+						const resData = response.data;
+						if (resData.status === 'success') {
 							content = 'Reset the racers.';
 						}
+						else if (resData.status === 'failure') {
+							if (resData.err_msg === 'missing_authorization') {
+								content = 'Authorization issue. Tell @kittenAngie.';
+							}
+							else {
+								content = 'Something went wrong, tell @kittenAngie 3.';
+							}
+						}
 						else {
-							content = 'Something went wrong, tell @kittenAngie.';
+							content = 'Something went wrong, tell @kittenAngie 2.';
 						}
 					})
 					.catch(function() {

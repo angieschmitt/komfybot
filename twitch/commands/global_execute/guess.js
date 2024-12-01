@@ -31,7 +31,7 @@ module.exports = {
 				}
 
 				let content = '';
-				axios.get(data.settings.newUrl + 'guess/insert/json/' + encodeURIComponent(JSON.stringify(twitchData)))
+				axios.get(data.settings.finalUrl + 'guess/insert/json/' + encodeURIComponent(JSON.stringify(twitchData)))
 					.then(function(response) {
 						const resData = response.data;
 						if (resData.status === 'success') {
@@ -47,6 +47,9 @@ module.exports = {
 								break;
 							case 'update_failure':
 								content = 'Something went wrong while updating, tell @kittenAngie.';
+								break;
+							case 'missing_authorization':
+								content = 'Authorization issue. Tell @kittenAngie.';
 								break;
 							default:
 								content = 'Something went wrong, tell @kittenAngie.';
@@ -70,12 +73,12 @@ module.exports = {
 				const channelName = channel.replace('#', '');
 
 				let content = '';
-				axios.get(data.settings.newUrl + 'guess/retrieve/' + channelName)
+				axios.get(data.settings.finalUrl + 'guess/retrieve/' + channelName)
 					.then(function(response) {
-						const output = response.data;
-						if (output.status === 'success') {
+						const resData = response.data;
+						if (resData.status === 'success') {
 							// content = 'Reset the bonks';
-							const list = JSON.parse(output.response);
+							const list = JSON.parse(resData.response);
 							if (Object.keys(list).length) {
 								Object.entries(list).forEach(([key, value]) => {
 									content += `${key}: ${value} || `;
@@ -84,6 +87,14 @@ module.exports = {
 							}
 							else {
 								content = 'Seems like there aren\'t any guesses!';
+							}
+						}
+						else if (resData.status === 'failure') {
+							if (resData.err_msg === 'missing_authorization') {
+								content = 'Authorization issue. Tell @kittenAngie.';
+							}
+							else {
+								content = 'Something went wrong, tell @kittenAngie.';
 							}
 						}
 						else {
@@ -108,11 +119,19 @@ module.exports = {
 				const channelName = channel.replace('#', '');
 
 				let content = '';
-				axios.get(data.settings.newUrl + 'guess/reset/' + channelName)
+				axios.get(data.settings.finalUrl + 'guess/reset/' + channelName)
 					.then(function(response) {
-						const output = response.data;
-						if (output.status === 'success') {
+						const resData = response.data;
+						if (resData.status === 'success') {
 							content = 'Reset the guesses!';
+						}
+						else if (resData.status === 'failure') {
+							if (resData.err_msg === 'missing_authorization') {
+								content = 'Authorization issue. Tell @kittenAngie.';
+							}
+							else {
+								content = 'Something went wrong, tell @kittenAngie.';
+							}
 						}
 						else {
 							content = 'Something went wrong, tell @kittenAngie.';
@@ -139,11 +158,19 @@ module.exports = {
 				const twitchData = { 'ident_type':'twitch_username', 'ident':user, 'lock':1 };
 
 				let content = '';
-				axios.get(data.settings.newUrl + 'guess/lock/json/' + encodeURIComponent(JSON.stringify(twitchData)))
+				axios.get(data.settings.finalUrl + 'guess/lock/json/' + encodeURIComponent(JSON.stringify(twitchData)))
 					.then(function(response) {
 						const resData = response.data;
 						if (resData.status === 'success') {
 							content = `Guesses are now ${resData.response}!`;
+						}
+						else if (resData.status === 'failure') {
+							if (resData.err_msg === 'missing_authorization') {
+								content = 'Authorization issue. Tell @kittenAngie.';
+							}
+							else {
+								content = 'Something went wrong, tell @kittenAngie.';
+							}
 						}
 						else {
 							content = 'Something went wrong, tell @kittenAngie.';
@@ -169,11 +196,19 @@ module.exports = {
 				const twitchData = { 'ident_type':'twitch_username', 'ident':user, 'lock':0 };
 
 				let content = '';
-				axios.get(data.settings.newUrl + 'guess/lock/json/' + encodeURIComponent(JSON.stringify(twitchData)))
+				axios.get(data.settings.finalUrl + 'guess/lock/json/' + encodeURIComponent(JSON.stringify(twitchData)))
 					.then(function(response) {
 						const resData = response.data;
 						if (resData.status === 'success') {
 							content = `Guesses are now ${resData.response}!`;
+						}
+						else if (resData.status === 'failure') {
+							if (resData.err_msg === 'missing_authorization') {
+								content = 'Authorization issue. Tell @kittenAngie.';
+							}
+							else {
+								content = 'Something went wrong, tell @kittenAngie.';
+							}
 						}
 						else {
 							content = 'Something went wrong, tell @kittenAngie.';

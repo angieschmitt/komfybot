@@ -11,11 +11,19 @@ module.exports = {
 		default: {
 			execute(args, tags, message, channel, client) {
 				let content = '';
-				axios.get(data.settings.newUrl + 'pun/retrieve')
+				axios.get(data.settings.finalUrl + 'pun/retrieve')
 					.then(function(response) {
-						const output = response.data;
-						if (output.status === 'success') {
-							content = 'Pun Delivery Service: ' + output.response;
+						const resData = response.data;
+						if (resData.status === 'success') {
+							content = 'Pun Delivery Service: ' + resData.response;
+						}
+						else if (resData.status === 'failure') {
+							if (resData.err_msg === 'missing_authorization') {
+								content = 'Authorization issue. Tell @kittenAngie.';
+							}
+							else {
+								content = 'Something went wrong, tell @kittenAngie.';
+							}
 						}
 						else {
 							content = 'Something went wrong, tell @kittenAngie.';
