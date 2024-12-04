@@ -18,9 +18,6 @@ module.exports = {
 			execute(args, tags, message, channel, client) {
 				const channelToJoin = args[1].replace('@', '');
 				client.join(channelToJoin)
-					.catch((error) => {
-						data.debug.write(channel, 'JOIN_ERROR', error);
-					})
 					.then(() => {
 						client.say(channel, `Joined ${channelToJoin}.`);
 						client.say(channelToJoin, data.functions.speakConvertor(`Hi! Hello! ${tags.username} sent me here!`));
@@ -37,6 +34,9 @@ module.exports = {
 						// Trigger reload of commands
 						tags['silent'] = true;
 						client.commands.global.reload.actions.commands.execute(args, tags, message, channel, client);
+					})
+					.catch((error) => {
+						data.debug.write(channel, 'JOIN_ERROR', error);
 					});
 			},
 		},

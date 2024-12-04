@@ -29,6 +29,7 @@ module.exports = {
 												.then(() => {
 													content = 'Reset Uptime, Guesses, Racers, and the counter!';
 												})
+												.catch(err => console.log(err))
 												.finally(function() {
 													client.say(channel, content);
 												});
@@ -38,11 +39,14 @@ module.exports = {
 										}
 										data.functions.refreshTimer(channelName, data, client);
 									})
+									.catch(err => console.log(err))
 									.finally(function() {
 										client.say(channel, content);
 									});
-							});
-					});
+							})
+							.catch(err => console.log(err));
+					})
+					.catch(err => console.log(err));
 			},
 		},
 	},

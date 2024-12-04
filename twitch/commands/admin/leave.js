@@ -18,12 +18,12 @@ module.exports = {
 			execute(args, tags, message, channel, client) {
 				const channelToJoin = args[1].replace('@', '');
 				client.leave(channelToJoin)
-					.catch((error) => {
-						data.debug.write(channel, 'LEAVE_ERROR', error);
-					})
 					.then(() => {
 						client.say(channel, `Left ${channelToJoin}.`);
 						client.say(channelToJoin, data.functions.speakConvertor(`Goodbye! ${tags.username} called me back home!`));
+					})
+					.catch((error) => {
+						data.debug.write(channel, 'LEAVE_ERROR', error);
 					});
 			},
 		},

@@ -141,6 +141,7 @@ module.exports = {
 																	content += ` You have ${(coinAmt ? coinAmt : 0)} KomfyCoins remaining!`;
 																}
 															})
+															.catch(err => console.log(err))
 															.finally(function() {
 																client.say(channel, `${content}`);
 															});
@@ -167,6 +168,7 @@ module.exports = {
 													content = responses[ randomItem(0, (Object.keys(responses).length - 1)) ];
 												}
 											})
+											.catch(err => console.log(err))
 											.finally(function() {
 												client.say(channel, `${content}`);
 											});
@@ -422,6 +424,7 @@ module.exports = {
 													content += ` You have ${(coinAmt ? coinAmt : 0)} KomfyCoins stashed in your wallet!`;
 												}
 											})
+											.catch(err => console.log(err))
 											.finally(function() {
 												client.say(channel, `${content}`);
 											});
@@ -440,6 +443,7 @@ module.exports = {
 												content += ` You have ${(coinAmt ? coinAmt : 0)} KomfyCoins stashed in your wallet!`;
 											}
 										})
+										.catch(err => console.log(err))
 										.finally(function() {
 											client.say(channel, `${content}`);
 										});

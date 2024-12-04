@@ -334,6 +334,7 @@ module.exports = {
 								coinCount = (output.total ? output.total : 0);
 							}
 						})
+						.catch(err => console.log(err))
 						.finally(function() {
 							resolve(coinCount);
 						});

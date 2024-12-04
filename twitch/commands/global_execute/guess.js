@@ -59,7 +59,8 @@ module.exports = {
 						else {
 							content = 'Something went wrong, tell @kittenAngie.';
 						}
-					}).catch(function() {
+					})
+					.catch(function() {
 						content = 'Something went wrong, tell @kittenAngie.';
 					})
 					.finally(function() {
@@ -175,7 +176,8 @@ module.exports = {
 						else {
 							content = 'Something went wrong, tell @kittenAngie.';
 						}
-					}).catch(function() {
+					})
+					.catch(function() {
 						content = 'Something went wrong, tell @kittenAngie.';
 					})
 					.finally(function() {
@@ -213,7 +215,8 @@ module.exports = {
 						else {
 							content = 'Something went wrong, tell @kittenAngie.';
 						}
-					}).catch(function() {
+					})
+					.catch(function() {
 						content = 'Something went wrong, tell @kittenAngie.';
 					})
 					.finally(function() {

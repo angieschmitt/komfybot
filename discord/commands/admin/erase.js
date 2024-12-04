@@ -107,6 +107,7 @@ function actuallyDeleteThings(amount, interaction, before) {
 					lastMessage = true;
 				}
 			})
+			.catch(err => console.log(err))
 			.finally(() => {
 				const interval = setInterval(() => {
 					if (lastMessage != false) {

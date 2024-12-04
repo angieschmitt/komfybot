@@ -40,7 +40,8 @@ module.exports = {
 								// axios.post(data.settings.baseUrl + 'coins_fix');
 							});
 					}
-				});
+				})
+				.catch(err => console.log(err));
 		}
 		console.log('caught raid');
 		console.log(channel);

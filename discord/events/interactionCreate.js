@@ -70,7 +70,8 @@ module.exports = {
 					interaction.client.channels.fetch(channels.just_joined)
 						.then(channel => {
 							channel.send({ content: `Hey everyone, <@${member.user.id}> just joined, make sure to give them a warm welcome! <:KiwiLove:1127968221987868736>` });
-						});
+						})
+						.catch(err => console.log(err));
 				}
 			}
 			else if (buttonInfo[0] == 'miscRoles') {

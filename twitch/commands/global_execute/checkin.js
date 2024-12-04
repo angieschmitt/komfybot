@@ -42,7 +42,7 @@ module.exports = {
 				const twitchData = { 'ident_type':'twitch_username', 'ident':channelName, 'userID':userID };
 
 				let content = '';
-				axios.get(data.settings.newUrl + 'checkin/insert/json/' + encodeURIComponent(JSON.stringify(twitchData)))
+				axios.get(data.settings.finalUrl + 'checkin/insert/json/' + encodeURIComponent(JSON.stringify(twitchData)))
 					.then(function(response) {
 						const resData = response.data;
 						const swapText = (resData.response > 1 ? 'checkins' : 'checkin');
@@ -54,6 +54,9 @@ module.exports = {
 							case 'already_checked_in':
 								content = `@${user}, you're at ${resData.response} ${swapText}, but it looks like you already checked in today.`;
 								break;
+							case 'missing_authorization':
+								content = 'Authorization issue. Tell @kittenAngie.';
+								break;
 							default:
 								content = 'Something went wrong, tell @kittenAngie.';
 								break;
@@ -62,7 +65,8 @@ module.exports = {
 						else {
 							content = 'Something went wrong, tell @kittenAngie.';
 						}
-					}).catch(function() {
+					})
+					.catch(function() {
 						content = 'Something went wrong, tell @kittenAngie.';
 					})
 					.finally(function() {
@@ -82,17 +86,26 @@ module.exports = {
 				const twitchData = { 'ident_type':'twitch_username', 'ident':channelName, 'userID':userID };
 
 				let content = '';
-				axios.get(data.settings.newUrl + 'checkin/retrieve/json/' + encodeURIComponent(JSON.stringify(twitchData)))
+				axios.get(data.settings.finalUrl + 'checkin/retrieve/json/' + encodeURIComponent(JSON.stringify(twitchData)))
 					.then(function(response) {
 						const resData = response.data;
 						const swapText = (resData.response > 1 ? 'times' : 'time');
 						if (resData.status === 'success') {
 							content = `Yeah, well, @${user} has checked in ${resData.response} ${swapText}!`;
 						}
+						else if (resData.status === 'failure') {
+							if (resData.err_msg === 'missing_authorization') {
+								content = 'Authorization issue. Tell @kittenAngie.';
+							}
+							else {
+								content = 'Something went wrong, tell @kittenAngie.';
+							}
+						}
 						else {
 							content = 'Something went wrong, tell @kittenAngie.';
 						}
-					}).catch(function() {
+					})
+					.catch(function() {
 						content = 'Something went wrong, tell @kittenAngie.';
 					})
 					.finally(function() {
@@ -137,7 +150,8 @@ module.exports = {
 						else {
 							content = 'Something went wrong, tell @kittenAngie.';
 						}
-					}).catch(function() {
+					})
+					.catch(function() {
 						content = 'Something went wrong, tell @kittenAngie.';
 					})
 					.finally(function() {

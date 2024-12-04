@@ -98,6 +98,7 @@ module.exports = {
 																	content += ` You have ${(coinAmt ? coinAmt : 0)} KomfyCoins remaining!`;
 																}
 															})
+															.catch(err => console.log(err))
 															.finally(function() {
 																client.say(channel, `${content}`);
 															});

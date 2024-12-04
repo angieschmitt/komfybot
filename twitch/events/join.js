@@ -39,7 +39,8 @@ async function callApi(channel, client) {
 			client.say(channel, botSpeak)
 				.then(() => {
 					axios.get(data.settings.finalUrl + 'speak/remove/' + channel);
-				});
+				})
+				.catch(err => console.log(err));
 		}
 	}
 }

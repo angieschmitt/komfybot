@@ -14,7 +14,7 @@ axios.defaults.headers.common['Authorization'] = data.settings.apiKey;
 
 // Connect to Twitch:
 const client = new tmi.client(data.settings[branch]);
-client.connect().catch(console.error);
+client.connect().catch(err => console.log(err));
 
 data.functions.loadBranch(client, data, branch);
 data.functions.loadEvents(client);

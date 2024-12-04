@@ -162,7 +162,7 @@ const functions = {
 						});
 					}
 				})
-				.catch(console.error);
+				.catch(err => console.log(err));
 		});
 	},
 	loadSettings(client, reset = false) {
@@ -198,7 +198,7 @@ const functions = {
 						});
 					}
 				})
-				.catch(console.error);
+				.catch(err => console.log(err));
 		});
 	},
 	handleAlias(baseCommand, name, details, commands) {
@@ -233,7 +233,8 @@ const functions = {
 				}
 
 				return response;
-			});
+			})
+			.catch(err => console.log(err));
 	},
 	handleTimers(data, timers, client) {
 		const parent = this;
@@ -257,7 +258,7 @@ const functions = {
 							client.timerOffset[channel] = (response.data.minutes > 0 ? response.data.minutes : 1);
 						}
 					})
-					.catch(console.error)
+					.catch(err => console.log(err))
 					.finally(() => {
 						const queue = {};
 						queue[channel] = [];
@@ -286,18 +287,20 @@ const functions = {
 									Object.entries(queue[channel]).forEach(([ident]) => {
 										const messageData = queue[channel][ident];
 										if (client.last_message[channel] !== messageData['message']) {
-											parent.liveCheck(data, channel, messageData).then(res => {
-												if (res.live === true) {
-													console.log('Timer: SENT ' + ident + ' IN ' + channel);
-													client.say(channel, res.extra['message']);
-													queue[channel] = [];
-												}
-												else {
-													console.log('Timer: SKIPPED - ' + ident + ' IN ' + channel);
-													queue[channel] = [];
-												}
-												console.log('- - -');
-											});
+											parent.liveCheck(data, channel, messageData)
+												.then(res => {
+													if (res.live === true) {
+														console.log('Timer: SENT ' + ident + ' IN ' + channel);
+														client.say(channel, res.extra['message']);
+														queue[channel] = [];
+													}
+													else {
+														console.log('Timer: SKIPPED - ' + ident + ' IN ' + channel);
+														queue[channel] = [];
+													}
+													console.log('- - -');
+												})
+												.catch(err => console.log(err));
 										}
 									});
 								}
@@ -325,7 +328,7 @@ const functions = {
 						client.timerOffset[channel] = (response.data.minutes > 0 ? response.data.minutes : 1);
 					}
 				})
-				.catch(console.error);
+				.catch(err => console.log(err));
 		}
 	},
 	isObjectEmpty(objectName) {
@@ -400,9 +403,7 @@ const functions = {
 							}
 						}
 					})
-					.catch(function(error) {
-						console.log(error.code);
-					});
+					.catch(err => console.log(err));
 			},
 			timerInterval,
 		);

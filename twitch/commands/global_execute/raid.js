@@ -17,9 +17,11 @@ module.exports = {
 									setTimeout(() => {
 										client.say(channel, 'Never forget that you matter, that you deserve great things & that I love you!');
 									}, 3000);
-								});
+								})
+								.catch(err => console.log(err));
 						}, 3000);
-					});
+					})
+					.catch(err => console.log(err));
 			},
 		},
 	},

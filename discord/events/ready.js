@@ -69,9 +69,11 @@ async function handleLiveCheck(client) {
 									data = {};
 								});
 						}
-					});
+					})
+					.catch(err => console.log(err));
 			}
-		});
+		})
+		.catch(err => console.log(err));
 	// controller.abort();
 }
 
