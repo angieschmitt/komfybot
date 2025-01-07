@@ -25,7 +25,6 @@ module.exports = {
 					}
 				}
 				const value = getRandomNumber(100);
-				// const value = chances[0];
 				const data = { 'amt': 10, 'ident_type': 'discord_username', 'ident': message.author.username, 'reason': 'Chatting in discord' };
 				if (chances.includes(value)) {
 					message.react('🪙');
@@ -65,12 +64,15 @@ const getRandomNumber = function(max) {
 	const rolls5 = [];
 	let finalRolls = [];
 
+	// Add all numbers to the pull
 	let i;
 	for (i = 1; i <= max; i++) {
-		// rolls.push(Math.floor(Math.random() * max) + 1);
 		rolls.push(i);
 	}
 
+	// Cut the list in half by moving half of them into rollsX
+	// assign to finalRolls in case we're done here
+	// and do that until we ARE done
 	if (rolls.length > 2) {
 		// Reduce those
 		const rollsLength = Math.floor(rolls.length / 2);
