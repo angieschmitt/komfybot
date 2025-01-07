@@ -25,24 +25,90 @@ module.exports = {
 				const channelName = channel.replace('#', '');
 				const currencyEnabled = module.exports.currencyCheck(channelName, client);
 
-				const payout = [ 160, 120, 80, 40 ];
+				// Timeout
+				const timeout = 1000;
 
-				let iter = 0;
+				// Strip out bad users
 				const users = message.replace(args[0] + ' ', '').split('@');
-				users.forEach((user) => {
-					if (user !== '') {
-						if (currencyEnabled) {
-							if (payout[iter] === undefined) {
-								payout[iter] = 40;
-							}
-							const args2 = ['!coins', 'add', '@' + user, payout[iter], 'WoS' ];
-							const message2 = `!coins add @${user} ${payout[iter]} WoS`;
-							// tags['silent'] = true;
-							client.commands.komfykiwi.coins.actions.add.execute(args2, tags, message2, channel, client);
-							iter++;
-						}
+				users.forEach((user, idx) => {
+					if (user == '') {
+						users.splice(idx, 1);
 					}
 				});
+
+				if (currencyEnabled) {
+					const payout = [ 200, 160, 100, 80 ];
+
+					let iter = 0;
+					const processUsers = setInterval(
+						(users) => {
+							let content = '';
+							client.commands['global'].wos.actions.submitCoins.execute(users[iter].trim(), payout[iter])
+								.then((response) => {
+									if (response[0]) {
+										content = `@${response[1]}, thanks for playing WoS, enjoy your ${response[2]} Komfycoins!`;
+									}
+									else {
+										content = `@${response[1]}, tell Kiwi she owes you ${response[2]} coins.`;
+									}
+								})
+								.catch(err => console.log(err))
+								.finally(function() {
+									client.say(channel, content);
+								});
+
+							iter = iter + 1;
+
+							if (iter == users.length) {
+								clearInterval(processUsers);
+							}
+						},
+						timeout, users,
+					);
+				}
+				else {
+					let iter = 0;
+					const processUsers = setInterval(
+						(users) => {
+							client.say(channel, `${users[iter].trim()}, thanks for participating!`);
+							iter = iter + 1;
+
+							if (iter == users.length) {
+								clearInterval(processUsers);
+							}
+						},
+						timeout, users,
+					);
+				}
+			},
+		},
+		submitCoins: {
+			async execute(user, payout) {
+
+				let processed = false;
+
+				const p1 = new Promise((resolve) => {
+					const reason = 'WoS';
+					axios.get(data.settings.baseUrl + 'insert/coins/?username=' + user.toLowerCase() + '&amount=' + payout + '&reason=' + reason)
+						.then(function(response) {
+							const output = response.data;
+							if (output.status === 'success') {
+								processed = [true, user, payout];
+							}
+							else if (output.status === 'failure') {
+								processed = [false, user, payout];
+							}
+						})
+						.catch(function() {
+							processed = [false, user, payout];
+						})
+						.finally(function() {
+							resolve(processed);
+						});
+				});
+
+				const results = await p1;
+				return results;
 			},
 		},
 	},
