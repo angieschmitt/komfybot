@@ -6,7 +6,7 @@ axios.defaults.headers.common['Authorization'] = data.settings.apiKey;
 
 module.exports = {
 	name: 'quote',
-	help: 'Pull a quote from our growing database of silliness!',
+	help: 'Pull a quote from our growing database of silliness! Additional arguments: add',
 	actions: {
 		default: {
 			execute(args, tags, message, channel, client) {
@@ -20,7 +20,10 @@ module.exports = {
 							content = `"${resData.response}" - @${resData.username}`;
 						}
 						else if (resData.status === 'failure') {
-							if (resData.err_msg === 'missing_authorization') {
+							if (resData.err_msg === 'no_entries') {
+								content = 'Seems like their aren\'t any quotes for this channel... yet.';
+							}
+							else if (resData.err_msg === 'missing_authorization') {
 								content = 'Authorization issue. Tell @kittenAngie.';
 							}
 							else {
@@ -43,6 +46,7 @@ module.exports = {
 			},
 		},
 		add: {
+			help: 'MOD command to add a quote to the database. !quote add <quote:required> <@username:optional, default:streamer>',
 			perms: {
 				levels: ['mod'],
 				error: 'this command is for mods only.',
