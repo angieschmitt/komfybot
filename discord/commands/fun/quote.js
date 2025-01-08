@@ -12,7 +12,7 @@ module.exports = {
 
 		await interaction.deferReply();
 
-		await axios.get(urls.baseUrl + '/retrieve/quote/')
+		await axios.get(urls.finalUrl + 'v1/quote/retrieve/komfykiwi')
 			.then(function(response) {
 
 				const output = response.data;
@@ -23,11 +23,7 @@ module.exports = {
 						.setTitle('Kiwi Quotes')
 						.setThumbnail('https://kittenangie.com/bots/images/komfy-kiwi.jpg')
 						.addFields(
-							{ name: 'Kiwi once said...', value: output.content },
-						)
-						.setTimestamp()
-						.setFooter(
-							{ text: `ID: ${output.id}` },
+							{ name: output.username + ' once said...', value: output.response },
 						);
 
 					interaction.editReply({ embeds: [embed] });
