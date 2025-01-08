@@ -75,7 +75,7 @@ module.exports = {
 			help: 'Used to set the runners. !race set <username:required> <username:optional>',
 			perms: {
 				levels: ['mod'],
-				error: 'This is a mod only command',
+				error: 'this command is for mods only.',
 			},
 			args: {
 				1: [ 'r' ],
@@ -118,7 +118,7 @@ module.exports = {
 			help: 'Used to set the runners. !race set <username:required> <username:optional>',
 			perms: {
 				levels: ['mod'],
-				error: 'This is a mod only command',
+				error: 'this command is for mods only.',
 			},
 			execute(args, tags, message, channel, client) {
 

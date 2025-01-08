@@ -64,7 +64,7 @@ module.exports = {
 			help: 'MOD command that allows adding coins to a wallet. !coins add <username:required> <amt:required> <reason:optional>',
 			perms: {
 				levels: ['mod'],
-				error: 'is trying to cheat!',
+				error: 'this command is for mods only.',
 			},
 			args: {
 				1: [ 'r' ],

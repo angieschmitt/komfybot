@@ -9,7 +9,7 @@ module.exports = {
 		default: {
 			perms: {
 				levels: ['mod'],
-				error: 'This is a mod only command',
+				error: 'this command is for mods only.',
 			},
 			args: {
 				1: [ 'r' ],

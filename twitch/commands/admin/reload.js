@@ -19,7 +19,7 @@ module.exports = {
 		default: {
 			perms: {
 				levels: ['mod'],
-				error: 'This is a mod only command',
+				error: 'this command is for mods only.',
 			},
 			execute(args, tags, message, channel, client) {
 				client.say(channel, 'The commands have changed, ask @kittenangie.');
@@ -28,7 +28,7 @@ module.exports = {
 		commands: {
 			perms: {
 				levels: ['mod'],
-				error: 'This is a mod only command',
+				error: 'this command is for mods only.',
 			},
 			execute(args, tags, message, channel, client) {
 				data.functions.loadCommands(client, true);
@@ -48,7 +48,7 @@ module.exports = {
 		settings: {
 			perms: {
 				levels: ['mod'],
-				error: 'This is a mod only command',
+				error: 'this command is for mods only.',
 			},
 			execute(args, tags, message, channel, client) {
 				data.functions.loadSettings(client, true);

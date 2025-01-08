@@ -197,7 +197,7 @@ module.exports = {
 			help: 'STREAMER command to give a hat to a user. !hattington give <username:required> <hat-name:required>',
 			perms: {
 				levels: ['streamer', 'admin'],
-				error: 'This is a streamer only command',
+				error: 'this is a streamer only command.',
 			},
 			execute(args, tags, message, channel, client) {
 				let content = '';

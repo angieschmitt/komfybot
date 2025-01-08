@@ -12,7 +12,7 @@ module.exports = {
 		default: {
 			perms: {
 				levels: ['streamer'],
-				error: 'This is a streamer only command',
+				error: 'this is a streamer only command.',
 			},
 			execute(args, tags, message, channel, client) {
 				let content = '';

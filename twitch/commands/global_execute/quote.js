@@ -45,7 +45,7 @@ module.exports = {
 		add: {
 			perms: {
 				levels: ['mod'],
-				error: 'is trying to cheat!',
+				error: 'this command is for mods only.',
 			},
 			args: {
 				1: [ 'r' ],

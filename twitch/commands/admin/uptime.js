@@ -40,8 +40,8 @@ module.exports = {
 		reset: {
 			help: 'MOD command to reset the uptime counter. !uptime reset',
 			perms: {
-				levels: ['streamer', 'mod'],
-				error: 'This is a mod+ only command',
+				levels: ['mod'],
+				error: 'this command is for mods only.',
 			},
 			execute(args, tags, message, channel, client) {
 

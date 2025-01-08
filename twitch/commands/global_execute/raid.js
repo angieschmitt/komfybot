@@ -6,7 +6,7 @@ module.exports = {
 		komfykiwi: {
 			perms: {
 				levels: ['streamer'],
-				error: 'This is a streamer only command',
+				error: 'this is a streamer only command.',
 			},
 			execute(args, tags, message, channel, client) {
 				client.say(channel, 'SUBS: komfykRaid komfykDuck KOOL KOMFY RAID komfykDuck komfykRaid')

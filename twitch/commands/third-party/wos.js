@@ -13,8 +13,8 @@ module.exports = {
 		default: {
 			help: 'MOD command to prompt WoS payouts. !wos <username:required> <username:required> <username:required> etc',
 			perms: {
-				levels: ['streamer', 'mod'],
-				error: 'is doing something they shouldn\'t be doing!',
+				levels: ['mod'],
+				error: 'this command is for mods only.',
 			},
 			args: {
 				1: [ 'r' ],

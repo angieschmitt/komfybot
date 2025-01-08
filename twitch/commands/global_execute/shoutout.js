@@ -18,7 +18,7 @@ module.exports = {
 		default: {
 			perms: {
 				levels: ['mod'],
-				error: 'This command is for mods only!',
+				error: 'this command is for mods only.',
 			},
 			execute(args, tags, message, channel, client) {
 				let content = '';

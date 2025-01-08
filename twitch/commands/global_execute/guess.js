@@ -114,7 +114,7 @@ module.exports = {
 			help: 'MOD command to reset the guesses.',
 			perms: {
 				levels: ['mod'],
-				error: 'This is a mod only command',
+				error: 'this command is for mods only.',
 			},
 			execute(args, tags, message, channel, client) {
 				const channelName = channel.replace('#', '');
@@ -150,7 +150,7 @@ module.exports = {
 			help: 'MOD command to lock the guesses.',
 			perms: {
 				levels: ['mod'],
-				error: 'This is a mod only command',
+				error: 'this command is for mods only.',
 			},
 			execute(args, tags, message, channel, client) {
 
@@ -189,7 +189,7 @@ module.exports = {
 			help: 'MOD command to unlock the guesses.',
 			perms: {
 				levels: ['mod'],
-				error: 'This is a mod only command',
+				error: 'this command is for mods only.',
 			},
 			execute(args, tags, message, channel, client) {
 

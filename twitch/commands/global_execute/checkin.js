@@ -122,7 +122,7 @@ module.exports = {
 			},
 			perms: {
 				levels: ['mod'],
-				error: 'This is a mod only command',
+				error: 'this command is for mods only.',
 			},
 			execute(args, tags, message, channel, client) {
 

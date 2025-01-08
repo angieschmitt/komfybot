@@ -55,8 +55,8 @@ module.exports = {
 		start: {
 			help: 'MOD command to start a giveaway. !giveaway start <amount:optional:default(100)>',
 			perms: {
-				levels: ['streamer', 'mod'],
-				error: 'This is a mod+ only command',
+				levels: ['mod'],
+				error: 'this command is for mods only.',
 			},
 			execute(args, tags, message, channel, client) {
 
@@ -107,8 +107,8 @@ module.exports = {
 		end: {
 			help: 'MOD command to end a giveaway. !giveaway end',
 			perms: {
-				levels: ['streamer', 'mod'],
-				error: 'This is a mod+ only command',
+				levels: ['mod'],
+				error: 'this command is for mods only.',
 			},
 			execute(args, tags, message, channel, client) {
 
@@ -162,8 +162,8 @@ module.exports = {
 		list: {
 			help: 'MOD command to list out entries in a giveaway. !giveaway list',
 			perms: {
-				levels: ['streamer', 'mod'],
-				error: 'This is a mod+ only command',
+				levels: ['mod'],
+				error: 'this command is for mods only.',
 			},
 			execute(args, tags, message, channel, client) {
 				const channelName = channel.replace('#', '');

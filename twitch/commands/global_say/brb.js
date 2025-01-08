@@ -6,7 +6,7 @@ module.exports = {
 		default: {
 			perms: {
 				levels: ['streamer'],
-				error: 'This is a streamer only command!',
+				error: 'this is a streamer only command.',
 			},
 			say: 'I\'ll be right back!',
 		},
