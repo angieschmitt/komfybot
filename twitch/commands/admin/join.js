@@ -16,7 +16,7 @@ module.exports = {
 				error: 'don\'t forgot your channel to join!',
 			},
 			execute(args, tags, message, channel, client) {
-				const channelToJoin = args[1].replace('@', '');
+				const channelToJoin = args[1].replace('@', '').toLowerCase();
 				client.join(channelToJoin)
 					.then(() => {
 						client.say(channel, `Joined ${channelToJoin}.`);
@@ -27,9 +27,9 @@ module.exports = {
 						client.commands[ channelToJoin ] = {};
 
 						// Add extras?
-						client.extras[channelToJoin] = [];
-						client.extras[channelToJoin].race = [];
-						client.extras[channelToJoin].firstMessage = [];
+						client.extras[ channelToJoin ] = [];
+						client.extras[ channelToJoin ].race = [];
+						client.extras[ channelToJoin ].firstMessage = [];
 
 						// Trigger reload of commands
 						tags['silent'] = true;

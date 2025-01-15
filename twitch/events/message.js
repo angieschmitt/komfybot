@@ -82,7 +82,6 @@ module.exports = {
 
 		// React to first message
 		if (data.firstMessage[channelName]) {
-
 			const userID = tags['user-id'];
 			const firsts = client.extras[channelName].firstMessage;
 			if (Object.values(firsts).indexOf(userID) == -1) {
