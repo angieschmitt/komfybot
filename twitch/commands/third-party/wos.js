@@ -6,12 +6,12 @@ axios.defaults.headers.common['Authorization'] = data.settings.apiKey;
 
 module.exports = {
 	name: 'wos',
-	help: 'Command to reward WoS players. Additional arguments: start, end',
+	help: 'MOD command to reward WoS payouts. !wos <username:required> <username:required> <username:required> etc',
 	aliases: {
 	},
 	actions: {
 		default: {
-			help: 'MOD command to prompt WoS payouts. !wos <username:required> <username:required> <username:required> etc',
+			help: 'MOD command to reward WoS payouts. !wos <username:required> <username:required> <username:required> etc',
 			perms: {
 				levels: ['mod'],
 				error: 'this command is for mods only.',
@@ -43,6 +43,11 @@ module.exports = {
 					const processUsers = setInterval(
 						(users) => {
 							let content = '';
+
+							if (payout[iter] === undefined) {
+								payout[iter] = payout[payout.length - 1];
+							}
+
 							client.commands['global'].wos.actions.submitCoins.execute(users[iter].trim(), payout[iter])
 								.then((response) => {
 									if (response[0]) {

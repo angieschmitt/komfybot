@@ -342,7 +342,7 @@ module.exports = {
 				const hat = message.replace(args[0], '').replace(args[1], '').trim();
 				let sold = false;
 
-				if (hat === 'duplicates' || hat === 'duplicate') {
+				if (hat === 'duplicates' || hat === 'duplicate' || hat === 'dupes') {
 					axios.get(data.settings.baseUrl + 'interactive/hats/hat_inventory?twitch_id=' + userID)
 						.then(function(response) {
 							const resData = response.data;
