@@ -92,7 +92,7 @@ module.exports = {
 						// If we're here, something went wrong...
 						else {
 							message.react('‼️');
-							message.reply({ content: `<@${userID}>, something went wrong! I'll ping <@215630012060139522>! ErrMsg: ${outcome.err_msg}}` });
+							message.reply({ content: `<@${userID}>, something went wrong! I'll ping <@215630012060139522>! ErrMsg: ${outcome}` });
 						}
 					})
 					.catch(console.error);
