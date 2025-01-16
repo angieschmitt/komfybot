@@ -11,46 +11,92 @@ module.exports = {
 		const discordData = { 'id': message.author.id, 'username': message.author.username };
 		await axios.get(urls.baseUrl + 'insert/user_reference/?discord=' + encodeURIComponent(JSON.stringify(discordData))).catch(console.error);
 
-		const categories = ['1127069748157481020', '1045082408233484331', '1156573567937429514'];
-		// const categories = ['1045086819714347119'];
 
+		// Handle the KomfyCoin handouts
 		const channel = message.channel;
+		// const categories = ['1127069748157481020', '1045082408233484331', '1156573567937429514'];
+		const categories = ['1045086819714347119'];
+
+		// If the message is in the appropriate categories...
 		if (categories.includes(channel.parentId)) {
-			if (message.author.username !== 'Komfy Bot') {
-				const chances = [];
-				for (let index = 0; chances.length < 10; index++) {
-					const check = getRandomNumber(100);
-					if (!chances.includes(check)) {
-						chances.push(check);
-					}
-				}
-				const value = getRandomNumber(100);
-				const data = { 'amt': 10, 'ident_type': 'discord_username', 'ident': message.author.username, 'reason': 'Chatting in discord' };
-				if (chances.includes(value)) {
-					message.react('🪙');
-					await axios.get(urls.baseUrl2 + 'coins/insert/json/' + encodeURIComponent(JSON.stringify(data)))
-						.then(function(response) {
-							const outcome = response.data;
 
-							let content = '';
-							if (outcome.status === 'success') {
-								content = `KC_HANDOUT, SUCCESS, <@${message.author.id}>, 10, false`;
+			// Snag the username / ID
+			const userID = message.author.id;
+			const username = message.author.username;
+
+			// Skip KB messages
+			if (userID === '1045127424347750401') {
+				return;
+			}
+
+			// Get their lotto numbers...
+			let chances = new Array();
+			for (let index = 0; chances.length < 10; index++) {
+				const check = getRandomNumber(100);
+				if (!chances.includes(check)) {
+					chances.push(check);
+				}
+			}
+			chances = chances.sort((a, b) => a - b);
+
+			// Select the winning number...
+			const value = getRandomNumber(100);
+
+			// If the winning number is on their card...
+			if (chances.includes(value)) {
+
+				// First, we check if their accounts are linked..
+				await axios.get(urls.finalUrl + 'v1/userdata/retrieve/' + username)
+					.then(function(response) {
+						const outcome = response.data;
+						if (outcome.status === 'success') {
+
+							// If they are, we pay out the coins
+							if (outcome.response.linked === true) {
+
+								// Mark the message with the coin
+								message.react('🪙');
+
+								// Actually add the coins
+								const data = { 'amt': 10, 'ident_type': 'discord_username', 'ident': message.author.username, 'reason': 'Chatting in discord' };
+								axios.get(urls.baseUrl2 + 'coins/insert/json/' + encodeURIComponent(JSON.stringify(data)))
+									.then(function(response) {
+										const outcome = response.data;
+
+										let content = '';
+										if (outcome.status === 'success') {
+											content = `KC_HANDOUT, SUCCESS, <@${message.author.id}>, 10, false, [${chances}], [${value}]`;
+										}
+										else if (outcome.status === 'failure') {
+											message.react('‼️');
+											message.reply({ content: `<@${userID}>, something went wrong! I'll ping <@215630012060139522>!` });
+											content = `KC_HANDOUT, FAILURE, <@${message.author.id}>, 0, ${outcome.err_msg}, [${chances}], [${value}]`;
+										}
+
+										message.channel.client.channels.fetch(channels.bot_log)
+											.then(channel => {
+												channel.send({
+													content: `${content}`,
+												});
+											})
+											.catch(err => console.log(err));
+									})
+									.catch(console.error);
+
 							}
-							else if (outcome.status === 'failure') {
-								message.react('⛔');
-								content = `KC_HANDOUT, FAILURE, <@${message.author.id}>, 0, ${outcome.err_msg}`;
+							// If not, we alert them to the /link command
+							else {
+								message.reply({ content: `<@${userID}>, I attempted to give you free 🪙 KomfyCoins, but you haven't linked your Twitch account! To make sure you don't miss any in the future, make sure you use the /link command!` });
 							}
 
-							message.channel.client.channels.fetch(channels.bot_log)
-								.then(channel => {
-									channel.send({
-										content: `${content}`,
-									});
-								})
-								.catch(err => console.log(err));
-						})
-						.catch(console.error);
-				}
+						}
+						// If we're here, something went wrong...
+						else {
+							message.react('‼️');
+							message.reply({ content: `<@${userID}>, something went wrong! I'll ping <@215630012060139522>! ErrMsg: Coins//Fail_Check` });
+						}
+
+					});
 			}
 		}
 	},
