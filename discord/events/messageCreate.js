@@ -53,17 +53,17 @@ module.exports = {
 
 						message.reply({ content: 'There are issues with this right now.' });
 
-						console.log(response.config.headers);
+						console.log(response.request['_header']);
 						console.log(outcome);
 
-						Object.entries(outcome).forEach(([key, value]) => {
-							message.reply({ content: `${key} : ${value}` });
-							if (typeof value === 'object') {
-								Object.entries(value).forEach(([key2, value2]) => {
-									message.reply({ content: `-- ${key2} : ${value2}` });
-								});
-							}
-						});
+						// Object.entries(outcome).forEach(([key, value]) => {
+						// 	message.reply({ content: `${key} : ${value}` });
+						// 	if (typeof value === 'object') {
+						// 		Object.entries(value).forEach(([key2, value2]) => {
+						// 			message.reply({ content: `-- ${key2} : ${value2}` });
+						// 		});
+						// 	}
+						// });
 
 						// if (outcome.status === 'success') {
 
@@ -114,7 +114,12 @@ module.exports = {
 						// 	// message.reply({ content: `<@${userID}>, something went wrong! I'll ping <@215630012060139522>! ErrMsg: Coins//Failed` });
 						// }
 					})
-					.catch(console.error);
+					.catch(function(error) {
+						message.reply({ content: `Catch: ${error}` });
+					})
+					.finally(function() {
+						// always executed
+					});
 			}
 		}
 	},
