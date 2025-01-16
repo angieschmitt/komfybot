@@ -1,16 +1,16 @@
 require('../data/globals');
 
-const { Events } = require('discord.js');
-const { channels, messages, roles, urls } = require(configFile); // eslint-disable-line
-
 const axios = require('axios');
+const { Events } = require('discord.js');
+const { channels, messages, roles, urls, apiKey } = require(configFile); // eslint-disable-line
+
+axios.defaults.headers.common['Authorization'] = apiKey;
 
 module.exports = {
 	name: Events.MessageCreate,
 	async execute(message) {
 		const discordData = { 'id': message.author.id, 'username': message.author.username };
 		await axios.get(urls.baseUrl + 'insert/user_reference/?discord=' + encodeURIComponent(JSON.stringify(discordData))).catch(console.error);
-
 
 		// Handle the KomfyCoin handouts
 		const channel = message.channel;
