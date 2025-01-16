@@ -39,10 +39,7 @@ module.exports = {
 			chances = chances.sort((a, b) => a - b);
 
 			// Select the winning number...
-			let value = getRandomNumber(100);
-
-			chances = [ 100 ];
-			value = 100;
+			const value = getRandomNumber(100);
 
 			// If the winning number is on their card...
 			if (chances.includes(value)) {
