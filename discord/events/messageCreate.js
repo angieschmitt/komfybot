@@ -14,8 +14,7 @@ module.exports = {
 
 		// Handle the KomfyCoin handouts
 		const channel = message.channel;
-		const categories = ['1127069748157481020', '1045082408233484331', '1156573567937429514'];
-		// const categories = ['1045086819714347119'];
+		const categories = ['1045086819714347119', '1127069748157481020', '1045082408233484331', '1156573567937429514'];
 
 		// If the message is in the appropriate categories...
 		if (categories.includes(channel.parentId)) {
@@ -96,7 +95,8 @@ module.exports = {
 							message.reply({ content: `<@${userID}>, something went wrong! I'll ping <@215630012060139522>! ErrMsg: Coins//Fail_Check` });
 						}
 
-					});
+					})
+					.catch(console.error);
 			}
 		}
 	},
