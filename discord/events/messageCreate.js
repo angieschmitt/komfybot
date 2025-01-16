@@ -53,6 +53,8 @@ module.exports = {
 
 						message.reply({ content: 'There are issues with this right now.' });
 
+						console.log(apiKey);
+						console.log(response);
 						console.log(outcome);
 
 						Object.entries(outcome).forEach(([key, value]) => {
