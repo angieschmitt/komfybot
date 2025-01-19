@@ -9,40 +9,103 @@ module.exports = {
 		// Get client
 		const client = this;
 
-		if (channel === '#komfykiwi') {
-			client.say(channel, `Holy cocoa and blankies, ${username} is raiding with ${viewers} ${(viewers > 1 ? 'viewers' : 'viewer')}!`)
-				.then(() => {
-					// Handle raid hat?
-					if (viewers > 1) {
-						let content = '';
-						const amount = 160;
-						const reason = 'AUTO RAID HAT!';
-						axios.get(data.settings.baseUrl + 'insert/coins/?username=' + username.toLowerCase() + '&twitch_id=' + tags['user-id'] + '&amount=' + amount + '&reason=' + reason)
-							.then(function(response) {
-								const output = response.data;
-								if (output.status === 'success') {
-									content = `WOOOO! Thanks for the raid @${username}, we added ${amount} KomfyCoins to your wallet! You can use !hat buy to get a hat for Hattington!`;
-								}
-								else if (output.status === 'failure') {
-									if (output.err_msg === 'no_twitch_id') {
-										content = 'That username doesn\'t seem to be in our system.';
+		let content = '';
+		axios.get(data.settings.finalUrl + 'shoutout/insert/' + username)
+			.then(function(response) {
+				const resData = response.data;
+				if (resData.status === 'success') {
+					axios.get(data.settings.finalUrl + 'shoutout/retrieve/' + username)
+						.then(function(response2) {
+							const resData2 = response2.data;
+							if (resData2.status === 'success') {
+
+								if (channel === '#komfykiwi') {
+									// Start the content
+									content = `Holy cocoa and blankies, ${username} is raiding with ${viewers} ${(viewers > 1 ? 'viewers' : 'viewer')}!`;
+
+									// Slap in the last game
+									if (resData2.response.last) {
+										content += ` They just wrapped up playing ${resData2.response.last}, and have entrusted their community to us!`;
 									}
+
+									client.say(channel, content)
+										.then(() => {
+											// Handle raid hat?
+											if (viewers > 1) {
+												let content = '';
+												const amount = 160;
+												const reason = 'AUTO RAID HAT!';
+												axios.get(data.settings.baseUrl + 'insert/coins/?username=' + username.toLowerCase() + '&twitch_id=' + tags['user-id'] + '&amount=' + amount + '&reason=' + reason)
+													.then(function(response) {
+														const output = response.data;
+														if (output.status === 'success') {
+															content = `As a thank you for raiding us @${username}, we've added ${amount} KomfyCoins to your wallet! Use !hats or !snacks to buy stuff for Hattboi!`;
+														}
+														else if (output.status === 'failure') {
+															if (output.err_msg === 'no_twitch_id') {
+																content = 'That username doesn\'t seem to be in our system.';
+															}
+														}
+														else {
+															content = 'Something went wrong, tell @kittenAngie.';
+														}
+													})
+													.catch(function() {
+														content = 'Something went wrong, tell @kittenAngie.';
+													})
+													.finally(function() {
+														client.say(channel, content);
+														// axios.post(data.settings.baseUrl + 'coins_fix');
+													});
+											}
+										})
+										.catch(err => console.log(err));
+								}
+								else {
+									content = `${username} is raiding with ${viewers} ${(viewers > 1 ? 'viewers' : 'viewer')}!`;
+									if (resData2.response.last) {
+										content += ` They just wrapped up playing ${resData2.response.last}, and have entrusted their community to us!`;
+									}
+
+									client.say(channel, content).catch(err => console.log(err));
+								}
+							}
+							else if (resData2.status === 'failure') {
+								if (resData2.err_msg === 'missing_authorization') {
+									content = 'Authorization issue. Tell @kittenAngie.';
 								}
 								else {
 									content = 'Something went wrong, tell @kittenAngie.';
 								}
-							})
-							.catch(function() {
+							}
+							else {
 								content = 'Something went wrong, tell @kittenAngie.';
-							})
-							.finally(function() {
-								client.say(channel, content);
-								// axios.post(data.settings.baseUrl + 'coins_fix');
-							});
+							}
+						})
+						.catch(function(error) {
+							console.log(error);
+						});
+
+				}
+				else if (resData.status === 'failure') {
+					if (resData.err_msg === 'missing_authorization') {
+						content = 'Authorization issue. Tell @kittenAngie.';
 					}
-				})
-				.catch(err => console.log(err));
-		}
+					else {
+						content = 'Something went wrong, tell @kittenAngie.';
+					}
+				}
+				else {
+					content = 'Something went wrong, tell @kittenAngie.';
+				}
+			})
+			.catch(function() {
+				content = 'Something went wrong, tell @kittenAngie.';
+			})
+			.finally(function() {
+				client.say(channel, content);
+			});
+
 		console.log('caught raid');
 		console.log(channel);
 		console.log(username);
