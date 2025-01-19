@@ -19,17 +19,24 @@ module.exports = {
 							const resData2 = response2.data;
 							if (resData2.status === 'success') {
 
+								// Custom raid message per channel?
 								if (channel === '#komfykiwi') {
-									// Start the content
 									content = `Holy cocoa and blankies, ${username} is raiding with ${viewers} ${(viewers > 1 ? 'viewers' : 'viewer')}!`;
+								}
+								else {
+									content = `${username} is raiding with ${viewers} ${(viewers > 1 ? 'viewers' : 'viewer')}!`;
+								}
 
-									// Slap in the last game
-									if (resData2.response.last) {
-										content += ` They just wrapped up playing ${resData2.response.last}, and have entrusted their community to us!`;
-									}
+								// Slap on the last playing message
+								if (resData2.response.last) {
+									content += ` They just wrapped up playing ${resData2.response.last}, and have entrusted their community to us!`;
+								}
 
-									client.say(channel, content)
-										.then(() => {
+								// Now say it, and do extras if there are some...
+								client.say(channel, content)
+									.then(() => {
+
+										if (channel === '#komfykiwi') {
 											// Handle raid hat?
 											if (viewers > 1) {
 												let content = '';
@@ -39,7 +46,7 @@ module.exports = {
 													.then(function(response) {
 														const output = response.data;
 														if (output.status === 'success') {
-															content = `As a thank you for raiding us @${username}, we've added ${amount} KomfyCoins to your wallet! Use !hats or !snacks to buy stuff for Hattboi!`;
+															content = `As a thank you for raiding us @${username}, we've added ${amount} KomfyCoins to your wallet! Use !hats or !snacks to buy stuff for Hattyboi!`;
 														}
 														else if (output.status === 'failure') {
 															if (output.err_msg === 'no_twitch_id') {
@@ -58,17 +65,10 @@ module.exports = {
 														// axios.post(data.settings.baseUrl + 'coins_fix');
 													});
 											}
-										})
-										.catch(err => console.log(err));
-								}
-								else {
-									content = `${username} is raiding with ${viewers} ${(viewers > 1 ? 'viewers' : 'viewer')}!`;
-									if (resData2.response.last) {
-										content += ` They just wrapped up playing ${resData2.response.last}, and have entrusted their community to us!`;
-									}
+										}
 
-									client.say(channel, content).catch(err => console.log(err));
-								}
+									})
+									.catch(err => console.log(err));
 							}
 							else if (resData2.status === 'failure') {
 								if (resData2.err_msg === 'missing_authorization') {
