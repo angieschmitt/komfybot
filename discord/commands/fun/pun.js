@@ -12,7 +12,7 @@ module.exports = {
 
 		await interaction.deferReply();
 
-		await axios.get(urls.baseUrl + '/retrieve/pun/')
+		await axios.get(urls.finalUrl + '/pun/retrieve')
 			.then(function(response) {
 
 				const output = response.data;
