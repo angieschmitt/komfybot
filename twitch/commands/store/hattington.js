@@ -124,6 +124,11 @@ module.exports = {
 														else {
 															content += ` You unwrapped another ${output3.content.item} (${rarityText}) from Set #${output3.content.set}!`;
 														}
+														if ('livingHat' in output3) {
+															if (output3.livingHat.status == 'failed') {
+																content += ` You attempted to roll for the living hat, but ${output3.livingHat.pull_1} !== ${output3.livingHat.pull_2}. Better luck next time!`;
+															}
+														}
 													}
 													else {
 														content = 'Something went wrong, tell @kittenAngie: Hats 5.';

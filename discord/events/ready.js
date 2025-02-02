@@ -86,9 +86,9 @@ async function handleChannelPoints() {
 			axios.get(urls.finalUrl + 'redeems/vip/manage');
 		})
 		.catch(err => console.log(err));
-	// controller.abort();
 }
 
 async function handleTokenRefresh() {
-	axios.get(urls.finalUrl + 'v1/tokens/update/');
+	axios.get(urls.finalUrl + 'v1/tokens/update/')
+		.catch(err => console.log(err));
 }

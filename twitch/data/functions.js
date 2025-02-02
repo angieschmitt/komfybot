@@ -11,6 +11,7 @@ axios.defaults.headers.common['Authorization'] = settings.apiKey;
 const functions = {
 	loadBranch(client, data, branch) {
 		client.commands = [];
+		client.timers = [];
 		client.extras = [];
 		client.last_message = [];
 
@@ -44,6 +45,21 @@ const functions = {
 		}
 		return client;
 	},
+	refreshConnection(data, client) {
+		setInterval(() => {
+			if (client.readyState() == 'OPEN') {
+				// Update password
+				data.settings[data.currentBranch].identity.password = axios.get('https://www.kittenangie.com/bots/api_new/retrieve/key?id=komfybot_token')
+					.then(function(response) { return response.data.key; });
+
+				// Disconnect, then reconnect
+				client.disconnect().catch(err => console.log(err));
+				setTimeout(() => client.connect().catch(err => console.log(err)), 5000);
+			}
+		}, 60000);
+		return client;
+	},
+	// commands
 	loadCommands(client, reset = false) {
 
 		if (reset) {
@@ -165,41 +181,29 @@ const functions = {
 				.catch(err => console.log(err));
 		});
 	},
-	loadSettings(client, reset = false) {
+	checkForCommandRefresh(data, client) {
+		const timerInterval = 5000;
 
-		if (reset) {
-			Object.entries(client.opts.channels).forEach(([index, channel]) => { // eslint-disable-line no-unused-vars
-				channel = channel.replace('#', '');
-				client.settings[channel] = [];
-			});
-			for (const i in require.cache) {
-				delete require.cache[i];
-			}
-		}
-
-	},
-	loadExternalSettings(client, data) {
-
-		// Set up the container
-		client.settings = [];
-
-		// Loop over the channels and get the settings
-		Object.entries(client.opts.channels).forEach(([index, channel]) => { // eslint-disable-line no-unused-vars
-			channel = channel.replace('#', '');
-			axios.get(data.settings.finalUrl + 'settings/retrieve/' + channel)
-				.then(function(res) {
-					client.settings[channel] = [];
-
-					if (res.data.status == 'success') {
-						// Lets assign the settings to the channel
-						const settings = res.data.response;
-						Object.entries(settings).forEach(([key, value]) => { // eslint-disable-line no-unused-vars
-							client.settings[channel][key] = value;
-						});
-					}
-				})
-				.catch(err => console.log(err));
-		});
+		setInterval(
+			function() {
+				axios.get(data.settings.finalUrl + 'force_refresh/retrieve/')
+					.then(function(res) {
+						if (res.data.status === 'success') {
+							if (res.data.response === 'commands') {
+								console.log('Commands - Refreshed');
+								console.log('- - -');
+								const tags = [];
+								tags['silent'] = true;
+								client.commands.global.reload.actions.commands.execute(false, tags, false, false, client);
+								axios.get(data.settings.finalUrl + 'force_refresh/reset/')
+									.catch(err => console.log(err));
+							}
+						}
+					})
+					.catch(err => console.log(err));
+			},
+			timerInterval,
+		);
 	},
 	handleAlias(baseCommand, name, details, commands) {
 		if (!('disabled' in details)) {
@@ -215,43 +219,98 @@ const functions = {
 		}
 		return commands;
 	},
-	liveCheck(data, channel, extra = false) {
-		const chan = channel.toLowerCase();
-		return axios.get(data.settings.finalUrl + 'live_check/retrieve/' + chan)
-			.then(function(res) {
-				const resData = res.data;
+	// timers
+	loadTimers(client, reset = false) {
 
-				const response = [];
-				response.live = false;
-				if (resData.status === 'success') {
-					if (resData.response === '1') {
-						response.live = true;
-						if (extra) {
-							response.extra = extra;
-						}
-					}
-				}
+		if (reset) {
+			Object.entries(client.timers).forEach(([channel]) => {
+				client.timers[channel] = [];
+				// Wipe out exisiting commands, and cache of them
+				client.timers[channel] = new Array();
+			});
+			for (const i in require.cache) {
+				delete require.cache[i];
+			}
+		}
 
-				return response;
-			})
-			.catch(err => console.log(err));
+		const timers = require('./timers');
+		const timersData = timers.content();
+
+		// Create the containers
+		Object.entries(client.opts.channels).forEach(([index, channel]) => { // eslint-disable-line no-unused-vars
+			channel = channel.replace('#', '');
+			client.timers[channel] = [];
+		});
+
+		// Fill them with local data
+		Object.entries(timersData).forEach(([channel, timers]) => {
+			Object.entries(timers).forEach(([timer, timerData]) => {
+				client.timers[channel][timer] = timerData;
+			});
+		});
+
+		return client;
 	},
-	handleTimers(data, timers, client) {
+	loadExternalTimers(client, data) {
+		Object.entries(client.opts.channels).forEach(([index, channel]) => { // eslint-disable-line no-unused-vars
+			channel = channel.replace('#', '');
+			axios.get(data.settings.finalUrl + 'timers/retrieve/' + channel)
+				.then(function(res) {
+					if (res.data.status == 'success') {
+						const timers = res.data.response;
+						Object.entries(timers).forEach(([index, timer]) => { // eslint-disable-line no-unused-vars
+							Object.entries(timer).forEach(([name, data]) => {
+								client.timers[channel][name] = [];
+								client.timers[channel][name]['timer'] = parseInt(data['timer']);
+								client.timers[channel][name]['message'] = data['message'];
+							});
+						});
+					}
+				})
+				.catch(err => console.log(err));
+		});
+	},
+	checkForTimerRefresh(data, client) {
+		const timerInterval = 5000;
+
+		setInterval(
+			function() {
+				axios.get(data.settings.finalUrl + 'force_refresh/retrieve/')
+					.then(function(res) {
+						if (res.data.status === 'success') {
+							if (res.data.response === 'timers') {
+								console.log('Timers - Refreshed');
+								console.log('- - -');
+								const tags = [];
+								tags['silent'] = true;
+								client.commands.global.reload.actions.timers.execute(false, tags, false, false, client);
+								axios.get(data.settings.finalUrl + 'force_refresh/reset/')
+									.catch(err => console.log(err));
+							}
+						}
+					})
+					.catch(err => console.log(err));
+			},
+			timerInterval,
+		);
+	},
+	handleTimers(data, client) {
 		const parent = this;
-		const timerInterval = 60000;
-		// const timerInterval = 10000;
+		// const timerInterval = 60000;
+		const timerInterval = 10000;
 
 		// If not set up, set it up
 		if (!('timerOffset' in client)) {
 			client.timerOffset = [];
-			Object.entries(timers).forEach(([channel]) => {
+			Object.entries(client.opts.channels).forEach(([index, channel]) => { // eslint-disable-line no-unused-vars
+				channel = channel.replace('#', '');
 				client.timerOffset[channel] = 1;
 			});
 		}
 
 		// Now load in the timerOffsets
 		if ('timerOffset' in client) {
-			Object.entries(timers).forEach(([channel]) => {
+			Object.entries(client.timers).forEach(([channel]) => {
 				axios.get(data.settings.finalUrl + 'uptime/retrieve/' + channel)
 					.then(function(response) {
 						if (response.data.status === 'success') {
@@ -268,7 +327,7 @@ const functions = {
 								console.log('Timer - ' + channel + ' : ' + client.timerOffset[channel]);
 
 								// Enter messages into queue
-								const channelTimers = timers[channel];
+								const channelTimers = client.timers[channel];
 								Object.entries(channelTimers).forEach(([key]) => {
 									if ((client.timerOffset[channel] % channelTimers[key]['timer']) == 0) {
 										if (parent.isObjectEmpty(queue[channel])) {
@@ -331,6 +390,65 @@ const functions = {
 				.catch(err => console.log(err));
 		}
 	},
+	// settings
+	loadSettings(client, reset = false) {
+
+		if (reset) {
+			Object.entries(client.opts.channels).forEach(([index, channel]) => { // eslint-disable-line no-unused-vars
+				channel = channel.replace('#', '');
+				client.settings[channel] = [];
+			});
+			for (const i in require.cache) {
+				delete require.cache[i];
+			}
+		}
+
+	},
+	loadExternalSettings(client, data) {
+
+		// Set up the container
+		client.settings = [];
+
+		// Loop over the channels and get the settings
+		Object.entries(client.opts.channels).forEach(([index, channel]) => { // eslint-disable-line no-unused-vars
+			channel = channel.replace('#', '');
+			axios.get(data.settings.finalUrl + 'settings/retrieve/' + channel)
+				.then(function(res) {
+					client.settings[channel] = [];
+
+					if (res.data.status == 'success') {
+						// Lets assign the settings to the channel
+						const settings = res.data.response;
+						Object.entries(settings).forEach(([key, value]) => { // eslint-disable-line no-unused-vars
+							client.settings[channel][key] = value;
+						});
+					}
+				})
+				.catch(err => console.log(err));
+		});
+	},
+	// other funcs
+	liveCheck(data, channel, extra = false) {
+		const chan = channel.toLowerCase();
+		return axios.get(data.settings.finalUrl + 'live_check/retrieve/' + chan)
+			.then(function(res) {
+				const resData = res.data;
+
+				const response = [];
+				response.live = false;
+				if (resData.status === 'success') {
+					if (resData.response === '1') {
+						response.live = true;
+						if (extra) {
+							response.extra = extra;
+						}
+					}
+				}
+
+				return response;
+			})
+			.catch(err => console.log(err));
+	},
 	isObjectEmpty(objectName) {
 		return Object.keys(objectName).length === 0 && objectName.constructor === Object;
 	},
@@ -384,29 +502,6 @@ const functions = {
 		else {
 			return data;
 		}
-	},
-	checkForCommandRefresh(data, client) {
-		const timerInterval = 5000;
-
-		setInterval(
-			function() {
-				axios.get(data.settings.baseUrl + 'debug/force_refresh/')
-					.then(function(res) {
-						if (res.data.status === 'success') {
-							if (res.data.content === 'commands') {
-								console.log('Commands - Refreshed');
-								console.log('- - -');
-								const tags = [];
-								tags['silent'] = true;
-								client.commands.global.reload.actions.commands.execute(false, tags, false, false, client);
-								axios.get(data.settings.baseUrl + 'debug/force_refresh/?clear');
-							}
-						}
-					})
-					.catch(err => console.log(err));
-			},
-			timerInterval,
-		);
 	},
 };
 

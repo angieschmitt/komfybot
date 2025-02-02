@@ -10,6 +10,10 @@ module.exports = {
 			arg: 'commands',
 			list: false,
 		},
+		'reltim': {
+			arg: 'timers',
+			list: false,
+		},
 		'relset': {
 			arg: 'settings',
 			list: false,
@@ -35,6 +39,26 @@ module.exports = {
 				data.functions.loadExternalCommands(client, data);
 
 				const content = 'Reloaded commands.';
+				if ('silent' in tags) {
+					if (tags.silent !== true) {
+						client.say(channel, content);
+					}
+				}
+				else {
+					client.say(channel, content);
+				}
+			},
+		},
+		timers: {
+			perms: {
+				levels: ['mod'],
+				error: 'this command is for mods only.',
+			},
+			execute(args, tags, message, channel, client) {
+				data.functions.loadTimers(client, true);
+				data.functions.loadExternalTimers(client, data);
+
+				const content = 'Reloaded timers.';
 				if ('silent' in tags) {
 					if (tags.silent !== true) {
 						client.say(channel, content);
