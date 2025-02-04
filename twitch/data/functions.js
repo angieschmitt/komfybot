@@ -46,7 +46,12 @@ const functions = {
 		return client;
 	},
 	refreshConnection(data, client) {
+		// const interval = 10000;
+		const interval = 3600000;
 		setInterval(() => {
+
+			console.log(client.timers);
+
 			if (client.readyState() == 'OPEN') {
 				// Update password
 				data.settings[data.currentBranch].identity.password = axios.get('https://www.kittenangie.com/bots/api_new/retrieve/key?id=komfybot_token')
@@ -56,7 +61,7 @@ const functions = {
 				client.disconnect().catch(err => console.log(err));
 				setTimeout(() => client.connect().catch(err => console.log(err)), 5000);
 			}
-		}, 60000);
+		}, interval);
 		return client;
 	},
 	// commands
@@ -296,8 +301,8 @@ const functions = {
 	},
 	handleTimers(data, client) {
 		const parent = this;
-		// const timerInterval = 60000;
-		const timerInterval = 10000;
+		const timerInterval = 60000;
+		// const timerInterval = 10000;
 
 		// If not set up, set it up
 		if (!('timerOffset' in client)) {

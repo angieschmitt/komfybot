@@ -38,7 +38,7 @@ data.functions.checkForTimerRefresh(data, client);
 // Start the timers
 data.functions.handleTimers(data, client);
 
-// Occasionally update the token
+// Occasionally update the token and reconnect to chat
 data.functions.refreshConnection(data, client);
 
 data.debug.write('global', 'LAUNCHED');
