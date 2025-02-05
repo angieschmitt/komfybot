@@ -25,7 +25,7 @@ module.exports = {
 				const twitchData = { 'ident_type':'twitch_username', 'ident':channelName };
 
 				let content = '';
-				axios.get(data.settings.newUrl + 'clip/insert/json/' + encodeURIComponent(JSON.stringify(twitchData)))
+				axios.get(data.settings.finalUrl + 'clip/insert/json/' + encodeURIComponent(JSON.stringify(twitchData)))
 					.then(function(response) {
 						const resData = response.data;
 						if (resData.status === 'success') {
@@ -33,7 +33,7 @@ module.exports = {
 							client.say(channel, data.functions.speakConvertor('Generating a clip, please be patient! It can take up to 20 seconds!'));
 
 							setTimeout((userName, data, resData, content, channel, client) => {
-								axios.get(data.settings.newUrl + 'clip/retrieve/' + encodeURIComponent(resData.response))
+								axios.get(data.settings.finalUrl + 'clip/retrieve/' + encodeURIComponent(resData.response))
 									.then(function(response2) {
 										const resData2 = response2.data;
 										if (resData2.status === 'success') {
@@ -54,7 +54,7 @@ module.exports = {
 						}
 						else if (resData.status === 'failure') {
 							if (resData.err_msg) {
-								content = resData.err_msg;
+								content = 'Error: ' + resData.err_msg;
 							}
 							else {
 								content = 'Something went wrong, tell @kittenAngie.';

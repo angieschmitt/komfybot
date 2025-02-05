@@ -6,46 +6,49 @@ axios.defaults.headers.common['Authorization'] = data.settings.apiKey;
 
 module.exports = {
 	name: 'race',
-	channel: ['komfykiwi'],
 	help: 'Outputs info about the current race, with a multitwitch link. Additional arguments: set',
 	actions: {
 		default: {
 			execute(args, tags, message, channel, client) {
+
+				const channelName = channel.replace('#', '');
+
 				let content = '';
 
-				axios.get(data.settings.finalUrl + 'racers/retrieve')
+				axios.get(data.settings.finalUrl + 'racers/retrieve/' + channelName)
 					.then(function(response) {
 						const resData = response.data;
 						if (resData.status === 'success') {
-							const runners = JSON.parse(resData.response);
-							if (runners.length !== undefined && runners.length !== 0) {
+							const length = Object.keys(resData.response).length;
+							if (length !== undefined && length !== 0) {
 								let text = '';
 								let nameList = '';
 								let url = '';
 
-								if (runners.length > 1) {
+								if (length > 1) {
 									text = 'all of us';
-									for (let index = 0; index < runners.length; index++) {
-										if (index === (runners.length - 1)) {
-											url += runners[index].replace('@', '');
+									// eslint-disable-next-line
+									Object.entries(resData.response).forEach(([index, value]) => {
+										if (parseInt(index) === (length - 1)) {
+											url += resData.response[index].replace('@', '');
 											nameList = nameList.substring(0, nameList.length - 2);
-											nameList += ` and ${runners[index]}`;
+											nameList += ` and ${resData.response[index]}`;
 										}
 										else {
-											url += `${runners[index].replace('@', '')}/`;
-											nameList += `${runners[index]}, `;
+											url += `${resData.response[index].replace('@', '')}/`;
+											nameList += `${resData.response[index]}, `;
 										}
-									}
+									});
 								}
 								else {
 									text = 'both of us';
-									nameList = `${runners[0]}`;
-									url += runners[0].replace('@', '');
+									nameList = `${resData.response[0]}`;
+									url += resData.response[0].replace('@', '');
 								}
 
-								content = 'We\'re racing ' + nameList + ' in a !keyitem randomizer! ';
+								content = 'We\'re currently racing ' + nameList + '! ';
 								content += 'If you wanna tune in to ' + text + ' at the same time, feel free to use: ';
-								content += 'https://www.multitwitch.tv/komfykiwi/' + url;
+								content += 'https://www.multitwitch.tv/' + channelName + '/' + url;
 							}
 							else {
 								content = 'Seems like we aren\'t racing anyone yet!';
@@ -79,16 +82,25 @@ module.exports = {
 			},
 			args: {
 				1: [ 'r' ],
+				2: [ 'r' ],
 				error: 'don\'t forgot the user you are racing!',
 			},
 			execute(args, tags, message, channel, client) {
 
-				let content, racers = '';
+				// Get channel and userID
+				const channelName = channel.replace('#', '');
+
+				let content = '';
+
+				// Setup JSON to pass through
+				const raceData = { 'ident_type':'twitch_username', 'ident':channelName, 'racers':{} };
+				let iter = 0;
 				for (let index = 2; index < args.length; index++) {
-					racers += '/' + args[index].replace('@', '');
+					raceData['racers'][iter] = args[index].replace('@', '');
+					iter++;
 				}
 
-				axios.get(data.settings.finalUrl + 'racers/insert' + racers)
+				axios.get(data.settings.finalUrl + 'racers/insert/json/' + encodeURIComponent(JSON.stringify(raceData)))
 					.then(function(response) {
 						const resData = response.data;
 						if (resData.status === 'success') {
@@ -122,8 +134,10 @@ module.exports = {
 			},
 			execute(args, tags, message, channel, client) {
 
+				const channelName = channel.replace('#', '');
+
 				let content = '';
-				axios.get(data.settings.finalUrl + 'racers/reset')
+				axios.get(data.settings.finalUrl + 'racers/reset/' + channelName)
 					.then(function(response) {
 						const resData = response.data;
 						if (resData.status === 'success') {

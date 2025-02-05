@@ -24,25 +24,16 @@ module.exports = {
 							.then(() => {
 								axios.get(data.settings.newUrl + 'count/reset/' + channelName)
 									.then(() => {
-										if (channelName == 'komfykiwi') {
-											axios.get(data.settings.newUrl + 'racers/reset')
-												.then(() => {
-													content = 'Reset Uptime, Guesses, Racers, and the counter!';
-												})
-												.catch(err => console.log(err))
-												.finally(function() {
-													client.say(channel, content);
-												});
-										}
-										else {
-											content = 'Reset Uptime, Guesses, and the counter!';
-										}
-										data.functions.refreshTimer(channelName, data, client);
+										axios.get(data.settings.newUrl + 'racers/reset' + channelName)
+											.then(() => {
+												content += 'Reset complete!';
+											})
+											.catch(err => console.log(err))
+											.finally(function() {
+												client.say(channel, content);
+											});
 									})
-									.catch(err => console.log(err))
-									.finally(function() {
-										client.say(channel, content);
-									});
+									.catch(err => console.log(err));
 							})
 							.catch(err => console.log(err));
 					})

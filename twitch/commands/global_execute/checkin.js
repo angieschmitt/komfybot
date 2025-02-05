@@ -141,7 +141,7 @@ module.exports = {
 				const twitchData = { 'ident_type':'twitch_username', 'ident':channelName, 'username':username, 'amount':amount };
 
 				let content = '';
-				axios.get(data.settings.newUrl + 'checkin/set/json/' + encodeURIComponent(JSON.stringify(twitchData)))
+				axios.get(data.settings.finalUrl + 'checkin/set/json/' + encodeURIComponent(JSON.stringify(twitchData)))
 					.then(function(response) {
 						const resData = response.data;
 						if (resData.status === 'success') {
