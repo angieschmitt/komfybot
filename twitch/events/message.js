@@ -111,11 +111,11 @@ module.exports = {
 		}
 
 		// Shove in user reference data
-		const twitchData = { 'id': tags['user-id'], 'username': tags.username };
-		axios.get(data.settings.baseUrl + 'insert/user_reference/?twitch=' + encodeURIComponent(JSON.stringify(twitchData)));
+		const twitchData = { 'id': tags['user-id'], 'username': tags.username, 'ident_type': 'twitch_id' };
+		axios.get(data.settings.finalUrl + 'userdata/update/json/' + encodeURIComponent(JSON.stringify(twitchData)));
 
 		// Update coin_log
-		// axios.post(data.settings.baseUrl + 'coins_fix');
+		// axios.post(data.settings.finalUrl + 'coins_fix');
 
 		console.log('- - -');
 	},
