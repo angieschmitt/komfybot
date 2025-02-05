@@ -21,6 +21,14 @@ module.exports = {
 					output = `@${tags.username}, ${args[1]} can be defined as a... noun : (sometimes derogatory) A person who is intellectual but generally introverted. See @MrDrXMan .`;
 					client.say(channel, output);
 				}
+				else if (args[1] === 'nuisance') {
+					output = `@${tags.username}, ${args[1]} can be defined as a.. noun : A minor annoyance or inconvenience. See @YourPalMal . It is pronounced like: /ˈnjuːsəns/.`;
+					client.say(channel, output);
+				}
+				else if (args[1] === 'komfybot') {
+					output = `@${tags.username}, ${args[1]} can be defined as a... noun : The best bot ever (ok, that's a bit subjective, but hear me out...)`;
+					client.say(channel, output);
+				}
 				else {
 					axios.get('https://api.dictionaryapi.dev/api/v2/entries/en/' + args[1])
 						.then(function(response) {

@@ -54,7 +54,7 @@ const functions = {
 
 			if (client.readyState() == 'OPEN') {
 				// Update password
-				data.settings[data.currentBranch].identity.password = axios.get('https://www.kittenangie.com/bots/api_new/retrieve/key?id=komfybot_token')
+				data.settings[data.currentBranch].identity.password = axios.get(data.settings.finalUrl + 'tokens/retrieve/komfybot_token')
 					.then(function(response) { return response.data.key; });
 
 				// Disconnect, then reconnect
