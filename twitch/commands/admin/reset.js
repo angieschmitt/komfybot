@@ -18,13 +18,13 @@ module.exports = {
 				let content = '';
 				const channelName = channel.replace('#', '');
 				const twitchData = { 'ident_type':'twitch_username', 'ident': channelName };
-				axios.get(data.settings.newUrl + 'uptime/insert/json/' + encodeURIComponent(JSON.stringify(twitchData)))
+				axios.get(data.settings.finalUrl + 'uptime/insert/json/' + encodeURIComponent(JSON.stringify(twitchData)))
 					.then(() => {
-						axios.get(data.settings.newUrl + 'guess/reset/' + channelName)
+						axios.get(data.settings.finalUrl + 'guess/reset/' + channelName)
 							.then(() => {
-								axios.get(data.settings.newUrl + 'count/reset/' + channelName)
+								axios.get(data.settings.finalUrl + 'count/reset/' + channelName)
 									.then(() => {
-										axios.get(data.settings.newUrl + 'racers/reset' + channelName)
+										axios.get(data.settings.finalUrl + 'racers/reset/' + channelName)
 											.then(() => {
 												content += 'Reset complete!';
 											})
