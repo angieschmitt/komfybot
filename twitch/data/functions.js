@@ -6,7 +6,11 @@ const axios = require('axios');
 const settingsFile = require('./settings');
 // const e = require('express');
 const settings = settingsFile.content();
+
 axios.defaults.headers.common['Authorization'] = settings.apiKey;
+// axios.defaults.headers.common['Cache-Control'] = 'no-cache, no-store, must-revalidate';
+// axios.defaults.headers.common['Pragma'] = 'no-cache';
+// axios.defaults.headers.common['Expires'] = '0';
 
 const functions = {
 	loadBranch(client, data, branch) {
@@ -49,17 +53,22 @@ const functions = {
 		// const interval = 10000;
 		const interval = 3600000;
 		setInterval(() => {
-
-			console.log(client.timers);
-
 			if (client.readyState() == 'OPEN') {
 				// Update password
-				data.settings[data.currentBranch].identity.password = axios.get(data.settings.finalUrl + 'tokens/retrieve/komfybot_token')
-					.then(function(response) { return response.data.key; });
-
-				// Disconnect, then reconnect
-				client.disconnect().catch(err => console.log(err));
-				setTimeout(() => client.connect().catch(err => console.log(err)), 5000);
+				axios.get(data.settings.finalUrl + 'tokens/retrieve/komfybot_token')
+					.then(function(response) {
+						data.settings[data.currentBranch].identity.password = response.data.response;
+					})
+					.catch(err => console.log(err))
+					.finally(() => {
+						// Disconnect, then reconnect
+						client.disconnect().catch(err => console.log(err));
+						setTimeout(() => {
+							client.connect(true).catch(err => console.log(err));
+							console.log('Connection - Refreshed');
+							console.log('- - -');
+						}, 5000);
+					});
 			}
 		}, interval);
 		return client;
@@ -187,7 +196,7 @@ const functions = {
 		});
 	},
 	checkForCommandRefresh(data, client) {
-		const timerInterval = 5000;
+		const timerInterval = 10000;
 
 		setInterval(
 			function() {
@@ -276,7 +285,7 @@ const functions = {
 		});
 	},
 	checkForTimerRefresh(data, client) {
-		const timerInterval = 5000;
+		const timerInterval = 10000;
 
 		setInterval(
 			function() {

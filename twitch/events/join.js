@@ -3,6 +3,9 @@ const dataFile = require('../data/index');
 const data = dataFile.content();
 
 axios.defaults.headers.common['Authorization'] = data.settings.apiKey;
+// axios.defaults.headers.common['Cache-Control'] = 'no-cache, no-store, must-revalidate';
+// axios.defaults.headers.common['Pragma'] = 'no-cache';
+// axios.defaults.headers.common['Expires'] = '0';
 
 module.exports = {
 	eventHandler(channel, username, isSelf) {
@@ -18,7 +21,7 @@ module.exports = {
 	},
 	handleSpeak(channel, client) {
 		channel = channel.replace('#', '');
-		const timerInterval = 5000;
+		const timerInterval = 10000;
 		setInterval(
 			callApi,
 			timerInterval,

@@ -3,6 +3,9 @@ const dataFile = require('../data/index');
 const data = dataFile.content();
 
 axios.defaults.headers.common['Authorization'] = data.settings.apiKey;
+// axios.defaults.headers.common['Cache-Control'] = 'no-cache, no-store, must-revalidate';
+// axios.defaults.headers.common['Pragma'] = 'no-cache';
+// axios.defaults.headers.common['Expires'] = '0';
 
 module.exports = {
 	eventHandler(channel, tags, message, self) {
@@ -24,8 +27,15 @@ module.exports = {
 		// Set last message
 		client.last_message[channelName] = message;
 
-		if (self) { return; }
-		if (tags['user-id'] === '934821771') { return; }
+		if (self) {
+			return;
+		}
+		if (tags['username'] === 'komfybot') {
+			return;
+		}
+		if (tags['user-id'] === '934821771') {
+			return;
+		}
 
 		const perms = {};
 		if ('#' + tags.username == channel) {

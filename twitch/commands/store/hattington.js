@@ -117,16 +117,16 @@ module.exports = {
 															rarityText = 'Um.. ???';
 															break;
 														}
-														content = `Congrats @${username} on buying a ${item} @ ${cost} KomfyCoins.`;
+														content = `Congrats @${username}, `;
 														if (parseInt(output3.content.qty) <= 1) {
-															content += ` You unwrapped a ${output3.content.item} (${rarityText}) from Set #${output3.content.set}!`;
+															content += ` you got a ${output3.content.item} (${rarityText}) from Set #${output3.content.set}!`;
 														}
 														else {
-															content += ` You unwrapped another ${output3.content.item} (${rarityText}) from Set #${output3.content.set}!`;
+															content += ` you got another ${output3.content.item}!`;
 														}
 														if ('livingHat' in output3) {
 															if (output3.livingHat.status == 'failed') {
-																content += ` You attempted to roll for the living hat, but ${output3.livingHat.pull_1} !== ${output3.livingHat.pull_2}. Better luck next time!`;
+																content += ` You also rolled for the Living Hat, but ${output3.livingHat.pull_1} !== ${output3.livingHat.pull_2}.`;
 															}
 														}
 													}
@@ -335,6 +335,87 @@ module.exports = {
 					});
 			},
 		},
+		missing: {
+			help: 'Shows a list of the hats a user is missing. !hattington missing <rarity:req>',
+			execute(args, tags, message, channel, client) {
+				let content = '';
+				const userID = tags['user-id'];
+
+				const rarities = {
+					'common' : 1,
+					'uncommon' : 2,
+					'rare' : 3,
+					'super-rare' : 4,
+					'custom' : 5,
+				};
+
+				axios.get(data.settings.finalUrl + 'hats/retrieve/missing/twitch_id/' + userID)
+					.then(function(response) {
+						const resData = response.data;
+						if (resData.status === 'success') {
+
+							// No rarity, output breakdown
+							if (!args[2]) {
+								content += `@${tags.username}, you are missing `;
+
+								let iter = 1;
+								// eslint-disable-next-line no-unused-vars
+								Object.entries(resData.response.totals).forEach(([id, amt]) => {
+									let rarity = Object.keys(rarities).find(key => rarities[key] === parseInt(id));
+									rarity = rarity.replace('-', ' ').replace(/(?<= )[^\s]|^./g, a => a.toUpperCase());
+									if (iter < Object.keys(resData.response.totals).length) {
+										content += `${amt}x ${rarity}, `;
+									}
+									else {
+										content += ` and ${amt}x ${rarity} hats.`;
+									}
+									iter++;
+								});
+							}
+
+							// If rarity is sent...
+							if (args[2]) {
+								// Check if it's a valid rarity...
+								if ((args[2] in rarities)) {
+
+									console.log(rarities);
+									console.log(args[2]);
+									console.log(rarities[args[2]]);
+
+									if (parseInt(resData.response.totals[rarities[args[2]]]) > 0) {
+										content += 'Here\'s what ' + args[2] + ' hats you are missing: ';
+
+										// Check for entries at the rarity level
+										// eslint-disable-next-line no-unused-vars
+										Object.entries(resData.response.items).forEach(([id, hatData]) => {
+											if (hatData.rarity == rarities[args[2]]) {
+												content += hatData.name + ' (Set #' + hatData.hat_set + '), ';
+											}
+										});
+										content = content.substring(0, content.length - 2);
+									}
+									else {
+										content = 'Congrats! You aren\'t missing any ' + args[2] + ' hats!';
+									}
+								}
+								// If not, provide the options
+								else {
+									content += `@${tags.username}, you can choose common, uncommon, rare, super-rare, or custom.`;
+								}
+							}
+						}
+						else {
+							content = 'Something went wrong, tell @kittenAngie. 1';
+						}
+					})
+					.catch(function() {
+						content = 'Something went wrong, tell @kittenAngie. 2';
+					})
+					.finally(function() {
+						client.say(channel, content);
+					});
+			},
+		},
 		sell: {
 			help: 'Sell a hat for 40/80/160 KomfyCoins. !hattington sell <hat-name:required || duplicate(s)>',
 			args: {
@@ -347,41 +428,63 @@ module.exports = {
 				const hat = message.replace(args[0], '').replace(args[1], '').trim();
 				let sold = false;
 
+				// Dupes uses finalUrl
 				if (hat === 'duplicates' || hat === 'duplicate' || hat === 'dupes') {
-					axios.get(data.settings.baseUrl + 'interactive/hats/hat_inventory?twitch_id=' + userID)
+
+					let success = false;
+					const channelName = channel.replace('#', '');
+					const twitchData = { 'ident':userID, 'ident_type':'twitch_id', 'channel':channelName, 'action':'sell_duplicates' };
+					axios.get(data.settings.finalUrl + 'store/remove/json/' + encodeURIComponent(JSON.stringify(twitchData)))
 						.then(function(response) {
 							const resData = response.data;
 							if (resData.status === 'success') {
-								if (Object.keys(resData.content['DUPLICATE']).length > 0) {
+								success = true;
+								if (Object.keys(resData.response.items.length > 0)) {
 									content += 'You\'ve sold the following hats: ';
-									Object.entries(resData.content['DUPLICATE']).forEach(([hat, data]) => {
-										const toSell = (parseInt(data.qty) - 1);
-
-										for (let index = 0; index < toSell; index++) {
-											// const element = array[index];
-											// client.commands
-											const newArgs = ['!hat', 'sell', hat];
-											const newMess = '!hat sell ' + hat;
-											tags['silent'] = true;
-
-											client.commands[channel.replace('#', '')].hattington.actions.sell.execute(newArgs, tags, newMess, channel, client);
-											sold = true;
-										}
-										content += toSell + 'x ' + hat + ' || ';
+									// eslint-disable-next-line no-unused-vars
+									Object.entries(resData.response.items).forEach(([hat, data]) => {
+										content += data.amt + 'x ' + data.name + ' || ';
 									});
-
-									content = content.substring(0, content.length - 3).trim();
+									content = content.substring(0, content.length - 3).trim() + '.';
 								}
 								else {
 									content = 'Seems like you don\'t have a duplicates to sell.';
 								}
+							}
+							else if (resData.status === 'failure') {
+
+								switch (resData.err_msg) {
+								case 'no_sells':
+									content = 'Not sure what happened, but nothing was sold...';
+									break;
+								default:
+									content = 'Something went wrong, tell @kittenAngie.';
+									break;
+								}
+							}
+							else {
+								content = 'Something went wrong, tell @kittenAngie.';
 							}
 						})
 						.catch(function() {
 							content = 'Something went wrong, tell @kittenAngie. 2';
 						})
 						.finally(function() {
-							client.say(channel, `${content}`);
+							if (success) {
+								client.commands[channel.replace('#', '')].coins.actions.coincount.execute(tags)
+									.then((coinAmt) => {
+										if (coinAmt) {
+											content += ` You have ${(coinAmt ? coinAmt : 0)} KomfyCoins stashed in your wallet!`;
+										}
+									})
+									.catch(err => console.log(err))
+									.finally(function() {
+										client.say(channel, `${content}`);
+									});
+							}
+							else {
+								client.say(channel, `${content}`);
+							}
 						});
 				}
 				else {
