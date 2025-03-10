@@ -13,7 +13,7 @@ module.exports = {
 					client.say(channel, 'Please provide a card to lookup!');
 				}
 				else {
-					const cardName = message.replace(args[0], '').trim();
+					const cardName = args.join(' ').replace('!scry', '');
 					axios.get('https://api.scryfall.com/cards/named?fuzzy=' + cardName.toLowerCase())
 						.then(function(response) {
 							const resData = response.data;
