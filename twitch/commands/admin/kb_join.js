@@ -3,7 +3,7 @@ const data = dataFile.content();
 
 module.exports = {
 	list: false,
-	name: 'join',
+	name: 'kb_join',
 	help: 'Join a channel',
 	actions: {
 		default: {
