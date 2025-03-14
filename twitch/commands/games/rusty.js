@@ -4,7 +4,7 @@ module.exports = {
 	actions: {
 		default: {
 			execute(args, tags, message, channel, client) {
-				let content = 'Basic Commands:';
+				let content = 'Basic Commands: ';
 				content += '!join - Join the farm if there are free slots available || ';
 				content += '!leave - Leave the farm || ';
 				content += '!plant - Focus on planting crops || ';
@@ -19,7 +19,7 @@ module.exports = {
 		},
 		colors: {
 			execute(args, tags, message, channel, client) {
-				let content = 'Set your color:';
+				let content = 'Set your color: ';
 				content += '!pink || ';
 				content += '!blue || ';
 				content += '!green || ';
@@ -34,7 +34,7 @@ module.exports = {
 		},
 		advanced: {
 			execute(args, tags, message, channel, client) {
-				let content = 'Advanced commands:';
+				let content = 'Advanced commands: ';
 				content += '!pick - Focus on picking berries (when unlocked) || ';
 				content += '!feed - Focus on feeding animals (when unlocked) || ';
 				content += '!collect - Focus on collecting poop (when unlocked) || ';
