@@ -12,7 +12,8 @@ module.exports = {
 				content += '!harvest - Focus on harvesting crops || ';
 				content += '!biofuel - Focus on loading biofuel converters || ';
 				content += '!build - Focus on building || ';
-				content += '!bench - Sit down and take rest';
+				content += '!bench - Sit down and take rest || ';
+				content += 'You can also do !rusty colors and !rusty advanced for more commands';
 
 				client.say(channel, content);
 			},
