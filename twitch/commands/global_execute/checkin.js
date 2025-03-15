@@ -24,7 +24,7 @@ module.exports = {
 			arg: false,
 			list: false,
 		},
-        'schinken': {
+		'schinken': {
 			arg: false,
 			list: false,
 		},

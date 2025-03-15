@@ -229,7 +229,7 @@ module.exports = {
 								content = content.substring(0, content.length - 2);
 							}
 							else {
-								content += 'You don\'t currently have any hats!';
+								content += 'You don\'t currently have any snacks!';
 							}
 						}
 						else {
