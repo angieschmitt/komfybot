@@ -587,7 +587,6 @@ module.exports = {
 							});
 
 							if (matched) {
-                                console.log( data.settings.baseUrl + 'interactive/hats/hat_set?userID=' + userID + '&hat=' + matched['hat_id'] );
 								axios.get(data.settings.baseUrl + 'interactive/hats/hat_set?userID=' + userID + '&hat=' + matched['hat_id'])
 									.then(function(response2) {
 										const data2 = response2.data;
