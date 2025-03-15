@@ -255,7 +255,9 @@ module.exports = {
 						content += 'Here\'s whats in the store:';
 						resData.content.forEach(element => {
 							if (element['name'].indexOf('Snack') !== -1) {
-								content += ' ' + element['name'].replace('Snacks : ', '') + ' @ ' + element['value'] + ' KomfyCoins ||';
+								if (element['enabled'] !== 1) {
+									content += ' ' + element['name'].replace('Snacks : ', '') + ' @ ' + element['value'] + ' KomfyCoins ||';
+								}
 							}
 						});
 						content = content.substring(0, content.length - 3);
