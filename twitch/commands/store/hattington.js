@@ -43,7 +43,7 @@ module.exports = {
 					.then(function(response2) {
 						const resData = response2.data;
 						if (resData.status === 'success') {
-							content = 'Hattington is currently wearing the "' + resData['hat_id	'] + '", provided by @' + resData['username'];
+							content = 'Hattington is currently wearing the "' + resData['hat_name'] + '", provided by @' + resData['username'];
 							if (resData.time_left > 0) {
 								content += `! They only recently put it on, so give them a little time! (Roughly ${resData.time_left} minutes)`;
 							}
@@ -587,6 +587,7 @@ module.exports = {
 							});
 
 							if (matched) {
+                                console.log( data.settings.baseUrl + 'interactive/hats/hat_set?userID=' + userID + '&hat=' + matched['hat_id'] );
 								axios.get(data.settings.baseUrl + 'interactive/hats/hat_set?userID=' + userID + '&hat=' + matched['hat_id'])
 									.then(function(response2) {
 										const data2 = response2.data;
