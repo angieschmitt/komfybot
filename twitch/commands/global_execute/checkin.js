@@ -24,6 +24,10 @@ module.exports = {
 			arg: false,
 			list: false,
 		},
+        'schinken': {
+			arg: false,
+			list: false,
+		},
 		'signin': {
 			arg: false,
 			list: false,
