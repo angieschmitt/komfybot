@@ -3,9 +3,9 @@ const dataFile = require('../data/index');
 const data = dataFile.content();
 
 axios.defaults.headers.common['Authorization'] = data.settings.apiKey;
-// axios.defaults.headers.common['Cache-Control'] = 'no-cache, no-store, must-revalidate';
-// axios.defaults.headers.common['Pragma'] = 'no-cache';
-// axios.defaults.headers.common['Expires'] = '0';
+axios.defaults.headers.common['Cache-Control'] = 'no-cache, no-store, must-revalidate';
+axios.defaults.headers.common['Pragma'] = 'no-cache';
+axios.defaults.headers.common['Expires'] = '0';
 
 module.exports = {
 	eventHandler(channel, username, isSelf) {
@@ -21,7 +21,7 @@ module.exports = {
 	},
 	handleSpeak(channel, client) {
 		channel = channel.replace('#', '');
-		const timerInterval = 10000;
+		const timerInterval = 15000;
 		setInterval(
 			callApi,
 			timerInterval,
@@ -34,7 +34,8 @@ module.exports = {
 async function callApi(channel, client) {
 	const response = await axios({ url: data.settings.finalUrl + 'speak/retrieve/' + channel })
 		.catch(function(error) {
-			data.debug.write(channel, 'SPEAK_ERROR', error.toJSON());
+			const errJSON = error.toJSON();
+			data.debug.write(channel, 'SPEAK_ERROR', errJSON.message);
 		});
 	if (response) {
 		if (response.data.status === 'success') {
