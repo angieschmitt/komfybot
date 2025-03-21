@@ -5,8 +5,8 @@ const data = dataFile.content();
 axios.defaults.headers.common['Authorization'] = data.settings.apiKey;
 
 module.exports = {
-	name: 'race',
-	help: 'Outputs info about the current race, with a multitwitch link. Additional arguments: set',
+	name: 'collab',
+	help: 'Outputs info about the current collab, with a multitwitch link. Additional arguments: set',
 	actions: {
 		default: {
 			execute(args, tags, message, channel, client) {
@@ -75,7 +75,7 @@ module.exports = {
 			},
 		},
 		set: {
-			help: 'Used to set the runners. !race set <username:required> <username:optional>',
+			help: 'Used to set the collaborators. !collab set <username:required> <username:optional>',
 			perms: {
 				levels: ['mod'],
 				error: 'this command is for mods only.',
@@ -127,7 +127,7 @@ module.exports = {
 			},
 		},
 		reset: {
-			help: 'Used to set the runners. !race set <username:required> <username:optional>',
+			help: 'Used to reset the collaborators. !collab set <username:required> <username:optional>',
 			perms: {
 				levels: ['mod'],
 				error: 'this command is for mods only.',
