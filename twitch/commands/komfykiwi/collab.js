@@ -46,12 +46,12 @@ module.exports = {
 									url += resData.response[0].replace('@', '');
 								}
 
-								content = 'We\'re currently racing ' + nameList + '! ';
+								content = 'We\'re currently collabing with ' + nameList + '! ';
 								content += 'If you wanna tune in to ' + text + ' at the same time, feel free to use: ';
 								content += 'https://www.multitwitch.tv/' + channelName + '/' + url;
 							}
 							else {
-								content = 'Seems like we aren\'t racing anyone yet!';
+								content = 'Seems like we aren\'t collabing right now!';
 							}
 						}
 						else if (resData.status === 'failure') {
@@ -104,7 +104,7 @@ module.exports = {
 					.then(function(response) {
 						const resData = response.data;
 						if (resData.status === 'success') {
-							content = 'Set the racers!';
+							content = 'Set the collaborators!';
 						}
 						else if (resData.status === 'failure') {
 							if (resData.err_msg === 'missing_authorization') {
@@ -141,7 +141,7 @@ module.exports = {
 					.then(function(response) {
 						const resData = response.data;
 						if (resData.status === 'success') {
-							content = 'Reset the racers.';
+							content = 'Reset the collaborators.';
 						}
 						else if (resData.status === 'failure') {
 							if (resData.err_msg === 'missing_authorization') {
