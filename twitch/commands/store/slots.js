@@ -47,13 +47,11 @@ module.exports = {
 									if (coinAmt || coinAmt === 0) {
 										if ((risk <= parseInt(coinAmt)) || risk === 0) {
 
-											// Weight = matching X in X PER reel.
-											//    - Increases chances, but I can't figure out the math
-											//    - 1 = 100%, 2 = 50%, 3 = 33%
+											// Weight = gen X amt of nums to increase chance of matching
 											const reel = [];
 											reel[0] = getWeightedSlot(5);
-											reel[1] = getWeightedSlot(5, 3, reel[0]);
-											reel[2] = getWeightedSlot(5, 2, reel[1]);
+											reel[1] = getWeightedSlot(5, 2, reel[0]);
+											reel[2] = getWeightedSlot(5, 2, reel[0]);
 
 											let num = false;
 											let win = true;
@@ -66,9 +64,6 @@ module.exports = {
 													win = false;
 												}
 											});
-
-											console.log(`Risking ${risk} `);
-											console.log(reel);
 
 											const outcome = `${icons[reel[0]]} | ${icons[reel[1]]} | ${icons[reel[2]]}`;
 											content += `@${tags.username}, you got ${outcome} `;
@@ -138,19 +133,32 @@ const isNumeric = function(num) {
 };
 
 const getWeightedSlot = function(max, weight = false, match = false) {
-	if (!weight) {
-		return getRandomNumber(max);
-	}
-	else {
-		const value = getRandomNumber(max);
-		if (getRandomNumber(weight) == weight) {
-			console.log('WEIGHTED: TRUE');
-			return match;
+	if (weight) {
+		if (weight != 0) {
+			// Generate WEIGHT amount of buffers to increase match chances
+			const weightValues = [];
+			for (let index = 0; weightValues.length < weight; index++) {
+				const value = getRandomNumber(max);
+				if (!weightValues.includes(value)) {
+					weightValues.push(value);
+				}
+			}
+
+			// Generate random chance to match
+			const matchChance = getRandomNumber(max);
+			if (weightValues.includes(matchChance)) {
+				return match;
+			}
+			else {
+				return matchChance;
+			}
 		}
 		else {
-			console.log('WEIGHTED: FALSE');
-			return value;
+			return getRandomNumber(max);
 		}
+	}
+	else {
+		return getRandomNumber(max);
 	}
 };
 
