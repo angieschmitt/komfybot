@@ -88,12 +88,12 @@ module.exports = {
 					interaction.editReply({ content: `Adding the ${ucwords(which)} role.`, ephemeral: true });
 				}
 			}
-			else if (buttonInfo[0] == 'pingRoles') {
-				const { ping_roles } = require(configFile); // eslint-disable-line
+			else if (buttonInfo[0] == 'optinRoles') {
+				const { optin_roles } = require(configFile); // eslint-disable-line
 				const which = buttonInfo[1].replace('-', '/');
-				const role	= interaction.guild.roles.cache.find(r => r.id === ping_roles.buttons[which].roleID);
+				const role	= interaction.guild.roles.cache.find(r => r.id === optin_roles.buttons[which].roleID);
 
-				if (member.roles.cache.some(r => r.id === ping_roles.buttons[which].roleID)) {
+				if (member.roles.cache.some(r => r.id === optin_roles.buttons[which].roleID)) {
 					member.roles.remove(role);
 					interaction.editReply({ content: `Removing the ${ucwords(which)} role.`, ephemeral: true });
 				}
@@ -105,7 +105,6 @@ module.exports = {
 			else {
 				interaction.editReply({ content: `You clicked a ${buttonInfo[0]} button. Specifically the ${buttonInfo[1]} one.`, ephemeral: true });
 			}
-
 		}
 		else if (interaction.isAutocomplete()) {
 			const command = interaction.client.commands.get(interaction.commandName);

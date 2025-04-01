@@ -1,18 +1,18 @@
 require('../../data/globals');
 
 const { SlashCommandBuilder, PermissionFlagsBits, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
-const { ping_roles } = require(configFile); // eslint-disable-line
+const { optin_roles } = require(configFile); // eslint-disable-line
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('ping-roles')
+		.setName('optin-roles')
 		.setDescription('Command to output role options')
 		.setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
 	async execute(interaction) {
 
 		await interaction.deferReply();
 
-		const size = Object.keys(ping_roles.buttons).length;
+		const size = Object.keys(optin_roles.buttons).length;
 		const runs = Math.ceil(size / 5);
 
 		const rows = [];
@@ -20,13 +20,13 @@ module.exports = {
 
 			let i = 1;
 			const row = new ActionRowBuilder();
-			for (const [key, data] of Object.entries(ping_roles.buttons)) {
+			for (const [key, data] of Object.entries(optin_roles.buttons)) {
 				if (i > (5 * (index - 1)) && i <= (5 * index)) {
 					const unique = key.replace('/', '-');
 					if (data.icon !== '') {
 						row.addComponents(
 							new ButtonBuilder()
-								.setCustomId('pingRoles_' + unique)
+								.setCustomId('optinRoles_' + unique)
 								.setLabel(ucwords(key))
 								.setStyle(ButtonStyle.Primary)
 								.setEmoji(data.icon),
@@ -35,7 +35,7 @@ module.exports = {
 					else {
 						row.addComponents(
 							new ButtonBuilder()
-								.setCustomId('pingRoles_' + unique)
+								.setCustomId('optinRoles_' + unique)
 								.setLabel(ucwords(key))
 								.setStyle(ButtonStyle.Primary),
 						);
@@ -51,7 +51,7 @@ module.exports = {
 		interaction.deleteReply();
 
 		const channel = interaction.client.channels.cache.get(message.channelId);
-		channel.send({ content: ping_roles.message, components: rows });
+		channel.send({ content: optin_roles.message, components: rows });
 
 	},
 };

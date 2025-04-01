@@ -5,9 +5,12 @@ const { rule_roles } = require(global.configFile); // eslint-disable-line
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('accept-rules')
-		.setDescription('Command to output rules spiel')
-		.setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
+		.setName('rules')
+		.setDescription('Command to output rules')
+		.setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
+		.addBooleanOption(option =>
+			option.setName('button')
+				.setDescription('Whether or not to output the button')),
 	async execute(interaction) {
 
 		await interaction.deferReply();
@@ -27,7 +30,15 @@ module.exports = {
 		interaction.deleteReply();
 
 		const channel = interaction.client.channels.cache.get(message.channelId);
-		channel.send({ content: rule_roles.message, components: rows });
+
+		const button = (interaction.options.getBoolean('button') ?? false);
+
+		if (button) {
+			channel.send({ content: rule_roles.message, components: rows });
+		}
+		else {
+			channel.send({ content: rule_roles.message });
+		}
 
 	},
 };
