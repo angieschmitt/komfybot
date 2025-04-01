@@ -41,7 +41,14 @@ module.exports = {
 			// Select the winning number...
 			const value = getRandomNumber(100);
 
+			// April Fools - Everybody wins (jk, lol)!
+			const date = new Date();
+			if (date.getMonth() == '3' && date.getDate('1')) {
+				message.react('🪙');
+			}
+
 			// If the winning number is on their card...
+			let winner = false;
 			if (chances.includes(value)) {
 				// First, we check if their accounts are linked..
 				await axios.get(urls.finalUrl + 'v1/userdata/retrieve/' + username)
@@ -51,6 +58,9 @@ module.exports = {
 
 							// If they are, we pay out the coins
 							if (outcome.response.linked === true) {
+
+								// set winner
+								winner = true;
 
 								// Mark the message with the coin
 								message.react('🪙');
@@ -100,6 +110,18 @@ module.exports = {
 					.finally(function() {
 						// always executed
 					});
+			}
+
+			// April Fools - Everybody wins (jk, lol)!
+			if (date.getMonth() == '3' && date.getDate('1') && !winner) {
+				setTimeout(() => {
+					message.reactions.cache.forEach(reaction => reaction.remove('🪙'));
+					message.react('😜');
+
+					setTimeout(() => {
+						message.reactions.cache.forEach(reaction => reaction.remove('😜'));
+					}, 30000, message);
+				}, 30000, message);
 			}
 		}
 	},
