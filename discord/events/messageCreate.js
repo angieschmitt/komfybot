@@ -43,7 +43,7 @@ module.exports = {
 
 			// April Fools - Everybody wins (jk, lol)!
 			const date = new Date();
-			if (date.getMonth() == '3' && date.getDate('1')) {
+			if (date.getMonth() == '3' && date.getDate() == '1') {
 				message.react('🪙');
 			}
 
@@ -113,7 +113,7 @@ module.exports = {
 			}
 
 			// April Fools - Everybody wins (jk, lol)!
-			if (date.getMonth() == '3' && date.getDate('1') && !winner) {
+			if (date.getMonth() == '3' && date.getDate() == '1' && !winner) {
 				setTimeout(() => {
 					message.reactions.cache.forEach(reaction => reaction.remove('🪙'));
 					message.react('😜');
