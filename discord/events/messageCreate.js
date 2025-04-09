@@ -127,23 +127,37 @@ module.exports = {
 	},
 };
 
-const getRandomNumber = function(max) {
-	const rolls = [];
+const getRandomNumber = function(max, exclude = []) {
+	const baseNumbers = [];
+
+	// Make a list of all numbers between 0 and max
+	let i;
+	for (i = 1; i <= max; i++) {
+		baseNumbers.push(i);
+	}
+
+	// Remove any exludes
+	if (exclude.length > 0) {
+		exclude.forEach((element) => {
+			if (element != false) {
+				if (baseNumbers.indexOf(element) != -1) {
+					baseNumbers.splice(baseNumbers.indexOf(element), 1);
+				}
+			}
+		});
+	}
+
+	// Prep the rolls
+	const rolls = baseNumbers;
 	const rolls2 = [];
 	const rolls3 = [];
 	const rolls4 = [];
 	const rolls5 = [];
 	let finalRolls = [];
 
-	// Add all numbers to the pull
-	let i;
-	for (i = 1; i <= max; i++) {
-		rolls.push(i);
-	}
+	// Now shuffle them
+	shuffle(rolls);
 
-	// Cut the list in half by moving half of them into rollsX
-	// assign to finalRolls in case we're done here
-	// and do that until we ARE done
 	if (rolls.length > 2) {
 		// Reduce those
 		const rollsLength = Math.floor(rolls.length / 2);
@@ -161,6 +175,7 @@ const getRandomNumber = function(max) {
 		for (i = 0; rolls3.length < rolls2Length; i++) {
 			const selected = Math.floor(Math.random() * rolls2.length);
 			const value = rolls2[selected];
+
 			rolls3.push(value);
 			rolls2.splice(selected, 1);
 		}
@@ -173,6 +188,7 @@ const getRandomNumber = function(max) {
 		for (i = 0; rolls4.length < rolls3Length; i++) {
 			const selected = Math.floor(Math.random() * rolls3.length);
 			const value = rolls3[selected];
+
 			rolls4.push(value);
 			rolls3.splice(selected, 1);
 		}
@@ -185,6 +201,7 @@ const getRandomNumber = function(max) {
 		for (i = 0; rolls5.length < rolls4Length; i++) {
 			const selected = Math.floor(Math.random() * rolls4.length);
 			const value = rolls4[selected];
+
 			rolls5.push(value);
 			rolls4.splice(selected, 1);
 		}
@@ -195,4 +212,21 @@ const getRandomNumber = function(max) {
 	const winner = finalRolls[Math.floor(Math.random() * finalRolls.length)];
 
 	return winner;
+};
+
+const shuffle = function(array) {
+	let currentIndex = array.length;
+
+	// While there remain elements to shuffle...
+	while (currentIndex != 0) {
+
+		// Pick a remaining element...
+		const randomIndex = Math.floor(Math.random() * currentIndex);
+		currentIndex--;
+
+		// And swap it with the current element.
+		[array[currentIndex], array[randomIndex]] = [
+			array[randomIndex], array[currentIndex],
+		];
+	}
 };

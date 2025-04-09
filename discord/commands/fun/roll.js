@@ -79,30 +79,106 @@ module.exports = {
 	},
 };
 
-const getRandomNumber = function(max) {
-	const rolls = [];
+const getRandomNumber = function(max, exclude = []) {
+	const baseNumbers = [];
+
+	// Make a list of all numbers between 0 and max
+	let i;
+	for (i = 1; i <= max; i++) {
+		baseNumbers.push(i);
+	}
+
+	// Remove any exludes
+	if (exclude.length > 0) {
+		exclude.forEach((element) => {
+			if (element != false) {
+				if (baseNumbers.indexOf(element) != -1) {
+					baseNumbers.splice(baseNumbers.indexOf(element), 1);
+				}
+			}
+		});
+	}
+
+	// Prep the rolls
+	const rolls = baseNumbers;
 	const rolls2 = [];
 	const rolls3 = [];
+	const rolls4 = [];
+	const rolls5 = [];
+	let finalRolls = [];
 
-	let i;
-	// Assign a bunch of "random rolls"
-	for (i = 0; i < 10000; i++) {
-		rolls.push(Math.floor(Math.random() * max) + 1);
+	// Now shuffle them
+	shuffle(rolls);
+
+	if (rolls.length > 2) {
+		// Reduce those
+		const rollsLength = Math.floor(rolls.length / 2);
+		for (i = 0; rolls2.length < rollsLength; i++) {
+			const selected = Math.floor(Math.random() * rolls.length);
+			const value = rolls[selected];
+			rolls2.push(value);
+			rolls.splice(selected, 1);
+		}
+		finalRolls = rolls2;
 	}
-	// Lets filter that down to less rolls
-	for (i = 0; i < 1000; i++) {
-		const selected = Math.floor(Math.random() * rolls.length);
-		rolls2.push(rolls[selected]);
-		rolls.splice(selected, 1);
+
+	if (rolls2.length > 2) {
+		const rolls2Length = Math.floor(rolls2.length / 2);
+		for (i = 0; rolls3.length < rolls2Length; i++) {
+			const selected = Math.floor(Math.random() * rolls2.length);
+			const value = rolls2[selected];
+
+			rolls3.push(value);
+			rolls2.splice(selected, 1);
+		}
+		finalRolls = rolls3;
 	}
-	// More filtering
-	for (i = 0; i < 100; i++) {
-		const selected = Math.floor(Math.random() * rolls2.length);
-		rolls3.push(rolls2[selected]);
-		rolls2.splice(selected, 1);
+
+	if (rolls3.length > 2) {
+		// Reduce those
+		const rolls3Length = Math.floor(rolls3.length / 2);
+		for (i = 0; rolls4.length < rolls3Length; i++) {
+			const selected = Math.floor(Math.random() * rolls3.length);
+			const value = rolls3[selected];
+
+			rolls4.push(value);
+			rolls3.splice(selected, 1);
+		}
+		finalRolls = rolls4;
 	}
+
+	if (rolls4.length > 2) {
+		// Reduce those
+		const rolls4Length = Math.floor(rolls4.length / 2);
+		for (i = 0; rolls5.length < rolls4Length; i++) {
+			const selected = Math.floor(Math.random() * rolls4.length);
+			const value = rolls4[selected];
+
+			rolls5.push(value);
+			rolls4.splice(selected, 1);
+		}
+		finalRolls = rolls5;
+	}
+
 	// Pick the winner!
-	const winner = rolls3[Math.floor(Math.random() * rolls3.length)];
+	const winner = finalRolls[Math.floor(Math.random() * finalRolls.length)];
 
 	return winner;
+};
+
+const shuffle = function(array) {
+	let currentIndex = array.length;
+
+	// While there remain elements to shuffle...
+	while (currentIndex != 0) {
+
+		// Pick a remaining element...
+		const randomIndex = Math.floor(Math.random() * currentIndex);
+		currentIndex--;
+
+		// And swap it with the current element.
+		[array[currentIndex], array[randomIndex]] = [
+			array[randomIndex], array[currentIndex],
+		];
+	}
 };
