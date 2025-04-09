@@ -137,11 +137,18 @@ const getWeightedSlot = function(max, weight = false, match = false) {
 		if (weight != 0) {
 			// Generate WEIGHT amount of buffers to increase match chances
 			const weightValues = [];
-			for (let index = 0; weightValues.length < weight; index++) {
-				const value = getRandomNumber(max);
-				if (!weightValues.includes(value)) {
-					weightValues.push(value);
+
+			// Check for bad math
+			if (max > weight) {
+				for (let index = 0; weightValues.length < weight; index++) {
+					const value = getRandomNumber(max, [ match ]);
+					if (!weightValues.includes(value) && value != match) {
+						weightValues.push(value);
+					}
 				}
+			}
+			else {
+				weightValues.push(getRandomNumber(max));
 			}
 
 			// Generate random chance to match
@@ -162,18 +169,36 @@ const getWeightedSlot = function(max, weight = false, match = false) {
 	}
 };
 
-const getRandomNumber = function(max) {
-	const rolls = [];
+const getRandomNumber = function(max, exclude = []) {
+	const baseNumbers = [];
+
+	// Make a list of all numbers between 0 and max
+	let i;
+	for (i = 1; i <= max; i++) {
+		baseNumbers.push(i);
+	}
+
+	// Remove any exludes
+	if (exclude.length > 0) {
+		exclude.forEach((element) => {
+			if (element != false) {
+				if (baseNumbers.indexOf(element) != -1) {
+					baseNumbers.splice(baseNumbers.indexOf(element), 1);
+				}
+			}
+		});
+	}
+
+	// Prep the rolls
+	const rolls = baseNumbers;
 	const rolls2 = [];
 	const rolls3 = [];
 	const rolls4 = [];
 	const rolls5 = [];
 	let finalRolls = [];
 
-	let i;
-	for (i = 0; i < max; i++) {
-		rolls.push(Math.floor(Math.random() * max) + 1);
-	}
+	// Now shuffle them
+	shuffle(rolls);
 
 	if (rolls.length > 2) {
 		// Reduce those
@@ -229,4 +254,21 @@ const getRandomNumber = function(max) {
 	const winner = finalRolls[Math.floor(Math.random() * finalRolls.length)];
 
 	return winner;
+};
+
+const shuffle = function(array) {
+	let currentIndex = array.length;
+
+	// While there remain elements to shuffle...
+	while (currentIndex != 0) {
+
+		// Pick a remaining element...
+		const randomIndex = Math.floor(Math.random() * currentIndex);
+		currentIndex--;
+
+		// And swap it with the current element.
+		[array[currentIndex], array[randomIndex]] = [
+			array[randomIndex], array[currentIndex],
+		];
+	}
 };
