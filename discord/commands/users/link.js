@@ -25,10 +25,12 @@ module.exports = {
 			'data': {
 				'discord_username': interaction.user.username,
 				'twitch_username': (interaction.options.getString('twitch_username') ?? ''),
-				'opt_out': (interaction.options.getBoolean('opt_out') ?? false),
+				'opt_out': (interaction.options.getBoolean('opt_out') ?? ''),
 			},
 		};
 		const url = urls.finalUrl + 'userdata/update/json/' + encodeURIComponent(JSON.stringify(jsonData));
+
+        console.log(url);
 
 		await axios.get(url)
 			.then(function(response) {
