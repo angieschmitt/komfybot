@@ -1,7 +1,7 @@
 require('../../data/globals');
 
 const axios = require('axios');
-const { SlashCommandBuilder, MessageFlags } = require('discord.js');
+const { SlashCommandBuilder } = require('discord.js');
 const { channels, urls, apiKey } = require(configFile); // eslint-disable-line
 
 module.exports = {
@@ -102,7 +102,7 @@ module.exports = {
 					}
 					else if (outcome.err_msg === 'no_updates') {
 						// OUTPUT CUSTOM MESSAGE FOR NO UPDATES
-						content += 'CUSTOM NO UPDATES MESSAGE! ';
+						content += `Account status: ${(outcome.response.linked == true ? 'Linked to ' + outcome.response.twitch_username : 'Not Linked')}, ${(outcome.response.opt_out == '0' ? 'Opted In' : 'Opted Out')}.`;
 						// debug.push(`LINK, FAILURE, ${interaction.user.username}>, ${outcome.response.twitch_username}, no_match`);
 					}
 				}
