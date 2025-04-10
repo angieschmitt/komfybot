@@ -17,7 +17,7 @@ module.exports = {
 				.setDescription('Opt out of free KomfyCoins')),
 	async execute(interaction) {
 
-		await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+		await interaction.deferReply({ ephemeral: true });
 
 		const jsonData = {
 			'id': interaction.user.id,
@@ -110,7 +110,7 @@ module.exports = {
 					content += 'There was an general issue adding that to the database. Tell kittenAngie. ';
 				}
 
-				interaction.editReply({ content: `${content}`, flags: MessageFlags.Ephemeral });
+				interaction.editReply({ content: `${content}`, ephemeral: true });
 				interaction.channel.client.channels.fetch(channels.bot_log)
 					.then(channel => {
 						debug.forEach((dbgMsg) => {
@@ -122,7 +122,7 @@ module.exports = {
 					.catch(err => console.log(err));
 			})
 			.catch(function(error) {
-				interaction.editReply({ content: `Something went wrong? ${error}`, flags: MessageFlags.Ephemeral });
+				interaction.editReply({ content: `Something went wrong? ${error}`, ephemeral: true });
 			})
 			.finally(function() {
 				// always executed
