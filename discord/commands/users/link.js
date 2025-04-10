@@ -30,8 +30,6 @@ module.exports = {
 		};
 		const url = urls.finalUrl + 'userdata/update/json/' + encodeURIComponent(JSON.stringify(jsonData));
 
-        console.log(url);
-
 		await axios.get(url)
 			.then(function(response) {
 				let content = '';
