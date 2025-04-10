@@ -12,7 +12,7 @@ module.exports = {
 
 		await interaction.deferReply();
 
-		await axios.get(urls.finalUrl + 'v1/quote/retrieve/komfykiwi')
+		await axios.get(urls.finalUrl + 'quote/retrieve/komfykiwi')
 			.then(function(response) {
 
 				const output = response.data;

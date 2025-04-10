@@ -12,7 +12,7 @@ module.exports = {
 
 		await interaction.deferReply();
 
-		await axios.get(urls.finalUrl + '/pun/retrieve')
+		await axios.get(urls.finalUrl + 'pun/retrieve')
 			.then(function(response) {
 
 				const output = response.data;
@@ -22,7 +22,7 @@ module.exports = {
 						.setColor(0xC44578)
 						.setTitle('Pun Delivery Service')
 						.addFields(
-							{ name: 'Pun:', value: output.content },
+							{ name: 'Pun:', value: output.response },
 						)
 						.setTimestamp()
 						.setFooter(

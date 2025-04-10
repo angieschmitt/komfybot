@@ -41,6 +41,9 @@ module.exports = {
 			// Select the winning number...
 			const value = getRandomNumber(100);
 
+			// ALWAYS - For testing reasons
+			// const value = chances[0];
+
 			// April Fools - Everybody wins (jk, lol)!
 			const date = new Date();
 			if (date.getMonth() == '3' && date.getDate() == '1') {
@@ -51,13 +54,13 @@ module.exports = {
 			let winner = false;
 			if (chances.includes(value)) {
 				// First, we check if their accounts are linked..
-				await axios.get(urls.finalUrl + 'v1/userdata/retrieve/' + username)
+				await axios.get(urls.finalUrl + 'userdata/retrieve/' + username)
 					.then(function(response) {
 						const outcome = response.data;
 						if (outcome.status === 'success') {
 
 							// If they are, we pay out the coins
-							if (outcome.response.linked === true) {
+							if (outcome.response.linked === true && outcome.response.opt_out !== true) {
 
 								// set winner
 								winner = true;
@@ -93,7 +96,7 @@ module.exports = {
 
 							}
 							// If not, we alert them to the /link command
-							else {
+							else if (outcome.response.opt_out === true) {
 								message.reply({ content: `<@${userID}>, I attempted to give you free 🪙 KomfyCoins, but you haven't linked your Twitch account! To make sure you don't miss any in the future, make sure you use the /link command!` });
 							}
 

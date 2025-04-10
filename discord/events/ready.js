@@ -89,6 +89,6 @@ async function handleChannelPoints() {
 }
 
 async function handleTokenRefresh() {
-	axios.get(urls.finalUrl + 'v1/tokens/update/')
+	axios.get(urls.finalUrl + 'tokens/update/')
 		.catch(err => console.log(err));
 }
