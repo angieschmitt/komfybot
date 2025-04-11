@@ -60,6 +60,7 @@ module.exports = {
 		console.log(perms);
 
 		// Let's look for a command
+		let commandData = false;
 		const cleanedMessage = message.trim();
 		if (cleanedMessage.indexOf('!') !== false) {
 			// Remove preceding text
@@ -75,7 +76,6 @@ module.exports = {
 			const channelCommands = client.commands[channelName];
 			const globalCommands = client.commands['global'];
 
-			let commandData = false;
 			if (channelCommands) {
 				commandData = module.exports.locateCommand(baseCommand, args, channelCommands);
 			}
@@ -131,14 +131,17 @@ module.exports = {
 		const url = data.settings.finalUrl + 'userdata/update/json/' + encodeURIComponent(JSON.stringify(jsonData));
 		axios.get(url);
 
-		// Passive income?
-		const currencyEnabled = client.commands.global.giveaway.currencyCheck(channelName, client);
-		const passiveIncomeAmt = 2;
-		if (currencyEnabled) {
-			const args2 = ['!coins', 'add', tags.username, passiveIncomeAmt, 'Passive Income - Twitch Chat' ];
-			const message2 = `!coins add ${tags.username} ${passiveIncomeAmt} Passive Income - Twitch Chat`;
-			tags['silent'] = true;
-			client.commands.komfykiwi.coins.actions.add.execute(args2, tags, message2, channel, client);
+		// Passive income if NOT a command
+		if (!commandData) {
+			const currencyEnabled = client.commands.global.giveaway.currencyCheck(channelName, client);
+			const passiveIncomeAmt = 2;
+			if (currencyEnabled) {
+				const args2 = ['!coins', 'add', tags.username, passiveIncomeAmt, 'Passive Income - Twitch Chat' ];
+				const message2 = `!coins add ${tags.username} ${passiveIncomeAmt} Passive Income - Twitch Chat`;
+				tags['silent'] = true;
+				client.commands.komfykiwi.coins.actions.add.execute(args2, tags, message2, channel, client);
+				console.log('PI : ' + passiveIncomeAmt);
+			}
 		}
 
 		// Update coin_log
