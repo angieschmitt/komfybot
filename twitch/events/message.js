@@ -121,8 +121,25 @@ module.exports = {
 		}
 
 		// Shove in user reference data
-		// const twitchData = { 'id': tags['user-id'], 'username': tags.username, 'ident_type': 'twitch_id' };
-		// axios.get(data.settings.finalUrl + 'userdata/update/json/' + encodeURIComponent(JSON.stringify(twitchData)));
+		const jsonData = {
+			'id': tags['user-id'],
+			'ident_type': 'twitch_id',
+			'data': {
+				'twitch_username': tags.username,
+			},
+		};
+		const url = data.settings.finalUrl + 'userdata/update/json/' + encodeURIComponent(JSON.stringify(jsonData));
+		axios.get(url);
+
+		// Passive income?
+		const currencyEnabled = client.commands.global.giveaway.currencyCheck(channelName, client);
+		const passiveIncomeAmt = 2;
+		if (currencyEnabled) {
+			const args2 = ['!coins', 'add', tags.username, passiveIncomeAmt, 'Passive Income - Twitch Chat' ];
+			const message2 = `!coins add ${tags.username} ${passiveIncomeAmt} Passive Income - Twitch Chat`;
+			tags['silent'] = true;
+			client.commands.komfykiwi.coins.actions.add.execute(args2, tags, message2, channel, client);
+		}
 
 		// Update coin_log
 		// axios.post(data.settings.finalUrl + 'coins_fix');
