@@ -82,13 +82,40 @@ module.exports = {
 			if (!commandData) {
 				commandData = module.exports.locateCommand(baseCommand, args, globalCommands, channelName);
 			}
-
-			if (commandData) {
-				if (module.exports.handleCommand(commandData, channel, perms, tags, message, client)) {
-					console.log('Used command: ' + commandData.command.name + ' ' + (commandData.args[1] ? commandData.args[1] : ''));
-				}
-			}
 		}
+
+		// If the channel is live... process stuff
+		data.functions.liveCheck(data, channelName)
+			.then(res => {
+				if (res.live === true) {
+
+					// If command was found, do this stuff...
+					if (commandData) {
+						if (module.exports.handleCommand(commandData, channel, perms, tags, message, client)) {
+							console.log('Used command: ' + commandData.command.name + ' ' + (commandData.args[1] ? commandData.args[1] : ''));
+						}
+					}
+					// If not, do this stuff...
+					else {
+						// const currencyEnabled = client.commands.global.giveaway.currencyCheck(channelName, client);
+						// const passiveIncomeAmt = 2;
+						// if (currencyEnabled) {
+						// 	const args2 = ['!coins', 'add', tags.username, passiveIncomeAmt, 'Passive Income - Twitch Chat' ];
+						// 	const message2 = `!coins add ${tags.username} ${passiveIncomeAmt} Passive Income - Twitch Chat`;
+						// 	tags['silent'] = true;
+						// 	client.commands.komfykiwi.coins.actions.add.execute(args2, tags, message2, channel, client);
+						// 	console.log('PI : ' + passiveIncomeAmt);
+						// }
+					}
+				}
+				else {
+					/* eslint-disable-next-line no-lonely-if */
+					if (commandData) {
+						client.say(channel, data.functions.speakConvertor('Commands are only active while the streamer is live!'));
+					}
+				}
+			})
+			.catch(err => console.log(err));
 
 		// React to first message
 		if (data.firstMessage[channelName]) {
@@ -130,19 +157,6 @@ module.exports = {
 		};
 		const url = data.settings.finalUrl + 'userdata/update/json/' + encodeURIComponent(JSON.stringify(jsonData));
 		axios.get(url);
-
-		// Passive income if NOT a command
-		if (!commandData) {
-			const currencyEnabled = client.commands.global.giveaway.currencyCheck(channelName, client);
-			const passiveIncomeAmt = 2;
-			if (currencyEnabled) {
-				const args2 = ['!coins', 'add', tags.username, passiveIncomeAmt, 'Passive Income - Twitch Chat' ];
-				const message2 = `!coins add ${tags.username} ${passiveIncomeAmt} Passive Income - Twitch Chat`;
-				tags['silent'] = true;
-				client.commands.komfykiwi.coins.actions.add.execute(args2, tags, message2, channel, client);
-				console.log('PI : ' + passiveIncomeAmt);
-			}
-		}
 
 		// Update coin_log
 		// axios.post(data.settings.finalUrl + 'coins_fix');
