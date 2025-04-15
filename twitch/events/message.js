@@ -85,9 +85,9 @@ module.exports = {
 		}
 
 		// If the channel is live... process stuff
-		data.functions.liveCheck(data, channelName)
-			.then(res => {
-				if (res.live === true) {
+		// data.functions.liveCheck(data, channelName)
+		// 	.then(res => {
+		// 		if (res.live === true || perms.streamer === true || perms.admin === true) {
 
 					// If command was found, do this stuff...
 					if (commandData) {
@@ -107,15 +107,15 @@ module.exports = {
 						// 	console.log('PI : ' + passiveIncomeAmt);
 						// }
 					}
-				}
-				else {
-					/* eslint-disable-next-line no-lonely-if */
-					if (commandData) {
-						client.say(channel, data.functions.speakConvertor('Commands are only active while the streamer is live!'));
-					}
-				}
-			})
-			.catch(err => console.log(err));
+		// 		}
+		// 		else {
+		// 			/* eslint-disable-next-line no-lonely-if */
+		// 			if (commandData) {
+		// 				client.say(channel, data.functions.speakConvertor('Commands are only active while the streamer is live!'));
+		// 			}
+		// 		}
+		// 	})
+		// 	.catch(err => console.log(err));
 
 		// React to first message
 		if (data.firstMessage[channelName]) {
