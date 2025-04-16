@@ -20,22 +20,38 @@ function init() {
         ws.on('message', function message(data) {
             console.log('Received: %s', data);
 
+            console.log(users);
+            let list = Array.from(wss.clients);
+
+            let output = {
+                'userList' : users
+            };
+
             if ( isJson(data) ){
-                let parsed = JSON.parse(data);
 
-                let target = getKeyByValue(users, parsed['ping'].toString());
+                const panel = getKeyByValue(users, 'panel');
 
+                const parsed = JSON.parse(data);
+                let target = getKeyByValue(users, parsed['action'].toString());
+
+                if (parsed['action'] == 'refresh'){
+                    target = panel;
+                }
+
+                // Loop over all the connections because we have to anyway...
                 let iter = 0;
                 wss.clients.forEach(function (client) {
                     if (iter == target){
-                        client.send( parsed['ping'] + ' => ' + Math.random() );
+                        output['response'] = parsed['action'];
+                        client.send( JSON.stringify(output) );
                     }
                     iter++;
                 });                
             }
             else {
                 wss.clients.forEach(function (client) {
-                    client.send( 'OOGA: ' + Math.random() );
+                    output['response'] = 'OOGA: ' + Math.random();
+                    client.send( JSON.stringify(output) );
                 });
             }
         });
