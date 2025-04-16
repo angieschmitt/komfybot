@@ -7,11 +7,13 @@ function init() {
     wss.on('connection', function connection(ws, req) {
 
         var userID = req.url.substr(1);
-        if(!(userID in users)){
+        if (!Object.values(users).includes(userID)) {
+            users.push(userID);
+        } else {
+            const key = getKeyByValue(users, userID);
+            users.splice(key, 1);
             users.push(userID);
         }
-
-        console.log(users);
 
         ws.on('error', console.error);
 
@@ -29,9 +31,7 @@ function init() {
                         client.send( parsed['ping'] + ' => ' + Math.random() );
                     }
                     iter++;
-                });
-
-                
+                });                
             }
             else {
                 wss.clients.forEach(function (client) {
