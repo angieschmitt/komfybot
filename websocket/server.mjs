@@ -18,9 +18,9 @@ function init() {
         ws.on('error', console.error);
 
         ws.on('message', function message(data) {
-            console.log('Received: %s', data);
+            // console.log('Received: %s', data);
 
-            console.log(users);
+            // console.log(users);
             let list = Array.from(wss.clients);
 
             let output = {
@@ -29,24 +29,46 @@ function init() {
 
             if ( isJson(data) ){
 
-                const panel = getKeyByValue(users, 'panel');
-
                 const parsed = JSON.parse(data);
-                let target = getKeyByValue(users, parsed['action'].toString());
 
-                if (parsed['action'] == 'refresh'){
-                    target = panel;
+                let action = parsed['action'].toString();
+                let source = parsed['source'].toString();
+                let target = 999;
+
+                output['userList'] = users;
+
+                console.log(action);
+
+                switch (action) {
+                    case 'all':
+                        break;
+                    case 'close':
+                        // remove closed connection
+                        users.splice(getKeyByValue(users, source), 1);
+                        output['userList'] = users;
+                        target = getKeyByValue(users, 'panel');
+                        action = 'refresh';
+                        break;
+                    case 'refresh':
+                        target = getKeyByValue(users, 'panel');
+                        break;
+                    default:
+                        target = getKeyByValue(users, action);
+                        break;
                 }
+
+                console.log(target);
+                output['response'] = action;
+                console.log(output);
 
                 // Loop over all the connections because we have to anyway...
                 let iter = 0;
                 wss.clients.forEach(function (client) {
                     if (iter == target){
-                        output['response'] = parsed['action'];
                         client.send( JSON.stringify(output) );
                     }
                     iter++;
-                });                
+                });
             }
             else {
                 wss.clients.forEach(function (client) {
