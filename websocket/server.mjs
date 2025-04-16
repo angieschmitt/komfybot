@@ -18,10 +18,6 @@ function init() {
         ws.on('error', console.error);
 
         ws.on('message', function message(data) {
-            // console.log('Received: %s', data);
-
-            // console.log(users);
-            let list = Array.from(wss.clients);
 
             let output = {
                 'userList' : users
@@ -34,10 +30,6 @@ function init() {
                 let action = parsed['action'].toString();
                 let source = parsed['source'].toString();
                 let target = 999;
-
-                output['userList'] = users;
-
-                console.log(action);
 
                 switch (action) {
                     case 'all':
@@ -57,14 +49,12 @@ function init() {
                         break;
                 }
 
-                console.log(target);
                 output['response'] = action;
-                console.log(output);
 
                 // Loop over all the connections because we have to anyway...
                 let iter = 0;
                 wss.clients.forEach(function (client) {
-                    if (iter == target){
+                    if (iter == target || target == 999){
                         client.send( JSON.stringify(output) );
                     }
                     iter++;
