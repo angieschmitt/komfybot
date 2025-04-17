@@ -3,7 +3,7 @@ const data = dataFile.content();
 
 module.exports = {
 	list: false,
-	name: 'kb_leave',
+	name: 'kbleave',
 	help: 'Leave a channel',
 	actions: {
 		default: {

@@ -77,7 +77,16 @@ module.exports = {
 			execute(args, tags, message, channel, client) {
 				data.functions.loadSettings(client, true);
 				data.functions.loadExternalSettings(client, data);
-				client.say(channel, 'Reloaded settings.');
+
+				const content = 'Reloaded settings.';
+				if ('silent' in tags) {
+					if (tags.silent !== true) {
+						client.say(channel, content);
+					}
+				}
+				else {
+					client.say(channel, content);
+				}
 			},
 		},
 	},
