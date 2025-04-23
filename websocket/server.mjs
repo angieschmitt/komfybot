@@ -87,14 +87,6 @@ function init() {
                 });
             }
         });
-
-        ws.on('error', console.error);
-    
-        ws.on('message', function message(data) {
-            console.log('received: %s', data);
-        });
-    
-        ws.send('something');
     });
 
     server.listen(8080);
