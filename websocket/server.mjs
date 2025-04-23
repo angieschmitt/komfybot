@@ -7,6 +7,9 @@ function init() {
     wss.on('connection', function connection(ws, req) {
 
         var userID = req.url.substr(1);
+
+        console.log(userID);
+
         if (!Object.values(users).includes(userID)) {
             users.push(userID);
         } else {
@@ -14,6 +17,8 @@ function init() {
             users.splice(key, 1);
             users.push(userID);
         }
+
+        console.log(users);
 
         ws.on('error', console.error);
 
