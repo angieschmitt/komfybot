@@ -517,6 +517,37 @@ const functions = {
 			return data;
 		}
 	},
+	// Hand the websocket...
+	handleWebSocket(data, client) {
+
+		const identifier = 'komfybot';
+		const websocket = new WebSocket('wss://localhost:8080/' + identifier);
+
+		websocket.onopen = () => {
+			console.log('open');
+			websocket.send(JSON.stringify({ 'action': 'refresh', 'source': identifier }));
+			data.debug.write('global', 'WEBSOCKET_CONNECTED');
+
+			// Handle websocket items...
+			// data.functions.handlePopCat(data, client);
+		};
+
+		websocket.onmessage = (event) => {
+			const data = JSON.parse(event.data);
+			console.log(data);
+		};
+
+		websocket.onerror = (error) => {
+			console.log(error);
+			// parent.handleWebSocket(data, client);
+		};
+
+		websocket.onclose = (event) => {
+			console.log(event.code);
+		};
+
+		client.websocket = websocket;
+	},
 	// channel points
 	handleChannelPoints(data, client) {
 		const parent = this;
