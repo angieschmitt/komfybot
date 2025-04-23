@@ -36,6 +36,9 @@ data.functions.loadExternalSettings(client, data);
 data.functions.checkForCommandRefresh(data, client);
 data.functions.checkForTimerRefresh(data, client);
 
+// Start the channel points watcher
+data.functions.handleChannelPoints(data, client);
+
 // Connect to the websocket?
 const identifier = 'komfybot-dev';
 const websocket = new WebSocket('ws://64.176.216.41:8080/' + identifier);
@@ -44,8 +47,8 @@ websocket.onopen = () => {
 	websocket.send(JSON.stringify({ 'action': 'refresh', 'source': identifier }));
 	data.debug.write('global', 'WEBSOCKET_CONNECTED');
 
-	// Start the channel points watcher
-	data.functions.handleChannelPoints(data, websocket);
+	// Handle websocket items...
+	data.functions.handlePopCat(data, websocket);
 };
 
 websocket.onmessage = (event) => {

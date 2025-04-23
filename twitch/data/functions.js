@@ -518,14 +518,14 @@ const functions = {
 		}
 	},
 	// channel points
-	handleChannelPoints(data, websocket) {
+	handleChannelPoints(data, client) {
 		const parent = this;
 		setInterval(function() {
 			axios.get(data.settings.finalUrl + 'channel_points/insert/')
 				.then(() => {
 					parent.handleLights(data);
-					parent.handleVIP(data);
-					parent.handlePopCat(data, websocket);
+					parent.handleCoinConvert(data, client);
+					parent.handleVIP(data, client);
 				}).catch(err => console.log(err));
 		}, 5000);
 	},
@@ -540,11 +540,18 @@ const functions = {
 	handleVIP(data) {
 		axios.get(data.settings.finalBase + 'redeems/vip/manage');
 	},
-	handleCoinConvert(data) {
+	handleCoinConvert(data, client) {
+		const parent = this;
 		axios.get(data.settings.finalUrl + 'channel_points/retrieve/coin_convert')
 			.then((response) => {
 				if (response.data.status == 'success') {
-					// axios.get(data.settings.finalBase + 'redeems/coins/convert/' + response.data.response);
+					axios.get(data.settings.finalBase + 'redeems/coins/convert/' + response.data.response)
+						.then((response2) => {
+							if (response2.data.status == 'success') {
+								client.say('#komfykiwi', parent.speakConvertor('Redeem processed!'));
+							}
+						})
+						.catch(err => console.log(err));
 				}
 			}).catch(err => console.log(err));
 	},
