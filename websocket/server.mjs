@@ -57,6 +57,8 @@ function init() {
                     output['data'] = parsed['data'].toString()
                 }
 
+                output['timestamp'] = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
                 // Loop over all the connections because we have to anyway...
                 let iter = 0;
                 wss.clients.forEach(function (client) {
