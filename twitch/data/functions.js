@@ -521,7 +521,7 @@ const functions = {
 	handleWebSocket(data, client) {
 
 		const identifier = 'komfybot';
-		const websocket = new WebSocket('wss://64.176.216.41:8080/' + identifier);
+		const websocket = new WebSocket('wss://127.0.0.1:8080/' + identifier);
 
 		websocket.onopen = () => {
 			console.log('open');
