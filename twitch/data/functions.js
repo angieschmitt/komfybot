@@ -517,6 +517,45 @@ const functions = {
 			return data;
 		}
 	},
+	// channel points
+	handleChannelPoints(data, websocket) {
+		const parent = this;
+		setInterval(function() {
+			axios.get(data.settings.finalUrl + 'channel_points/insert/')
+				.then(() => {
+					parent.handleLights(data);
+					parent.handleVIP(data);
+					parent.handlePopCat(data, websocket);
+				}).catch(err => console.log(err));
+		}, 5000);
+	},
+	handleLights(data) {
+		axios.get(data.settings.finalUrl + 'channel_points/retrieve/stream_color')
+			.then((response) => {
+				if (response.data.status == 'success') {
+					axios.get(data.settings.finalBase + 'redeems/lights/update/' + response.data.response);
+				}
+			}).catch(err => console.log(err));
+	},
+	handleVIP(data) {
+		axios.get(data.settings.finalBase + 'redeems/vip/manage');
+	},
+	handleCoinConvert(data) {
+		axios.get(data.settings.finalUrl + 'channel_points/retrieve/coin_convert')
+			.then((response) => {
+				if (response.data.status == 'success') {
+					// axios.get(data.settings.finalBase + 'redeems/coins/convert/' + response.data.response);
+				}
+			}).catch(err => console.log(err));
+	},
+	handlePopCat(data, websocket) {
+		axios.get(data.settings.finalUrl + 'channel_points/retrieve/pop_cat')
+			.then((response) => {
+				if (response.data.status == 'success') {
+					websocket.send(JSON.stringify({ 'action': 'popcat', 'source': 'komfybot', 'data': response.data.response }));
+				}
+			});
+	},
 };
 
 // mymodule.js

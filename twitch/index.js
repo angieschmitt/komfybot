@@ -1,7 +1,5 @@
 const tmi = require('tmi.js');
 const axios = require('axios');
-// const fs = require('node:fs');
-// const path = require('node:path');
 
 // Load in data
 const dataFile = require('./data/index');
@@ -10,8 +8,11 @@ const data = dataFile.content();
 // Set current branch
 data.currentBranch = 'live';
 
-// Define auth for axios stuff
+// Define axios stuff
 axios.defaults.headers.common['Authorization'] = data.settings.apiKey;
+// axios.defaults.headers.common['Cache-Control'] = 'no-cache, no-store, must-revalidate';
+// axios.defaults.headers.common['Pragma'] = 'no-cache';
+// axios.defaults.headers.common['Expires'] = '0';
 
 // Connect to Twitch:
 const client = new tmi.client(data.settings[ data.currentBranch ]);
@@ -34,6 +35,23 @@ data.functions.loadExternalSettings(client, data);
 // Start the command refresh check
 data.functions.checkForCommandRefresh(data, client);
 data.functions.checkForTimerRefresh(data, client);
+
+// Connect to the websocket?
+const identifier = 'komfybot';
+const websocket = new WebSocket('ws://64.176.216.41:8080/' + identifier);
+
+websocket.onopen = () => {
+	websocket.send(JSON.stringify({ 'action': 'refresh', 'source': identifier }));
+	data.debug.write('global', 'WEBSOCKET_CONNECTED');
+
+	// Start the channel points watcher
+	data.functions.handleChannelPoints(data, websocket);
+};
+
+websocket.onmessage = (event) => {
+	const data = JSON.parse(event.data);
+	console.log(data);
+};
 
 // Start the timers
 data.functions.handleTimers(data, client);

@@ -45,8 +45,8 @@ module.exports = {
 						// Trigger reload of commands
 						tags['silent'] = true;
 						client.commands.global.reload.actions.commands.execute(args, tags, message, channel, client);
-                        client.commands.global.reload.actions.timers.execute(args, tags, message, channel, client);
-                        client.commands.global.reload.actions.settings.execute(args, tags, message, channel, client);
+						client.commands.global.reload.actions.timers.execute(args, tags, message, channel, client);
+						client.commands.global.reload.actions.settings.execute(args, tags, message, channel, client);
 					})
 					.catch((error) => {
 						data.debug.write(channel, 'JOIN_ERROR', error);

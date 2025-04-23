@@ -229,8 +229,6 @@ module.exports = {
 	currencyHandler(value, channel, client) {
 		let currencyOut = false;
 
-        console.log(client);
-
 		if (value > 1) {
 			if ('currency_name_plural' in client.settings[channel]) {
 				currencyOut = client.settings[channel].currency_name_plural;
