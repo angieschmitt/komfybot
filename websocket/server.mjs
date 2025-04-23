@@ -50,6 +50,9 @@ function init() {
                 }
 
                 output['response'] = action;
+                if ('data' in parsed){
+                    output['data'] = parsed['data'].toString()
+                }
 
                 // Loop over all the connections because we have to anyway...
                 let iter = 0;
