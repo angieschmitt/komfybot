@@ -1,6 +1,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const axios = require('axios');
+const ws = require('ws');
 
 // Load settings, assign apiKey
 const settingsFile = require('./settings');
@@ -519,17 +520,25 @@ const functions = {
 	},
 	// Hand the websocket...
 	handleWebSocket(data, client) {
+		const parent = this;
 
+		let interval = false;
 		const identifier = 'komfybot';
-		const websocket = new WebSocket('wss://localhost:8080/' + identifier, null, null, null, {rejectUnauthorized: false});
+		const websocket = new ws('wss://64.176.216.41:8080/' + identifier, { rejectUnauthorized: false });
 
 		websocket.onopen = () => {
-			console.log('open');
 			websocket.send(JSON.stringify({ 'action': 'refresh', 'source': identifier }));
 			data.debug.write('global', 'WEBSOCKET_CONNECTED');
 
 			// Handle websocket items...
-			// data.functions.handlePopCat(data, client);
+			interval = setInterval(
+				() => {
+					data.functions.handlePopCat(data, client);
+				},
+				5000,
+				data,
+				client,
+			);
 		};
 
 		websocket.onmessage = (event) => {
@@ -539,11 +548,14 @@ const functions = {
 
 		websocket.onerror = (error) => {
 			console.log(error);
-			// parent.handleWebSocket(data, client);
 		};
 
 		websocket.onclose = (event) => {
 			console.log(event.code);
+			clearInterval(interval);
+			setTimeout(function() {
+				parent.handleWebSocket(data, client);
+			}, 1000, data, client);
 		};
 
 		client.websocket = websocket;
@@ -587,11 +599,11 @@ const functions = {
 				}
 			}).catch(err => console.log(err));
 	},
-	handlePopCat(data, websocket) {
+	handlePopCat(data, client) {
 		axios.get(data.settings.finalUrl + 'channel_points/retrieve/pop_cat')
 			.then((response) => {
 				if (response.data.status == 'success') {
-					websocket.send(JSON.stringify({ 'action': 'popcat', 'source': 'komfybot', 'data': response.data.response }));
+					client.websocket.send(JSON.stringify({ 'action': 'popcat', 'source': 'komfybot', 'data': response.data.response }));
 				}
 			});
 	},
