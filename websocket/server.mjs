@@ -75,6 +75,8 @@ function init() {
                     client.send( JSON.stringify(output) );
                 });
             }
+
+            console.log( wss.clients );
         });
     });
 }
