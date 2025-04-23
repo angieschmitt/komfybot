@@ -27,6 +27,8 @@ function init() {
 
                 const parsed = JSON.parse(data);
 
+                console.log(parsed);
+
                 let action = parsed['action'].toString();
                 let source = parsed['source'].toString();
                 let target = 999;
@@ -64,6 +66,9 @@ function init() {
                 });
             }
             else {
+
+                console.log(data);
+
                 wss.clients.forEach(function (client) {
                     output['response'] = 'OOGA: ' + Math.random();
                     client.send( JSON.stringify(output) );
