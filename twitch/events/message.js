@@ -89,24 +89,20 @@ module.exports = {
 		// 	.then(res => {
 		// 		if (res.live === true || perms.streamer === true || perms.admin === true) {
 
-					// If command was found, do this stuff...
-					if (commandData) {
-						if (module.exports.handleCommand(commandData, channel, perms, tags, message, client)) {
-							console.log('Used command: ' + commandData.command.name + ' ' + (commandData.args[1] ? commandData.args[1] : ''));
-						}
-					}
-					// If not, do this stuff...
-					else {
-						// const currencyEnabled = client.commands.global.giveaway.currencyCheck(channelName, client);
-						// const passiveIncomeAmt = 2;
-						// if (currencyEnabled) {
-						// 	const args2 = ['!coins', 'add', tags.username, passiveIncomeAmt, 'Passive Income - Twitch Chat' ];
-						// 	const message2 = `!coins add ${tags.username} ${passiveIncomeAmt} Passive Income - Twitch Chat`;
-						// 	tags['silent'] = true;
-						// 	client.commands.komfykiwi.coins.actions.add.execute(args2, tags, message2, channel, client);
-						// 	console.log('PI : ' + passiveIncomeAmt);
-						// }
-					}
+		// If command was found, do this stuff...
+		if (commandData) {
+			if (module.exports.handleCommand(commandData, channel, perms, tags, message, client)) {
+				console.log('Used command: ' + commandData.command.name + ' ' + (commandData.args[1] ? commandData.args[1] : ''));
+			}
+		}
+		// If not, do this stuff...
+		else {
+			const currencyEnabled = client.commands.global.giveaway.currencyCheck(channelName, client);
+			if (currencyEnabled) {
+				tags['passiveAmt'] = 2;
+				client.commands.komfykiwi.coins.actions.handlePassiveIncome.execute(tags, channel, client);
+			}
+		}
 		// 		}
 		// 		else {
 		// 			/* eslint-disable-next-line no-lonely-if */

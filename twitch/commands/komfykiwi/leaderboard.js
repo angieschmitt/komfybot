@@ -7,7 +7,7 @@ axios.defaults.headers.common['Authorization'] = data.settings.apiKey;
 module.exports = {
 	list: false,
 	name: 'leaderboard',
-	channel: 'komfykiwi',
+	// channel: 'komfykiwi',
 	help: 'Shows who is in the lead for different things! Additional arguments: hoarders, spenders',
 	aliases: {
 		'top': {
@@ -29,8 +29,11 @@ module.exports = {
 		},
 		hoarders: {
 			execute(args, tags, message, channel, client) {
+
+				const jsonData = { 'action': 'hold' };
+
 				let content = '';
-				axios.get(data.settings.finalUrl + 'coins/retrieve/hold/')
+				axios.get(data.settings.finalUrl + 'coins/retrieve/json/' + encodeURIComponent(JSON.stringify(jsonData)))
 					.then(function(response) {
 						const resData = response.data;
 						if (resData.status === 'success') {
@@ -38,7 +41,7 @@ module.exports = {
 								content += 'Top 5 Coin Holders: ';
 								// eslint-disable-next-line no-unused-vars
 								Object.entries(resData.response).forEach(([key, details]) => {
-									content += `${details['username']} - ${details['total']} || `;
+									content += `${details['username']} :: ${details['total']} || `;
 								});
 								content = content.substring(0, content.length - 4);
 							}
@@ -65,8 +68,11 @@ module.exports = {
 		},
 		spenders: {
 			execute(args, tags, message, channel, client) {
+
+				const jsonData = { 'action': 'spent' };
+
 				let content = '';
-				axios.get(data.settings.finalUrl + 'coins/retrieve/spent/')
+				axios.get(data.settings.finalUrl + 'coins/retrieve/json/' + encodeURIComponent(JSON.stringify(jsonData)))
 					.then(function(response) {
 						const resData = response.data;
 						if (resData.status === 'success') {
@@ -74,7 +80,7 @@ module.exports = {
 								content += 'Top 5 Coin Spenders: ';
 								// eslint-disable-next-line no-unused-vars
 								Object.entries(resData.response).forEach(([key, details]) => {
-									content += `${details['username']} - ${details['total']} || `;
+									content += `${details['username']} :: ${parseInt(details['total']) * -1} || `;
 								});
 								content = content.substring(0, content.length - 4);
 							}
