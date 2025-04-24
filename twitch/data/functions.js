@@ -522,7 +522,7 @@ const functions = {
 	handleWebSocket(data, client) {
 		const parent = this;
 
-		let interval = false;
+		// let interval = false;
 		const identifier = 'komfybot';
 		const websocket = new ws('wss://64.176.216.41:8080/' + identifier, { rejectUnauthorized: false });
 
@@ -530,15 +530,15 @@ const functions = {
 			websocket.send(JSON.stringify({ 'action': 'refresh', 'source': identifier }));
 			data.debug.write('global', 'WEBSOCKET_CONNECTED');
 
-			// Handle websocket items...
-			interval = setInterval(
-				() => {
-					data.functions.handlePopCat(data, client);
-				},
-				5000,
-				data,
-				client,
-			);
+			// // Handle websocket items...
+			// interval = setInterval(
+			// 	() => {
+			// 		data.functions.handlePopCat(data, client);
+			// 	},
+			// 	5000,
+			// 	data,
+			// 	client,
+			// );
 		};
 
 		websocket.onmessage = (event) => {
@@ -552,7 +552,7 @@ const functions = {
 
 		websocket.onclose = (event) => {
 			console.log(event.code);
-			clearInterval(interval);
+			// clearInterval(interval);
 			setTimeout(function() {
 				parent.handleWebSocket(data, client);
 			}, 1000, data, client);
@@ -566,10 +566,47 @@ const functions = {
 		const parent = this;
 		setInterval(function() {
 			axios.get(data.settings.finalUrl + 'channel_points/insert/')
-				.then(() => {
-					parent.handleLights(data);
-					parent.handleCoinConvert(data, client);
-					parent.handleVIP(data, client);
+				.then((response) => {
+
+					const items = response.data.response;
+					if (Object.keys(items).length > 0) {
+						Object.entries(items).forEach(([key, value]) => {
+							switch (key) {
+							case 'bird_swarm':
+								parent.handleWebsocketRedeem('birbs', value, client);
+								break;
+							case 'coin_convert':
+								parent.handleCoinConvert(data, client);
+								break;
+							case 'give_snack':
+								// parent.handleCoinConvert(data, client);
+								break;
+							case 'loading':
+								// parent.handleLoading(data, client);
+								break;
+							case 'pop_cat':
+								parent.handleWebsocketRedeem('popcat', value, client);
+								break;
+							case 'set_hat':
+								// parent.handleHatSet(client, value);
+								break;
+							case 'stream_color':
+								parent.handleLights(data);
+								break;
+							case 'vip_level_1':
+								// parent.handleVIP(data, client);
+								break;
+							case 'vip_level_2':
+								// parent.handleVIP(data, client);
+								break;
+							case 'vip_level_3':
+								// parent.handleVIP(data, client);
+								break;
+							default:
+								break;
+							}
+						});
+					}
 				}).catch(err => console.log(err));
 		}, 5000);
 	},
@@ -599,13 +636,9 @@ const functions = {
 				}
 			}).catch(err => console.log(err));
 	},
-	handlePopCat(data, client) {
-		axios.get(data.settings.finalUrl + 'channel_points/retrieve/pop_cat')
-			.then((response) => {
-				if (response.data.status == 'success') {
-					client.websocket.send(JSON.stringify({ 'action': 'popcat', 'source': 'komfybot', 'data': response.data.response }));
-				}
-			});
+	// Websocket powered
+	handleWebsocketRedeem(type, redeemId, client) {
+		client.websocket.send(JSON.stringify({ 'action': type, 'source': 'komfybot', 'data': redeemId }));
 	},
 };
 

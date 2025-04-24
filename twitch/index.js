@@ -36,11 +36,11 @@ data.functions.loadExternalSettings(client, data);
 data.functions.checkForCommandRefresh(data, client);
 data.functions.checkForTimerRefresh(data, client);
 
-// Start the channel points watcher
-data.functions.handleChannelPoints(data, client);
-
 // Connect to the websocket
 data.functions.handleWebSocket(data, client);
+
+// Start the channel points watcher
+data.functions.handleChannelPoints(data, client);
 
 // Start the timers
 data.functions.handleTimers(data, client);
