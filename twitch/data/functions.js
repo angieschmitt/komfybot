@@ -567,49 +567,63 @@ const functions = {
 		setInterval(function() {
 			axios.get(data.settings.finalUrl + 'channel_points/insert/')
 				.then((response) => {
-
 					const items = response.data.response;
 					if (Object.keys(items).length > 0) {
 						Object.entries(items).forEach(([key, value]) => {
-							switch (key) {
-							case 'bird_swarm':
-								parent.handleWebsocketRedeem('birbs', value, client);
-								break;
-							case 'coin_convert':
-								parent.handleCoinConvert(data, client);
-								break;
-							case 'give_snack':
-								// parent.handleCoinConvert(data, client);
-								break;
-							case 'loading':
-								// parent.handleLoading(data, client);
-								break;
-							case 'pop_cat':
-								parent.handleWebsocketRedeem('popcat', value, client);
-								break;
-							case 'set_hat':
-								// parent.handleHatSet(client, value);
-								break;
-							case 'stream_color':
-								parent.handleLights(data);
-								break;
-							case 'vip_level_1':
-								// parent.handleVIP(data, client);
-								break;
-							case 'vip_level_2':
-								// parent.handleVIP(data, client);
-								break;
-							case 'vip_level_3':
-								// parent.handleVIP(data, client);
-								break;
-							default:
-								break;
-							}
+							parent.handleChannelPointRedeem(key, value, client, data);
 						});
 					}
+
+					axios.get(data.settings.finalUrl + 'channel_points/retrieve/')
+						.then((response) => {
+							const items = response.data.response;
+							if (Object.keys(items).length > 0) {
+								Object.entries(items).forEach(([key, value]) => {
+									parent.handleChannelPointRedeem(key, value, client, data);
+								});
+							}
+						}).catch(err => console.log(err));
 				}).catch(err => console.log(err));
 		}, 5000);
 	},
+	handleChannelPointRedeem(key, value, client, data) {
+		const parent = this;
+		switch (key) {
+		case 'bird_swarm':
+			parent.handleWebsocketRedeem('birbs', value, client);
+			break;
+		case 'coin_convert':
+			parent.handleCoinConvert(data, client);
+			break;
+		case 'give_snack':
+			// parent.handleCoinConvert(data, client);
+			break;
+		case 'loading':
+			// parent.handleLoading(data, client);
+			break;
+		case 'pop_cat':
+			parent.handleWebsocketRedeem('popcat', value, client);
+			break;
+		case 'set_hat':
+			// parent.handleHatSet(client, value);
+			break;
+		case 'stream_color':
+			parent.handleLights(data);
+			break;
+		case 'vip_level_1':
+			// parent.handleVIP(data, client);
+			break;
+		case 'vip_level_2':
+			// parent.handleVIP(data, client);
+			break;
+		case 'vip_level_3':
+			// parent.handleVIP(data, client);
+			break;
+		default:
+			break;
+		}
+	},
+	// Actual Channel Point functions
 	handleLights(data) {
 		axios.get(data.settings.finalUrl + 'channel_points/retrieve/stream_color')
 			.then((response) => {
