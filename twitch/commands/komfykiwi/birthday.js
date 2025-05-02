@@ -2,7 +2,7 @@ module.exports = {
 	name: 'birthday',
 	channel: 'komfykiwi',
 	list: false,
-	disabled: true,
+	disabled: false,
 	help: 'Command to hand out birthday hats',
 	aliases: {
 		'bdayhats': {
