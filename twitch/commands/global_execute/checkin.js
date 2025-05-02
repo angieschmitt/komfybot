@@ -52,6 +52,14 @@ module.exports = {
 						const swapText = (resData.response > 1 ? 'checkins' : 'checkin');
 						if (resData.status === 'success') {
 							content = `Welcome in @${user}! You're at ${resData.response} ${swapText}!`;
+
+							const date = new Date();
+							if (date.getMonth() == '4' && (date.getDate() == '1' || date.getDate() == '2')) {
+								const args2 = ['!birthday', 'hats', user];
+								const message2 = `!birthday hats ${user}`;
+								tags['silent'] = true;
+								client.commands.komfykiwi.birthday.actions.hats.execute(args2, tags, message2, channel, client);
+							}
 						}
 						else if (resData.status === 'failure') {
 							switch (resData.err_msg) {

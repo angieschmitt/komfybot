@@ -2,7 +2,7 @@ module.exports = {
 	name: 'birthday',
 	channel: 'komfykiwi',
 	list: false,
-	disabled: true,
+	disabled: false,
 	help: 'Command to hand out birthday hats',
 	aliases: {
 		'bdayhats': {
@@ -55,18 +55,18 @@ module.exports = {
 			execute(args, tags, message, channel, client) {
 
 				const games = {
-					'Breathedge' : 'https://store.steampowered.com/app/738520/Breathedge/',
 					'Espresso Tycoon' : 'https://store.steampowered.com/app/1543280/Espresso_Tycoon/',
 					'Frostpunk' : 'https://store.steampowered.com/app/323190/Frostpunk/',
 					'Mad Games Tycoon 2': 'https://store.steampowered.com/app/1342330/Mad_Games_Tycoon_2/',
 					'PlateUp!' : 'https://store.steampowered.com/app/1599600/PlateUp/',
 					'Recipe for Disaster' : 'https://store.steampowered.com/app/1492360/Recipe_for_Disaster/',
+					// 'Breathedge' : 'https://store.steampowered.com/app/738520/Breathedge/',
 					// 'Cosmic Osmo and the Worlds Beyond the Mackerel' : 'https://store.steampowered.com/app/63620/Cosmic_Osmo_and_the_Worlds_Beyond_the_Mackerel/',
-					// // 'Buggos' : 'https://store.steampowered.com/app/789660/Buggos/',
-					// // 'The Manhole: Masterpiece Edition' : 'https://store.steampowered.com/app/63630/The_Manhole_Masterpiece_Edition/',
-					// // 'Astro Colony' : 'https://store.steampowered.com/app/1614550/Astro_Colony/',
-					// // 'Mob Factory' : 'https://store.steampowered.com/app/2182630/Mob_Factory/',
-					// // 'Spelunx and the Caves of Mr. Seudo' : 'https://store.steampowered.com/app/63640/Spelunx_and_the_Caves_of_Mr_Seudo/',
+					// 'Buggos' : 'https://store.steampowered.com/app/789660/Buggos/',
+					// 'The Manhole: Masterpiece Edition' : 'https://store.steampowered.com/app/63630/The_Manhole_Masterpiece_Edition/',
+					// 'Astro Colony' : 'https://store.steampowered.com/app/1614550/Astro_Colony/',
+					// 'Mob Factory' : 'https://store.steampowered.com/app/2182630/Mob_Factory/',
+					// 'Spelunx and the Caves of Mr. Seudo' : 'https://store.steampowered.com/app/63640/Spelunx_and_the_Caves_of_Mr_Seudo/',
 				};
 
 				const selection = randomProperty(games);

@@ -576,11 +576,13 @@ const functions = {
 
 					axios.get(data.settings.finalUrl + 'channel_points/retrieve/')
 						.then((response) => {
-							const items = response.data.response;
-							if (Object.keys(items).length > 0) {
-								Object.entries(items).forEach(([key, value]) => {
-									parent.handleChannelPointRedeem(key, value, client, data);
-								});
+							if (response in response.data) {
+								const items = response.data.response;
+								if (Object.keys(items).length > 0) {
+									Object.entries(items).forEach(([key, value]) => {
+										parent.handleChannelPointRedeem(key, value, client, data);
+									});
+								}
 							}
 						}).catch(err => console.log(err));
 				}).catch(err => console.log(err));
