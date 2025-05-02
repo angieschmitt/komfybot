@@ -30,7 +30,7 @@ module.exports = {
 					'Cult of the Hattyboi',
 					'Monster Race Hat',
 					'MTG Hat',
-					'Santa Hat',
+					// 'Santa Hat',
 					'Party Hat - Blue',
 					'Party Hat - Green',
 					'Party Hat - Red',
@@ -44,7 +44,7 @@ module.exports = {
 					client.commands.komfykiwi.hattington.actions.give.execute(args2, tags, message2, channel, client);
 				});
 
-				client.say(channel, `Handed out the birthday hats to ${args[2]}! Enjoy your Pie Hat, Cult of the Hattyboi Hat, Monster Race Hat, MTG Hat, Santa Hat and all the Party Hats!`);
+				client.say(channel, `Handed out the birthday hats to ${args[2]}! Enjoy your Pie Hat, Cult of the Hattyboi Hat, Monster Race Hat, MTG Hat and all the Party Hats!`);
 			},
 		},
 		raffle: {
@@ -56,7 +56,10 @@ module.exports = {
 
 				const games = {
 					'Breathedge' : 'https://store.steampowered.com/app/738520/Breathedge/',
-					'Factory Town' : 'https://store.steampowered.com/app/860890/Factory_Town/',
+					'Espresso Tycoon' : 'https://store.steampowered.com/app/1543280/Espresso_Tycoon/',
+					'Frostpunk' : 'https://store.steampowered.com/app/323190/Frostpunk/',
+					'Mad Games Tycoon 2': 'https://store.steampowered.com/app/1342330/Mad_Games_Tycoon_2/',
+					'PlateUp!' : 'https://store.steampowered.com/app/1599600/PlateUp/',
 					'Recipe for Disaster' : 'https://store.steampowered.com/app/1492360/Recipe_for_Disaster/',
 					// 'Cosmic Osmo and the Worlds Beyond the Mackerel' : 'https://store.steampowered.com/app/63620/Cosmic_Osmo_and_the_Worlds_Beyond_the_Mackerel/',
 					// // 'Buggos' : 'https://store.steampowered.com/app/789660/Buggos/',
