@@ -101,7 +101,6 @@ const functions = {
 
 				if (command.disabled !== true) {
 					if (command.channel !== '' && command.channel !== undefined) {
-
 						if (typeof command.channel == 'object') {
 							// eslint-disable-next-line no-unused-vars
 							Object.entries(command.channel).forEach(([key, channel]) => {
