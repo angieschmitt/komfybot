@@ -260,6 +260,59 @@ module.exports = {
 			client.say(channel, `${output}`);
 			return true;
 		}
+		else if ('random' in action) {
+
+			let output = module.exports.randomProperty(module.exports.shuffleObject(action.random));
+			let proceed = true;
+
+			// Handle perms/proceed, assign output if needed
+			if (action.perms !== undefined) {
+				if (action.perms) {
+					let hasPerm = false;
+					for (const [key] of Object.entries(perms)) {
+						if (action.perms['levels'].includes(key)) {
+							hasPerm = true;
+						}
+					}
+					if (!hasPerm) {
+						output = `${tags.username}, ${action.perms.error}`;
+						proceed = false;
+					}
+				}
+			}
+
+			// Handle the action now
+			// TO DO: Args?
+			if (proceed) {
+				if (action.args) {
+					// Find out how many required, start at 2 because !command and first arg
+					let count = 2;
+					for (const [key] of Object.entries(action.args)) {
+						if (action.args[key][0] === 'r') { count++; }
+					}
+					// Check full length vs required count
+					if (args.length < count) {
+						// console.log('Missed an argument');
+						return false;
+					}
+
+					for (const [key] of Object.entries(action.args)) {
+						if (args[(parseInt(key) + 1)] === undefined) {
+							if (action.args[key][1] === 'tags.username') {
+								output = output.replace('@' + key, tags.username);
+							}
+						}
+						else {
+							output = output.replace('@' + key, args[(parseInt(key) + 1)]);
+						}
+					}
+				}
+			}
+
+			// Output output...
+			client.say(channel, `${output}`);
+			return true;
+		}
 		else if ('execute' in action) {
 			let output = '';
 			let proceed = true;
@@ -376,5 +429,18 @@ module.exports = {
 		const milli = (a.getMilliseconds() < 10 ? '0' : '') + a.getMilliseconds();
 		const time = month + ' ' + date + ' ' + year + ' ' + hour + ':' + min + ':' + sec + ':' + milli;
 		return time;
+	},
+	randomProperty(obj) {
+		const values = Object.values(obj);
+		const random = values[Math.floor(Math.random() * values.length)];
+		return random;
+	},
+	shuffleObject(obj) {
+		const entries = Object.entries(obj);
+		for (let i = entries.length - 1; i > 0; i--) {
+			const j = Math.floor(Math.random() * (i + 1));
+			[entries[i], entries[j]] = [entries[j], entries[i]];
+		}
+		return Object.fromEntries(entries);
 	},
 };
