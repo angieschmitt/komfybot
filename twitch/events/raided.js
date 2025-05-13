@@ -62,7 +62,7 @@ module.exports = {
 													})
 													.finally(function() {
 														client.say(channel, content);
-														// axios.post(data.settings.finalUrl + 'coins_fix');
+														axios.post(data.settings.finalUrl + 'coins/update');
 													});
 											}
 										}

@@ -106,7 +106,7 @@ module.exports = {
 													else {
 														client.say(channel, `${content}`);
 													}
-													axios.post(data.settings.baseUrl + 'coins_fix');
+													axios.post(data.settings.finalUrl + 'coins/update');
 												});
 										}
 										else if (resData2.status === 'failure' && resData2.err_msg === 'not_enough_coins') {
@@ -121,7 +121,7 @@ module.exports = {
 									})
 									.finally(function() {
 										client.say(channel, content);
-										axios.post(data.settings.baseUrl + 'coins_fix');
+										axios.post(data.settings.finalUrl + 'coins/update');
 									});
 							}
 						})
@@ -130,7 +130,7 @@ module.exports = {
 						})
 						.finally(function() {
 							client.say(channel, content);
-							axios.post(data.settings.baseUrl + 'coins_fix');
+							axios.post(data.settings.finalUrl + 'coins/update');
 						});
 				}
 			},

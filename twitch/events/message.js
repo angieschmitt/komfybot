@@ -155,7 +155,7 @@ module.exports = {
 		axios.get(url);
 
 		// Update coin_log
-		// axios.post(data.settings.finalUrl + 'coins_fix');
+		axios.post(data.settings.finalUrl + 'coins/update');
 
 		console.log('- - -');
 	},

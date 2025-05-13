@@ -63,7 +63,7 @@ module.exports = {
 					})
 					.finally(function() {
 						client.say(channel, content);
-						axios.post(data.settings.baseUrl + 'coins_fix');
+						axios.post(data.settings.finalUrl + 'coins/update');
 					});
 			},
 		},
@@ -116,7 +116,7 @@ module.exports = {
 						else {
 							client.say(channel, content);
 						}
-						axios.post(data.settings.baseUrl + 'coins_fix');
+						axios.post(data.settings.finalUrl + 'coins/update');
 					});
 			},
 		},
@@ -149,7 +149,7 @@ module.exports = {
 					})
 					.finally(function() {
 						client.say(channel, content);
-						axios.post(data.settings.baseUrl + 'coins_fix');
+						axios.post(data.settings.finalUrl + 'coins/update');
 					});
 			},
 		},
@@ -240,7 +240,7 @@ module.exports = {
 												})
 												.finally(function() {
 													client.say(channel, content);
-													axios.post(data.settings.baseUrl + 'coins_fix');
+													axios.post(data.settings.finalUrl + 'coins/update');
 												});
 										}
 										else {
@@ -264,7 +264,7 @@ module.exports = {
 												})
 												.finally(function() {
 													client.say(channel, content);
-													axios.post(data.settings.baseUrl + 'coins_fix');
+													axios.post(data.settings.finalUrl + 'coins/update');
 												});
 										}
 									}
@@ -280,7 +280,7 @@ module.exports = {
 								})
 								.finally(function() {
 									client.say(channel, content);
-									axios.post(data.settings.baseUrl + 'coins_fix');
+									axios.post(data.settings.finalUrl + 'coins/update');
 								});
 						}
 					})
@@ -289,7 +289,7 @@ module.exports = {
 					})
 					.finally(function() {
 						client.say(channel, content);
-						axios.post(data.settings.baseUrl + 'coins_fix');
+						axios.post(data.settings.finalUrl + 'coins/update');
 					});
 			},
 		},
