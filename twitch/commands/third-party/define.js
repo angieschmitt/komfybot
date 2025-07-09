@@ -14,50 +14,55 @@ module.exports = {
 		default: {
 			execute(args, tags, message, channel, client) {
 				let output = '';
+
 				if (!args[1]) {
 					client.say(channel, 'Please provide a word to define!');
 				}
-				else if (args[1] === 'nerd') {
-					output = `@${tags.username}, ${args[1]} can be defined as a... noun : (sometimes derogatory) A person who is intellectual but generally introverted. See @MrDrXMan .`;
-					client.say(channel, output);
-				}
-				else if (args[1] === 'nuisance') {
-					output = `@${tags.username}, ${args[1]} can be defined as a.. noun : A minor annoyance or inconvenience. See @YourPalMal . It is pronounced like: /ˈnjuːsəns/.`;
-					client.say(channel, output);
-				}
-				else if (args[1] === 'komfybot') {
-					output = `@${tags.username}, ${args[1]} can be defined as a... noun : The best bot ever (ok, that's a bit subjective, but hear me out...)`;
-					client.say(channel, output);
-				}
 				else {
-					axios.get('https://api.dictionaryapi.dev/api/v2/entries/en/' + args[1])
-						.then(function(response) {
-							const resData = response.data;
+					const lookup = args[1].trim().toLowerCase();
 
-							output = `@${tags.username}, ${args[1]} can be defined as a... `;
-							const meanings = resData[0].meanings;
-							Object.entries(meanings).forEach(([key]) => {
-								output += `${meanings[key].partOfSpeech} : ${meanings[key].definitions[0].definition} || `;
+					if (lookup === 'nerd') {
+						output = `@${tags.username}, ${lookup} can be defined as a... noun : (sometimes derogatory) A person who is intellectual but generally introverted. See @MrDrXMan .`;
+						client.say(channel, output);
+					}
+					else if (lookup === 'nuisance') {
+						output = `@${tags.username}, ${lookup} can be defined as a.. noun : A minor annoyance or inconvenience. See @YourPalMal . It is pronounced like: /ˈnjuːsəns/.`;
+						client.say(channel, output);
+					}
+					else if (lookup === 'komfybot') {
+						output = `@${tags.username}, ${lookup} can be defined as a... noun : The best bot ever (ok, that's a bit subjective, but hear me out...)`;
+						client.say(channel, output);
+					}
+					else {
+						axios.get('https://api.dictionaryapi.dev/api/v2/entries/en/' + lookup)
+							.then(function(response) {
+								const resData = response.data;
+
+								output = `@${tags.username}, ${lookup} can be defined as a... `;
+								const meanings = resData[0].meanings;
+								Object.entries(meanings).forEach(([key]) => {
+									output += `${meanings[key].partOfSpeech} : ${meanings[key].definitions[0].definition} || `;
+								});
+
+								output = output.substring(0, output.length - 3).trim();
+
+								if (resData[0].phonetic) {
+									output += ` It is pronounced like: ${resData[0].phonetic}`;
+								}
+							})
+							.catch(function(caught) {
+								const resData = caught.response.data;
+								if (resData.message == 'Sorry pal, we couldn\'t find definitions for the word you were looking for.') {
+									output = `Sorry @${tags.username}, we couldn't find definitions for the word you were looking for.`;
+								}
+								else {
+									output = 'Something went wrong, tell @kittenAngie.';
+								}
+							})
+							.finally(function() {
+								client.say(channel, output);
 							});
-
-							output = output.substring(0, output.length - 3).trim();
-
-							if (resData[0].phonetic) {
-								output += ` It is pronounced like: ${resData[0].phonetic}`;
-							}
-						})
-						.catch(function(caught) {
-							const resData = caught.response.data;
-							if (resData.message == 'Sorry pal, we couldn\'t find definitions for the word you were looking for.') {
-								output = `Sorry @${tags.username}, we couldn't find definitions for the word you were looking for.`;
-							}
-							else {
-								output = 'Something went wrong, tell @kittenAngie.';
-							}
-						})
-						.finally(function() {
-							client.say(channel, output);
-						});
+					}
 				}
 			},
 		},
