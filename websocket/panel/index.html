@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+    <head>
+        <script type="text/javascript" src="../jquery.min.js"></script>
+    </head>
+    <body>
+        <div class="websocket_test"></div>
+        <div class="buttons"></div>
+        <button onclick="refreshButtons()">Refresh</button>
+        <script>
+
+            const identifier = 'panel';
+            
+            function init(identifier){
+
+                // websocket = new WebSocket('wss://server.komfybot.com:8080/' + identifier);
+                websocket = new WebSocket('wss://64.176.216.41:8080/' + identifier);
+
+                websocket.onopen = () => {
+                    console.log('Socket connected.');
+                    websocket.send(JSON.stringify({ 'action': 'refresh', 'source': identifier }));
+                };
+
+                websocket.onmessage = (event) => {
+                    jQuery(function($){
+
+                        // Handle data from message
+                        const data = JSON.parse(event.data);
+
+                        // Output message
+                        jQuery('.websocket_test').html('Incoming from: ' + data.response + '.');
+
+                        // Handle the buttons
+                        const buttonList = data.userList.sort();
+                        $('.buttons').html('');
+                        buttonList.forEach(element => {
+                            if (element !== 'panel') {
+                                $('.buttons').append('<button onclick="handleButton(\'' + element + '\');">' + element + '</button>');
+                            }
+                        });
+                    });
+                };
+
+                websocket.onclose = function(e) {
+                    console.log('Socket is closed. Reconnect will be attempted in 1 second.', e.reason);
+                    setTimeout(function(identifier) {
+                        init(identifier);
+                    }, 1000, identifier);
+                };
+
+                websocket.onerror = function(err) {
+                    console.error('Socket encountered error: ', err.message, 'Closing socket');
+                    websocket.close();
+                };
+
+                window.addEventListener("beforeunload", (event) => {
+                    websocket.send(JSON.stringify({ 'action': 'close', 'source': identifier }));
+                    websocket.close();
+                });
+
+                return websocket;
+            }
+
+            function refreshButtons(){
+                wss.send(JSON.stringify({ 'action': 'refresh', 'source': identifier }));
+            }
+
+            function handleButton(button){
+                jQuery('.websocket_test').html('Ping ' + button + '.');
+                wss.send(JSON.stringify( { 'action': button, 'source': identifier }));
+            }
+
+            const wss = init(identifier);
+
+            setInterval(
+                ()=>{
+                    if (!wss) {
+                        init(identifier)
+                    }
+                },
+                2000,
+                wss,
+                identifier
+            )
+        </script>
+    </body>
+</html>

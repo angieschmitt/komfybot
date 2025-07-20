@@ -575,11 +575,13 @@ const functions = {
 
 					axios.get(data.settings.finalUrl + 'channel_points/retrieve/')
 						.then((response) => {
-							if (response in response.data) {
+							if ('response' in response.data) {
 								const items = response.data.response;
 								if (Object.keys(items).length > 0) {
-									Object.entries(items).forEach(([key, value]) => {
-										parent.handleChannelPointRedeem(key, value, client, data);
+									Object.entries(items).forEach(([key, values]) => {
+										for (let i = 0; i < values.length; i++) {
+											parent.handleChannelPointRedeem(key, values[i], client, data);
+										}
 									});
 								}
 							}
@@ -594,7 +596,7 @@ const functions = {
 			parent.handleWebsocketRedeem('birbs', value, client);
 			break;
 		case 'coin_convert':
-			parent.handleCoinConvert(data, client);
+			parent.handleCoinConvert(value, data, client);
 			break;
 		case 'give_snack':
 			// parent.handleCoinConvert(data, client);
@@ -636,20 +638,29 @@ const functions = {
 	handleVIP(data) {
 		axios.get(data.settings.finalBase + 'redeems/vip/manage');
 	},
-	handleCoinConvert(data, client) {
+	handleCoinConvert(redeemID, data, client) {
 		const parent = this;
-		axios.get(data.settings.finalUrl + 'channel_points/retrieve/coin_convert')
-			.then((response) => {
-				if (response.data.status == 'success') {
-					axios.get(data.settings.finalBase + 'redeems/coins/convert/' + response.data.response)
-						.then((response2) => {
-							if (response2.data.status == 'success') {
-								client.say('#komfykiwi', parent.speakConvertor('Redeem processed!'));
-							}
-						})
-						.catch(err => console.log(err));
+
+		axios.get(data.settings.finalBase + 'redeems/coins/convert/' + redeemID)
+			.then((response2) => {
+				if (response2.data.status == 'success') {
+					client.say('#komfykiwi', parent.speakConvertor('Redeem processed!'));
 				}
-			}).catch(err => console.log(err));
+			})
+			.catch(err => console.log(err));
+
+		// axios.get(data.settings.finalUrl + 'channel_points/retrieve/coin_convert')
+		// 	.then((response) => {
+		// 		if (response.data.status == 'success') {
+		// 			axios.get(data.settings.finalBase + 'redeems/coins/convert/' + response.data.response)
+		// 				.then((response2) => {
+		// 					if (response2.data.status == 'success') {
+		// 						client.say('#komfykiwi', parent.speakConvertor('Redeem processed!'));
+		// 					}
+		// 				})
+		// 				.catch(err => console.log(err));
+		// 		}
+		// 	}).catch(err => console.log(err));
 	},
 	// Websocket powered
 	handleWebsocketRedeem(type, redeemId, client) {
