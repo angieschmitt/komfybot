@@ -434,6 +434,9 @@ module.exports = {
 					let success = false;
 					const channelName = channel.replace('#', '');
 					const twitchData = { 'ident':userID, 'ident_type':'twitch_id', 'channel':channelName, 'action':'sell_duplicates' };
+
+					console.log(data.settings.finalUrl + 'store/remove/json/' + encodeURIComponent(JSON.stringify(twitchData)));
+
 					axios.get(data.settings.finalUrl + 'store/remove/json/' + encodeURIComponent(JSON.stringify(twitchData)))
 						.then(function(response) {
 							const resData = response.data;
@@ -457,13 +460,16 @@ module.exports = {
 								case 'no_sells':
 									content = 'Not sure what happened, but nothing was sold...';
 									break;
+								case 'no_duplicates':
+									content = 'Looks like you don\'t have any duplicate hats to sell.';
+									break;
 								default:
-									content = 'Something went wrong, tell @kittenAngie.';
+									content = 'Something went wrong, tell @kittenAngie. 0';
 									break;
 								}
 							}
 							else {
-								content = 'Something went wrong, tell @kittenAngie.';
+								content = 'Something went wrong, tell @kittenAngie. 1';
 							}
 						})
 						.catch(function() {
