@@ -434,9 +434,6 @@ module.exports = {
 					let success = false;
 					const channelName = channel.replace('#', '');
 					const twitchData = { 'ident':userID, 'ident_type':'twitch_id', 'channel':channelName, 'action':'sell_duplicates' };
-
-					console.log(data.settings.finalUrl + 'store/remove/json/' + encodeURIComponent(JSON.stringify(twitchData)));
-
 					axios.get(data.settings.finalUrl + 'store/remove/json/' + encodeURIComponent(JSON.stringify(twitchData)))
 						.then(function(response) {
 							const resData = response.data;
@@ -464,16 +461,16 @@ module.exports = {
 									content = 'Looks like you don\'t have any duplicate hats to sell.';
 									break;
 								default:
-									content = 'Something went wrong, tell @kittenAngie. 0';
+									content = 'Something went wrong, tell @kittenAngie: sell_fail_default-dupes';
 									break;
 								}
 							}
 							else {
-								content = 'Something went wrong, tell @kittenAngie. 1';
+								content = 'Something went wrong, tell @kittenAngie: sell_else_default-dupes';
 							}
 						})
 						.catch(function() {
-							content = 'Something went wrong, tell @kittenAngie. 2';
+							content = 'Something went wrong, tell @kittenAngie: sell_catch_default-dupes';
 						})
 						.finally(function() {
 							if (success) {
@@ -517,16 +514,16 @@ module.exports = {
 									content = 'Something went wrong giving you your coins, tell @kittenAngie!';
 									break;
 								default:
-									content = 'Something went wrong, tell @kittenAngie.';
+									content = 'Something went wrong, tell @kittenAngie: sell_fail_default';
 									break;
 								}
 							}
 							else {
-								content = 'Something went wrong, tell @kittenAngie.';
+								content = 'Something went wrong, tell @kittenAngie: sell_else_default';
 							}
 						})
 						.catch(function() {
-							content = 'Something went wrong, tell @kittenAngie.';
+							content = 'Something went wrong, tell @kittenAngie: sell_catch_default';
 						})
 						.finally(function() {
 							if ('silent' in tags) {
