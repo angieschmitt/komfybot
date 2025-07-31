@@ -598,17 +598,11 @@ const functions = {
 		case 'coin_convert':
 			parent.handleCoinConvert(value, data, client);
 			break;
-		case 'give_snack':
-			// parent.handleCoinConvert(data, client);
-			break;
 		case 'loading':
 			// parent.handleLoading(data, client);
 			break;
 		case 'pop_cat':
 			parent.handleWebsocketRedeem('popcat', value, client);
-			break;
-		case 'set_hat':
-			// parent.handleHatSet(client, value);
 			break;
 		case 'stream_color':
 			parent.handleLights(data);
@@ -648,19 +642,6 @@ const functions = {
 				}
 			})
 			.catch(err => console.log(err));
-
-		// axios.get(data.settings.finalUrl + 'channel_points/retrieve/coin_convert')
-		// 	.then((response) => {
-		// 		if (response.data.status == 'success') {
-		// 			axios.get(data.settings.finalBase + 'redeems/coins/convert/' + response.data.response)
-		// 				.then((response2) => {
-		// 					if (response2.data.status == 'success') {
-		// 						client.say('#komfykiwi', parent.speakConvertor('Redeem processed!'));
-		// 					}
-		// 				})
-		// 				.catch(err => console.log(err));
-		// 		}
-		// 	}).catch(err => console.log(err));
 	},
 	// Websocket powered
 	handleWebsocketRedeem(type, redeemId, client) {

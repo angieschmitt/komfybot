@@ -142,6 +142,7 @@ module.exports = {
 				error: 'don\'t forgot the snack name!',
 			},
 			execute(args, tags, message, channel, client) {
+
 				let content = '';
 				const userID = tags['user-id'];
 				let snack = message.replace(args[0], '').replace(args[1], '').trim().toLowerCase();
@@ -154,50 +155,33 @@ module.exports = {
 					snackOut = snackOut.substring(snackOut.indexOf(':') + 1).toLowerCase().trim();
 				}
 
-				// Get user inventory...
-				axios.get(data.settings.baseUrl + 'interactive/snacks/inventory?twitch_id=' + userID)
+				// Check if the user has the snack...
+				axios.get(data.settings.finalUrl + 'snacks/retrieve/lookup/' + userID + '/' + snackOut)
 					.then(function(response) {
 						const resData = response.data;
-						if (resData.status === 'success') {
-							// Check if snack in inv...
-							let matched = false;
-							Object.entries(resData.reference).forEach(([key, value]) => {
-								if (key.toLowerCase() === snack.toLowerCase()) {
-									if (parseInt(value.qty) > 0) {
-										matched = value;
-									}
-								}
-							});
+						if (resData.status == 'success') {
 
-							if (matched) {
-								axios.get(data.settings.baseUrl + 'interactive/snacks/insert?userID=' + userID + '&snack=' + matched['snack_id'] + '&item_id=' + matched['item_id'])
-									.then(function(response2) {
-										const resData2 = response2.data;
-										if (resData2.status === 'success') {
-											content = 'Found your snack, giving it to Hattington!';
-										}
-										else if (resData2.status === 'failure') {
-											if (resData2.err_msg == 'timeout') {
-												content = `Hattington seems to be enjoying their last snack, give them a little time! (Roughly ${resData2.time_left} minutes)`;
-											}
-										}
-										else {
-											content = 'Something went wrong, tell @kittenAngie "snacks-d" :)';
-										}
-									})
-									.catch(function() {
-										content = 'Something went wrong, tell @kittenAngie "snacks-c" :)';
-									})
-									.finally(function() {
-										client.say(channel, content);
-									});
-							}
-							else {
+							const snackData = { 'type': 'snack', 'item': resData.content['snackID'], 'emote': JSON.parse(resData.content.response) };
+
+							axios.get(data.settings.finalUrl + 'snacks/insert/' + userID + '/' + resData.content['unique_id'])
+								.then(function(response2) {
+									const resData2 = response2.data;
+									if (resData2.status == 'success') {
+										content = 'Found your snack, giving it to Hattington!';
+										data.functions.handleWebsocketRedeem('hattington', JSON.stringify(snackData), client);
+									}
+								})
+								.finally(function() {
+									client.say(channel, content);
+								});
+						}
+						else if (resData.status == 'failure') {
+							if (resData.err_msg == 'no_snacks') {
 								content = `Seems like you don't have a "${snackOut}" in your inventory. You might want to check your spelling.`;
 							}
-						}
-						else {
-							content = 'Something went wrong, tell @kittenAngie  "snacks-b" :)';
+							else if (resData.err_msg == 'timeout') {
+								content = `Hattington seems to be enjoying their last snack, give them a little time! (Roughly ${resData.time_left} minutes)`;
+							}
 						}
 					})
 					.catch(function() {
@@ -209,7 +193,7 @@ module.exports = {
 			},
 		},
 		inv: {
-			help: 'Shows your inventory of hats. !hattington inv',
+			help: 'Shows your inventory of snacks. !snacks inv',
 			execute(args, tags, message, channel, client) {
 				let content = '';
 				const userID = tags['user-id'];
