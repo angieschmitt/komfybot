@@ -6,3 +6,4 @@ debug
 # Don't push cred files
 twitch/data/settings.js
 websocket/certs
+websocket-dev/certs

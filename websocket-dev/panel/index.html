@@ -56,8 +56,7 @@
 
                 let port = 1165;
 
-                // websocket = new WebSocket('wss://server.komfybot.com:' + port + '/' + identifier);
-                websocket = new WebSocket('wss://64.176.216.41:' + port + '/' + identifier);
+                websocket = new WebSocket('wss://localhost:' + port + '/' + identifier, 'echo-protocol');
 
                 websocket.onopen = () => {
                     console.log('Socket connected.');

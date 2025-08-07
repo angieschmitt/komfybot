@@ -39,10 +39,10 @@
             <button onclick="refresh()">Refresh</button>
             <button onclick="refreshAll()">Refresh All</button>
         </div>
-        <div class="label">panel</div>
+        <div class="label">multiple:two</div>
         <script>
 
-            const identifier = 'panel';
+            const identifier = 'multiple:two';
 
             let wss = init(identifier);
             setInterval(
@@ -56,8 +56,7 @@
 
                 let port = 1165;
 
-                // websocket = new WebSocket('wss://server.komfybot.com:' + port + '/' + identifier);
-                websocket = new WebSocket('wss://64.176.216.41:' + port + '/' + identifier);
+                websocket = new WebSocket('wss://localhost:' + port + '/' + identifier, 'echo-protocol');
 
                 websocket.onopen = () => {
                     console.log('Socket connected.');
