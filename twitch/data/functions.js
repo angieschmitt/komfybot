@@ -645,7 +645,7 @@ const functions = {
 	},
 	// Websocket powered
 	handleWebsocketRedeem(type, redeemId, client) {
-		client.websocket.send(JSON.stringify({ 'action': type, 'source': 'komfybot', 'data': redeemId }));
+		client.websocket.send(JSON.stringify({ 'action': type, 'source': 'komfybot', 'data': { 'redeemId' : redeemId } }));
 	},
 };
 
