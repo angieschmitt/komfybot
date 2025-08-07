@@ -45,12 +45,7 @@
             const identifier = 'panel';
 
             let wss = init(identifier);
-            setInterval(
-                ()=>{ if (!wss) { init(identifier) } },
-                2000,
-                wss,
-                identifier
-            );
+            setInterval( ()=>{ if (!wss) { init(identifier) } }, 2000, wss, identifier );
             
             function init(identifier){
 
@@ -69,6 +64,8 @@
 
                         // Handle data from message
                         const data = JSON.parse(event.data);
+
+                        console.log(data);
 
                         // Output message
                         jQuery('.websocket_test').html('Incoming ' + data.action + ' from ' + data.source + '.');

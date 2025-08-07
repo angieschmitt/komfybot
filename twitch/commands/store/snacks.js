@@ -168,7 +168,7 @@ module.exports = {
 									const resData2 = response2.data;
 									if (resData2.status == 'success') {
 										content = 'Found your snack, giving it to Hattington!';
-										data.functions.handleWebsocketRedeem('hattington', JSON.stringify(snackData), client);
+										data.functions.handleWebsocketRedeem('hattington', snackData, client);
 									}
 								})
 								.finally(function() {

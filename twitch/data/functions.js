@@ -526,23 +526,27 @@ const functions = {
 		const websocket = new ws('wss://64.176.216.41:8080/' + identifier, { rejectUnauthorized: false });
 
 		websocket.onopen = () => {
-			websocket.send(JSON.stringify({ 'action': 'refresh', 'source': identifier }));
+			websocket.send(JSON.stringify({ 'action': 'refresh', 'data': { 'target': 'all' }, 'source': identifier }));
 			data.debug.write('global', 'WEBSOCKET_CONNECTED');
-
-			// // Handle websocket items...
-			// interval = setInterval(
-			// 	() => {
-			// 		data.functions.handlePopCat(data, client);
-			// 	},
-			// 	5000,
-			// 	data,
-			// 	client,
-			// );
 		};
 
 		websocket.onmessage = (event) => {
 			const data = JSON.parse(event.data);
-			console.log(data);
+
+			// console.log(data);
+
+			// Setup targets for checking against...
+			const targets = [];
+			if (typeof data.target === 'object') {
+				data.target.forEach(element => {
+					targets.push(data.userList[ element ]);
+				});
+			}
+
+			// Now only run if it's supposed to...
+			if (data.action === 'ping' && targets.includes('komfybot')) {
+				client.say('#komfybot', parent.speakConvertor('Pong!'));
+			}
 		};
 
 		websocket.onerror = (error) => {
@@ -551,7 +555,6 @@ const functions = {
 
 		websocket.onclose = (event) => {
 			console.log(event.code);
-			// clearInterval(interval);
 			setTimeout(function() {
 				parent.handleWebSocket(data, client);
 			}, 1000, data, client);
@@ -593,7 +596,7 @@ const functions = {
 		const parent = this;
 		switch (key) {
 		case 'bird_swarm':
-			parent.handleWebsocketRedeem('birbs', value, client);
+			parent.handleWebsocketRedeem('birbs', { 'redeemId': value }, client);
 			break;
 		case 'coin_convert':
 			parent.handleCoinConvert(value, data, client);
@@ -602,7 +605,7 @@ const functions = {
 			// parent.handleLoading(data, client);
 			break;
 		case 'pop_cat':
-			parent.handleWebsocketRedeem('popcat', value, client);
+			parent.handleWebsocketRedeem('popcat', { 'redeemId': value }, client);
 			break;
 		case 'stream_color':
 			parent.handleLights(data);
@@ -644,8 +647,12 @@ const functions = {
 			.catch(err => console.log(err));
 	},
 	// Websocket powered
-	handleWebsocketRedeem(type, redeemId, client) {
-		client.websocket.send(JSON.stringify({ 'action': type, 'source': 'komfybot', 'data': { 'redeemId' : redeemId } }));
+	handleWebsocketRedeem(target, data, client) {
+
+		// Slide the target into the data
+		data['target'] = target;
+
+		client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': data, 'source': 'komfybot' }));
 	},
 };
 
