@@ -153,7 +153,7 @@ function loadActions(actions = {}, reset = false){
         const filePath = path.join(foldersPath, file);
 
         // This might be an issue later..
-        const command = import( 'file:///' + filePath)
+        const command = import(filePath)
             .then(function(action) {
                 actions[ action.default.name ] = action.default.actions.default;
             });
