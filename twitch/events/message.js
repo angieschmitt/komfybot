@@ -98,11 +98,11 @@ module.exports = {
 		// If not, do this stuff...
 		else {
 
-			const triggerWords = { 'komfykiwi' : ['lizard'], 'komfybot' : ['lizard'] };
+			const triggerWords = { 'komfykiwi' : ['lizard', '🦎'], 'komfybot' : ['lizard', '🦎'] };
 
 			// Check for weird message redeems, if it is, we skip currency because spam reasons
 			if (triggerWords[channelName].includes(cleanedMessage.toLowerCase())) {
-				if (cleanedMessage.toLowerCase() == 'lizard') {
+				if (cleanedMessage.toLowerCase() == 'lizard' || cleanedMessage.toLowerCase() == '🦎') {
 					data.functions.handleWebsocketRedeem('lizard', { 'from': 'chat' }, client);
 				}
 			}
