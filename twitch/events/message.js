@@ -97,10 +97,21 @@ module.exports = {
 		}
 		// If not, do this stuff...
 		else {
-			const currencyEnabled = client.commands.global.giveaway.currencyCheck(channelName, client);
-			if (currencyEnabled) {
-				tags['passiveAmt'] = 2;
-				client.commands.komfykiwi.coins.actions.handlePassiveIncome.execute(tags, channel, client);
+
+			const triggerWords = { 'komfykiwi' : ['lizard'], 'komfybot' : ['lizard'] };
+
+			// Check for weird message redeems, if it is, we skip currency because spam reasons
+			if (triggerWords[channelName].includes(cleanedMessage.toLowerCase())) {
+				if (cleanedMessage.toLowerCase() == 'lizard') {
+					data.functions.handleWebsocketRedeem('lizard', {}, client);
+				}
+			}
+			else {
+				const currencyEnabled = client.commands.global.giveaway.currencyCheck(channelName, client);
+				if (currencyEnabled) {
+					tags['passiveAmt'] = 2;
+					client.commands.komfykiwi.coins.actions.handlePassiveIncome.execute(tags, channel, client);
+				}
 			}
 		}
 		// 		}
