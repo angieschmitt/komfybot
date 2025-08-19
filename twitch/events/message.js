@@ -103,7 +103,7 @@ module.exports = {
 			// Check for weird message redeems, if it is, we skip currency because spam reasons
 			if (triggerWords[channelName].includes(cleanedMessage.toLowerCase())) {
 				if (cleanedMessage.toLowerCase() == 'lizard') {
-					data.functions.handleWebsocketRedeem('lizard', {}, client);
+					data.functions.handleWebsocketRedeem('lizard', { 'from': 'chat' }, client);
 				}
 			}
 			else {

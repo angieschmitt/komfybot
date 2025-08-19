@@ -604,6 +604,9 @@ const functions = {
 		case 'loading':
 			// parent.handleLoading(data, client);
 			break;
+		case 'chaos_mode':
+			parent.handleWebsocketRedeem('lizard', { 'redeemId': value }, client);
+			break;
 		case 'pop_cat':
 			parent.handleWebsocketRedeem('popcat', { 'redeemId': value }, client);
 			break;
