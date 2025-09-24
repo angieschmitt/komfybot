@@ -56,21 +56,23 @@ module.exports = {
 						}
 						else if (resData.status === 'failure') {
 							if (resData.err_msg === 'missing_authorization') {
-								content = 'Authorization issue. Tell @kittenAngie.';
+								data.errorMsg.handle(channel, client, 'collab', 'Authorization issue');
 							}
 							else {
-								content = 'Something went wrong, tell @kittenAngie 3.';
+								data.errorMsg.handle(channel, client, 'collab', 'Failed response');
 							}
 						}
 						else {
-							content = 'Something went wrong, tell @kittenAngie 2.';
+							data.errorMsg.handle(channel, client, 'collab', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						content = 'Something went wrong, tell @kittenAngie 1.';
+						data.errorMsg.handle(channel, client, 'collab', 'Issue while handling command');
 					})
 					.finally(function() {
-						client.say(channel, content);
+						if (content !== '') {
+							client.say(channel, content);
+						}
 					});
 			},
 		},
@@ -108,21 +110,23 @@ module.exports = {
 						}
 						else if (resData.status === 'failure') {
 							if (resData.err_msg === 'missing_authorization') {
-								content = 'Authorization issue. Tell @kittenAngie.';
+								data.errorMsg.handle(channel, client, 'collab-set', 'Authorization issue');
 							}
 							else {
-								content = 'Something went wrong, tell @kittenAngie 3.';
+								data.errorMsg.handle(channel, client, 'collab-set', 'Failed response');
 							}
 						}
 						else {
-							content = 'Something went wrong, tell @kittenAngie 2.';
+							data.errorMsg.handle(channel, client, 'collab-set', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						content = 'Something went wrong, tell @kittenAngie.';
+						data.errorMsg.handle(channel, client, 'collab-set', 'Issue while handling command');
 					})
 					.finally(function() {
-						client.say(channel, content);
+						if (content !== '') {
+							client.say(channel, content);
+						}
 					});
 			},
 		},
@@ -145,18 +149,18 @@ module.exports = {
 						}
 						else if (resData.status === 'failure') {
 							if (resData.err_msg === 'missing_authorization') {
-								content = 'Authorization issue. Tell @kittenAngie.';
+								data.errorMsg.handle(channel, client, 'collab-reset', 'Authorization issue');
 							}
 							else {
-								content = 'Something went wrong, tell @kittenAngie 3.';
+								data.errorMsg.handle(channel, client, 'collab-reset', 'Failed response');
 							}
 						}
 						else {
-							content = 'Something went wrong, tell @kittenAngie 2.';
+							data.errorMsg.handle(channel, client, 'collab-reset', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						content = 'Something went wrong, tell @kittenAngie.';
+						data.errorMsg.handle(channel, client, 'collab-reset', 'Issue while handling command');
 					})
 					.finally(function() {
 						client.say(channel, content);

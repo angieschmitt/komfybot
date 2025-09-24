@@ -21,18 +21,18 @@ module.exports = {
 						}
 						else if (resData.status === 'failure') {
 							if (resData.err_msg === 'missing_authorization') {
-								content = 'Authorization issue. Tell @kittenAngie.';
+								data.errorMsg.handle(channel, client, 'followage', 'Authorization issue');
 							}
 							else {
-								content = 'Something went wrong, tell @kittenAngie 3.';
+								data.errorMsg.handle(channel, client, 'followage', 'Failed response');
 							}
 						}
 						else {
-							content = 'Something went wrong, tell @kittenAngie 2.';
+							data.errorMsg.handle(channel, client, 'followage', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						content = 'Something went wrong, tell @kittenAngie.';
+						data.errorMsg.handle(channel, client, 'followage', 'Issue while handling command');
 					})
 					.finally(function() {
 						client.say(channel, `${content}`);

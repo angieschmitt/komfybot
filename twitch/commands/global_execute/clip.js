@@ -41,34 +41,38 @@ module.exports = {
 											content = `@${userName} generated a clip! Check it out at: ${resData2.response}`;
 										}
 										else if (resData2.status === 'failure') {
-											content = 'Something went wrong, tell @kittenAngie.';
+											data.errorMsg.handle(channel, client, 'clip-komfykiwi', 'Failed response');
 										}
 									})
 									.catch(function() {
-										content = 'Something went wrong, tell @kittenAngie.';
+										data.errorMsg.handle(channel, client, 'clip-komfykiwi', 'Issue while handling command');
 									})
 									.finally(function() {
-										client.say(channel, content);
+										if (content !== '') {
+											client.say(channel, content);
+										}
 									});
 							}, 20000, userName, data, resData, content, channel, client);
 						}
 						else if (resData.status === 'failure') {
 							if (resData.err_msg) {
-								content = 'Error: ' + resData.err_msg;
+								data.errorMsg.handle(channel, client, 'clip-komfykiwi', resData.err_msg);
 							}
 							else {
-								content = 'Something went wrong, tell @kittenAngie.';
+								data.errorMsg.handle(channel, client, 'clip-komfykiwi', 'Failed response');
 							}
 						}
 						else {
-							content = 'Something went wrong, tell @kittenAngie.';
+							data.errorMsg.handle(channel, client, 'clip-komfykiwi', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						content = 'Something went wrong, tell @kittenAngie.';
+						data.errorMsg.handle(channel, client, 'clip-komfykiwi', 'Issue while handling command');
 					})
 					.finally(function() {
-						client.say(channel, content);
+						if (content !== '') {
+							client.say(channel, content);
+						}
 					});
 
 			},

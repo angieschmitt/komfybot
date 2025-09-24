@@ -24,18 +24,18 @@ module.exports = {
 								content = 'Seems like their aren\'t any quotes for this channel... yet.';
 							}
 							else if (resData.err_msg === 'missing_authorization') {
-								content = 'Authorization issue. Tell @kittenAngie.';
+								data.errorMsg.handle(channel, client, 'quote', 'Authorization issue');
 							}
 							else {
-								content = 'Something went wrong, tell @kittenAngie.';
+								data.errorMsg.handle(channel, client, 'quote', 'Failed response');
 							}
 						}
 						else {
-							content = 'Something went wrong, tell @kittenAngie.';
+							data.errorMsg.handle(channel, client, 'quote', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						content = 'Something went wrong, tell @kittenAngie.';
+						data.errorMsg.handle(channel, client, 'checkin-brag', 'Issue while handling command');
 					})
 					.finally(function() {
 						if (id === '3') {
@@ -53,7 +53,7 @@ module.exports = {
 			},
 			args: {
 				1: [ 'r' ],
-				error: 'don\'t forgot the user or the amount!',
+				error: 'don\'t forgot the user!',
 			},
 			execute(args, tags, message, channel, client) {
 
@@ -74,18 +74,18 @@ module.exports = {
 						}
 						else if (resData.status === 'failure') {
 							if (resData.err_msg === 'missing_authorization') {
-								content = 'Authorization issue. Tell @kittenAngie.';
+								data.errorMsg.handle(channel, client, 'quote-add', 'Authorization issue');
 							}
 							else {
-								content = 'Something went wrong, tell @kittenAngie.';
+								data.errorMsg.handle(channel, client, 'quote-add', 'Failed response');
 							}
 						}
 						else {
-							content = 'Something went wrong, tell @kittenAngie.';
+							data.errorMsg.handle(channel, client, 'quote-add', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						content = 'Something went wrong, tell @kittenAngie.';
+						data.errorMsg.handle(channel, client, 'quote-add', 'Issue while handling command');
 					})
 					.finally(function() {
 						client.say(channel, content);

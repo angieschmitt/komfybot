@@ -1,3 +1,6 @@
+const dataFile = require('../../data/index');
+const data = dataFile.content();
+
 const axios = require('axios');
 
 const gen2statsFile = require('../../data/gen2stats');
@@ -56,11 +59,13 @@ module.exports = {
 							output = `${ucwords(args[1])}, National Dex #${natDex}, the ${genus}. `;
 							output += `${ flavorText }`;
 						})
-						.catch(function() {
-							output = 'Something went wrong, tell @kittenAngie.';
+						.catch(function(error) {
+							data.errorMsg.handle(channel, client, 'pokemon', error.response.data);
 						})
 						.finally(function() {
-							client.say(channel, output);
+							if (output !== '') {
+								client.say(channel, output);
+							}
 						});
 				}
 			},
@@ -79,8 +84,8 @@ module.exports = {
 							const resData = response.data;
 							evoTree = resData.evolution_chain.url;
 						})
-						.catch(function() {
-							output = 'Something went wrong, tell @kittenAngie.';
+						.catch(function(error) {
+							data.errorMsg.handle(channel, client, 'pokemon-evolve', error.response.data);
 						})
 						.finally(function() {
 
@@ -100,11 +105,11 @@ module.exports = {
 										client.say(channel, `${output}`);
 									})
 									.catch(function() {
-										client.say(channel, '2Something went wrong, tell @kittenAngie.');
+										data.errorMsg.handle(channel, client, 'pokemon-evolve', 'Issue while handling step 2');
 									});
 							}
 							else {
-								client.say(channel, output);
+								data.errorMsg.handle(channel, client, 'pokemon-evolve', 'Failed to build evo-tree');
 							}
 						});
 
@@ -120,77 +125,64 @@ module.exports = {
 					client.say(channel, 'Please provide a pokemon to lookup!');
 				}
 				else {
+					let stats = false;
+					axios.get('https://pokeapi.co/api/v2/pokemon/' + args[2].toLowerCase())
+						.then(function(response) {
+							const resData = response.data;
+							stats = resData.stats;
 
-					// Check gen2stats FIRST
-					let stats = gen2stats[ args[2].toLowerCase() ];
-					if (stats !== undefined && args[3] === 'gen2') {
-						stats = stats[0];
-
-						let output = '';
-						output += 'In Gen2, ' + (args[2].charAt(0).toUpperCase() + args[2].slice(1)) + ' has the following base stats: ';
-						output += `hp : ${stats['HP']} || atk : ${stats['Att']} || def : ${stats['Def']} || sp-atk : ${stats['S.Atk']} || sp-def : ${stats['S.Def']} || spd : ${stats['Spd']}`;
-
-						client.say(channel, output);
-					}
-					// No gen2stats? Use the API.
-					else {
-						axios.get('https://pokeapi.co/api/v2/pokemon/' + args[2].toLowerCase())
-							.then(function(response) {
-								const resData = response.data;
-								stats = resData.stats;
-							})
-							.catch(function() {
-								output = 'Something went wrong, tell @kittenAngie.';
-							})
-							.finally(function() {
-
-								if (stats) {
-									const pkmn = ucwords(args[2]);
-									const statList = { 'hp': '', 'atk': '', 'def': '', 'sp-atk': '', 'sp-def': '', 'spd': '' };
-									for (let index = 0; index < stats.length; index++) {
-										Object.entries(stats[index]).forEach(([key, value]) => {
-											if (key === 'stat') {
-												let ref = '';
-												switch (value['name']) {
-												case 'hp':
-													ref = 'hp';
-													break;
-												case 'attack':
-													ref = 'atk';
-													break;
-												case 'defense':
-													ref = 'def';
-													break;
-												case 'special-attack':
-													ref = 'sp-atk';
-													break;
-												case 'special-defense':
-													ref = 'sp-def';
-													break;
-												case 'speed':
-													ref = 'spd';
-													break;
-												default:
-													break;
-												}
-												statList[ref] = stats[index]['base_stat'];
+							if (stats) {
+								const pkmn = ucwords(args[2]);
+								const statList = { 'hp': '', 'atk': '', 'def': '', 'sp-atk': '', 'sp-def': '', 'spd': '' };
+								for (let index = 0; index < stats.length; index++) {
+									Object.entries(stats[index]).forEach(([key, value]) => {
+										if (key === 'stat') {
+											let ref = '';
+											switch (value['name']) {
+											case 'hp':
+												ref = 'hp';
+												break;
+											case 'attack':
+												ref = 'atk';
+												break;
+											case 'defense':
+												ref = 'def';
+												break;
+											case 'special-attack':
+												ref = 'sp-atk';
+												break;
+											case 'special-defense':
+												ref = 'sp-def';
+												break;
+											case 'speed':
+												ref = 'spd';
+												break;
+											default:
+												break;
 											}
-										});
-									}
-
-									output += `${pkmn} has the following base stats: `;
-									Object.entries(statList).forEach(([key, value]) => {
-										output += `${key} : ${value} || `;
+											statList[ref] = stats[index]['base_stat'];
+										}
 									});
-									output = output.substring(0, output.length - 3).trim();
+								}
 
-									client.say(channel, output);
-								}
-								else {
-									client.say(channel, output);
-								}
-							});
-					}
+								output += `${pkmn} has the following base stats: `;
+								Object.entries(statList).forEach(([key, value]) => {
+									output += `${key} : ${value} || `;
+								});
+								output = output.substring(0, output.length - 3).trim();
+							}
+							else {
+								data.errorMsg.handle(channel, client, 'pokemon-stats', 'Issue locating stats');
+							}
+						})
+						.catch(function(error) {
+							data.errorMsg.handle(channel, client, 'pokemon-stats', error.response.data);
+						})
+						.finally(function() {
+							if (output !== '') {
+								client.say(channel, output);
+							}
+						});
 				}
 			},
 		},

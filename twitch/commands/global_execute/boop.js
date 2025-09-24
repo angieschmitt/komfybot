@@ -31,18 +31,20 @@ module.exports = {
 						}
 						else if (resData.status === 'failure') {
 							if (resData.err_msg === 'missing_authorization') {
-								content = 'Authorization issue. Tell @kittenAngie.';
+								data.errorMsg.handle(channel, client, 'boop', 'Authorization issue');
 							}
 							else {
-								content = 'Something went wrong, tell @kittenAngie.';
+								data.errorMsg.handle(channel, client, 'boop', 'Failed response');
 							}
 						}
 					})
 					.catch(function() {
-						content = 'Something went wrong, tell @kittenAngie.';
+						data.errorMsg.handle(channel, client, 'boop', 'Issue while handling command');
 					})
 					.finally(function() {
-						client.say(channel, content);
+						if (content !== '') {
+							client.say(channel, content);
+						}
 					});
 			},
 		},

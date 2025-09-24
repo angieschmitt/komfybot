@@ -25,18 +25,18 @@ module.exports = {
 						}
 						else if (resData.status === 'failure') {
 							if (resData.err_msg === 'missing_authorization') {
-								content = 'Authorization issue. Tell @kittenAngie.';
+								data.errorMsg.handle(channel, client, 'pickup', 'Authorization issue');
 							}
 							else {
-								content = 'Something went wrong, tell @kittenAngie.';
+								data.errorMsg.handle(channel, client, 'pickup', 'Failed response');
 							}
 						}
 						else {
-							content = 'Something went wrong, tell @kittenAngie.';
+							data.errorMsg.handle(channel, client, 'pickup', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						content = 'Something went wrong, tell @kittenAngie.';
+						data.errorMsg.handle(channel, client, 'checkin-brag', 'Issue while handling command');
 					})
 					.finally(function() {
 						client.say(channel, content);

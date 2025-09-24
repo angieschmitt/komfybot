@@ -62,27 +62,27 @@ module.exports = {
 							}
 						}
 						else if (resData.status === 'failure') {
-							switch (resData.err_msg) {
-							case 'already_checked_in':
+							if (resData.err_msg === 'already_checked_in') {
 								content = `@${user}, you're at ${resData.response} ${swapText}, but it looks like you already checked in today.`;
-								break;
-							case 'missing_authorization':
-								content = 'Authorization issue. Tell @kittenAngie.';
-								break;
-							default:
-								content = 'Something went wrong, tell @kittenAngie.';
-								break;
+							}
+							else if (resData.err_msg === 'missing_authorization') {
+								data.errorMsg.handle(channel, client, 'checkin', 'Authorization issue');
+							}
+							else {
+								data.errorMsg.handle(channel, client, 'checkin', 'Failed response');
 							}
 						}
 						else {
-							content = 'Something went wrong, tell @kittenAngie.';
+							data.errorMsg.handle(channel, client, 'checkin', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						content = 'Something went wrong, tell @kittenAngie.';
+						data.errorMsg.handle(channel, client, 'checkin', 'Issue while handling command');
 					})
 					.finally(function() {
-						client.say(channel, content);
+						if (content !== '') {
+							client.say(channel, content);
+						}
 					});
 			},
 		},
@@ -107,21 +107,23 @@ module.exports = {
 						}
 						else if (resData.status === 'failure') {
 							if (resData.err_msg === 'missing_authorization') {
-								content = 'Authorization issue. Tell @kittenAngie.';
+								data.errorMsg.handle(channel, client, 'checkin-brag', 'Authorization issue');
 							}
 							else {
-								content = 'Something went wrong, tell @kittenAngie.';
+								data.errorMsg.handle(channel, client, 'checkin-brag', 'Failed response');
 							}
 						}
 						else {
-							content = 'Something went wrong, tell @kittenAngie.';
+							data.errorMsg.handle(channel, client, 'checkin-brag', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						content = 'Something went wrong, tell @kittenAngie.';
+						data.errorMsg.handle(channel, client, 'checkin-brag', 'Issue while handling command');
 					})
 					.finally(function() {
-						client.say(channel, content);
+						if (content !== '') {
+							client.say(channel, content);
+						}
 					});
 			},
 		},
@@ -160,14 +162,16 @@ module.exports = {
 							content = `Updated checkins for ${username}, set them to ${resData.response}`;
 						}
 						else {
-							content = 'Something went wrong, tell @kittenAngie.';
+							data.errorMsg.handle(channel, client, 'checkin-reset', 'Failed response');
 						}
 					})
 					.catch(function() {
-						content = 'Something went wrong, tell @kittenAngie.';
+						data.errorMsg.handle(channel, client, 'checkin-reset', 'Issue while handling command');
 					})
 					.finally(function() {
-						client.say(channel, content);
+						if (content !== '') {
+							client.say(channel, content);
+						}
 					});
 			},
 		},

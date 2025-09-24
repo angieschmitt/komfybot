@@ -24,8 +24,10 @@ module.exports = {
 					.then(function(response) {
 						const resData = response.data;
 
-						// Only output on failure
-						if (resData.status === 'failure') {
+						if (resData.status === 'success') {
+							content = `@${tags['username']}, you've been entered into the giveaway!`;
+						}
+						else if (resData.status === 'failure') {
 							if (resData.err_msg == 'no_giveaway_exists') {
 								content = `@${tags['username']}, seems like there isn't a giveaway running right now.`;
 							}
@@ -34,16 +36,19 @@ module.exports = {
 							}
 							else if (resData.status === 'failure') {
 								if (resData.err_msg === 'missing_authorization') {
-									content = 'Authorization issue. Tell @kittenAngie.';
+									data.errorMsg.handle(channel, client, 'giveaway', 'Authorization issue');
 								}
 								else {
-									content = 'Something went wrong, tell @kittenAngie.';
+									data.errorMsg.handle(channel, client, 'giveaway', 'Failed response');
 								}
+							}
+							else {
+								data.errorMsg.handle(channel, client, 'giveaway', 'Not sure how you got here');
 							}
 						}
 					})
 					.catch(function() {
-						content = 'Something went wrong, tell @kittenAngie.';
+						data.errorMsg.handle(channel, client, 'giveaway', 'Issue while handling command');
 					})
 					.finally(function() {
 						if (content !== '') {
@@ -86,18 +91,18 @@ module.exports = {
 								content = 'Seems like there is already a giveaway running.';
 							}
 							else if (resData.err_msg === 'missing_authorization') {
-								content = 'Authorization issue. Tell @kittenAngie.';
+								data.errorMsg.handle(channel, client, 'giveaway-start', 'Authorization issue');
 							}
 							else {
-								content = 'Something went wrong, tell @kittenAngie.';
+								data.errorMsg.handle(channel, client, 'giveaway-start', 'Failed response');
 							}
 						}
 						else {
-							content = 'Something went wrong, tell @kittenAngie.';
+							data.errorMsg.handle(channel, client, 'giveaway-start', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						content = 'Something went wrong, tell @kittenAngie.';
+						data.errorMsg.handle(channel, client, 'giveaway-start', 'Issue while handling command');
 					})
 					.finally(function() {
 						client.say(channel, content);
@@ -141,18 +146,18 @@ module.exports = {
 								content = 'Giveaway ended, but it seems like there weren\'t enough entrees to choose a winner.';
 							}
 							else if (resData.err_msg === 'missing_authorization') {
-								content = 'Authorization issue. Tell @kittenAngie.';
+								data.errorMsg.handle(channel, client, 'giveaway-end', 'Authorization issue');
 							}
 							else {
-								content = 'Something went wrong, tell @kittenAngie.';
+								data.errorMsg.handle(channel, client, 'giveaway-end', 'Failed response');
 							}
 						}
 						else {
-							content = 'Something went wrong, tell @kittenAngie.';
+							data.errorMsg.handle(channel, client, 'giveaway-end', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						content = 'Something went wrong, tell @kittenAngie.';
+						data.errorMsg.handle(channel, client, 'giveaway-end', 'Issue while handling command');
 					})
 					.finally(function() {
 						client.say(channel, content);
@@ -195,18 +200,18 @@ module.exports = {
 								content = 'There are currently no entrees in the giveaway.';
 							}
 							else if (resData.err_msg === 'missing_authorization') {
-								content = 'Authorization issue. Tell @kittenAngie.';
+								data.errorMsg.handle(channel, client, 'giveaway-list', 'Authorization issue');
 							}
 							else {
-								content = 'Something went wrong, tell @kittenAngie.';
+								data.errorMsg.handle(channel, client, 'giveaway-list', 'Failed response');
 							}
 						}
 						else {
-							content = 'Something went wrong, tell @kittenAngie.';
+							data.errorMsg.handle(channel, client, 'giveaway-list', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						content = 'Something went wrong, tell @kittenAngie.';
+						data.errorMsg.handle(channel, client, 'giveaway-list', 'Issue while handling command');
 					})
 					.finally(function() {
 						client.say(channel, content);

@@ -2,6 +2,7 @@ node_modules
 config.json
 config.new.json
 debug
+errors
 
 # Don't push cred files
 twitch/data/settings.js

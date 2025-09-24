@@ -83,11 +83,11 @@ module.exports = {
 														}
 													}
 													else {
-														content = 'e Something went wrong, tell @kittenAngie.';
+														data.errorMsg.handle(channel, client, 'snacks-buy', 'Failed response - add to inv');
 													}
 												})
 												.catch(function() {
-													content = 'd Something went wrong, tell @kittenAngie.';
+													data.errorMsg.handle(channel, client, 'snacks-buy', 'Issue while adding to inventory');
 												})
 												.finally(function() {
 													// Get coin count
@@ -98,7 +98,9 @@ module.exports = {
 																	content += ` You have ${(coinAmt ? coinAmt : 0)} KomfyCoins remaining!`;
 																}
 															})
-															.catch(err => console.log(err))
+															.catch(() => {
+																data.errorMsg.handle(channel, client, 'snacks-buy', 'Issue while getting coin count');
+															})
 															.finally(function() {
 																client.say(channel, `${content}`);
 															});
@@ -113,11 +115,11 @@ module.exports = {
 											content = 'You seem to be out of KomfyCoins.';
 										}
 										else {
-											content = 'c Something went wrong, tell @kittenAngie.';
+											data.errorMsg.handle(channel, client, 'snacks-buy', 'Failed response - transaction');
 										}
 									})
 									.catch(function() {
-										content = 'b Something went wrong, tell @kittenAngie.';
+										data.errorMsg.handle(channel, client, 'snacks-buy', 'Issue while handling transaction');
 									})
 									.finally(function() {
 										client.say(channel, content);
@@ -126,10 +128,12 @@ module.exports = {
 							}
 						})
 						.catch(function() {
-							content = 'a Something went wrong, tell @kittenAngie.';
+							data.errorMsg.handle(channel, client, 'snacks-buy', 'Issue while retrieving item');
 						})
 						.finally(function() {
-							client.say(channel, content);
+							if (content !== '') {
+								client.say(channel, content);
+							}
 							axios.post(data.settings.finalUrl + 'coins/update');
 						});
 				}
@@ -182,13 +186,18 @@ module.exports = {
 							else if (resData.err_msg == 'timeout') {
 								content = `Hattington seems to be enjoying their last snack, give them a little time! (Roughly ${resData.time_left} minutes)`;
 							}
+							else {
+								data.errorMsg.handle(channel, client, 'snacks-give', 'Failed response');
+							}
 						}
 					})
 					.catch(function() {
-						content = 'Something went wrong, tell @kittenAngie "snacks-a" :)';
+						data.errorMsg.handle(channel, client, 'snacks-give', 'Issue while handling command');
 					})
 					.finally(function() {
-						client.say(channel, content);
+						if (content !== '') {
+							client.say(channel, content);
+						}
 					});
 			},
 		},
@@ -217,14 +226,16 @@ module.exports = {
 							}
 						}
 						else {
-							content = 'Something went wrong, tell @kittenAngie.';
+							data.errorMsg.handle(channel, client, 'snacks-inv', 'Failed response');
 						}
 					})
 					.catch(function() {
-						content = 'Something went wrong, tell @kittenAngie.';
+						data.errorMsg.handle(channel, client, 'snacks-inv', 'Issue while handling command');
 					})
 					.finally(function() {
-						client.say(channel, content);
+						if (content !== '') {
+							client.say(channel, content);
+						}
 					});
 			},
 		},
@@ -248,10 +259,12 @@ module.exports = {
 
 					})
 					.catch(function() {
-						content = 'Something went wrong, tell @kittenAngie.';
+						data.errorMsg.handle(channel, client, 'snacks-store', 'Issue while handling command');
 					})
 					.finally(function() {
-						client.say(channel, content);
+						if (content !== '') {
+							client.say(channel, content);
+						}
 					});
 			},
 		},

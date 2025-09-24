@@ -98,7 +98,10 @@ module.exports = {
 		// If not, do this stuff...
 		else {
 
-			const triggerWords = { 'komfykiwi' : ['lizard', '🦎'], 'komfybot' : ['lizard', '🦎'] };
+			const triggerWords = {
+				'komfykiwi' : ['lizard', '🦎'],
+				'komfybot' : ['lizard', '🦎'],
+			};
 
 			// Check for weird message redeems, if it is, we skip currency because spam reasons
 			if (triggerWords[channelName].includes(cleanedMessage.toLowerCase())) {

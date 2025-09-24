@@ -1,3 +1,6 @@
+const dataFile = require('../../data/index');
+const data = dataFile.content();
+
 const triviaFile = require('../../data/trivia');
 const trivia = triviaFile.content();
 
@@ -50,12 +53,11 @@ module.exports = {
 
 				if (qa) {
 					content = `Trivia time: ${qa['q']} Use !answer to answer!`;
+					client.say(channel, `${content}`);
 				}
 				else {
-					content = 'Uh... something went wrong. Tell @kittenangie.';
+					data.errorMsg.handle(channel, client, 'quiz', 'Couldn\'t select question for quiz');
 				}
-
-				client.say(channel, `${content}`);
 			},
 		},
 		answer: {

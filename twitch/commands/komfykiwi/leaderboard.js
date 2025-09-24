@@ -48,21 +48,23 @@ module.exports = {
 						}
 						else if (resData.status === 'failure') {
 							if (resData.err_msg === 'missing_authorization') {
-								content = 'Authorization issue. Tell @kittenAngie.';
+								data.errorMsg.handle(channel, client, 'leaderboard-hoarders', 'Authorization issue');
 							}
 							else {
-								content = 'Something went wrong, tell @kittenAngie 3.';
+								data.errorMsg.handle(channel, client, 'leaderboard-hoarders', 'Failed response');
 							}
 						}
 						else {
-							content = 'Something went wrong, tell @kittenAngie 2.';
+							data.errorMsg.handle(channel, client, 'leaderboard-hoarders', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						content = 'Something went wrong, tell @kittenAngie.';
+						data.errorMsg.handle(channel, client, 'leaderboard-hoarders', 'Issue while handling command');
 					})
 					.finally(function() {
-						client.say(channel, `${content}`);
+						if (content !== '') {
+							client.say(channel, `${content}`);
+						}
 					});
 			},
 		},
@@ -87,18 +89,18 @@ module.exports = {
 						}
 						else if (resData.status === 'failure') {
 							if (resData.err_msg === 'missing_authorization') {
-								content = 'Authorization issue. Tell @kittenAngie.';
+								data.errorMsg.handle(channel, client, 'leaderboard-spenders', 'Authorization issue');
 							}
 							else {
-								content = 'Something went wrong, tell @kittenAngie 3.';
+								data.errorMsg.handle(channel, client, 'leaderboard-spenders', 'Failed response');
 							}
 						}
 						else {
-							content = 'Something went wrong, tell @kittenAngie 2.';
+							data.errorMsg.handle(channel, client, 'leaderboard-spenders', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						content = 'Something went wrong, tell @kittenAngie.';
+						data.errorMsg.handle(channel, client, 'leaderboard-spenders', 'Issue while handling command');
 					})
 					.finally(function() {
 						client.say(channel, `${content}`);

@@ -24,6 +24,7 @@ const functions = {
 		client.commands['global'] = [];
 
 		data.debug.init(branch);
+		data.errorMsg.init(branch);
 
 		data.settings[branch]['channels'].forEach(channel => {
 			// Create channel commands

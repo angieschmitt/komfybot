@@ -1,6 +1,7 @@
 const functions = require('./functions');
 const settings = require('./settings');
 const debug = require('./debug');
+const errorMsg = require('./error');
 const metronome = require('./metronome');
 const reactWords = require('./react-words');
 const firstMessage = require('./on_first_message');
@@ -14,6 +15,7 @@ const data = {
 	firstMessage: firstMessage.content(),
 	timers: timers.content(),
 	debug: debug.content(),
+	errorMsg: errorMsg.content(),
 };
 
 module.exports = {

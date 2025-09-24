@@ -1,3 +1,6 @@
+const dataFile = require('../../data/index');
+const data = dataFile.content();
+
 const axios = require('axios');
 
 module.exports = {
@@ -56,11 +59,13 @@ module.exports = {
 									output = `Sorry @${tags.username}, we couldn't find definitions for the word you were looking for.`;
 								}
 								else {
-									output = 'Something went wrong, tell @kittenAngie.';
+									data.errorMsg.handle(channel, client, 'define', 'Issue while handling command');
 								}
 							})
 							.finally(function() {
-								client.say(channel, output);
+								if (output !== '') {
+									client.say(channel, output);
+								}
 							});
 					}
 				}

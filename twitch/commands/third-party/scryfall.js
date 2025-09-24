@@ -1,6 +1,7 @@
+const dataFile = require('../../data/index');
+const data = dataFile.content();
+
 const axios = require('axios');
-// const dataFile = require('../../data/index');
-// const data = dataFile.content();
 
 module.exports = {
 	name: 'scry',
@@ -50,18 +51,20 @@ module.exports = {
 							const resData = error.response.data;
 							if (resData.object == 'error') {
 								if (resData.details != '') {
-									output = resData.details;
+									data.errorMsg.handle(channel, client, 'scryfall', resData.details);
 								}
 								else {
-									output = 'Something went wrong, tell @kittenAngie.';
+									data.errorMsg.handle(channel, client, 'scryfall', 'Scryfall API issue');
 								}
 							}
 							else {
-								output = 'Something went wrong, tell @kittenAngie.';
+								data.errorMsg.handle(channel, client, 'scryfall', 'Failed response');
 							}
 						})
 						.finally(function() {
-							client.say(channel, output);
+							if (output !== '') {
+								client.say(channel, output);
+							}
 						});
 				}
 			},
