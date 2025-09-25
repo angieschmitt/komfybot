@@ -104,9 +104,18 @@ module.exports = {
 			};
 
 			// Check for weird message redeems, if it is, we skip currency because spam reasons
-			if (triggerWords[channelName].includes(cleanedMessage.toLowerCase())) {
-				if (cleanedMessage.toLowerCase() == 'lizard' || cleanedMessage.toLowerCase() == '🦎') {
-					data.functions.handleWebsocketRedeem('lizard', { 'from': 'chat' }, client);
+			if (channelName in triggerWords) {
+				if (triggerWords[channelName].includes(cleanedMessage.toLowerCase())) {
+					if (cleanedMessage.toLowerCase() == 'lizard' || cleanedMessage.toLowerCase() == '🦎') {
+						data.functions.handleWebsocketRedeem('lizard', { 'from': 'chat' }, client);
+					}
+				}
+				else {
+					const currencyEnabled = client.commands.global.giveaway.currencyCheck(channelName, client);
+					if (currencyEnabled) {
+						tags['passiveAmt'] = 2;
+						client.commands.komfykiwi.coins.actions.handlePassiveIncome.execute(tags, channel, client);
+					}
 				}
 			}
 			else {
