@@ -99,15 +99,25 @@ module.exports = {
 		else {
 
 			const triggerWords = {
-				'komfykiwi' : ['lizard', '🦎'],
-				'komfybot' : ['lizard', '🦎'],
+				'komfykiwi' : [ 'chicken', 'kiwi', 'lizard', '🦎', 'snail', 'v', 'whale' ],
+				'komfybot' : [ 'chicken', 'kiwi', 'lizard', '🦎', 'snail', 'v', 'whale' ],
 			};
 
 			// Check for weird message redeems, if it is, we skip currency because spam reasons
 			if (channelName in triggerWords) {
 				if (triggerWords[channelName].includes(cleanedMessage.toLowerCase())) {
+					console.log('triggerWord: ' + cleanedMessage.toLowerCase());
 					if (cleanedMessage.toLowerCase() == 'lizard' || cleanedMessage.toLowerCase() == '🦎') {
-						data.functions.handleWebsocketRedeem('lizard', { 'from': 'chat' }, client);
+						data.functions.handleWebsocketRedeem('lizard', { 'file': 'tts-lizard', 'from': 'chat' }, client);
+						// data.functions.handleWebsocketRedeem('lizard-test', { 'file': 'tts-lizard', 'from': 'chat' }, client);
+					}
+					else if (cleanedMessage.toLowerCase() == 'v') {
+						data.functions.handleWebsocketRedeem('lizard', { 'file': 'tts-vee', 'from': 'chat' }, client);
+						// data.functions.handleWebsocketRedeem('lizard-test', { 'file': 'tts-vee', 'from': 'chat' }, client);
+					}
+					else {
+						data.functions.handleWebsocketRedeem('lizard', { 'file': 'tts-' + cleanedMessage.toLowerCase(), 'from': 'chat' }, client);
+						// data.functions.handleWebsocketRedeem('lizard-test', { 'file': 'tts-' + cleanedMessage.toLowerCase(), 'from': 'chat' }, client);
 					}
 				}
 				else {
