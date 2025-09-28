@@ -25,7 +25,7 @@ function init() {
     let groups = [];
     wss.on('connection', function connection(ws, req) {
 
-        // console.log(actions);
+        console.log('connection');
 
         // get userID...
         var userID = req.url.substr(1);
