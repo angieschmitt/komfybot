@@ -51,7 +51,9 @@ function init() {
             users.push(userID);
         }
 
-        ws.on('error', console.error);
+        ws.on('error', function message(error){
+            console.log(error);
+        });
 
         ws.on('message', function message(data, isBinary) {
             
