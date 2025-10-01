@@ -570,10 +570,12 @@ const functions = {
 		setInterval(function() {
 			axios.get(data.settings.finalUrl + 'channel_points/insert/')
 				.then((response) => {
+					const firstPass = [];
 					const items = response.data.response;
 					if (Object.keys(items).length > 0) {
 						Object.entries(items).forEach(([key, value]) => {
-							parent.handleChannelPointRedeem(key, value, client, data);
+							parent.handleChannelPointRedeem(key, value[0], client, data);
+							firstPass.push(value[0].toString());
 						});
 					}
 
@@ -584,7 +586,9 @@ const functions = {
 								if (Object.keys(items).length > 0) {
 									Object.entries(items).forEach(([key, values]) => {
 										for (let i = 0; i < values.length; i++) {
-											parent.handleChannelPointRedeem(key, values[i], client, data);
+											if (!firstPass.includes(values[i])) {
+												parent.handleChannelPointRedeem(key, values[i], client, data);
+											}
 										}
 									});
 								}

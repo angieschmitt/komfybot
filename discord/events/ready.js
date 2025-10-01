@@ -19,11 +19,6 @@ module.exports = {
 			status: 'idle',
 		});
 
-		// 5 minutes : 300000
-		// 5 seconds : 5000
-		// setInterval(function() {
-		// 	handleChannelPoints();
-		// }, 5000);
 		setInterval(function() {
 			handleLiveCheck(client);
 			handleTokenRefresh();
@@ -76,17 +71,6 @@ async function handleLiveCheck(client) {
 		.catch(err => console.log(err));
 	// controller.abort();
 }
-
-// async function handleChannelPoints() {
-// 	// Check for channel points
-// 	axios.get(urls.baseUrl + 'insert/channel_points/')
-// 		.then(() => {
-// 			axios.get(urls.baseUrl + 'interactive/lights/');
-// 			axios.get(urls.baseUrl + 'interactive/coins/conversion');
-// 			axios.get(urls.finalUrl + 'redeems/vip/manage');
-// 		})
-// 		.catch(err => console.log(err));
-// }
 
 async function handleTokenRefresh() {
 	axios.get(urls.finalUrl + 'tokens/update/')
