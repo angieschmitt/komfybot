@@ -99,8 +99,32 @@ module.exports = {
 		else {
 
 			const triggerWords = {
-				'komfykiwi' : [ 'chicken', 'kiwi', 'lizard', '🦎', 'snail', 'v', 'whale' ],
-				'komfybot' : [ 'chicken', 'kiwi', 'lizard', '🦎', 'snail', 'v', 'whale' ],
+				'komfykiwi' : [
+					'angie',
+					'antidisestablishmentarianism',
+					'butt',
+					'chicken',
+					'kiwi',
+					'lizard',
+					'🦎',
+					'snail',
+					'supercalifragilisticexpialidocious',
+					'v',
+					'whale',
+				],
+				'komfybot' : [
+					'angie',
+					'antidisestablishmentarianism',
+					'butt',
+					'chicken',
+					'kiwi',
+					'lizard',
+					'🦎',
+					'snail',
+					'supercalifragilisticexpialidocious',
+					'v',
+					'whale',
+				],
 			};
 
 			// Check for weird message redeems, if it is, we skip currency because spam reasons
