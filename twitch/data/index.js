@@ -4,6 +4,7 @@ const debug = require('./debug');
 const errorMsg = require('./error');
 const metronome = require('./metronome');
 const reactWords = require('./react-words');
+const chaosWords = require('./chaos-words');
 const firstMessage = require('./on_first_message');
 const timers = require('./timers');
 
@@ -12,6 +13,7 @@ const data = {
 	settings: settings.content(),
 	metronome: metronome.content(),
 	reactWords: reactWords.content(),
+	chaosWords: chaosWords.content(),
 	firstMessage: firstMessage.content(),
 	timers: timers.content(),
 	debug: debug.content(),

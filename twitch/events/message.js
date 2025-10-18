@@ -89,77 +89,55 @@ module.exports = {
 		// 	.then(res => {
 		// 		if (res.live === true || perms.streamer === true || perms.admin === true) {
 
+		// Default passive income to true
+		let passive = true;
+
 		// If command was found, do this stuff...
 		if (commandData) {
 			if (module.exports.handleCommand(commandData, channel, perms, tags, message, client)) {
 				console.log('Used command: ' + commandData.command.name + ' ' + (commandData.args[1] ? commandData.args[1] : ''));
+
+				// No passive for commands...
+				passive = false;
 			}
 		}
-		// If not, do this stuff...
-		else {
+		// not a command, so we check for single word messages and handle them
+		else if (!cleanedMessage.includes(' ')) {
 
-			const triggerWords = {
-				'komfykiwi' : [
-					'angie',
-					'antidisestablishmentarianism',
-					'butt',
-					'chicken',
-					'kiwi',
-					'lizard',
-					'🦎',
-					'snail',
-					'supercalifragilisticexpialidocious',
-					'v',
-					'whale',
-				],
-				'komfybot' : [
-					'angie',
-					'antidisestablishmentarianism',
-					'butt',
-					'chicken',
-					'kiwi',
-					'lizard',
-					'🦎',
-					'snail',
-					'supercalifragilisticexpialidocious',
-					'v',
-					'whale',
-				],
-			};
-
-			// Check for weird message redeems, if it is, we skip currency because spam reasons
-			if (channelName in triggerWords) {
-				if (triggerWords[channelName].includes(cleanedMessage.toLowerCase())) {
-					console.log('triggerWord: ' + cleanedMessage.toLowerCase());
+			// If it's in the chaos words...
+			if (channelName in data.chaosWords) {
+				if (data.chaosWords[channelName].includes(cleanedMessage.toLowerCase())) {
+					console.log('chaosWords: ' + cleanedMessage.toLowerCase());
 					if (cleanedMessage.toLowerCase() == 'lizard' || cleanedMessage.toLowerCase() == '🦎') {
 						data.functions.handleWebsocketRedeem('lizard', { 'file': 'tts-lizard', 'from': 'chat' }, client);
-						// data.functions.handleWebsocketRedeem('lizard-test', { 'file': 'tts-lizard', 'from': 'chat' }, client);
 					}
 					else if (cleanedMessage.toLowerCase() == 'v') {
 						data.functions.handleWebsocketRedeem('lizard', { 'file': 'tts-vee', 'from': 'chat' }, client);
-						// data.functions.handleWebsocketRedeem('lizard-test', { 'file': 'tts-vee', 'from': 'chat' }, client);
 					}
 					else {
 						data.functions.handleWebsocketRedeem('lizard', { 'file': 'tts-' + cleanedMessage.toLowerCase(), 'from': 'chat' }, client);
-						// data.functions.handleWebsocketRedeem('lizard-test', { 'file': 'tts-' + cleanedMessage.toLowerCase(), 'from': 'chat' }, client);
 					}
+
+					// Disable passive for spam reasons...
+					passive = false;
 				}
-				else {
-					const currencyEnabled = client.commands.global.giveaway.currencyCheck(channelName, client);
-					if (currencyEnabled) {
-						tags['passiveAmt'] = 2;
-						client.commands.komfykiwi.coins.actions.handlePassiveIncome.execute(tags, channel, client);
-					}
-				}
-			}
-			else {
-				const currencyEnabled = client.commands.global.giveaway.currencyCheck(channelName, client);
-				if (currencyEnabled) {
-					tags['passiveAmt'] = 2;
-					client.commands.komfykiwi.coins.actions.handlePassiveIncome.execute(tags, channel, client);
-				}
+
 			}
 		}
+		// fallback check
+		else {
+			// Nothing doing, enable passive income...
+		}
+
+		if (passive) {
+			const currencyEnabled = client.commands.global.giveaway.currencyCheck(channelName, client);
+			if (currencyEnabled) {
+				tags['passiveAmt'] = 2;
+				console.log('- passive:' + tags['passiveAmt']);
+				client.commands.komfykiwi.coins.actions.handlePassiveIncome.execute(tags, channel, client);
+			}
+		}
+
 		// 		}
 		// 		else {
 		// 			/* eslint-disable-next-line no-lonely-if */

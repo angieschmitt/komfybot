@@ -598,6 +598,7 @@ const functions = {
 		}, 5000);
 	},
 	handleChannelPointRedeem(key, value, client, data) {
+		let message = false;
 		const parent = this;
 		switch (key) {
 		case 'bird_swarm':
@@ -611,6 +612,16 @@ const functions = {
 			break;
 		case 'chaos_mode':
 			parent.handleWebsocketRedeem('lizard', { 'redeemId': value }, client);
+
+			// Build message...
+			message = 'Chaos mode word list: ';
+			Object.entries(data.chaosWords['komfykiwi']).forEach(([idx]) => {
+				message += data.chaosWords['komfykiwi'][idx] + ', ';
+			});
+
+			// Now say the message?
+			client.say('komfykiwi', data.functions.speakConvertor(message));
+
 			break;
 		case 'pop_cat':
 			parent.handleWebsocketRedeem('popcat', { 'redeemId': value }, client);
