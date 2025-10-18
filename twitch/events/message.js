@@ -95,8 +95,6 @@ module.exports = {
 		// Default passive income to true
 		let passive = true;
 
-		console.log(data.settings.chaosMode);
-
 		// If command was found, do this stuff...
 		if (commandData) {
 			if (module.exports.handleCommand(commandData, channel, perms, tags, message, client)) {
