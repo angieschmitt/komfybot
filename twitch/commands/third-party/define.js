@@ -59,7 +59,7 @@ module.exports = {
 									output = `Sorry @${tags.username}, we couldn't find definitions for the word you were looking for.`;
 								}
 								else {
-									data.errorMsg.handle(channel, client, 'define', 'Issue while handling command');
+									data.errorMsg.handle(channel, client, 'define', 'Issue with 3rd party service');
 								}
 							})
 							.finally(function() {

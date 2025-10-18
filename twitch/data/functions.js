@@ -611,6 +611,9 @@ const functions = {
 			// parent.handleLoading(data, client);
 			break;
 		case 'chaos_mode':
+
+			data.settings.chaosMode = true;
+
 			parent.handleWebsocketRedeem('lizard', { 'redeemId': value }, client);
 
 			// Build message...
@@ -619,8 +622,13 @@ const functions = {
 				message += data.chaosWords['komfykiwi'][idx] + ', ';
 			});
 
-			// Now say the message?
-			client.say('komfykiwi', data.functions.speakConvertor(message));
+			// Now say the message in kiwi's channel
+			client.say('komfykiwi', message.substring(0, message.length - 2));
+
+			// Start timer to turn it off...
+			setTimeout(function() {
+				data.settings.chaosMode = false;
+			}, 90000);
 
 			break;
 		case 'pop_cat':

@@ -20,6 +20,8 @@ const data = {
 	errorMsg: errorMsg.content(),
 };
 
+data.settings.chaosMode = false;
+
 module.exports = {
 	content: function() {
 		return data;

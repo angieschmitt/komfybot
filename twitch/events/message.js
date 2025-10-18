@@ -48,6 +48,9 @@ module.exports = {
 		if (tags['user-id'] == '90928645') {
 			perms.admin = true;
 		}
+		else {
+			perms.admin = false;
+		}
 
 		// Timestamp
 		const formattedTime = module.exports.timeConverter(tags['tmi-sent-ts']);
@@ -92,6 +95,8 @@ module.exports = {
 		// Default passive income to true
 		let passive = true;
 
+		console.log(data.settings.chaosMode);
+
 		// If command was found, do this stuff...
 		if (commandData) {
 			if (module.exports.handleCommand(commandData, channel, perms, tags, message, client)) {
@@ -101,31 +106,46 @@ module.exports = {
 				passive = false;
 			}
 		}
-		// not a command, so we check for single word messages and handle them
-		else if (!cleanedMessage.includes(' ')) {
+		// not a command, so we check for other stuff...
+		else if (data.settings.chaosMode == true) {
 
-			// If it's in the chaos words...
-			if (channelName in data.chaosWords) {
-				if (data.chaosWords[channelName].includes(cleanedMessage.toLowerCase())) {
-					console.log('chaosWords: ' + cleanedMessage.toLowerCase());
-					if (cleanedMessage.toLowerCase() == 'lizard' || cleanedMessage.toLowerCase() == '🦎') {
-						data.functions.handleWebsocketRedeem('lizard', { 'file': 'tts-lizard', 'from': 'chat' }, client);
-					}
-					else if (cleanedMessage.toLowerCase() == 'v') {
-						data.functions.handleWebsocketRedeem('lizard', { 'file': 'tts-vee', 'from': 'chat' }, client);
-					}
-					else {
-						data.functions.handleWebsocketRedeem('lizard', { 'file': 'tts-' + cleanedMessage.toLowerCase(), 'from': 'chat' }, client);
-					}
+			// If a single word...
+			if (!cleanedMessage.includes(' ')) {
 
-					// Disable passive for spam reasons...
-					passive = false;
+				// If the channel has chaosWords...
+				if (channelName in data.chaosWords) {
+
+					// If it's in the channels chaos words...
+					if (data.chaosWords[channelName].includes(cleanedMessage.toLowerCase())) {
+
+						console.log('chaosWords: ' + cleanedMessage.toLowerCase());
+						if (cleanedMessage.toLowerCase() == 'lizard' || cleanedMessage.toLowerCase() == '🦎') {
+							data.functions.handleWebsocketRedeem('lizard', { 'file': 'tts-lizard', 'from': 'chat' }, client);
+						}
+						else if (cleanedMessage.toLowerCase() == 'v') {
+							data.functions.handleWebsocketRedeem('lizard', { 'file': 'tts-vee', 'from': 'chat' }, client);
+						}
+						else {
+							data.functions.handleWebsocketRedeem('lizard', { 'file': 'tts-' + cleanedMessage.toLowerCase(), 'from': 'chat' }, client);
+						}
+
+						// Disable passive for spam reasons...
+						passive = false;
+					}
 				}
-
 			}
+
+		}
+		// VERY SPECIAL CALL OUT FOR ISSUES...
+		else if (cleanedMessage.toLowerCase() === 'force-chaos' && perms.admin == true) {
+			data.functions.handleChannelPointRedeem('chaos_mode', 'test', client, data);
+
+			// Disable passive because it's a command... technically...
+			passive = false;
 		}
 		// fallback check
 		else {
+
 			// Nothing doing, enable passive income...
 		}
 
@@ -133,7 +153,7 @@ module.exports = {
 			const currencyEnabled = client.commands.global.giveaway.currencyCheck(channelName, client);
 			if (currencyEnabled) {
 				tags['passiveAmt'] = 2;
-				console.log('- passive:' + tags['passiveAmt']);
+				console.log('passive: ' + tags['passiveAmt']);
 				client.commands.komfykiwi.coins.actions.handlePassiveIncome.execute(tags, channel, client);
 			}
 		}
