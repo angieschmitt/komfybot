@@ -612,23 +612,38 @@ const functions = {
 			break;
 		case 'chaos_mode':
 
-			data.settings.chaosMode = true;
+			axios.get(data.settings.finalUrl + 'channel_points/retrieve/chaos_mode')
+				.then((response) => {
+					if (response.data.status == 'success') {
 
-			parent.handleWebsocketRedeem('lizard', { 'redeemId': value }, client);
+						const now = Math.round(+new Date() / 1000);
+						if (now < response.data.response.expires && response.data.response.status !== 'CANCELED') {
 
-			// Build message...
-			message = 'Chaos mode word list: ';
-			Object.entries(data.chaosWords['komfykiwi']).forEach(([idx]) => {
-				message += data.chaosWords['komfykiwi'][idx] + ', ';
-			});
+							// Change the setting to true..
+							data.settings.chaosMode = true;
 
-			// Now say the message in kiwi's channel
-			client.say('komfykiwi', message.substring(0, message.length - 2));
+							// Pass it off to the websocket...
+							parent.handleWebsocketRedeem('lizard', { 'redeemId': value }, client);
 
-			// Start timer to turn it off...
-			setTimeout(function() {
-				data.settings.chaosMode = false;
-			}, 90000);
+							// Build message...
+							message = 'Chaos mode word list: ';
+							Object.entries(data.chaosWords['komfykiwi']).forEach(([idx]) => {
+								message += data.chaosWords['komfykiwi'][idx] + ', ';
+							});
+
+							// Now say the message in kiwi's channel
+							client.say('komfykiwi', message.substring(0, message.length - 2));
+
+							// Start timer to turn it off...
+							setTimeout(function() {
+								data.settings.chaosMode = false;
+							}, 90000);
+						}
+						else {
+							data.settings.chaosMode = false;
+						}
+					}
+				}).catch(err => console.log(err));
 
 			break;
 		case 'pop_cat':
