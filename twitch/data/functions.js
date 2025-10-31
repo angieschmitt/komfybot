@@ -612,12 +612,14 @@ const functions = {
 			break;
 		case 'chaos_mode':
 
-			axios.get(data.settings.finalUrl + 'channel_points/retrieve/chaos_mode')
+			axios.get(data.settings.finalUrl + 'channel_points/lookup/chaos_mode')
 				.then((response) => {
 					if (response.data.status == 'success') {
 
+						console.log(response.data);
+
 						const now = Math.round(+new Date() / 1000);
-						if (now < response.data.response.expires && response.data.response.status !== 'CANCELED') {
+						if (now <= response.data.response.expires && response.data.response.status !== 'CANCELED') {
 
 							// Change the setting to true..
 							data.settings.chaosMode = true;
