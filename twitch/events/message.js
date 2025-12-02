@@ -309,6 +309,20 @@ module.exports = {
 				}
 			}
 
+			// Handle special tags in message
+			if (output.indexOf('{@sender}') !== -1) {
+				output = output.replace('{@sender}', '@' + tags.username);
+			}
+			if (output.indexOf('{@target}') !== -1) {
+				if (args.length > 1) {
+					output = output.replace('{@target}', args[1]);
+				}
+				else {
+					client.say(channel, 'You are missing a target for that command.');
+					return true;
+				}
+			}
+
 			// Output output...
 			client.say(channel, `${output}`);
 			return true;
@@ -359,6 +373,20 @@ module.exports = {
 							output = output.replace('@' + key, args[(parseInt(key) + 1)]);
 						}
 					}
+				}
+			}
+
+			// Handle special tags in message
+			if (output.indexOf('{@sender}') !== -1) {
+				output = output.replace('{@sender}', '@' + tags.username);
+			}
+			if (output.indexOf('{@target}') !== -1) {
+				if (args.length > 1) {
+					output = output.replace('{@target}', args[1]);
+				}
+				else {
+					client.say(channel, 'You are missing a target for that command.');
+					return true;
 				}
 			}
 
