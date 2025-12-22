@@ -17,7 +17,18 @@ module.exports = {
 					.then(function(response) {
 						const resData = response.data;
 						if (resData.status === 'success') {
-							content += `Hey ${tags['username']}, you've been following Kiwi for ${resData.response}!`;
+							if ('twitch' in resData.response && 'komfybot' in resData.response) {
+								content += `Hey ${tags['username']}, according to Twitch, you've been following Kiwi for ${resData.response['twitch']}! `;
+								content += `|| According to KomfyBot, you've been here for at least ${resData.response['komfybot']}!`;
+							}
+							else {
+								if ('twitch' in resData.response) {
+									content += `Hey ${tags['username']}, according to Twitch, you've been following Kiwi for ${resData.response['twitch']}!`;
+								}
+								if ('komfybot' in resData.response) {
+									content += `Hey ${tags['username']}, according to KomfyBot, you've been following Kiwi for ${resData.response['komfybot']}!`;
+								}
+							}
 						}
 						else if (resData.status === 'failure') {
 							if (resData.err_msg === 'missing_authorization') {
