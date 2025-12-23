@@ -271,8 +271,6 @@ module.exports = {
 			execute(args, tags, message, channel, client) {
 				let content = '';
 
-				console.log(message);
-
 				if (args[2]) {
 					const username = args[2].replace('@', '').trim();
 					data.functions.getUserIdFromUsername(username, data)

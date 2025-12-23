@@ -32,7 +32,15 @@ module.exports = {
 					client.commands.komfykiwi.hattington.actions.give.execute(args2, tags, message2, channel, client);
 				});
 
-				client.say(channel, `Handed out the holiday hats to ${args[2]}! Enjoy your Santa Hat, Mittens, Wreath Crown, and Red Fez (cause Fez's are cool)!`);
+				const content = `Handed out the holiday hats to ${args[2]}! Enjoy your Santa Hat, Mittens, Wreath Crown, and Red Fez (cause Fez's are cool)!`;
+				if ('silent' in tags) {
+					if (tags.silent !== true) {
+						client.say(channel, `${content}`);
+					}
+				}
+				else {
+					client.say(channel, `${content}`);
+				}
 			},
 		},
 		snacks: {
@@ -41,8 +49,6 @@ module.exports = {
 				error: 'this command is for mods only.',
 			},
 			execute(args, tags, message, channel, client) {
-
-				console.log('x');
 
 				const snacks = [
 					'Kiwi Cocoa',
@@ -61,7 +67,37 @@ module.exports = {
 					client.commands.komfykiwi.snacks.actions.freebie.execute(args2, tags, message2, channel, client);
 				});
 
-				client.say(channel, `Handed out the holiday snacks to ${args[2]}! Make sure to give Hattington some Kiwi Cocoa, Star Cookies, or Jelly Beans!`);
+				const content = `Handed out the holiday snacks to ${args[2]}! Make sure to give Hattington some Kiwi Cocoa, Star Cookies, or Jelly Beans!`;
+				if ('silent' in tags) {
+					if (tags.silent !== true) {
+						client.say(channel, `${content}`);
+					}
+				}
+				else {
+					client.say(channel, `${content}`);
+				}
+			},
+		},
+		gifts: {
+			perms: {
+				levels: ['mod'],
+				error: 'this command is for mods only.',
+			},
+			execute(args, tags, message, channel, client) {
+				tags['silent'] = true;
+
+				const args2 = ['!holiday', 'snacks', args[2] ];
+				const message2 = `!holiday snacks ${args[2]}`;
+				client.commands.komfykiwi.holiday.actions.snacks.execute(args2, tags, message2, channel, client);
+
+				const args3 = ['!holiday', 'hats', args[2] ];
+				const message3 = `!holiday hats ${args[2]}`;
+				client.commands.komfykiwi.holiday.actions.hats.execute(args3, tags, message3, channel, client);
+
+				let content = `Handed out the holiday gifts to ${args[2]}! `;
+				content += 'Make sure to share your Kiwi Cocoa, Star Cookies, or Jelly Beans! ';
+				content += 'Also check out the Santa Hat, Mittens, Wreath Crown, and Red Fez (cause Fez\'s are cool)!';
+				client.say(channel, `${content}`);
 			},
 		},
 	},
