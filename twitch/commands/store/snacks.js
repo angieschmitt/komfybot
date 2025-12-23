@@ -29,7 +29,7 @@ module.exports = {
 			'If you need more help, check out !help coins and !help snacks.',
 		},
 		buy: {
-			help: 'Buy an Random Hat from the KomfyStore. !hattington buy',
+			help: 'Buy an snack from the KomfyStore. !snack buy',
 			args: {
 				1: [ 'r' ],
 				error: 'don\'t forgot the snack name!',
@@ -50,93 +50,87 @@ module.exports = {
 					itemOut = itemOut.substring(itemOut.indexOf(':') + 1).toLowerCase().trim();
 				}
 
-				if (item.toLowerCase() === 'random hat') {
-					content = 'You\'ll need to use the !hat buy command instead.';
-					client.say(channel, content);
-				}
-				else {
-					axios.get(data.settings.baseUrl + 'retrieve/store/?item=' + item.toLowerCase())
-						.then(function(response) {
-							const resData = response.data;
+				axios.get(data.settings.baseUrl + 'retrieve/store/?item=' + item.toLowerCase())
+					.then(function(response) {
+						const resData = response.data;
 
-							if (resData.status === 'failure') {
-								content += `No item named ${item}, or that item isn't available`;
-							}
-							else {
-								const cost = resData.content;
-								const reason = 'BOUGHT: ' + item;
-								bought = true;
+						if (resData.status === 'failure') {
+							content += `No item named ${item}, or that item isn't available`;
+						}
+						else {
+							const cost = resData.content;
+							const reason = 'BOUGHT: ' + item;
+							bought = true;
 
-								axios.get(data.settings.baseUrl + 'insert/coins/?username=' + username.toLowerCase() + '&amount=' + (cost * -1) + '&reason=' + reason)
-									.then(function(response2) {
-										const resData2 = response2.data;
-										if (resData2.status === 'success') {
-											axios.get(data.settings.baseUrl + 'interactive/coins/store_purchase?twitch_id=' + userID + '&item=' + item)
-												.then(function(response3) {
-													const resData3 = response3.data;
-													if (resData3.status === 'success') {
-														if (resData3.content.qty == 1) {
-															content = `Congrats @${username} on buying ${itemOut} @ ${cost} KomfyCoins.`;
-														}
-														else {
-															content = `Congrats @${username} on buying more ${itemOut} @ ${cost} KomfyCoins. You now have ${resData3.content.qty} of them.`;
-														}
+							axios.get(data.settings.baseUrl + 'insert/coins/?username=' + username.toLowerCase() + '&amount=' + (cost * -1) + '&reason=' + reason)
+								.then(function(response2) {
+									const resData2 = response2.data;
+									if (resData2.status === 'success') {
+										axios.get(data.settings.baseUrl + 'interactive/coins/store_purchase?twitch_id=' + userID + '&item=' + item)
+											.then(function(response3) {
+												const resData3 = response3.data;
+												if (resData3.status === 'success') {
+													if (resData3.content.qty == 1) {
+														content = `Congrats @${username} on buying ${itemOut} @ ${cost} KomfyCoins.`;
 													}
 													else {
-														data.errorMsg.handle(channel, client, 'snacks-buy', 'Failed response - add to inv');
+														content = `Congrats @${username} on buying more ${itemOut} @ ${cost} KomfyCoins. You now have ${resData3.content.qty} of them.`;
 													}
-												})
-												.catch(function() {
-													data.errorMsg.handle(channel, client, 'snacks-buy', 'Issue while adding to inventory');
-												})
-												.finally(function() {
-													// Get coin count
-													if (bought) {
-														client.commands[channel.replace('#', '')].coins.actions.coincount.execute(tags)
-															.then((coinAmt) => {
-																if (coinAmt) {
-																	content += ` You have ${(coinAmt ? coinAmt : 0)} KomfyCoins remaining!`;
-																}
-															})
-															.catch(() => {
-																data.errorMsg.handle(channel, client, 'snacks-buy', 'Issue while getting coin count');
-															})
-															.finally(function() {
-																client.say(channel, `${content}`);
-															});
-													}
-													else {
-														client.say(channel, `${content}`);
-													}
-													axios.post(data.settings.finalUrl + 'coins/update');
-												});
-										}
-										else if (resData2.status === 'failure' && resData2.err_msg === 'not_enough_coins') {
-											content = 'You seem to be out of KomfyCoins.';
-										}
-										else {
-											data.errorMsg.handle(channel, client, 'snacks-buy', 'Failed response - transaction');
-										}
-									})
-									.catch(function() {
-										data.errorMsg.handle(channel, client, 'snacks-buy', 'Issue while handling transaction');
-									})
-									.finally(function() {
-										client.say(channel, content);
-										axios.post(data.settings.finalUrl + 'coins/update');
-									});
-							}
-						})
-						.catch(function() {
-							data.errorMsg.handle(channel, client, 'snacks-buy', 'Issue while retrieving item');
-						})
-						.finally(function() {
-							if (content !== '') {
-								client.say(channel, content);
-							}
-							axios.post(data.settings.finalUrl + 'coins/update');
-						});
-				}
+												}
+												else {
+													data.errorMsg.handle(channel, client, 'snacks-buy', 'Failed response - add to inv');
+												}
+											})
+											.catch(function() {
+												data.errorMsg.handle(channel, client, 'snacks-buy', 'Issue while adding to inventory');
+											})
+											.finally(function() {
+												// Get coin count
+												if (bought) {
+													client.commands[channel.replace('#', '')].coins.actions.coincount.execute(tags)
+														.then((coinAmt) => {
+															if (coinAmt) {
+																content += ` You have ${(coinAmt ? coinAmt : 0)} KomfyCoins remaining!`;
+															}
+														})
+														.catch(() => {
+															data.errorMsg.handle(channel, client, 'snacks-buy', 'Issue while getting coin count');
+														})
+														.finally(function() {
+															client.say(channel, `${content}`);
+														});
+												}
+												else {
+													client.say(channel, `${content}`);
+												}
+												axios.post(data.settings.finalUrl + 'coins/update');
+											});
+									}
+									else if (resData2.status === 'failure' && resData2.err_msg === 'not_enough_coins') {
+										content = 'You seem to be out of KomfyCoins.';
+									}
+									else {
+										data.errorMsg.handle(channel, client, 'snacks-buy', 'Failed response - transaction');
+									}
+								})
+								.catch(function() {
+									data.errorMsg.handle(channel, client, 'snacks-buy', 'Issue while handling transaction');
+								})
+								.finally(function() {
+									client.say(channel, content);
+									axios.post(data.settings.finalUrl + 'coins/update');
+								});
+						}
+					})
+					.catch(function() {
+						data.errorMsg.handle(channel, client, 'snacks-buy', 'Issue while retrieving item');
+					})
+					.finally(function() {
+						if (content !== '') {
+							client.say(channel, content);
+						}
+						axios.post(data.settings.finalUrl + 'coins/update');
+					});
 			},
 		},
 		give: {
@@ -266,6 +260,91 @@ module.exports = {
 							client.say(channel, content);
 						}
 					});
+			},
+		},
+		freebie: {
+			help: 'STREAMER command to give a freebie snack to a user. !snacks freebie <username:required> <snack-name:required>',
+			perms: {
+				levels: ['streamer', 'admin'],
+				error: 'this is a streamer only command.',
+			},
+			execute(args, tags, message, channel, client) {
+				let content = '';
+
+				console.log(message);
+
+				if (args[2]) {
+					const username = args[2].replace('@', '').trim();
+					data.functions.getUserIdFromUsername(username, data)
+						.then(function(response) {
+							if (response) {
+
+								const userID = response.twitch_id;
+
+								// Got a userID... set up the item...
+								let item = message.replace(args[0], '').replace(args[1], '').replace(args[2], '').trim();
+								let itemOut = item;
+
+								if (item.indexOf(':') === -1) {
+									item = 'snacks : ' + item;
+								}
+								else {
+									itemOut = itemOut.substring(itemOut.indexOf(':') + 1).toLowerCase().trim();
+								}
+
+								// Now check that the item is valid...
+								axios.get(data.settings.baseUrl + 'retrieve/store/?item=' + item.toLowerCase())
+									.then(function(response) {
+										const resData = response.data;
+
+										if (resData.status === 'failure') {
+											content += `No item named ${item}, or that item isn't available`;
+										}
+										else {
+											// Now insert the freebie...
+											axios.get(data.settings.baseUrl + 'interactive/coins/store_purchase?twitch_id=' + userID + '&item=' + item)
+												.then(function(response3) {
+													const resData3 = response3.data;
+													if (resData3.status === 'success') {
+														content = `Congrats @${username} on your free ${itemOut}.`;
+													}
+													else {
+														data.errorMsg.handle(channel, client, 'snacks-freebie', 'Failed response - add to inv');
+													}
+												})
+												.catch(function() {
+													data.errorMsg.handle(channel, client, 'snacks-buy', 'Issue while adding to inventory');
+												})
+												.finally(function() {
+													if ('silent' in tags) {
+														if (tags.silent !== true) {
+															client.say(channel, `${content}`);
+														}
+													}
+													else if (content !== '') {
+														client.say(channel, `${content}`);
+													}
+												});
+										}
+									})
+									.catch(function() {
+										data.errorMsg.handle(channel, client, 'snacks-freebie', 'Issue while retrieving item');
+									})
+									.finally(function() {
+										if ('silent' in tags) {
+											if (tags.silent !== true) {
+												if (content !== '') {
+													client.say(channel, `${content}`);
+												}
+											}
+										}
+										else if (content !== '') {
+											client.say(channel, `${content}`);
+										}
+									});
+							}
+						});
+				}
 			},
 		},
 	},

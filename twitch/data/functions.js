@@ -698,6 +698,25 @@ const functions = {
 
 		client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': data, 'source': 'komfybot' }));
 	},
+	// UserID from Username
+	getUserIdFromUsername(username, data) {
+		const user = username.toLowerCase();
+		return axios.get(data.settings.finalUrl + 'userdata/retrieve/' + user)
+			.then(function(res) {
+				const resData = res.data;
+
+				let response = [];
+				if (resData.status === 'success') {
+					response.twitch_id = resData.response.twitch_id;
+				}
+				else {
+					response = false;
+				}
+
+				return response;
+			})
+			.catch(err => console.log(err));
+	},
 };
 
 // mymodule.js
