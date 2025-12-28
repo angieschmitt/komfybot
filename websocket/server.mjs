@@ -15,8 +15,8 @@ const actions = loadActions();
 function init() {
 
     const server = createServer({
-        cert: readFileSync('./certs/server-cert.pem'),
-        key: readFileSync('./certs/server-key.pem')
+        cert: readFileSync('/websocket/certs/server-cert.pem'),
+        key: readFileSync('/websocket/certs/server-key.pem')
     });
 
     const wss = new WebSocketServer({ server });
@@ -67,7 +67,7 @@ function init() {
 
                 const parsed = JSON.parse(message);
 
-                // console.log(parsed);
+                console.log(parsed);
 
                 let action = parsed['action'].toString();
                 let source = parsed['source'].toString();
