@@ -16,7 +16,7 @@ module.exports = {
 		data.debug.write(channel, 'USER_JOIN', username);
 
 		if (isSelf) {
-			console.log('isSelf');
+			// console.log('isSelf');
 		}
 	},
 	// handleSpeak(channel, client) {
