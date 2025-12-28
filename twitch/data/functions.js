@@ -548,6 +548,9 @@ const functions = {
 			if (data.action === 'ping' && targets.includes('komfybot')) {
 				client.say('#komfybot', parent.speakConvertor('Pong!'));
 			}
+			else if (data.action === 'speak' && targets.includes('komfybot')) {
+				client.say('#' + data['data']['channel'], parent.speakConvertor(data['data']['message']));
+			}
 		};
 
 		websocket.onerror = (error) => {
