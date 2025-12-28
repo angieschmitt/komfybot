@@ -25,7 +25,7 @@ function init() {
     let groups = [];
     wss.on('connection', function connection(ws, req) {
 
-        console.log('connection');
+        // console.log('connection');
 
         // get userID...
         var userID = req.url.substr(1);
@@ -97,9 +97,6 @@ function init() {
                     let iter = 0;
                     wss.clients.forEach(function (client) {
                         if (Object.values(output.target).indexOf(iter.toString()) > -1) {
-
-                            console.log( output );
-
                             client.send( JSON.stringify(output) );
                         }
                         iter++;
