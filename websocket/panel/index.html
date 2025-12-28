@@ -51,7 +51,6 @@
 
                 let port = 8080;
 
-                // websocket = new WebSocket('wss://server.komfybot.com:' + port + '/' + identifier);
                 websocket = new WebSocket('wss://64.176.216.41:' + port + '/' + identifier);
 
                 websocket.onopen = () => {
@@ -105,6 +104,7 @@
                 };
 
                 websocket.onerror = function(err) {
+                    console.error(err);
                     console.error('Socket encountered error: ', err.message, 'Closing socket');
                     websocket.close();
                 };
