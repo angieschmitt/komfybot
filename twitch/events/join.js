@@ -10,41 +10,41 @@ axios.defaults.headers.common['Expires'] = '0';
 module.exports = {
 	eventHandler(channel, username, isSelf) {
 		// Get client
-		const client = this;
+		// const client = this;
 
 		// Log people joining
 		data.debug.write(channel, 'USER_JOIN', username);
 
 		if (isSelf) {
-			module.exports.handleSpeak(channel, client);
+			console.log('isSelf');
 		}
 	},
-	handleSpeak(channel, client) {
-		channel = channel.replace('#', '');
-		const timerInterval = 15000;
-		setInterval(
-			callApi,
-			timerInterval,
-			channel,
-			client,
-		);
-	},
+	// handleSpeak(channel, client) {
+	// 	channel = channel.replace('#', '');
+	// 	const timerInterval = 15000;
+	// 	setInterval(
+	// 		callApi,
+	// 		timerInterval,
+	// 		channel,
+	// 		client,
+	// 	);
+	// },
 };
 
-async function callApi(channel, client) {
-	const response = await axios({ url: data.settings.finalUrl + 'speak/retrieve/' + channel })
-		.catch(function(error) {
-			const errJSON = error.toJSON();
-			data.debug.write(channel, 'SPEAK_ERROR', errJSON.message);
-		});
-	if (response) {
-		if (response.data.status === 'success') {
-			const botSpeak = data.functions.speakConvertor(response.data.response);
-			client.say(channel, botSpeak)
-				.then(() => {
-					axios.get(data.settings.finalUrl + 'speak/remove/' + channel);
-				})
-				.catch(err => console.log(err));
-		}
-	}
-}
+// async function callApi(channel, client) {
+// 	const response = await axios({ url: data.settings.finalUrl + 'speak/retrieve/' + channel })
+// 		.catch(function(error) {
+// 			const errJSON = error.toJSON();
+// 			data.debug.write(channel, 'SPEAK_ERROR', errJSON.message);
+// 		});
+// 	if (response) {
+// 		if (response.data.status === 'success') {
+// 			const botSpeak = data.functions.speakConvertor(response.data.response);
+// 			client.say(channel, botSpeak)
+// 				.then(() => {
+// 					axios.get(data.settings.finalUrl + 'speak/remove/' + channel);
+// 				})
+// 				.catch(err => console.log(err));
+// 		}
+// 	}
+// }
