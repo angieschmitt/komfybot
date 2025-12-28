@@ -67,7 +67,7 @@ function init() {
 
                 const parsed = JSON.parse(message);
 
-                console.log(parsed);
+                // console.log(parsed);
 
                 let action = parsed['action'].toString();
                 let source = parsed['source'].toString();
@@ -98,8 +98,7 @@ function init() {
                     wss.clients.forEach(function (client) {
                         if (Object.values(output.target).indexOf(iter.toString()) > -1) {
 
-                            // console.log( 'action: ' + output.action );
-                            // console.log( 'target: ' + output.target );
+                            console.log( output );
 
                             client.send( JSON.stringify(output) );
                         }
