@@ -15,8 +15,8 @@ const actions = loadActions();
 function init() {
 
     const server = createServer({
-        cert: readFileSync('../websocket-dev/certs/localhost.crt'),
-        key: readFileSync('../websocket-dev/certs/localhost.key')
+        cert: readFileSync('./websocket-dev/certs/localhost.crt'),
+        key: readFileSync('./websocket-dev/certs/localhost.key')
     });
 
     const wss = new WebSocketServer({ server });

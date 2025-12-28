@@ -78,9 +78,9 @@
                             const buttonList = data.userList.sort();
                             $('.buttons').html('');
                             buttonList.forEach(element => {
-                                if (element !== identifier) {
+                                // if (element !== identifier) {
                                     $('.buttons').append('<button onclick="handleButton(\'' + element + '\');">' + element + '</button>');
-                                }
+                                // }
                             });
 
                             // Populate the group
