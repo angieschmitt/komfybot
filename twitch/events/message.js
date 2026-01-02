@@ -87,12 +87,11 @@ module.exports = {
 			}
 		}
 
-		// If the channel is live... process stuff
-		// data.functions.liveCheck(data, channelName)
-		// 	.then(res => {
-		// 		if (res.live === true || perms.streamer === true || perms.admin === true) {
+		// Setup some stuff for using it...
+		const userID = tags['user-id'];
+		const chatters = client.extras[channelName].chatters;
 
-		// Default passive income to true
+		// Passive starts true...
 		let passive = true;
 
 		// If command was found, do this stuff...
@@ -143,47 +142,35 @@ module.exports = {
 		}
 		// fallback check
 		else {
-
 			// Nothing doing, enable passive income...
 		}
 
+		// Handle passive income if still true...
 		if (passive) {
-			const currencyEnabled = client.commands.global.giveaway.currencyCheck(channelName, client);
-			if (currencyEnabled) {
-				tags['passiveAmt'] = 2;
-				console.log('passive: ' + tags['passiveAmt']);
-				client.commands.komfykiwi.coins.actions.handlePassiveIncome.execute(tags, channel, client);
-			}
+			module.exports.handlePassiveIncome(channelName, tags, client);
 		}
 
-		// 		}
-		// 		else {
-		// 			/* eslint-disable-next-line no-lonely-if */
-		// 			if (commandData) {
-		// 				client.say(channel, data.functions.speakConvertor('Commands are only active while the streamer is live!'));
-		// 			}
-		// 		}
-		// 	})
-		// 	.catch(err => console.log(err));
-
-		// React to first message
+		// If streamer has triggers for 'first messages'...
 		if (data.firstMessage[channelName]) {
-			const userID = tags['user-id'];
-			const firsts = client.extras[channelName].firstMessage;
-			if (Object.values(firsts).indexOf(userID) == -1) {
-				client.extras[channelName].firstMessage.push(userID);
-				console.log('first-message');
-
+			// And chatter hasn't alread chatted....
+			if (Object.values(chatters).indexOf(userID) == -1) {
+				// Handle first message reaction
 				const reaction = module.exports.handleFirstMessage(message, tags, data.firstMessage[channelName]);
 				if (reaction) {
 					if ('say' in reaction) {
 						client.say(channel, reaction['say']);
 					}
 					if ('execute' in reaction) {
-						eval(reaction['execute']);
+						if (!eval(reaction['execute'])) {
+							reaction['execute'];
+						}
 					}
 					console.log('Triggered: first_message');
 				}
+
+				// Then log that they have triggered it in the bot AND the DB...
+				module.exports.handleChatterLog(channelName, tags, client);
+				console.log('first-message');
 			}
 		}
 
@@ -206,6 +193,9 @@ module.exports = {
 		};
 		const url = data.settings.finalUrl + 'userdata/update/json/' + encodeURIComponent(JSON.stringify(jsonData));
 		axios.get(url);
+
+		// Log the chatter...
+		module.exports.handleChatterLog(channelName, tags, client);
 
 		// Update coin_log
 		axios.post(data.settings.finalUrl + 'coins/update');
@@ -523,5 +513,29 @@ module.exports = {
 			[entries[i], entries[j]] = [entries[j], entries[i]];
 		}
 		return Object.fromEntries(entries);
+	},
+	// user stuff
+	handlePassiveIncome(channelName, tags, client) {
+		const currencyEnabled = client.commands.global.giveaway.currencyCheck(channelName, client);
+		if (currencyEnabled) {
+			tags['passiveAmt'] = 2;
+			console.log('passive: ' + tags['passiveAmt']);
+			client.commands.komfykiwi.coins.actions.handlePassiveIncome.execute(tags, '@' + channelName, client);
+		}
+	},
+	handleChatterLog(channelName, tags, client) {
+		const userID = tags['user-id'];
+		let chatters = client.extras[channelName].chatters;
+
+		// If user not already in the list...
+		if (Object.values(chatters).indexOf(userID) == -1) {
+			client.extras[channelName].chatters.push(userID);
+		}
+
+		chatters = client.extras[channelName].chatters;
+
+		const chatterData = { 'ident_type':'twitch_username', 'ident':channelName, 'chatter': userID };
+		const chatterUrl = data.settings.finalUrl + 'chatters/insert/json/' + encodeURIComponent(JSON.stringify(chatterData));
+		axios.get(chatterUrl);
 	},
 };

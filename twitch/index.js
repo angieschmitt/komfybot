@@ -32,6 +32,9 @@ data.functions.loadExternalCommands(client, data);
 data.functions.loadExternalTimers(client, data);
 data.functions.loadExternalSettings(client, data);
 
+// Pull in chatter log from the DB
+data.functions.loadChattersFromDB(client, data);
+
 // Start the command refresh check
 data.functions.checkForCommandRefresh(data, client);
 data.functions.checkForTimerRefresh(data, client);

@@ -18,6 +18,10 @@ module.exports = {
 			arg: 'settings',
 			list: false,
 		},
+		'relchat': {
+			arg: 'chatters',
+			list: false,
+		},
 	},
 	actions: {
 		default: {
@@ -79,6 +83,25 @@ module.exports = {
 				data.functions.loadExternalSettings(client, data);
 
 				const content = 'Reloaded settings.';
+				if ('silent' in tags) {
+					if (tags.silent !== true) {
+						client.say(channel, content);
+					}
+				}
+				else {
+					client.say(channel, content);
+				}
+			},
+		},
+		chatters: {
+			perms: {
+				levels: ['mod'],
+				error: 'this command is for mods only.',
+			},
+			execute(args, tags, message, channel, client) {
+				data.functions.loadChattersFromDB(client, true);
+
+				const content = 'Reloaded chatters.';
 				if ('silent' in tags) {
 					if (tags.silent !== true) {
 						client.say(channel, content);

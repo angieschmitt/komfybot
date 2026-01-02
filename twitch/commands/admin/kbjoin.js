@@ -40,7 +40,7 @@ module.exports = {
 						// Add extras?
 						client.extras[ channelToJoin ] = [];
 						client.extras[ channelToJoin ].race = [];
-						client.extras[ channelToJoin ].firstMessage = [];
+						client.extras[ channelToJoin ].chatters = [];
 
 						// Trigger reload of commands
 						tags['silent'] = true;

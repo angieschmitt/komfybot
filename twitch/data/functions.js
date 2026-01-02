@@ -33,7 +33,7 @@ const functions = {
 			// Create channel extras
 			client.extras[channel.replace('#', '')] = [];
 			client.extras[channel.replace('#', '')].race = [];
-			client.extras[channel.replace('#', '')].firstMessage = [];
+			client.extras[channel.replace('#', '')].chatters = [];
 
 			// Create channel last_message
 			client.last_message[channel.replace('#', '')] = '';
@@ -405,6 +405,25 @@ const functions = {
 				.catch(err => console.log(err));
 		}
 	},
+	// channel extras
+	loadChattersFromDB(client, data) {
+		// Loop over the channels and get the settings
+		Object.entries(client.opts.channels).forEach(([index, channel]) => { // eslint-disable-line no-unused-vars
+			channel = channel.replace('#', '');
+
+			// Set up the container
+			client.extras[channel].chatters = [];
+
+			axios.get(data.settings.finalUrl + 'chatters/retrieve/' + channel)
+				.then(function(res) {
+					if (res.data.status == 'success') {
+						// Lets assign the settings to the channel
+						client.extras[channel].chatters = res.data.response;
+					}
+				})
+				.catch(err => console.log(err));
+		});
+	},
 	// settings
 	loadSettings(client, reset = false) {
 
@@ -695,10 +714,8 @@ const functions = {
 	},
 	// Websocket powered
 	handleWebsocketRedeem(target, data, client) {
-
 		// Slide the target into the data
 		data['target'] = target;
-
 		client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': data, 'source': 'komfybot' }));
 	},
 	// UserID from Username

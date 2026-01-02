@@ -26,7 +26,14 @@ module.exports = {
 									.then(() => {
 										axios.get(data.settings.finalUrl + 'racers/reset/' + channelName)
 											.then(() => {
-												content += 'Reset complete!';
+												axios.get(data.settings.finalUrl + 'chatters/reset/' + channelName)
+													.then(() => {
+														content += 'Reset complete!';
+													})
+													.catch(err => console.log(err))
+													.finally(function() {
+														client.say(channel, content);
+													});
 											})
 											.catch(err => console.log(err))
 											.finally(function() {
