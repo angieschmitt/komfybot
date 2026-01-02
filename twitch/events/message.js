@@ -158,12 +158,16 @@ module.exports = {
 				const reaction = module.exports.handleFirstMessage(message, tags, data.firstMessage[channelName]);
 				if (reaction) {
 					if ('say' in reaction) {
-						client.say(channel, reaction['say']);
+						Object.entries(reaction['say']).forEach(([idx]) => {
+							client.say(channel, reaction['say'][idx]);
+						});
 					}
 					if ('execute' in reaction) {
-						if (!eval(reaction['execute'])) {
-							reaction['execute'];
-						}
+						Object.entries(reaction['execute']).forEach(([idx]) => {
+							if (!eval(reaction['execute'][idx])) {
+								reaction['execute'][idx];
+							}
+						});
 					}
 					console.log('Triggered: first_message');
 				}
@@ -467,23 +471,22 @@ module.exports = {
 	},
 	handleFirstMessage(message, tags, data) {
 		const userID = tags['user-id'];
-		let output = false;
+		const output = {};
 
 		// Check user specific first
 		if (data[userID]) {
 			Object.entries(data[userID]).forEach(([action, response]) => {
-				console.log(action);
 				if (action == 'say') {
-					output = { 'say' : response };
+					output['say'] = response;
 				}
-				else if (action == 'execute') {
-					output = { 'execute' : response };
+				if (action == 'execute') {
+					output['execute'] = response;
 				}
 			});
 		}
 
 		// If output, return.. if not false
-		if (output) {
+		if (Object.keys(output).length !== 0) {
 			return output;
 		}
 		return false;

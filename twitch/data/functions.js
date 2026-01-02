@@ -412,7 +412,7 @@ const functions = {
 			channel = channel.replace('#', '');
 
 			// Set up the container
-			client.extras[channel].chatters = [];client.extras[channel].chatters = [];
+			client.extras[channel].chatters = [];
 
 			axios.get(data.settings.finalUrl + 'chatters/retrieve/' + channel)
 				.then(function(res) {
