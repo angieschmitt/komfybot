@@ -28,6 +28,7 @@ module.exports = {
 											.then(() => {
 												axios.get(data.settings.finalUrl + 'chatters/reset/' + channelName)
 													.then(() => {
+														client.extras[channelName].chatters = [];
 														content += 'Reset complete!';
 													})
 													.catch(err => console.log(err))

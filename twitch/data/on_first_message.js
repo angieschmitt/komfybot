@@ -9,7 +9,7 @@ const on_first_message = {
 		'547517825': {
 			execute: 'data.functions.handleWebsocketRedeem(\'lizard\', { \'file\': \'whos-that-pokemon\', \'from\': \'walk-on\' }, client)',
 		},
-        '90928645': {
+		'90928645': {
 			execute: 'data.functions.handleWebsocketRedeem(\'lizard\', { \'file\': \'cute-and-fluffy\', \'from\': \'walk-on\' }, client)',
 		},
 	},
