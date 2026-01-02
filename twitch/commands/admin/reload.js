@@ -99,7 +99,7 @@ module.exports = {
 				error: 'this command is for mods only.',
 			},
 			execute(args, tags, message, channel, client) {
-				data.functions.loadChattersFromDB(client, true);
+				data.functions.loadChattersFromDB(client, data);
 
 				const content = 'Reloaded chatters.';
 				if ('silent' in tags) {
