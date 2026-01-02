@@ -7,7 +7,7 @@ const on_first_message = {
 			execute: 'client.commands[\'global\'].checkin.actions.default.execute(false, tags, message, channel, client)',
 		},
 		'547517825': {
-			execute: 'data.functions.handleWebsocketRedeem(\'lizard\', { \'file\': \'whos-that-pokemon.mp3\', \'from\': \'walk-on\' }, client)',
+			execute: 'data.functions.handleWebsocketRedeem(\'lizard\', { \'file\': \'whos-that-pokemon\', \'from\': \'walk-on\' }, client)',
 		},
 	},
 	'kittenangie': {
