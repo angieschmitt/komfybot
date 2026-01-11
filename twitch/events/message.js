@@ -135,7 +135,7 @@ module.exports = {
 		}
 		// VERY SPECIAL CALL OUT FOR ISSUES...
 		else if (cleanedMessage.toLowerCase() === 'force-chaos' && perms.admin == true) {
-			data.functions.handleChannelPointRedeem('chaos_mode', 'test', client, data);
+			data.functions.handleChannelPointRedeem('chaos_mode', 'forced', client, data);
 
 			// Disable passive because it's a command... technically...
 			passive = false;

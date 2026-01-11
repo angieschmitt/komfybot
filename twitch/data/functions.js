@@ -634,40 +634,66 @@ const functions = {
 			break;
 		case 'chaos_mode':
 
-			axios.get(data.settings.finalUrl + 'channel_points/lookup/chaos_mode')
-				.then((response) => {
-					if (response.data.status == 'success') {
+			if (value == 'forced') {
 
-						console.log(response.data);
+				data.settings.chaosMode = true;
 
-						const now = Math.round(+new Date() / 1000);
-						if (now <= response.data.response.expires && response.data.response.status !== 'CANCELED') {
+				// Pass it off to the websocket...
+				parent.handleWebsocketRedeem('lizard', { 'redeemId': value }, client);
 
-							// Change the setting to true..
-							data.settings.chaosMode = true;
+				// Build message...
+				message = 'Chaos mode word list: ';
+				Object.entries(data.chaosWords['komfykiwi']).forEach(([idx]) => {
+					message += data.chaosWords['komfykiwi'][idx] + ', ';
+				});
 
-							// Pass it off to the websocket...
-							parent.handleWebsocketRedeem('lizard', { 'redeemId': value }, client);
+				// Now say the message in kiwi's channel
+				client.say('komfykiwi', message.substring(0, message.length - 2));
 
-							// Build message...
-							message = 'Chaos mode word list: ';
-							Object.entries(data.chaosWords['komfykiwi']).forEach(([idx]) => {
-								message += data.chaosWords['komfykiwi'][idx] + ', ';
-							});
+				// Start timer to turn it off...
+				setTimeout(function() {
+					data.settings.chaosMode = false;
+				}, 30000);
 
-							// Now say the message in kiwi's channel
-							client.say('komfykiwi', message.substring(0, message.length - 2));
+			}
+			else {
 
-							// Start timer to turn it off...
-							setTimeout(function() {
+				axios.get(data.settings.finalUrl + 'channel_points/lookup/chaos_mode')
+					.then((response) => {
+						if (response.data.status == 'success') {
+
+							console.log(response.data);
+
+							const now = Math.round(+new Date() / 1000);
+							if (now <= response.data.response.expires && response.data.response.status !== 'CANCELED') {
+
+								// Change the setting to true..
+								data.settings.chaosMode = true;
+
+								// Pass it off to the websocket...
+								parent.handleWebsocketRedeem('lizard', { 'redeemId': value }, client);
+
+								// Build message...
+								message = 'Chaos mode word list: ';
+								Object.entries(data.chaosWords['komfykiwi']).forEach(([idx]) => {
+									message += data.chaosWords['komfykiwi'][idx] + ', ';
+								});
+
+								// Now say the message in kiwi's channel
+								client.say('komfykiwi', message.substring(0, message.length - 2));
+
+								// Start timer to turn it off...
+								setTimeout(function() {
+									data.settings.chaosMode = false;
+								}, 90000);
+							}
+							else {
 								data.settings.chaosMode = false;
-							}, 90000);
+							}
 						}
-						else {
-							data.settings.chaosMode = false;
-						}
-					}
-				}).catch(err => console.log(err));
+					}).catch(err => console.log(err));
+
+			}
 
 			break;
 		case 'pop_cat':
