@@ -6,5 +6,6 @@ errors
 
 # Don't push cred files
 twitch/data/settings.js
+twitch-v2/settings.js
 websocket/certs
 websocket-dev/certs
