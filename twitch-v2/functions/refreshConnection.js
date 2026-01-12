@@ -3,7 +3,7 @@ const axios = require('axios');
 module.exports = {
 	function(clientData, globals, client) {
 		// const interval = 5000;
-		const interval = 3600000;
+		const interval = 1800000;
 		setInterval(() => {
 			if (client.readyState() == 'OPEN') {
 				const channelName = clientData.channels[0].replace('#', '');

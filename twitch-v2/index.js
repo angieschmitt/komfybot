@@ -11,6 +11,10 @@ const functions = functionsFile.content();
 const globals = [];
 globals['endpoint'] = settings.endpoint;
 
-// Handle creating bots
+// Handle creating bots...
 globals['bots'] = [];
 globals['bots'] = functions.createBots(globals);
+
+// Handle refreshing commands and timers...
+globals['refreshHandlers'] = [];
+globals['refreshHandlers']['commands'] = functions.commandRefreshHandler(globals);

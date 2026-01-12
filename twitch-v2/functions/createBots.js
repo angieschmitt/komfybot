@@ -20,14 +20,20 @@ module.exports = {
 				},
 			};
 
-			globals['bots'][results['username']] = new tmi.client(clientData);
-			globals['bots'][results['username']].connect()
+			// Now create the bot...
+			globals['bots'][results['userID']] = new tmi.client(clientData);
+			globals['bots'][results['userID']].connect()
 				.then(() => {
-					parent.loadEvents(globals['bots'][results['username']]);
-					parent.loadCommands(globals['bots'][results['username']], globals, results['userID']);
-					parent.refreshConnection(clientData, globals, globals['bots'][results['username']]);
+					parent.loadEvents(globals['bots'][results['userID']]);
+					parent.loadCommands(globals['bots'][results['userID']], globals, results['userID']);
+					parent.refreshConnection(clientData, globals, globals['bots'][results['userID']]);
 				})
 				.catch(err => console.log(err));
+
+			// Set this for use where needed...
+			globals['bots'][results['userID']]['userID'] = results['userID'];
+			globals['bots'][results['userID']]['username'] = results['username'];
+
 		});
 
 		return globals;
