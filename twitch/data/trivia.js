@@ -253,7 +253,7 @@ const trivia = [
 	},
 	{
 		'q':'Who are the trainers in Team Rocket?',
-		'a':'James & Jessie',
+		'a':'Jessie and James',
 	},
 	{
 		'q':'Who does Charmander evolve into?',
