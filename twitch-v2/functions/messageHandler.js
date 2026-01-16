@@ -1,5 +1,8 @@
 module.exports = {
 	function(client, channel, tags, message, self) {
+
+		client.lastMessage = message;
+
 		console.log('handling message');
 		console.log(client.opts.identity);
 		console.log(channel);

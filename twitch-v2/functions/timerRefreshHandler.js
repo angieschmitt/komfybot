@@ -20,7 +20,7 @@ module.exports = {
 								// eslint-disable-next-line no-unused-vars
 								Object.entries(list).forEach(([idx, userID]) => {
 
-									parent.loadCommands(globals.bots[userID], globals, userID, true);
+									parent.loadTimers(globals.bots[userID], globals, userID, true);
 
 									// Pass back to remove the flag...
 									axios.get(globals['endpoint'] + 'timers/refresh/' + userID)

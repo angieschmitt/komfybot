@@ -22,18 +22,21 @@ module.exports = {
 
 			// Now create the bot...
 			globals['bots'][results['userID']] = new tmi.client(clientData);
-			globals['bots'][results['userID']].connect()
+
+			// Make ^ client, assign some stuff...
+			const client = globals['bots'][results['userID']];
+			client['userID'] = results['userID'];
+			client['channel'] = '#' + results['username'];
+
+			// Then connect to twitch...
+			client.connect()
 				.then(() => {
-					parent.loadEvents(globals['bots'][results['userID']]);
-					parent.loadCommands(globals['bots'][results['userID']], globals, results['userID']);
-					parent.refreshConnection(clientData, globals, globals['bots'][results['userID']]);
+					parent.loadEvents(client);
+					parent.loadCommands(client, globals, results['userID']);
+					parent.loadTimers(client, globals, results['userID']);
+					parent.refreshConnection(clientData, globals, client);
 				})
 				.catch(err => console.log(err));
-
-			// Set this for use where needed...
-			globals['bots'][results['userID']]['userID'] = results['userID'];
-			globals['bots'][results['userID']]['username'] = results['username'];
-
 		});
 
 		return globals;

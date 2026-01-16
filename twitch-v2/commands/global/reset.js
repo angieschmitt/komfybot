@@ -8,7 +8,9 @@ module.exports = {
 				levels: ['streamer'],
 				error: 'this is a streamer only command.',
 			},
-			say: 'COMING IF NECESSARY',
+			execute(args, tags, message, channel, client) {
+				client.timerOffset[channel] = 1;
+			},
 		},
 	},
 };
