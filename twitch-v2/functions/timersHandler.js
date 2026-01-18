@@ -1,6 +1,5 @@
 module.exports = {
-	async function(client, globals) {
-		const parent = this;
+	async function(client) {
 		const timerInterval = 60000;
 		// const timerInterval = 10000;
 
@@ -38,20 +37,15 @@ module.exports = {
 						const ident = Object.keys(timerQueue)[0];
 						const messageData = timerQueue[ident];
 						if (client.lastMessage !== messageData['message']) {
-							parent.userLiveCheck(client['userID'], globals)
-								.then(response => {
-									if (response === true) {
-										console.log('Timer: SENT ' + ident + ' IN ' + client['channel']);
-										client.say(client['channel'], messageData['message']);
-										Object.keys(timerQueue).forEach(key => delete timerQueue[key]);
-									}
-									else {
-										console.log('Timer: SKIPPED - ' + ident + ' IN ' + client['channel']);
-										Object.keys(timerQueue).forEach(key => delete timerQueue[key]);
-									}
-									console.log('- - -');
-								})
-								.catch(err => console.log(err));
+							if (client.isLive) {
+								console.log('Timer: SENT ' + ident + ' IN ' + client['channel']);
+								client.say(client['channel'], messageData['message']);
+								Object.keys(timerQueue).forEach(key => delete timerQueue[key]);
+							}
+							else {
+								console.log('Timer: SKIPPED - ' + ident + ' IN ' + client['channel']);
+								Object.keys(timerQueue).forEach(key => delete timerQueue[key]);
+							}
 						}
 					}
 

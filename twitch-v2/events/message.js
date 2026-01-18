@@ -23,7 +23,7 @@ module.exports = {
 		const commandData = functions.messageLocateCommand(client, channel, message);
 
 		if (commandData) {
-			if (functions.commandHandler(commandData, channel, perms, tags, message, client)) {
+			if (functions.commandsHandler(commandData, channel, perms, tags, message, client)) {
 				console.log('Used command: ' + commandData.command.name + ' ' + (commandData.args[1] ? commandData.args[1] : ''));
 			}
 		}

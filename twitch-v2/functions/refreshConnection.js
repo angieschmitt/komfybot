@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 module.exports = {
-	function(clientData, globals, client) {
+	function(client, globals, clientData) {
 		// const interval = 5000;
 		const interval = 1800000;
 		setInterval(() => {

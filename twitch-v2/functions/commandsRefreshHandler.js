@@ -10,20 +10,19 @@ module.exports = {
 
 		setInterval(
 			function() {
-				axios.get(globals['endpoint'] + 'timers/refresh')
+				axios.get(globals['endpoint'] + 'commands/refresh')
 					.then(function(response) {
 						if (response.data.status === 'success') {
 							const list = response.data.response;
 
 							if (Object.keys(list).length) {
 
-								// eslint-disable-next-line no-unused-vars
-								Object.entries(list).forEach(([idx, userID]) => {
+								Object.entries(list).forEach(([idx, userID]) => { // eslint-disable-line no-unused-vars
 
-									parent.loadTimers(globals.bots[userID], globals, userID, true);
+									parent.commandsLoad(globals.bots[userID], globals, userID, true);
 
 									// Pass back to remove the flag...
-									axios.get(globals['endpoint'] + 'timers/refresh/' + userID)
+									axios.get(globals['endpoint'] + 'commands/refresh/' + userID)
 										.catch(err => console.log(err));
 								});
 							}

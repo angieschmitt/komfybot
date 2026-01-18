@@ -31,10 +31,11 @@ module.exports = {
 			// Then connect to twitch...
 			client.connect()
 				.then(() => {
-					parent.loadEvents(client);
-					parent.loadCommands(client, globals, results['userID']);
-					parent.loadTimers(client, globals, results['userID']);
-					parent.refreshConnection(clientData, globals, client);
+					parent.eventsLoad(client);
+					parent.commandsLoad(client, globals, results['userID']);
+					parent.timersLoad(client, globals, results['userID']);
+					parent.liveLoad(client, globals, results['userID']);
+					parent.refreshConnection(client, globals, clientData);
 				})
 				.catch(err => console.log(err));
 		});

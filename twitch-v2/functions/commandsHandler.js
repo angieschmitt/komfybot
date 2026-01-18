@@ -1,9 +1,22 @@
 module.exports = {
 	function(command, channel, perms, tags, message, client) {
 		const parent = this;
+		const settings = command.command;
 		const action = command.action;
 		const args = command.args;
 		// const channel = command.channel;
+
+		// Check for allowOffline...
+		if ('allowOffline' in settings) {
+			// If allowOffline is false...
+			if (!settings.allowOffline) {
+				// And user isn't live...
+				if (!client.isLive) {
+					client.say(channel, 'This command cannot be used while the streamer is offline.');
+					return;
+				}
+			}
+		}
 
 		// Handle basic actions
 		if ('say' in action) {
@@ -89,7 +102,7 @@ module.exports = {
 			}
 
 			// Select a random entr
-			let output = parent.randomProperty(parent.shuffleObject(randomList));
+			let output = parent.funcRandomProperty(parent.funcShuffleObject(randomList));
 			let proceed = true;
 
 			// Handle perms/proceed, assign output if needed

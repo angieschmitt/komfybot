@@ -19,11 +19,9 @@ module.exports = {
 					const timers = response.data.response;
 					Object.entries(timers).forEach(([index, timer]) => { // eslint-disable-line no-unused-vars
 						Object.entries(timer).forEach(([name, data]) => {
-
 							client.timers[name] = [];
 							client.timers[name]['timer'] = parseInt(data['timer']);
 							client.timers[name]['message'] = data['message'];
-
 						});
 					});
 				}
@@ -33,6 +31,6 @@ module.exports = {
 				return client;
 			});
 
-		parent.timerHandler(client, globals);
+		parent.timersHandler(client, globals);
 	},
 };

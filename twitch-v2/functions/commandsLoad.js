@@ -34,8 +34,7 @@ module.exports = {
 				if (command.disabled !== true) {
 					if (command.channel !== '' && command.channel !== undefined) {
 						if (typeof command.channel == 'object') {
-							// eslint-disable-next-line no-unused-vars
-							Object.entries(command.channel).forEach(([key, channel]) => {
+							Object.entries(command.channel).forEach(([key, channel]) => { // eslint-disable-line no-unused-vars
 								if (!(channel in client.commands)) {
 									client.commands['user'] = [];
 								}
@@ -78,8 +77,10 @@ module.exports = {
 								client.commands['user'][name] = [];
 								client.commands['user'][name]['name'] = name;
 								client.commands['user'][name]['list'] = data['list'];
+								client.commands['user'][name]['allowOffline'] = data['allowOffline'];
 
 								delete data['list'];
+								delete data['allowOffline'];
 
 								client.commands['user'][name]['actions'] = [];
 								client.commands['user'][name]['actions']['default'] = data;
