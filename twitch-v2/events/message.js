@@ -27,5 +27,11 @@ module.exports = {
 				console.log('Used command: ' + commandData.command.name + ' ' + (commandData.args[1] ? commandData.args[1] : ''));
 			}
 		}
+
+		const reactwordCheck = functions.messageLocateReactword(client, channel, message, tags);
+		if (reactwordCheck) {
+			const chosen = functions.funcRandomProperty(reactwordCheck);
+			client.say(channel, chosen);
+		}
 	},
 };

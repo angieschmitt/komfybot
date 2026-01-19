@@ -34,6 +34,7 @@ module.exports = {
 					parent.eventsLoad(client);
 					parent.commandsLoad(client, globals, results['userID']);
 					parent.timersLoad(client, globals, results['userID']);
+					parent.reactwordsLoad(client, globals, results['userID']);
 					parent.liveLoad(client, globals, results['userID']);
 					parent.refreshConnection(client, globals, clientData);
 				})

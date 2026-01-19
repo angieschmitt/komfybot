@@ -1,8 +1,7 @@
 const axios = require('axios');
 
 // Handle watching for refreshes...
-const timerInterval = 10000;
-// const timerInterval = 5000;
+const timerInterval = 5000;
 
 module.exports = {
 	async function(globals) {
