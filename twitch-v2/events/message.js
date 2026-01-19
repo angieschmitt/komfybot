@@ -20,14 +20,16 @@ module.exports = {
 		// Populate some things we'll need...
 		const client = this;
 		const perms = functions.messagePermissions(channel, tags);
-		const commandData = functions.messageLocateCommand(client, channel, message);
 
+		// Handle commands...
+		const commandData = functions.messageLocateCommand(client, channel, message);
 		if (commandData) {
 			if (functions.commandsHandler(commandData, channel, perms, tags, message, client)) {
 				console.log('Used command: ' + commandData.command.name + ' ' + (commandData.args[1] ? commandData.args[1] : ''));
 			}
 		}
 
+		// Handle reactwords...
 		const reactwordCheck = functions.messageLocateReactword(client, channel, message, tags);
 		if (reactwordCheck) {
 			const chosen = functions.funcRandomProperty(reactwordCheck);
