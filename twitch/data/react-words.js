@@ -12,6 +12,7 @@ const words = {
 	'komfykiwi': {
 		'0': {
 			'comfy': 'Hey <username>, you misspelled that.',
+            '1998': '1998? Don\'t let that distract you from the fact that, in 1998, The Undertaker threw Mankind off Hell In A Cell, and plummeted 16 ft through an announcer\'s table.',
 		},
 		'16192204': {
 			'whale' : 'Hey <username>, you\'re a dingus.',
