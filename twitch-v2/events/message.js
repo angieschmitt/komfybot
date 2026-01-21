@@ -35,5 +35,17 @@ module.exports = {
 			const chosen = functions.funcRandomProperty(reactwordCheck);
 			client.say(channel, chosen);
 		}
+
+		// Handle passive income...
+		if (client.settings.currency.enabled) {
+			if (client.settings.passive.enabled) {
+				if (!commandData) {
+					if (client.isLive) {
+						functions.messageHandlePassive(client, channel, message, tags, perms);
+					}
+				}
+			}
+		}
+
 	},
 };

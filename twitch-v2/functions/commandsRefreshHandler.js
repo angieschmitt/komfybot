@@ -15,14 +15,14 @@ module.exports = {
 							const list = response.data.response;
 
 							if (Object.keys(list).length) {
-
 								Object.entries(list).forEach(([idx, userID]) => { // eslint-disable-line no-unused-vars
-
-									parent.commandsLoad(globals.bots[userID], globals, userID, true);
+									if (userID in globals.bots) {
+										parent.commandsLoad(globals.bots[userID], globals, userID, true);
+									}
 
 									// Pass back to remove the flag...
-									axios.get(globals['endpoint'] + 'commands/refresh/' + userID)
-										.catch(err => console.log(err));
+									// axios.get(globals['endpoint'] + 'commands/refresh/' + userID)
+									// 	.catch(err => console.log(err));
 								});
 							}
 						}

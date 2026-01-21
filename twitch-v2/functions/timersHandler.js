@@ -18,15 +18,14 @@ module.exports = {
 
 					// Enter messages into queue
 					const timerQueue = {};
-					const timerNames = Object.keys(client.timers);
 					Object.entries(client.timers).forEach(([index, data]) => {
 						if ((client.timerOffset % data['timer']) == 0) {
 							if (!Object.keys(timerQueue).length) {
-								timerQueue[ timerNames[index] ] = data;
+								timerQueue[ index ] = data;
 							}
 							else {
 								Object.keys(timerQueue).forEach(key => delete timerQueue[key]);
-								timerQueue[ timerNames[index] ] = data;
+								timerQueue[ index ] = data;
 							}
 						}
 					});
@@ -36,6 +35,7 @@ module.exports = {
 
 						const ident = Object.keys(timerQueue)[0];
 						const messageData = timerQueue[ident];
+
 						if (client.lastMessage !== messageData['message']) {
 							if (client.isLive) {
 								console.log('Timer: SENT ' + ident + ' IN ' + client['channel']);

@@ -7,6 +7,7 @@ module.exports = {
 		const channels = await parent.retrieveBotUsers(globals);
 		Object.entries(channels).forEach(async ([uuid, results]) => { // eslint-disable-line no-unused-vars
 			const botDataJson = JSON.parse(results['botData'], 'utf-8');
+			const settingsJson = JSON.parse(results['settings'], 'utf-8');
 
 			const clientData = {
 				channels: [ results['username'] ],
@@ -27,11 +28,13 @@ module.exports = {
 			const client = globals['bots'][results['userID']];
 			client['userID'] = results['userID'];
 			client['channel'] = '#' + results['username'];
+			client['endpoint'] = globals['endpoint'];
 
 			// Then connect to twitch...
 			client.connect()
 				.then(() => {
 					parent.eventsLoad(client);
+					parent.settingsLoad(client, globals, results['userID'], settingsJson);
 					parent.commandsLoad(client, globals, results['userID']);
 					parent.timersLoad(client, globals, results['userID']);
 					parent.reactwordsLoad(client, globals, results['userID']);

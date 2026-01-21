@@ -9,7 +9,7 @@ module.exports = {
 
 		setInterval(
 			function() {
-				axios.get(globals['endpoint'] + 'timers/refresh')
+				axios.get(globals['endpoint'] + 'settings/refresh')
 					.then(function(response) {
 						if (response.data.status === 'success') {
 							const list = response.data.response;
@@ -17,11 +17,11 @@ module.exports = {
 							if (Object.keys(list).length) {
 								Object.entries(list).forEach(([idx, userID]) => { // eslint-disable-line no-unused-vars
 									if (userID in globals.bots) {
-										parent.timersLoad(globals.bots[userID], globals, userID, true);
+										parent.settingsLoad(globals.bots[userID], globals, userID, {}, true);
 									}
 
 									// Pass back to remove the flag...
-									axios.get(globals['endpoint'] + 'timers/refresh/' + userID)
+									axios.get(globals['endpoint'] + 'settings/refresh' + userID)
 										.catch(err => console.log(err));
 								});
 							}

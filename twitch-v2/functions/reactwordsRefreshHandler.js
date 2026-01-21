@@ -16,7 +16,9 @@ module.exports = {
 
 							if (Object.keys(list).length) {
 								Object.entries(list).forEach(([idx, userID]) => { // eslint-disable-line no-unused-vars
-									parent.reactwordsLoad(globals.bots[userID], globals, userID, true);
+									if (userID in globals.bots) {
+										parent.reactwordsLoad(globals.bots[userID], globals, userID, true);
+									}
 
 									// Pass back to remove the flag...
 									axios.get(globals['endpoint'] + 'reactwords/refresh/' + userID)
