@@ -40,6 +40,9 @@ module.exports = {
 				parent.reactwordsLoad(client, globals, channel['userID']);
 				parent.liveLoad(client, globals, channel['userID']);
 				parent.refreshConnection(client, globals, clientData);
+
+				// Load in data...
+				parent.dataLoad('chatters', client, globals);
 			})
 			.catch(err => console.log(err));
 

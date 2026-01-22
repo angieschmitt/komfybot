@@ -16,12 +16,13 @@ module.exports = {
 
 							if (Object.keys(list).length) {
 								Object.entries(list).forEach(([idx, userID]) => { // eslint-disable-line no-unused-vars
+
 									if (userID in globals.bots) {
 										parent.settingsLoad(globals.bots[userID], globals, userID, {}, true);
 									}
 
 									// Pass back to remove the flag...
-									axios.get(globals['endpoint'] + 'settings/refresh' + userID)
+									axios.get(globals['endpoint'] + 'settings/refresh/' + userID)
 										.catch(err => console.log(err));
 								});
 							}

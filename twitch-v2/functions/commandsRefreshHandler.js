@@ -21,8 +21,8 @@ module.exports = {
 									}
 
 									// Pass back to remove the flag...
-									// axios.get(globals['endpoint'] + 'commands/refresh/' + userID)
-									// 	.catch(err => console.log(err));
+									axios.get(globals['endpoint'] + 'commands/refresh/' + userID)
+										.catch(err => console.log(err));
 								});
 							}
 						}

@@ -21,6 +21,9 @@ module.exports = {
 		const client = this;
 		const perms = functions.messagePermissions(channel, tags);
 
+		// Log chatters...
+		functions.dataChatters(client, channel, tags);
+
 		// Handle commands...
 		const commandData = functions.messageLocateCommand(client, channel, message);
 		if (commandData) {

@@ -20,14 +20,11 @@ module.exports = {
 				const viewer = tags['username'];
 				const viewerID = tags['user-id'];
 
-				// Setup JSON to pass through
-				const jsonData = { 'userID': client.userID, 'viewerID': viewerID };
-
 				let content = '';
-				axios.get(settings.endpoint + 'checkin/insert/' + encodeURIComponent(JSON.stringify(jsonData)))
+				axios.get(settings.endpoint + 'data/checkin/' + client.userID + '/' + viewerID)
 					.then(function(response) {
+
 						const resData = response.data;
-						console.log(resData);
 						const swapText = (resData.response > 1 ? 'checkins' : 'checkin');
 						if (resData.status === 'success') {
 							content = `Welcome in @${viewer}! You're at ${resData.response} ${swapText}!`;
@@ -64,19 +61,20 @@ module.exports = {
 				const viewer = tags['username'];
 				const viewerID = tags['user-id'];
 
-				// Setup JSON to pass through
-				const jsonData = { 'userID': client.userID, 'viewerID': viewerID };
-
 				let content = '';
-				axios.get(settings.endpoint + 'checkin/retrieve/' + encodeURIComponent(JSON.stringify(jsonData)))
+				axios.get(settings.endpoint + 'data/checkin/' + client.userID + '/' + viewerID)
 					.then(function(response) {
 						const resData = response.data;
 						const swapText = (resData.response > 1 ? 'times' : 'time');
 						if (resData.status === 'success') {
-							content = `@${viewer} has checked in ${resData.response} ${swapText}!`;
+							content = `@${viewer} has checked in an amazing ${resData.response} ${swapText}!`;
 						}
 						else if (resData.status === 'failure') {
-							if (resData.err_msg === 'missing_authorization') {
+							// If already checked in, we ignore it here...
+							if (resData.err_msg === 'already_checked_in') {
+								content = `@${viewer} has checked in an amazing ${resData.response} ${swapText}!`;
+							}
+							else if (resData.err_msg === 'missing_authorization') {
 								// data.errorMsg.handle(channel, client, 'checkin-brag', 'Authorization issue');
 							}
 							else {
