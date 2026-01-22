@@ -1,3 +1,5 @@
+const axios = require('axios');
+
 module.exports = {
 	list: false,
 	name: 'reset',
@@ -9,7 +11,12 @@ module.exports = {
 				error: 'this is a streamer only command.',
 			},
 			execute(args, tags, message, channel, client) {
-				client.timerOffset[channel] = 1;
+				// Local resets...
+				// client.timerOffset = 1;
+				client.chatters = 1;
+
+				// Database resets...
+				axios.get(client.endpoint + 'data/chatters/' + client.userID + '/reset');
 			},
 		},
 	},

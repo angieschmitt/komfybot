@@ -1,8 +1,5 @@
 const axios = require('axios');
 
-const settingsFile = require('../../settings');
-const settings = settingsFile.content();
-
 module.exports = {
 	name: 'bonk',
 	help: 'Command to bonk someone',
@@ -22,7 +19,7 @@ module.exports = {
 				}
 
 				let content = '';
-				axios.get(settings.endpoint + 'data/bonk/' + target)
+				axios.get(client.endpoint + 'data/bonk/' + target)
 					.then(function(response) {
 						const resData = response.data;
 						const swapText = (resData.response > 1 ? 'times' : 'time');

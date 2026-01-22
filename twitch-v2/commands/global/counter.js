@@ -1,8 +1,5 @@
 const axios = require('axios');
 
-const settingsFile = require('../../settings');
-const settings = settingsFile.content();
-
 module.exports = {
 	name: 'counter',
 	help: 'Command to bonk someone',
@@ -16,7 +13,7 @@ module.exports = {
 		default: {
 			execute(args, tags, message, channel, client) {
 				let content = '';
-				axios.get(settings.endpoint + 'data/counter/' + client.userID)
+				axios.get(client.endpoint + 'data/counter/' + client.userID)
 					.then(function(response) {
 						const resData = response.data;
 						if (resData.status === 'success') {
@@ -54,7 +51,7 @@ module.exports = {
 					return;
 				}
 
-				axios.get(settings.endpoint + 'data/counter/' + client.userID + '/set/' + args[2])
+				axios.get(client.endpoint + 'data/counter/' + client.userID + '/set/' + args[2])
 					.then(function(response) {
 						const resData = response.data;
 						if (resData.status === 'success') {
@@ -86,7 +83,7 @@ module.exports = {
 		reset: {
 			execute(args, tags, message, channel, client) {
 				let content = '';
-				axios.get(settings.endpoint + 'data/counter/' + client.userID + '/reset')
+				axios.get(client.endpoint + 'data/counter/' + client.userID + '/reset')
 					.then(function(response) {
 						const resData = response.data;
 						if (resData.status === 'success') {

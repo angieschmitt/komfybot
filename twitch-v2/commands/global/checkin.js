@@ -1,8 +1,5 @@
 const axios = require('axios');
 
-const settingsFile = require('../../settings');
-const settings = settingsFile.content();
-
 module.exports = {
 	name: 'checkin',
 	help: 'Command to checkin to a stream.',
@@ -21,7 +18,7 @@ module.exports = {
 				const viewerID = tags['user-id'];
 
 				let content = '';
-				axios.get(settings.endpoint + 'data/checkin/' + client.userID + '/' + viewerID)
+				axios.get(client.endpoint + 'data/checkin/' + client.userID + '/' + viewerID)
 					.then(function(response) {
 
 						const resData = response.data;
@@ -62,7 +59,7 @@ module.exports = {
 				const viewerID = tags['user-id'];
 
 				let content = '';
-				axios.get(settings.endpoint + 'data/checkin/' + client.userID + '/' + viewerID)
+				axios.get(client.endpoint + 'data/checkin/' + client.userID + '/' + viewerID)
 					.then(function(response) {
 						const resData = response.data;
 						const swapText = (resData.response > 1 ? 'times' : 'time');

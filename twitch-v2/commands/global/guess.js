@@ -1,8 +1,5 @@
 const axios = require('axios');
 
-const settingsFile = require('../../settings');
-const settings = settingsFile.content();
-
 module.exports = {
 	name: 'guess',
 	help: 'Add your guesses to the list. Additional args: list, reset, lock, unlock',
@@ -17,7 +14,7 @@ module.exports = {
 				const guess = message.replace(args[0], '').trim().toLowerCase();
 
 				let content = '';
-				axios.get(settings.endpoint + 'data/guess/' + client.userID + '/' + viewerID + '/' + guess)
+				axios.get(client.endpoint + 'data/guess/' + client.userID + '/' + viewerID + '/' + guess)
 					.then(function(response) {
 						const resData = response.data;
 						if (resData.status === 'success') {
@@ -51,7 +48,7 @@ module.exports = {
 		list: {
 			execute(args, tags, message, channel, client) {
 				let content = '';
-				axios.get(settings.endpoint + 'data/guess/' + client.userID + '/retrieve')
+				axios.get(client.endpoint + 'data/guess/' + client.userID + '/retrieve')
 					.then(function(response) {
 						const resData = response.data;
 						if (resData.status === 'success') {
@@ -91,7 +88,7 @@ module.exports = {
 		reset: {
 			execute(args, tags, message, channel, client) {
 				let content = '';
-				axios.get(settings.endpoint + 'data/guess/' + client.userID + '/reset')
+				axios.get(client.endpoint + 'data/guess/' + client.userID + '/reset')
 					.then(function(response) {
 						const resData = response.data;
 						if (resData.status === 'success') {
@@ -122,7 +119,7 @@ module.exports = {
 		lock: {
 			execute(args, tags, message, channel, client) {
 				let content = '';
-				axios.get(settings.endpoint + 'data/guess/' + client.userID + '/lock')
+				axios.get(client.endpoint + 'data/guess/' + client.userID + '/lock')
 					.then(function(response) {
 						const resData = response.data;
 						if (resData.status === 'success') {
@@ -153,7 +150,7 @@ module.exports = {
 		unlock: {
 			execute(args, tags, message, channel, client) {
 				let content = '';
-				axios.get(settings.endpoint + 'data/guess/' + client.userID + '/unlock')
+				axios.get(client.endpoint + 'data/guess/' + client.userID + '/unlock')
 					.then(function(response) {
 						const resData = response.data;
 						if (resData.status === 'success') {

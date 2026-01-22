@@ -1,8 +1,5 @@
 const axios = require('axios');
 
-const settingsFile = require('../../settings');
-const settings = settingsFile.content();
-
 module.exports = {
 	name: 'followage',
 	help: 'Command to checkin to a stream.',
@@ -18,7 +15,7 @@ module.exports = {
 				const viewerID = tags['user-id'];
 
 				let content = '';
-				axios.get(settings.endpoint + 'data/followage/' + client.userID + '/' + viewerID)
+				axios.get(client.endpoint + 'data/followage/' + client.userID + '/' + viewerID)
 					.then(function(response) {
 						const resData = response.data;
 						if (resData.status === 'success') {

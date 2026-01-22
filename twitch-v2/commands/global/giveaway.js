@@ -1,8 +1,5 @@
 const axios = require('axios');
 
-const settingsFile = require('../../settings');
-const settings = settingsFile.content();
-
 module.exports = {
 	name: 'giveaway',
 	help: 'Command to interact with the giveaway. Additional arguments: start, end',
@@ -20,7 +17,7 @@ module.exports = {
 				const viewerID = tags['user-id'];
 
 				let content = '';
-				axios.get(settings.endpoint + 'data/giveaway/' + client.userID + '/' + viewerID)
+				axios.get(client.endpoint + 'data/giveaway/' + client.userID + '/' + viewerID)
 					.then(function(response) {
 						const resData = response.data;
 						if (resData.status === 'success') {
@@ -58,7 +55,7 @@ module.exports = {
 			execute(args, tags, message, channel, client) {
 				let content = '';
 				const prize = message.replace(args[0], '').replace(args[1], '').trim().toLowerCase();
-				axios.get(settings.endpoint + 'data/giveaway/' + client.userID + '/start/' + prize)
+				axios.get(client.endpoint + 'data/giveaway/' + client.userID + '/start/' + prize)
 					.then(function(response) {
 						const resData = response.data;
 						if (resData.status === 'success') {
@@ -92,7 +89,7 @@ module.exports = {
 		end: {
 			execute(args, tags, message, channel, client) {
 				let content = '';
-				axios.get(settings.endpoint + 'data/giveaway/' + client.userID + '/end')
+				axios.get(client.endpoint + 'data/giveaway/' + client.userID + '/end')
 					.then(function(response) {
 						const resData = response.data;
 						if (resData.status === 'success') {

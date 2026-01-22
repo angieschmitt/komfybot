@@ -1,8 +1,5 @@
 const axios = require('axios');
 
-const settingsFile = require('../../settings');
-const settings = settingsFile.content();
-
 module.exports = {
 	list: false,
 	name: 'shoutout',
@@ -39,11 +36,11 @@ module.exports = {
 					}
 
 					let content = '';
-					axios.get(settings.endpoint + 'shoutout/insert/' + username)
+					axios.get(client.endpoint + 'shoutout/insert/' + username)
 						.then(function(response) {
 							const resData = response.data;
 							if (resData.status === 'success') {
-								axios.get(settings.endpoint + 'shoutout/retrieve/' + username)
+								axios.get(client.endpoint + 'shoutout/retrieve/' + username)
 									.then(function(response2) {
 										const resData2 = response2.data;
 										if (resData2.status === 'success') {
