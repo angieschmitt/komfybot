@@ -13,7 +13,7 @@ module.exports = {
 			execute(args, tags, message, channel, client) {
 				// Local resets...
 				// client.timerOffset = 1;
-				client.chatters = [];
+				client.data.chatters = [];
 
 				// Database resets...
 				axios.get(client.endpoint + 'data/chatters/' + client.userID + '/reset');
