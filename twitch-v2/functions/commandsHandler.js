@@ -20,7 +20,7 @@ module.exports = {
 
 		// Handle basic actions
 		if ('say' in action) {
-			let output = action.say;
+			let output = action.say[0];
 			let proceed = true;
 
 			// Handle perms/proceed, assign output if needed
@@ -39,45 +39,36 @@ module.exports = {
 				}
 			}
 
-			// Handle the action now
-			// TO DO: Args?
+			// Handle the args...
 			if (proceed) {
 				if (action.args) {
-					// Find out how many required, start at 2 because !command and first arg
-					let count = 2;
-					for (const [key] of Object.entries(action.args)) {
-						if (action.args[key][0] === 'r') { count++; }
-					}
-					// Check full length vs required count
-					if (args.length < count) {
-						// console.log('Missed an argument');
-						return false;
-					}
-
-					for (const [key] of Object.entries(action.args)) {
-						if (args[(parseInt(key) + 1)] === undefined) {
-							if (action.args[key][1] === 'tags.username') {
-								output = output.replace('@' + key, tags.username);
+					if ('required' in action.args) {
+						Object.entries(action.args.required).forEach(([key, value]) => { // eslint-disable-line no-unused-vars
+							if (!(value in args)) {
+								proceed = false;
 							}
-						}
-						else {
-							output = output.replace('@' + key, args[(parseInt(key) + 1)]);
-						}
+						});
+					}
+					if (!proceed) {
+						output = `${tags.username}, ${action.args.error}`;
 					}
 				}
 			}
 
-			// Handle special tags in message
-			if (output.indexOf('{@sender}') !== -1) {
-				output = output.replace('{@sender}', '@' + tags.username);
-			}
-			if (output.indexOf('{@target}') !== -1) {
-				if (args.length > 1) {
-					output = output.replace('{@target}', args[1]);
+			// Handle cleaning the message...
+			if (proceed) {
+				// Handle special tags in message
+				if (output.indexOf('{@sender}') !== -1) {
+					output = output.replace('{@sender}', '@' + tags.username);
 				}
-				else {
-					client.say(channel, 'You are missing a target for that command.');
-					return true;
+				if (output.indexOf('{@target}') !== -1) {
+					if (args.length > 1) {
+						output = output.replace('{@target}', args[1]);
+					}
+					else {
+						client.say(channel, 'You are missing a target for that command.');
+						return true;
+					}
 				}
 			}
 
@@ -101,7 +92,7 @@ module.exports = {
 				randomList = action.random;
 			}
 
-			// Select a random entr
+			// Select a random entry...
 			let output = parent.funcRandomProperty(parent.funcShuffleObject(randomList));
 			let proceed = true;
 
@@ -121,45 +112,37 @@ module.exports = {
 				}
 			}
 
-			// Handle the action now
-			// TO DO: Args?
+			// Handle the args...
 			if (proceed) {
 				if (action.args) {
-					// Find out how many required, start at 2 because !command and first arg
-					let count = 2;
-					for (const [key] of Object.entries(action.args)) {
-						if (action.args[key][0] === 'r') { count++; }
-					}
-					// Check full length vs required count
-					if (args.length < count) {
-						// console.log('Missed an argument');
-						return false;
-					}
-
-					for (const [key] of Object.entries(action.args)) {
-						if (args[(parseInt(key) + 1)] === undefined) {
-							if (action.args[key][1] === 'tags.username') {
-								output = output.replace('@' + key, tags.username);
+					if ('required' in action.args) {
+						Object.entries(action.args.required).forEach(([key, value]) => { // eslint-disable-line no-unused-vars
+							if (!(value in args)) {
+								proceed = false;
 							}
-						}
-						else {
-							output = output.replace('@' + key, args[(parseInt(key) + 1)]);
-						}
+						});
+					}
+					if (!proceed) {
+						output = `${tags.username}, ${action.args.error}`;
 					}
 				}
 			}
 
-			// Handle special tags in message
-			if (output.indexOf('{@sender}') !== -1) {
-				output = output.replace('{@sender}', '@' + tags.username);
-			}
-			if (output.indexOf('{@target}') !== -1) {
-				if (args.length > 1) {
-					output = output.replace('{@target}', args[1]);
+			// Handle cleaning the message...
+			if (proceed) {
+
+				// Handle special tags in message
+				if (output.indexOf('{@sender}') !== -1) {
+					output = output.replace('{@sender}', '@' + tags.username);
 				}
-				else {
-					client.say(channel, 'You are missing a target for that command.');
-					return true;
+				if (output.indexOf('{@target}') !== -1) {
+					if (args.length > 1) {
+						output = output.replace('{@target}', args[1]);
+					}
+					else {
+						client.say(channel, 'You are missing a target for that command.');
+						return true;
+					}
 				}
 			}
 
@@ -188,26 +171,45 @@ module.exports = {
 			// Handle the action now
 			if (proceed) {
 				if (action.args) {
-					// Find out how many required, start at 1 because !command
-					let count = 1;
-					for (const [key] of Object.entries(action.args)) {
-						if (action.args[key][0] === 'r') {
-							count++;
-						}
+
+					if ('required' in action.args) {
+						Object.entries(action.args.required).forEach(([key, value]) => { // eslint-disable-line no-unused-vars
+							if (!(value in args)) {
+								proceed = false;
+							}
+						});
 					}
-					// Check full length vs required count
-					if (args.length < count) {
+					if (!proceed) {
 						output = `${tags.username}, ${action.args.error}`;
-						proceed = false;
+					}
+
+				}
+			}
+
+			// Handle cleaning the message...
+			if (proceed) {
+
+				// Handle special tags in message
+				if (output.indexOf('{@sender}') !== -1) {
+					output = output.replace('{@sender}', '@' + tags.username);
+				}
+				if (output.indexOf('{@target}') !== -1) {
+					if (args.length > 1) {
+						output = output.replace('{@target}', args[1]);
+					}
+					else {
+						client.say(channel, 'You are missing a target for that command.');
+						return true;
 					}
 				}
 			}
 
-			// Output... something...
+			// If no output, execute the command...
 			if (!output) {
 				action.execute(args, tags, message, channel, client);
 				return true;
 			}
+			// Otherwise, output output...
 			else {
 				client.say(channel, `${output}`);
 				return true;

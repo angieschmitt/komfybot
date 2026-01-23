@@ -8,7 +8,10 @@ module.exports = {
 		// Check user specific first
 		if (userID in words) {
 			Object.entries(words[userID]).forEach(([match, response]) => {
-				if (message.toLowerCase().includes(match)) {
+				if (message.includes(match)) {
+					output[match] = response.replace('<@username>', '@' + tags.username);
+				}
+				else if (message.toLowerCase().includes(match)) {
 					output[match] = response.replace('<@username>', '@' + tags.username);
 				}
 			});
@@ -17,7 +20,10 @@ module.exports = {
 		// If no user specific, check globals
 		if (0 in words) {
 			Object.entries(words[0]).forEach(([match, response]) => {
-				if (message.toLowerCase().includes(match)) {
+				if (message.includes(match)) {
+					output[match] = response.replace('<@username>', '@' + tags.username);
+				}
+				else if (message.toLowerCase().includes(match)) {
 					output[match] = response.replace('<@username>', '@' + tags.username);
 				}
 			});

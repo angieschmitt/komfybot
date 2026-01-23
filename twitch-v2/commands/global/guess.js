@@ -7,8 +7,11 @@ module.exports = {
 	},
 	actions: {
 		default: {
+			args: {
+				required: [ 1 ],
+				error: 'don\'t forgot your guess!',
+			},
 			execute(args, tags, message, channel, client) {
-				// const streamer = channel.replace('#', '');
 				const viewer = tags['username'];
 				const viewerID = tags['user-id'];
 				const guess = message.replace(args[0], '').trim().toLowerCase();

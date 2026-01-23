@@ -93,7 +93,16 @@ module.exports = {
 					.then(function(response) {
 						const resData = response.data;
 						if (resData.status === 'success') {
-							content = `Giveaway ended! The winner is @${resData.response.content.users}, winning ${resData.response.content.prize}!`;
+
+							// If a winner, slap a @ on it...
+							if (resData.response.content.users != 'nobody') {
+								resData.response.content.users = '@' + resData.response.content.users;
+							}
+							// If not, nothing the prize...
+							else {
+								resData.response.content.prize = 'nothing';
+							}
+							content = `Giveaway ended! The winner is ${resData.response.content.users}, winning ${resData.response.content.prize}!`;
 						}
 						else if (resData.status === 'failure') {
 							if (resData.err_msg == 'no_giveaway_exists') {

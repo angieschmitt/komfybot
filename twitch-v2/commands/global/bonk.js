@@ -24,7 +24,7 @@ module.exports = {
 						const resData = response.data;
 						const swapText = (resData.response > 1 ? 'times' : 'time');
 						if (resData.status === 'success') {
-							content += `BOP @${viewer} got bonked by ${user}!`;
+							content += `BOP @${viewer} got bonked by ${user}! `;
 							content += `They've been bonked ${resData.response} ${swapText}! BOP`;
 						}
 						else if (resData.status === 'failure') {

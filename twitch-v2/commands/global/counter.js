@@ -11,6 +11,10 @@ module.exports = {
 	},
 	actions: {
 		default: {
+			perms: {
+				levels: ['streamer', 'mod'],
+				error: 'this command is for the streamer and mods only.',
+			},
 			execute(args, tags, message, channel, client) {
 				let content = '';
 				axios.get(client.endpoint + 'data/counter/' + client.userID)
@@ -43,14 +47,16 @@ module.exports = {
 			},
 		},
 		set: {
+			perms: {
+				levels: ['streamer', 'mod'],
+				error: 'this command is for the streamer and mods only.',
+			},
+			args: {
+				required: [ 2 ],
+				error: 'don\'t forgot the amount!',
+			},
 			execute(args, tags, message, channel, client) {
 				let content = '';
-
-				if (!args[2]) {
-					client.say(channel, 'Please provide a value!');
-					return;
-				}
-
 				axios.get(client.endpoint + 'data/counter/' + client.userID + '/set/' + args[2])
 					.then(function(response) {
 						const resData = response.data;
@@ -81,6 +87,10 @@ module.exports = {
 			},
 		},
 		reset: {
+			perms: {
+				levels: ['streamer', 'mod'],
+				error: 'this command is for the streamer and mods only.',
+			},
 			execute(args, tags, message, channel, client) {
 				let content = '';
 				axios.get(client.endpoint + 'data/counter/' + client.userID + '/reset')
