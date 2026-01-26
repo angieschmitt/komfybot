@@ -31,6 +31,19 @@ module.exports = {
 				const filePath = path.join(commandsPath, file);
 				const command = require(filePath);
 
+				if (command.name in client.settings.commands) {
+					if (client.settings.commands[command.name] == 0) {
+						command.disabled = true;
+					}
+				}
+
+				if ('addon' in command) {
+					if (!client.settings.addons.includes(command.addon)) {
+						command.disabled = true;
+						console.log(command.name);
+					}
+				}
+
 				if (command.disabled !== true) {
 					if (command.channel !== '' && command.channel !== undefined) {
 						if (typeof command.channel == 'object') {

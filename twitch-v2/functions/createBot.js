@@ -8,6 +8,7 @@ module.exports = {
 		const channel = channels[userID];
 		const botDataJson = JSON.parse(channel['botData'], 'utf-8');
 		const settingsJson = JSON.parse(channel['settings'], 'utf-8');
+		const addonsJson = JSON.parse(channel['addons'], 'utf-8');
 
 		const clientData = {
 			channels: [ channel['username'] ],
@@ -34,6 +35,7 @@ module.exports = {
 		client.connect()
 			.then(() => {
 				parent.eventsLoad(client);
+				parent.addonsLoad(client, globals, channel['userID'], addonsJson);
 				parent.settingsLoad(client, globals, channel['userID'], settingsJson);
 				parent.commandsLoad(client, globals, channel['userID']);
 				parent.timersLoad(client, globals, channel['userID']);

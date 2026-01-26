@@ -2,9 +2,11 @@ const axios = require('axios');
 
 module.exports = {
 	async function(client, globals, userID, settingsJson, reset = false) {
-		// const parent = this;
+		const parent = this;
 
-		client.settings = [];
+		if (!('settings' in client)) {
+			client.settings = [];
+		}
 
 		if (reset) {
 			client.settings = new Array();
@@ -18,6 +20,7 @@ module.exports = {
 
 			client.settings.currency = [];
 			client.settings.passive = [];
+			client.settings.commands = [];
 
 			// Handle currency settings
 			if ('currency' in settingsJson) {
@@ -45,6 +48,14 @@ module.exports = {
 				client.settings.passive['enabled'] = false;
 			}
 
+			if ('commands' in settingsJson) {
+				Object.entries(settingsJson.commands).forEach(([key, value]) => {
+					client.settings.commands[ key ] = value;
+				});
+			}
+			else {
+				client.settings.commands = [];
+			}
 		}
 		// Otherwise, we get them...
 		else {
@@ -56,6 +67,7 @@ module.exports = {
 
 						client.settings.currency = [];
 						client.settings.passive = [];
+						client.settings.commands = [];
 
 						// Handle currency settings
 						if ('currency' in settingsJson) {
@@ -81,6 +93,16 @@ module.exports = {
 						}
 						else {
 							client.settings.passive['enabled'] = false;
+						}
+
+						if ('commands' in settingsJson) {
+							Object.entries(settingsJson.commands).forEach(([key, value]) => {
+								client.settings.commands[ key ] = value;
+							});
+							parent.commandsLoad(client, globals, client.userID);
+						}
+						else {
+							client.settings.commands = [];
 						}
 					}
 				})
