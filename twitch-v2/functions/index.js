@@ -9,7 +9,7 @@ for (const file of functionsFolder) {
 	const functionName = path.parse(file).name;
 
 	// skip this file
-	if (functionName !== 'index') {
+	if (functionName !== 'index' && functionName !== 'archived') {
 		const filePath = path.join(functionsPath, file);
 		const functionData = require(filePath);
 		data[functionName] = functionData.function;
