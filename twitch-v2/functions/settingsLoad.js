@@ -9,7 +9,9 @@ module.exports = {
 		}
 
 		if (reset) {
-			client.settings = new Array();
+			client.settings.currency = new Array();
+			client.settings.passive = new Array();
+			client.settings.commands = new Array();
 			for (const i in require.cache) {
 				delete require.cache[i];
 			}
