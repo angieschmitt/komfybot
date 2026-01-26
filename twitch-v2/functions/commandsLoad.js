@@ -74,7 +74,7 @@ module.exports = {
 			}
 		}
 
-		await axios.get(globals['endpoint'] + 'commands/retrieve/' + userID)
+		await axios.get(globals['endpoint'] + 'load/commands/' + userID)
 			.then(function(response) {
 				if (response.data.status == 'success') {
 					const commands = response.data.response;

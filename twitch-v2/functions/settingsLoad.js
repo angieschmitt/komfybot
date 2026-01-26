@@ -61,7 +61,7 @@ module.exports = {
 		}
 		// Otherwise, we get them...
 		else {
-			await axios.get(globals['endpoint'] + 'settings/retrieve/' + userID)
+			await axios.get(globals['endpoint'] + 'load/settings/' + userID)
 				.then(function(response) {
 					if (response.data.status == 'success') {
 						const settings = response.data.response;

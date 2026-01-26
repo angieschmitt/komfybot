@@ -9,7 +9,7 @@ module.exports = {
 
 		setInterval(
 			function() {
-				axios.get(globals['endpoint'] + 'refresh/refresh')
+				axios.get(globals['endpoint'] + 'load/refresh')
 					.then(function(response) {
 						if (response.data.status === 'success') {
 							const refreshData = response.data.response;
@@ -38,7 +38,7 @@ module.exports = {
 									}
 
 									// Pass back to remove the flag...
-									axios.get(globals['endpoint'] + 'refresh/refresh/' + userID + '/' + type)
+									axios.get(globals['endpoint'] + 'load/refresh/' + userID + '/' + type)
 										.catch(err => console.log(err));
 								});
 							});

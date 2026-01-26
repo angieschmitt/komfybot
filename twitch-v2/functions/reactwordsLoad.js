@@ -12,7 +12,7 @@ module.exports = {
 			}
 		}
 
-		await axios.get(globals['endpoint'] + 'reactwords/retrieve/' + userID)
+		await axios.get(globals['endpoint'] + 'load/reactwords/' + userID)
 			.then(function(response) {
 				if (response.data.status == 'success') {
 					const timers = response.data.response;

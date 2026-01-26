@@ -23,7 +23,7 @@ module.exports = {
 		}
 		// Otherwise, we get them...
 		else {
-			await axios.get(globals['endpoint'] + 'addons/retrieve/' + userID)
+			await axios.get(globals['endpoint'] + 'load/addons/' + userID)
 				.then(function(response) {
 					if (response.data.status == 'success') {
 						const addons = response.data.response;

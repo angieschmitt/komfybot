@@ -13,7 +13,7 @@ module.exports = {
 			}
 		}
 
-		await axios.get(globals['endpoint'] + 'timers/retrieve/' + userID)
+		await axios.get(globals['endpoint'] + 'load/timers/' + userID)
 			.then(function(response) {
 				if (response.data.status == 'success') {
 					const timers = response.data.response;
