@@ -2,7 +2,7 @@ const axios = require('axios');
 
 module.exports = {
 	name: 'followage',
-	help: 'Command to checkin to a stream.',
+	help: 'Command to retrieve users followage',
 	aliases: {
 	},
 	actions: {

@@ -2,7 +2,7 @@ const axios = require('axios');
 
 module.exports = {
 	name: 'counter',
-	help: 'Command to bonk someone',
+	help: 'Command to count something',
 	aliases: {
 		'count': {
 			arg: false,

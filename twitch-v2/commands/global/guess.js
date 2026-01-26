@@ -2,7 +2,7 @@ const axios = require('axios');
 
 module.exports = {
 	name: 'guess',
-	help: 'Add your guesses to the list. Additional args: list, reset, lock, unlock',
+	help: 'Command to accept guesses. Additional args: list, reset, lock, unlock',
 	aliases: {
 	},
 	actions: {

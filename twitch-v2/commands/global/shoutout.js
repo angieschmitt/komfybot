@@ -3,7 +3,7 @@ const axios = require('axios');
 module.exports = {
 	list: true,
 	name: 'shoutout',
-	help: 'A command to shout out a user in chat!',
+	help: 'Command to shoutout a user in chat',
 	aliases: {
 		'so': {
 			arg: false,
