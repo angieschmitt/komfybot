@@ -16,9 +16,4 @@ globals['bots'] = [];
 globals['bots'] = functions.createBots(globals);
 
 // Handle refreshing commands and timers...
-globals['refreshHandlers'] = [];
-globals['refreshHandlers']['settings'] = functions.settingsRefreshHandler(globals);
-globals['refreshHandlers']['commands'] = functions.commandsRefreshHandler(globals);
-globals['refreshHandlers']['timers'] = functions.timersRefreshHandler(globals);
-globals['refreshHandlers']['reactwords'] = functions.reactwordsRefreshHandler(globals);
-globals['refreshHandlers']['live'] = functions.liveRefreshHandler(globals);
+globals['refreshHandler'] = functions.refreshHandler(globals);
