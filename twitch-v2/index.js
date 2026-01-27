@@ -16,5 +16,6 @@ globals['bots'] = [];
 globals['bots'] = functions.createBots(globals);
 
 // Handle refreshing commands and timers...
+globals['refreshHandlers'] = [];
 globals['refreshHandlers']['load'] = functions.refreshHandler(globals);
 globals['refreshHandlers']['live'] = functions.liveRefreshHandler(globals);

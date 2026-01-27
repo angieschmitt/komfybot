@@ -47,8 +47,10 @@ module.exports = {
 						// data.errorMsg.handle(channel, client, 'checkin', 'Issue while handling command');
 					})
 					.finally(function() {
-						if (content !== '') {
-							client.say(channel, content);
+						if (!('silent' in tags)) {
+							if (content !== '') {
+								client.say(channel, content);
+							}
 						}
 					});
 			},
@@ -98,11 +100,35 @@ module.exports = {
 						// data.errorMsg.handle(channel, client, 'checkin', 'Issue while handling command');
 					})
 					.finally(function() {
-						if (content !== '') {
-							client.say(channel, content);
+						if (!('silent' in tags)) {
+							if (content !== '') {
+								client.say(channel, content);
+							}
 						}
 					});
 			},
+		},
+	},
+	coincount: {
+		async execute(client, tags) {
+			let coinCount = false;
+
+			const p1 = new Promise((resolve) => {
+				axios.get(client.endpoint + 'coins/retrieve/' + client.userID + '/' + tags['user-id'])
+					.then(function(response) {
+						const output = response.data;
+						if (output.status === 'success') {
+							coinCount = (output.response ? output.response : 0);
+						}
+					})
+					.catch(err => console.log(err))
+					.finally(function() {
+						resolve(coinCount);
+					});
+			});
+
+			const results = await p1;
+			return results;
 		},
 	},
 	isInt(value) {
