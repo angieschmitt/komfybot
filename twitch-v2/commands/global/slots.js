@@ -9,11 +9,11 @@ module.exports = {
 				const viewer = tags['username'];
 
 				const icons = {
-					1 : 'BrainSlug',
-					2 : 'PogChamp',
-					3 : 'PizzaTime',
-					4 : 'PartyHat',
-					5 : 'RaccAttack',
+					1 : (('icon_1' in client.settings.slots && client.settings.slots.icon_1 != '') ? client.settings.slots.icon_1 : 'BrainSlug'),
+					2 : (('icon_2' in client.settings.slots && client.settings.slots.icon_2 != '') ? client.settings.slots.icon_2 : 'PogChamp'),
+					3 : (('icon_3' in client.settings.slots && client.settings.slots.icon_3 != '') ? client.settings.slots.icon_3 : 'PizzaTime'),
+					4 : (('icon_4' in client.settings.slots && client.settings.slots.icon_4 != '') ? client.settings.slots.icon_4 : 'PartyHat'),
+					5 : (('icon_5' in client.settings.slots && client.settings.slots.icon_5 != '') ? client.settings.slots.icon_5 : 'RaccAttack'),
 				};
 
 				if (args.length < 2) {

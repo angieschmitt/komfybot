@@ -23,6 +23,7 @@ module.exports = {
 			client.settings.currency = [];
 			client.settings.passive = [];
 			client.settings.commands = [];
+			client.settings.slots = [];
 
 			// Handle currency settings
 			if ('currency' in settingsJson) {
@@ -58,6 +59,15 @@ module.exports = {
 			else {
 				client.settings.commands = [];
 			}
+
+			if ('slots' in settingsJson) {
+				Object.entries(settingsJson.slots).forEach(([key, value]) => {
+					client.settings.slots[ key ] = value;
+				});
+			}
+			else {
+				client.settings.slots = [];
+			}
 		}
 		// Otherwise, we get them...
 		else {
@@ -70,6 +80,7 @@ module.exports = {
 						client.settings.currency = [];
 						client.settings.passive = [];
 						client.settings.commands = [];
+						client.settings.slots = [];
 
 						// Handle currency settings
 						if ('currency' in settingsJson) {
@@ -105,6 +116,15 @@ module.exports = {
 						}
 						else {
 							client.settings.commands = [];
+						}
+
+						if ('slots' in settingsJson) {
+							Object.entries(settingsJson.slots).forEach(([key, value]) => {
+								client.settings.slots[ key ] = value;
+							});
+						}
+						else {
+							client.settings.slots = [];
 						}
 					}
 				})

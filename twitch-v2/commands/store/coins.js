@@ -5,6 +5,10 @@ module.exports = {
 	help: 'Command to interact with coins. Additional args: add',
 	addon: 1,
 	aliases: {
+		'coin': {
+			arg: false,
+			list: false,
+		},
 	},
 	actions: {
 		default: {
@@ -105,6 +109,82 @@ module.exports = {
 								client.say(channel, content);
 							}
 						}
+					});
+			},
+		},
+		holders: {
+			execute(args, tags, message, channel, client) {
+
+				let content = '';
+				axios.get(client.endpoint + 'coins/top/' + client.userID + '/holding')
+					.then(function(response) {
+						const resData = response.data;
+						if (resData.status === 'success') {
+							if (Object.keys(resData.response).length) {
+								content += 'Top Coin Holders: ';
+								// eslint-disable-next-line no-unused-vars
+								Object.entries(resData.response).forEach(([key, details]) => {
+									content += `${details['twitchUsername']} :: ${details['total']} || `;
+								});
+								content = content.substring(0, content.length - 4);
+							}
+						}
+						else if (resData.status === 'failure') {
+							if (resData.err_msg === 'missing_authorization') {
+								// data.errorMsg.handle(channel, client, 'leaderboard-hoarders', 'Authorization issue');
+							}
+							else {
+								// data.errorMsg.handle(channel, client, 'leaderboard-hoarders', 'Failed response');
+							}
+						}
+						else {
+							// data.errorMsg.handle(channel, client, 'leaderboard-hoarders', 'Not sure how you got here');
+						}
+					})
+					.catch(function() {
+						// data.errorMsg.handle(channel, client, 'leaderboard-hoarders', 'Issue while handling command');
+					})
+					.finally(function() {
+						if (content !== '') {
+							client.say(channel, `${content}`);
+						}
+					});
+			},
+		},
+		spenders: {
+			execute(args, tags, message, channel, client) {
+
+				let content = '';
+				axios.get(client.endpoint + 'coins/top/' + client.userID + '/spending')
+					.then(function(response) {
+						const resData = response.data;
+						if (resData.status === 'success') {
+							if (Object.keys(resData.response).length) {
+								content += 'Top Coin Spenders: ';
+								// eslint-disable-next-line no-unused-vars
+								Object.entries(resData.response).forEach(([key, details]) => {
+									content += `${details['twitchUsername']} :: ${parseInt(details['total']) * -1} || `;
+								});
+								content = content.substring(0, content.length - 4);
+							}
+						}
+						else if (resData.status === 'failure') {
+							if (resData.err_msg === 'missing_authorization') {
+								// data.errorMsg.handle(channel, client, 'leaderboard-spenders', 'Authorization issue');
+							}
+							else {
+								// data.errorMsg.handle(channel, client, 'leaderboard-spenders', 'Failed response');
+							}
+						}
+						else {
+							// data.errorMsg.handle(channel, client, 'leaderboard-spenders', 'Not sure how you got here');
+						}
+					})
+					.catch(function() {
+						// data.errorMsg.handle(channel, client, 'leaderboard-spenders', 'Issue while handling command');
+					})
+					.finally(function() {
+						client.say(channel, `${content}`);
 					});
 			},
 		},
