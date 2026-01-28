@@ -20,15 +20,15 @@ module.exports = {
 						const resData = response.data;
 						if (resData.status === 'success') {
 							if ('twitch_date' in resData.response && 'bot_date' in resData.response) {
-								content += `Hey ${viewer}, according to Twitch, you've been following ${streamer} for ${resData.response['twitch_date']}! `;
+								content += `Hey @${viewer}, according to Twitch, you've been following ${streamer} for ${resData.response['twitch_date']}! `;
 								content += `According to me, you've been here for ${resData.response['bot_date']}!`;
 							}
 							else {
 								if ('twitch_date' in resData.response) {
-									content += `Hey ${viewer}, according to Twitch, you've been following ${streamer} for ${resData.response['twitch_date']}!`;
+									content += `Hey @${viewer}, according to Twitch, you've been following ${streamer} for ${resData.response['twitch_date']}!`;
 								}
 								if ('bot_date' in resData.response) {
-									content += `Hey ${viewer}, according to me, you've been following ${streamer} for ${resData.response['bot_date']}!`;
+									content += `Hey @${viewer}, according to me, you've been following ${streamer} for ${resData.response['bot_date']}!`;
 								}
 							}
 						}

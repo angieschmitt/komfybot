@@ -25,7 +25,7 @@ module.exports = {
 						}
 						else if (resData.status === 'failure') {
 							if (resData.err_msg === 'no_matching_quoteid') {
-								content = `${viewer}, I couldn't locate a quote with ID: ${args[1]}`;
+								content = `@${viewer}, I couldn't locate a quote with ID: ${args[1]}`;
 							}
 							else if (resData.err_msg === 'missing_authorization') {
 								// data.errorMsg.handle(channel, client, 'checkin', 'Authorization issue');
@@ -83,7 +83,7 @@ module.exports = {
 						}
 						else if (resData.status === 'failure') {
 							if (resData.err_msg === 'no_matching_user') {
-								content = `${viewer}, I couldn't locate that username`;
+								content = `@${viewer}, I couldn't locate that username`;
 							}
 							else if (resData.err_msg === 'missing_authorization') {
 								// data.errorMsg.handle(channel, client, 'checkin', 'Authorization issue');
