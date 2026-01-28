@@ -24,6 +24,9 @@ module.exports = {
 							if (resData.err_msg === 'Channel offline.') {
 								content = `@${viewer}, you can't clip an offline channel.`;
 							}
+							else if (resData.err_msg === 'missing_permissions') {
+								content = `@${channel.replace('#', '')}, it looks like the bot is missing certain permissions.`;
+							}
 							else if (resData.err_msg) {
 								content = `@${viewer}: Can you please inform @kittenAngie about this error: ${resData.err_msg}.`;
 							}
