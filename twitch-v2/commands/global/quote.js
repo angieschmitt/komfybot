@@ -8,20 +8,26 @@ module.exports = {
 	actions: {
 		default: {
 			execute(args, tags, message, channel, client) {
+
+				const viewer = tags['username'];
+
 				let content = '';
-				axios.get(client.endpoint + 'data/quote/' + client.userID)
+				axios.get(client.endpoint + 'data/quote/' + client.userID + (1 in args ? '/' + args[1] : ''))
 					.then(function(response) {
 						const resData = response.data;
 						if (resData.status === 'success') {
 							if ('twitchUsername' in resData.response) {
-								content = `"${resData.response.content}" - @${resData.response.twitchUsername}`;
+								content = `Quote #${resData.response.id}: ${resData.response.content} [@${resData.response.twitchUsername}] [${resData.response.date}]`;
 							}
 							else {
 								content = `${resData.response.content}`;
 							}
 						}
 						else if (resData.status === 'failure') {
-							if (resData.err_msg === 'missing_authorization') {
+							if (resData.err_msg === 'no_matching_quoteid') {
+								content = `${viewer}, I couldn't locate a quote with ID: ${args[1]}`;
+							}
+							else if (resData.err_msg === 'missing_authorization') {
 								// data.errorMsg.handle(channel, client, 'checkin', 'Authorization issue');
 							}
 							else {
@@ -44,8 +50,8 @@ module.exports = {
 		},
 		add: {
 			perms: {
-				levels: ['mod'],
-				error: 'this command is for mods only.',
+				levels: ['streamer', 'mod'],
+				error: 'this command is for the streamer and mods only.',
 			},
 			args: {
 				required: [ 1 ],
@@ -65,107 +71,21 @@ module.exports = {
 				}
 
 				let content = '';
-				axios.get(client.endpoint + 'data/quote/' + client.userID + '/' + quote + (referenceUser ? '/' + referenceUser : ''))
+				axios.get(client.endpoint + 'data/quote/' + client.userID + '/add/' + quote + (referenceUser ? '/' + referenceUser : ''))
 					.then(function(response) {
 						const resData = response.data;
 						if (resData.status === 'success') {
-							content = `@${viewer}, thanks for adding that quote!`;
+							// If we have a note...
+							content += `Quote Added: Quote #${resData.response.id}: ${resData.response.content} [@${resData.response.twitchUsername}] [${resData.response.date}]`;
+							if ('note' in resData) {
+								content += ` || Couldn't locate @${referenceUser} in our database, quote associated with @${channel.replace('#', '')} instead.`;
+							}
 						}
 						else if (resData.status === 'failure') {
-							if (resData.err_msg === 'missing_authorization') {
-								// data.errorMsg.handle(channel, client, 'checkin', 'Authorization issue');
+							if (resData.err_msg === 'no_matching_user') {
+								content = `${viewer}, I couldn't locate that username`;
 							}
-							else {
-								// data.errorMsg.handle(channel, client, 'checkin', 'Failed response');
-							}
-						}
-						else {
-							// data.errorMsg.handle(channel, client, 'checkin', 'Not sure how you got here');
-						}
-					})
-					.catch(function() {
-						// data.errorMsg.handle(channel, client, 'checkin', 'Issue while handling command');
-					})
-					.finally(function() {
-						if (content !== '') {
-							client.say(channel, content);
-						}
-					});
-			},
-		},
-		reset: {
-			execute(args, tags, message, channel, client) {
-				let content = '';
-				axios.get(client.endpoint + 'data/guess/' + client.userID + '/reset')
-					.then(function(response) {
-						const resData = response.data;
-						if (resData.status === 'success') {
-							content += 'Guesses have been reset!';
-						}
-						else if (resData.status === 'failure') {
-							if (resData.err_msg === 'missing_authorization') {
-								// data.errorMsg.handle(channel, client, 'checkin', 'Authorization issue');
-							}
-							else {
-								// data.errorMsg.handle(channel, client, 'checkin', 'Failed response');
-							}
-						}
-						else {
-							// data.errorMsg.handle(channel, client, 'checkin', 'Not sure how you got here');
-						}
-					})
-					.catch(function() {
-						// data.errorMsg.handle(channel, client, 'checkin', 'Issue while handling command');
-					})
-					.finally(function() {
-						if (content !== '') {
-							client.say(channel, content);
-						}
-					});
-			},
-		},
-		lock: {
-			execute(args, tags, message, channel, client) {
-				let content = '';
-				axios.get(client.endpoint + 'data/guess/' + client.userID + '/lock')
-					.then(function(response) {
-						const resData = response.data;
-						if (resData.status === 'success') {
-							content += 'Guesses are now locked!';
-						}
-						else if (resData.status === 'failure') {
-							if (resData.err_msg === 'missing_authorization') {
-								// data.errorMsg.handle(channel, client, 'checkin', 'Authorization issue');
-							}
-							else {
-								// data.errorMsg.handle(channel, client, 'checkin', 'Failed response');
-							}
-						}
-						else {
-							// data.errorMsg.handle(channel, client, 'checkin', 'Not sure how you got here');
-						}
-					})
-					.catch(function() {
-						// data.errorMsg.handle(channel, client, 'checkin', 'Issue while handling command');
-					})
-					.finally(function() {
-						if (content !== '') {
-							client.say(channel, content);
-						}
-					});
-			},
-		},
-		unlock: {
-			execute(args, tags, message, channel, client) {
-				let content = '';
-				axios.get(client.endpoint + 'data/guess/' + client.userID + '/unlock')
-					.then(function(response) {
-						const resData = response.data;
-						if (resData.status === 'success') {
-							content += 'Guesses are now unlocked!';
-						}
-						else if (resData.status === 'failure') {
-							if (resData.err_msg === 'missing_authorization') {
+							else if (resData.err_msg === 'missing_authorization') {
 								// data.errorMsg.handle(channel, client, 'checkin', 'Authorization issue');
 							}
 							else {
