@@ -15,8 +15,8 @@ const actions = loadActions();
 function init() {
 
     const server = createServer({
-        cert: readFileSync('./certs/localhost+1.pem'),
-        key: readFileSync('./certs/localhost+1-key.pem')
+        cert: readFileSync('./certs/server-cert.pem'),
+        key: readFileSync('./certs/server-key.pem')
     });
 
     const wss = new WebSocketServer({ server });
@@ -109,7 +109,7 @@ function init() {
         });
     });
 
-    server.listen(1165);
+    server.listen(9090);
 }
 
 function handleUsers(userID, users){
