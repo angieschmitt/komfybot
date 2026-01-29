@@ -8,4 +8,4 @@ errors
 twitch/data/settings.js
 twitch-v2/settings.js
 websocket/certs
-websocket-dev/certs
+websocket-v2/certs

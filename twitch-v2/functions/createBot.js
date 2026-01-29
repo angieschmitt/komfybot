@@ -30,6 +30,7 @@ module.exports = {
 		client['userID'] = channel['userID'];
 		client['channel'] = '#' + channel['username'];
 		client['endpoint'] = globals['endpoint'];
+		client['socketInfo'] = globals['websocket'];
 
 		// Then connect to twitch...
 		client.connect()
@@ -45,6 +46,9 @@ module.exports = {
 
 				// Load in data...
 				parent.dataLoad('chatters', client, globals);
+
+				// Create websocket connection...
+				parent.socketLoad(client);
 			})
 			.catch(err => console.log(err));
 

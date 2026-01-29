@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+    <head>
+        <style>
+            body{
+                font-family: sans-serif;
+            }
+            .websocket_test{
+                padding: 0 0 10px 0;
+            }
+            .buttons, .groups{
+                display: flex;
+                flex-flow: row wrap;
+                gap: 4px;
+                padding: 4px 0;
+            }
+            .static{
+                display: flex;
+                flex-flow: row wrap;
+                gap: 4px;
+                position: absolute;
+                bottom: 10px;
+                right: 10px;
+            }
+            .label{
+                position: absolute;
+                bottom: 10px;
+                left: 10px;
+                font-weight: bold;
+                font-family: sans-serif;
+            }
+            .label span.status{
+                padding-left: 10px;
+            }
+        </style>
+        <script type="text/javascript" src="../jquery.min.js"></script>
+    </head>
+    <body>
+        <div class="websocket_test"></div>
+        <div class="buttons"></div>
+        <div class="groups"></div>
+        <div class="static">
+            <button onclick="refresh()">Refresh</button>
+            <button onclick="refreshAll()">Refresh All</button>
+        </div>
+        <div class="label">
+            <span class="identifier"></span><span class="status"></span>
+        </div>
+        <script>
+
+            // Set baseIdentifier...
+            let baseIdentifier = 'multiple';
+
+            // Handle in/out of vars...
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            const userID = ( urlParams.get('userID') ? urlParams.get('userID') : 999);
+
+            let identifier = baseIdentifier + ":" + userID;
+
+            let wss = init(identifier);
+            setInterval(
+                ()=>{ if (!wss) { init(identifier) } },
+                2000,
+                wss,
+                identifier
+            );
+            
+            function init(identifier){
+
+                let ip = '127.0.0.1';
+                let port = 1165;
+
+                websocket = new WebSocket('wss://'+ip+':' + port + '/' + identifier, 'echo-protocol');
+
+                websocket.onopen = () => {
+                    websocket.send(JSON.stringify({ 'action': 'refresh', 'data': { 'target': 'all' }, 'source': identifier }));
+                    $('.identifier').html(identifier);
+                    $('.status').html('Connected');
+                };
+
+                websocket.onmessage = (event) => {
+                    jQuery(function($){
+
+                        // Handle data from message
+                        const data = JSON.parse(event.data);
+
+                        // Output message
+                        jQuery('.websocket_test').html('Incoming ' + data.action + ' from ' + data.source + '.');
+
+                        if ( data.action == 'refresh' || data.action == 'close' ){
+                            
+                            // Populate the buttons
+                            const buttonList = sortObjectAlpha(data.userList);
+                            $('.buttons').html('');
+                            Object.entries(buttonList).forEach(([item]) => {
+                                if (item !== identifier) {
+                                    $('.buttons').append('<button onclick="handleButton(\'' + item + '\');">' + item + '</button>');
+                                }
+                            });
+
+                            // Populate the group
+                            const groupList = sortObjectAlpha(data.groupList);
+                            $('.groups').html('');
+                            Object.entries(groupList).forEach(([item]) => {
+                                if (item !== identifier) {
+                                    $('.groups').append('<button onclick="handleButton(\'' + item + '\');">' + item + '</button>');
+                                }
+                            });
+                            
+                        }
+                        else if ( data.action == 'ping' ){
+                            jQuery('.websocket_test').html('Ping from ' + data.source + '.');
+                        }
+                        
+                    });
+                };
+
+                websocket.onclose = function(e) {
+                    $('.status').html('Disconnected.');
+                    setTimeout(function(identifier) {
+                        wss = init(identifier);
+                    }, 1000, identifier);
+                };
+
+                websocket.onerror = function(err) {
+                    $('.status').html('Encountered an error. Will attempt to reconnect in 1 second.');
+                    console.error('Socket encountered error: ', err.message, 'Closing socket');
+                    websocket.close();
+                };
+
+                window.addEventListener("beforeunload", (event) => {
+                    $('.status').html('Disconnected.');
+                    websocket.send(JSON.stringify({ 'action': 'close', 'source': identifier }));
+                    websocket.close();
+                });
+
+                return websocket;
+            }
+
+            setInterval(() => {
+                wss.send(JSON.stringify({ 'action': 'live-check', 'data': { 'timestamp': new Date().toISOString() }, 'source': identifier }));
+            }, 10000);
+
+            function sortObjectAlpha(obj) {
+                return Object.fromEntries(
+                    Object.entries(obj).sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
+                );
+            };
+
+            function refresh(){
+                wss.send(JSON.stringify({ 'action': 'refresh', 'source': identifier }));
+            }
+
+            function refreshAll(){
+                wss.send(JSON.stringify({ 'action': 'refresh', 'data': { 'target': 'all' }, 'source': identifier }));
+            }
+
+            function handleButton(button){
+                jQuery('.websocket_test').html('Ping ' + button + '.');
+                wss.send(JSON.stringify( { 'action': 'ping', 'data': { 'target': button }, 'source': identifier }));
+            }
+        
+        </script>
+    </body>
+</html>

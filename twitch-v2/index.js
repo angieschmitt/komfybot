@@ -10,6 +10,7 @@ const functions = functionsFile.content();
 
 const globals = [];
 globals['endpoint'] = settings.endpoint;
+globals['websocket'] = settings.socket[ settings.env ];
 
 // Handle creating bots...
 globals['bots'] = [];

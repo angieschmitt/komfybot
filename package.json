@@ -9,12 +9,10 @@
     "private": true,
     "scripts": {
         "twitch": "node ./twitch/index.js",
-        "twitch-dev": "node ./twitch/index-dev.js",
         "discord": "node ./discord/index.js",
-        "discord-dev": "node ./discord/index-dev.js",
         "websocket": "node ./websocket/server.mjs",
-        "websocket-dev": "node ./websocket-dev/server.mjs",
-        "twitchv2": "node ./twitch-v2/index.js"
+        "twitchv2": "node ./twitch-v2/index.js",
+        "socketv2": "node ./websocket-v2/server.mjs"
     },
     "dependencies": {
         "axios": "^1.2.0",
