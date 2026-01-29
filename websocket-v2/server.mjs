@@ -25,8 +25,90 @@ function init() {
     let groups = {};
     wss.on('connection', function connection(ws, req) {
 
-        console.log('connect');
-        
+        // get userID...
+        var userID = req.url.substr(1);
+
+        console.log(userID);
+
+        users = handleUsers(userID, users);
+        groups = handleGroups(userID, groups);
+
+        ws.on('error', function message(error){
+            console.log(error);
+        });
+
+        ws.on('message', function message(data, isBinary) {
+            
+            const message = isBinary ? data : data.toString();
+            if ( isJson(message) ){
+
+                const parsed = JSON.parse(message);
+
+                let data = false;
+                let action = parsed['action'].toString();
+                let source = parsed['source'].toString();
+                if ( 'data' in parsed) {
+                    data = parsed['data'];
+                }
+
+                // Prep output...
+                let output = {
+                    'userList' : users,
+                    'groupList' : groups,
+                    'timestamp' : new Date().toISOString().slice(0, 19).replace('T', ' ')
+                };
+
+                // Handle the action
+                if ( action in actions ){
+                    output['action'] = action;
+                    let actionOutput = actions[action].execute(users, groups, source, data);
+                    Object.entries(actionOutput).forEach(([key, value]) => {
+                        output[ key ] = value;
+                    });
+                }
+
+                // Handle live-check
+                if ( action == 'live-check' ) {
+                    users[ source ] = data['timestamp'];
+
+                    // Clean out things that haven't checked in...
+                    users = cleanUsers(users);
+                    groups = cleanGroups(users, groups);
+
+                    // Overwrite the data..
+                    output.userList = users;
+                    output.groupList = groups;
+                    output.action = 'refresh';
+                    output.target = 'all';
+                    output.source = 'server';
+                }
+
+                // Handle "all" pings...
+                if ( output.target == 'all' ){
+                    wss.clients.forEach(function (client) {
+                        client.send( JSON.stringify(output) );
+                    });
+                } else if ( typeof output.target === 'object' ){
+                    let iter = 0;
+                    wss.clients.forEach(function (client) {
+                        if (Object.values(output.target).indexOf(iter.toString()) > -1) {
+                            client.send( JSON.stringify(output) );
+                        }
+                        iter++;
+                    });
+                }
+
+            }
+            else {
+                wss.clients.forEach(function (client) {
+                    output['response'] = 'OOGA: ' + Math.random();
+                    client.send( JSON.stringify(output) );
+                });
+            }
+
+            // console.log( '- - -' );
+
+        });
     });
 
     server.listen(9090);
