@@ -20,3 +20,6 @@ globals['bots'] = functions.createBots(globals);
 globals['refreshHandlers'] = [];
 globals['refreshHandlers']['load'] = functions.refreshHandler(globals);
 globals['refreshHandlers']['live'] = functions.liveRefreshHandler(globals);
+
+// Handle watching for redeems...
+globals['redeemWatcher'] = functions.redeemWatcher(globals);

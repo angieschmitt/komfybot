@@ -39,6 +39,7 @@ module.exports = {
 				parent.addonsLoad(client, globals, channel['userID'], addonsJson);
 				parent.settingsLoad(client, globals, channel['userID'], settingsJson);
 				parent.commandsLoad(client, globals, channel['userID']);
+				parent.redeemsLoad(client, globals, channel['userID']);
 				parent.timersLoad(client, globals, channel['userID']);
 				parent.reactwordsLoad(client, globals, channel['userID']);
 				parent.liveLoad(client, globals, channel['userID']);
