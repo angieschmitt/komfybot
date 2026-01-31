@@ -1,18 +1,26 @@
-const axios = require('axios');
-
 // REDEEM: Chaos mode
+// USER: kittenAngie
 
 const redeem = {
 	redeemHandler(redeemData, client) {
 
-		// id				0
-		// userID			"1"
-		// redeemID			"9a0fe7e1-afa4-47a8-a2bf-be37ec8beeb6"
-		// redemptionID		"ce2c9690-9bd4-4fa2-9344-5b17c8a35ca3"
-		// userInput		"adwda"
-		// lastUpdated		"2026-01-30 15:16:04"
+		// Build message...
+		let message = 'Chaos mode word list: ';
+		Object.entries(client.data.chaosWords).forEach(([idx]) => {
+			message += client.data.chaosWords[idx] + ', ';
+		});
 
-		client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'redeemID' : redeemData['id'], 'content' : redeemData['userInput'], 'target': 'popcat:' + client.userID }, 'source': 'komfybot' }));
+		// Now say the message in kiwi's channel
+		client.say(client.channel, message.substring(0, message.length - 2));
+
+		// Set chaosMode state...
+		client.redeems.states.chaosMode = true;
+		client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'redeemID' : redeemData['id'], 'content' : redeemData['userInput'], 'target': 'chaos-mode:' + client.userID }, 'source': 'komfybot' }));
+
+		// Start timer to turn it off...
+		setTimeout(function() {
+			client.redeems.states.chaosMode = false;
+		}, 30000);
 	},
 };
 

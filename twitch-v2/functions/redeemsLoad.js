@@ -5,9 +5,11 @@ module.exports = {
 		const parent = this;
 
 		client.redeems = [];
+		client.redeems.states = [];
 
 		if (reset) {
 			client.redeems = new Array();
+			client.redeems.states = new Array();
 			for (const i in require.cache) {
 				delete require.cache[i];
 			}

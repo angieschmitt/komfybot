@@ -21,6 +21,9 @@ module.exports = {
 		const client = this;
 		const perms = functions.messagePermissions(channel, tags);
 
+		// In case we need it...
+		let passive = true;
+
 		// Log chatters...
 		functions.dataChatters(client, channel, tags);
 
@@ -30,6 +33,9 @@ module.exports = {
 			if (functions.commandsHandler(commandData, channel, perms, tags, message, client)) {
 				console.log('Used command: ' + commandData.command.name + ' ' + (commandData.args[1] ? commandData.args[1] : ''));
 			}
+
+			// Commands don't give passive...
+			passive = false;
 		}
 
 		// Handle reactwords...
@@ -39,12 +45,40 @@ module.exports = {
 			client.say(channel, chosen);
 		}
 
+		// Chaos Mode stuff...
+		if ('chaosMode' in client.redeems.states) {
+			if (client.redeems.states.chaosMode) {
+				const cleanedMessage = message.trim();
+				// If a single word...
+				if (!cleanedMessage.includes(' ')) {
+					// If it's in the channels chaos words...
+					if (client.data.chaosWords.includes(cleanedMessage.toLowerCase())) {
+
+						if (cleanedMessage.toLowerCase() == 'lizard' || cleanedMessage.toLowerCase() == '🦎') {
+							client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'content' : 'tts-lizard', 'type' : 'chat', 'target': 'chaos-mode:' + client.userID }, 'source': 'komfybot' }));
+						}
+						else if (cleanedMessage.toLowerCase() == 'v') {
+							client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'content' : 'tts-vee', 'type' : 'chat', 'target': 'chaos-mode:' + client.userID }, 'source': 'komfybot' }));
+						}
+						else {
+							client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'content' : 'tts-' + cleanedMessage.toLowerCase(), 'type' : 'chat', 'target': 'chaos-mode:' + client.userID }, 'source': 'komfybot' }));
+						}
+
+						// Chaos-mode doesn't give passive...
+						passive = false;
+					}
+				}
+			}
+		}
+
 		// Handle passive income...
 		if (client.settings.currency.enabled) {
 			if (client.settings.passive.enabled) {
 				if (!commandData) {
 					if (client.isLive) {
-						functions.messageHandlePassive(client, channel, message, tags, perms);
+						if (passive) {
+							functions.messageHandlePassive(client, channel, message, tags, perms);
+						}
 					}
 				}
 			}

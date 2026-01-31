@@ -8,6 +8,14 @@ module.exports = {
 			client.data = [];
 		}
 
+		client.data.walkOn = {
+			1 : {
+				547517825 : 'whos-that-pokemon',
+				90928645 : 'cute-and-fluffy',
+			},
+		};
+		client.data.chaosWords = ['angie', 'antidisestablishmentarianism', 'butt', 'chicken', 'halloween', 'kiwi', 'lizard', '🦎', 'snail', 'supercalifragilisticexpialidocious', 'tittle', 'v', 'whale'];
+
 		if (dataType == 'chatters') {
 			axios.get(globals['endpoint'] + 'data/chatters/' + client.userID + '/all')
 				.then(function(response) {
