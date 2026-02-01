@@ -5,6 +5,14 @@ module.exports = {
 	help: 'Command to interact with the store. Additional args: add',
 	addon: 1,
 	aliases: {
+		'buy': {
+			arg: 'buy',
+			list: false,
+		},
+		'sell': {
+			arg: 'sell',
+			list: false,
+		},
 	},
 	actions: {
 		default: {
@@ -280,10 +288,7 @@ module.exports = {
 							}
 						}
 						else if (resData.status === 'failure') {
-							if (resData.err_msg == 'not_enough_coins') {
-								content = `It looks like you need ${resData.response} more ${(resData.response > 1 ? client.settings.currency.name.plural : client.settings.currency.name.single)} to complete the purchase.`;
-							}
-							else if (resData.err_msg == 'product_disabled') {
+							if (resData.err_msg == 'product_disabled') {
 								content = 'It looks like that product is currently disabled.';
 							}
 							else if (resData.err_msg == 'couldnt_locate_product') {

@@ -112,6 +112,56 @@ module.exports = {
 					});
 			},
 		},
+		give: {
+			args: {
+				required: [ 2, 3 ],
+				error: 'don\'t forgot the user and the amount!',
+			},
+			execute(args, tags, message, channel, client) {
+
+				const viewer = tags['username'];
+				const viewerID = tags['user-id'];
+				const target = args[2].replace('@', '');
+				const amount = args[3];
+				if (!module.exports.isInt(amount)) {
+					client.say(channel, 'The amount goes after the username');
+					return;
+				}
+
+				let content = '';
+				axios.get(client.endpoint + 'coins/give/' + client.userID + '/' + viewerID + '/' + target + '/' + amount + '/')
+					.then(function(response) {
+						const resData = response.data;
+						if (resData.status === 'success') {
+							content = `Transfer complete: @${viewer} gave @${target} ${amount} ${(amount > 1 ? client.settings.currency.name.plural : client.settings.currency.name.single)} to your wallet.`;
+						}
+						else if (resData.status === 'failure') {
+							if (resData.err_msg === 'not_enough_coins') {
+								content = `It looks like you don't have ${amount} ${(resData.response > 1 ? client.settings.currency.name.plural : client.settings.currency.name.single)} to give.`;
+							}
+							else if (resData.err_msg === 'missing_authorization') {
+								// data.errorMsg.handle(channel, client, 'checkin', 'Authorization issue');
+							}
+							else {
+								// data.errorMsg.handle(channel, client, 'checkin', 'Failed response');
+							}
+						}
+						else {
+							// data.errorMsg.handle(channel, client, 'checkin', 'Not sure how you got here');
+						}
+					})
+					.catch(function() {
+						// data.errorMsg.handle(channel, client, 'checkin', 'Issue while handling command');
+					})
+					.finally(function() {
+						if (!('silent' in tags)) {
+							if (content !== '') {
+								client.say(channel, content);
+							}
+						}
+					});
+			},
+		},
 		holders: {
 			execute(args, tags, message, channel, client) {
 
