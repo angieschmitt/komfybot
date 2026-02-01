@@ -171,13 +171,10 @@ module.exports = {
 				const viewerID = tags['user-id'];
 
 				let item = message.replace(args[0], '').replace(args[1], '').trim();
-				let amt = parseInt(args.at(-1));
-				// If amt is a number...
-				if (module.exports.isInt(amt)) {
-					// remove it from the end of the item...
-					item = item.substr(0, item.length - ((amt.toString.length) + 1));
+				let amt = args.at(-1);
+				if (!amt.match(/[^$,.\d]/)) {
+					item = item.substr(0, item.length - ((amt.length) + 1)).trim();
 				}
-				// Otherwise just set amt...
 				else {
 					amt = 1;
 				}
@@ -187,7 +184,100 @@ module.exports = {
 					.then(function(response) {
 						const resData = response.data;
 						if (resData.status === 'success') {
-							content = `Congrats @${viewer} on buying ${resData.response.qty}x ${resData.response.item} for ${resData.response.cost} ${(resData.response.cost > 1 ? client.settings.currency.name.plural : client.settings.currency.name.single)}.`;
+
+							// If a gacha item, handle it...
+							if ('gacha' in resData.response) {
+								content = `Congrats @${viewer}, you bought ${resData.response.qty}x Gacha Rolls for ${resData.response.cost} ${(resData.response.cost > 1 ? client.settings.currency.name.plural : client.settings.currency.name.single)}`;
+								if (Object.keys(resData.response.gacha).length > 1) {
+									content += ' and it rolled the following items: ';
+								}
+								else {
+									content += ' and it rolled the following item: ';
+								}
+								Object.entries(resData.response.gacha).forEach(([idx, entry]) => { // eslint-disable-line no-unused-vars
+									if (entry.qty > 1) {
+										content += ` Another ${entry.item} (${entry.rarity}) from Set #${entry.itemSet}, `;
+									}
+									else {
+										content += ` A ${entry.item} (${entry.rarity}) from Set #${entry.itemSet}, `;
+									}
+								});
+								content = content.substring(0, (content.length - 2));
+							}
+							else {
+								content = `Congrats @${viewer} on buying ${resData.response.qty}x ${resData.response.item} for ${resData.response.cost} ${(resData.response.cost > 1 ? client.settings.currency.name.plural : client.settings.currency.name.single)}.`;
+							}
+
+						}
+						else if (resData.status === 'failure') {
+							if (resData.err_msg == 'not_enough_coins') {
+								content = `It looks like you need ${resData.response} more ${(resData.response > 1 ? client.settings.currency.name.plural : client.settings.currency.name.single)} to complete the purchase.`;
+							}
+							else if (resData.err_msg == 'product_disabled') {
+								content = 'It looks like that product is currently disabled.';
+							}
+							else if (resData.err_msg == 'couldnt_locate_product') {
+								content = 'That product couldn\'t be located.';
+							}
+							else if (resData.err_msg === 'missing_authorization') {
+								// data.errorMsg.handle(channel, client, 'checkin', 'Authorization issue');
+							}
+							else {
+								// data.errorMsg.handle(channel, client, 'checkin', 'Failed response');
+							}
+						}
+						else {
+							// data.errorMsg.handle(channel, client, 'checkin', 'Not sure how you got here');
+						}
+					})
+					.catch(function() {
+						// data.errorMsg.handle(channel, client, 'checkin', 'Issue while handling command');
+					})
+					.finally(function() {
+						if (content !== '') {
+							client.say(channel, content);
+						}
+					});
+			},
+		},
+		sell: {
+			execute(args, tags, message, channel, client) {
+
+				const viewer = tags['username'];
+				const viewerID = tags['user-id'];
+
+				let item = message.replace(args[0], '').replace(args[1], '').trim();
+				let amt = args.at(-1);
+				if (!amt.match(/[^$,.\d]/)) {
+					item = item.substr(0, item.length - ((amt.length) + 1)).trim();
+				}
+				else {
+					amt = 1;
+				}
+
+				let content = '';
+				axios.get(client.endpoint + 'store/sell/' + client.userID + '/' + viewerID + '/' + item + '/' + amt)
+					.then(function(response) {
+						const resData = response.data;
+						if (resData.status === 'success') {
+
+							// If the qty was adjusted, adjust message...
+							if (resData.response.qtyAdjusted) {
+								if (resData.response.qty == 0) {
+									if (resData.response.type == 'default') {
+										content = `Sorry @${viewer}, you don't have any ${resData.response.name} to sell.`;
+									}
+									else if (resData.response.type == 'gacha') {
+										content = `Sorry @${viewer}, you can't sell your last ${resData.response.name}`;
+									}
+								}
+								else {
+									content = `Congrats @${viewer}, you sold ${resData.response.qty}x ${resData.response.name} for ${resData.response.value} ${(resData.response.value > 1 ? client.settings.currency.name.plural : client.settings.currency.name.single)}. `;
+								}
+							}
+							else {
+								content = `Congrats @${viewer}, you sold ${resData.response.qty}x ${resData.response.name} for ${resData.response.value} ${(resData.response.value > 1 ? client.settings.currency.name.plural : client.settings.currency.name.single)}`;
+							}
 						}
 						else if (resData.status === 'failure') {
 							if (resData.err_msg == 'not_enough_coins') {

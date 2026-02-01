@@ -85,12 +85,6 @@ module.exports = {
 
 										riskFinal = risk;
 										reason = `Slots Win: ${riskFinal}`;
-
-										// Add coins
-										const args2 = ['!coins', 'add', tags.username, risk, `Slots Win: ${risk}` ];
-										const message2 = `!coins add ${tags.username} ${risk} Slots Win: ${risk}`;
-										tags['silent'] = true;
-										client.commands.global.coins.actions.add.execute(args2, tags, message2, channel, client);
 									}
 									else {
 										content += ` and lost ${risk} ${(risk > 1 ? client.settings.currency.name.plural : client.settings.currency.name.single)}!`;
