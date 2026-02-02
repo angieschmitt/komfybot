@@ -8,6 +8,8 @@ module.exports = {
 			client.data = [];
 		}
 
+		client.data.chatters = [];
+
 		client.data.walkOn = {
 			1 : {
 				547517825 : 'whos-that-pokemon',

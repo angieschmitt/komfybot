@@ -20,19 +20,20 @@ module.exports = {
 								Object.entries(users).forEach(([idx, userID]) => { // eslint-disable-line no-unused-vars
 
 									if (userID in globals.bots) {
+
 										if (type == 'addons') {
 											parent.addonsLoad(globals.bots[userID], globals, userID, {}, true);
 										}
-										else if (type == 'commands') {
+										else if (type == 'command') {
 											parent.commandsLoad(globals.bots[userID], globals, userID, true);
 										}
 										else if (type == 'reactwords') {
 											parent.reactwordsLoad(globals.bots[userID], globals, userID, true);
 										}
-										else if (type == 'settings') {
+										else if (type == 'setting') {
 											parent.settingsLoad(globals.bots[userID], globals, userID, {}, true);
 										}
-										else if (type == 'timers') {
+										else if (type == 'timer') {
 											parent.timersLoad(globals.bots[userID], globals, userID, true);
 										}
 									}
