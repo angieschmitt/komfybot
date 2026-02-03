@@ -27,7 +27,7 @@ module.exports = {
 	},
 	actions: {
 		default: {
-			say: 'Angry, Shrug, Cats, and more...',
+			say: ['Angry, Shrug, Cats, and more...'],
 		},
 		angry: {
 			help: 'ME MAKE ANGY FACE',

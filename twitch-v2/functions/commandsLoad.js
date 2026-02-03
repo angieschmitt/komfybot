@@ -48,15 +48,14 @@ module.exports = {
 					if (command.channel !== '' && command.channel !== undefined) {
 						if (typeof command.channel == 'object') {
 							Object.entries(command.channel).forEach(([key, channel]) => { // eslint-disable-line no-unused-vars
-								if (!(channel in client.commands)) {
-									client.commands['user'] = [];
-								}
-								client.commands['user'][command.name] = command;
+								if (client.userID == channel) {
+									client.commands['user'][command.name] = command;
 
-								if (command.aliases !== undefined && Object.keys(command.aliases).length > 0) {
-									Object.entries(command.aliases).forEach(([key, data]) => {
-										module.exports.handleAlias(command, key, data, client.commands['user']);
-									});
+									if (command.aliases !== undefined && Object.keys(command.aliases).length > 0) {
+										Object.entries(command.aliases).forEach(([key, data]) => {
+											module.exports.handleAlias(command, key, data, client.commands['user']);
+										});
+									}
 								}
 							});
 						}
