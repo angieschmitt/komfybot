@@ -42,12 +42,19 @@ module.exports = {
 		client.connect()
 			.then(() => {
 				parent.eventsLoad(client);
+
+				// All of these should be one call...
+				// parent.loadFromDashboard(client, globals);
+
+				// Until I get that done...
 				parent.addonsLoad(client, globals, channel['userID'], addonsJson);
+				parent.overlaysLoad(client, globals, channel['userID']);
 				parent.settingsLoad(client, globals, channel['userID'], settingsJson);
 				parent.commandsLoad(client, globals, channel['userID']);
 				parent.redeemsLoad(client, globals, channel['userID']);
 				parent.timersLoad(client, globals, channel['userID']);
 				parent.reactwordsLoad(client, globals, channel['userID']);
+
 				parent.liveLoad(client, globals, channel['userID']);
 				parent.refreshConnection(client, globals, clientData);
 

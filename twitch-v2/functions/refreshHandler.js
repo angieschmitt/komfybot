@@ -20,12 +20,14 @@ module.exports = {
 								Object.entries(users).forEach(([idx, userID]) => { // eslint-disable-line no-unused-vars
 
 									if (userID in globals.bots) {
-
 										if (type == 'addons') {
 											parent.addonsLoad(globals.bots[userID], globals, userID, {}, true);
 										}
 										else if (type == 'command') {
 											parent.commandsLoad(globals.bots[userID], globals, userID, true);
+										}
+										else if (type == 'overlay') {
+											parent.overlaysLoad(globals.bots[userID], globals, true);
 										}
 										else if (type == 'reactwords') {
 											parent.reactwordsLoad(globals.bots[userID], globals, userID, true);
