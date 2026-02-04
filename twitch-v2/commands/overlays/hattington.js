@@ -2,7 +2,7 @@ const axios = require('axios');
 
 module.exports = {
 	list: false,
-	channel: ['1'],
+	channel: ['2'],
 	name: 'hatty',
 	help: 'Commands for Hattington',
 	aliases: {
@@ -34,27 +34,20 @@ module.exports = {
 
 				let bypassCheck = false;
 
-				// Gotta set something up in the client to track timers...
-				if (!('overlay' in client)) {
-					client.overlay = [];
-				}
-				// If hattington isn't set...
-				if (!('hattington' in client.overlay)) {
-					client.overlay.hattington = [];
-				}
-				// If the hat timer is not set...
-				if (!('hat' in client.overlay.hattington)) {
-					client.overlay.hattington.hat =	new Date();
+				// If there is no data set...
+				if (!('data' in client.overlay.hattington)) {
+					client.overlay.hattington.data = [];
+					client.overlay.hattington.data.hat = [];
+					client.overlay.hattington.data.hat.time = new Date();
 					bypassCheck = true;
 				}
 
 				if (!bypassCheck) {
-					const lastHat = client.overlay.hattington.hat;
+					const lastHat = new Date(client.overlay.hattington.data.hat.time);
 					const now = new Date();
 					const minsSince = Math.round((((now - lastHat) % 86400000) % 3600000) / 60000);
 
-					// MOVE TIME LIMITS TO DASHBOARD
-					const timeLimit = 10;
+					const timeLimit = client.overlay.hattington.settings.timeBetweenHats;
 					if (minsSince < timeLimit) {
 						client.say(channel, `Hattington seems to be enjoying their current hat, give them a little time! (Roughly ${timeLimit - minsSince} minutes)`);
 						return;
@@ -62,7 +55,7 @@ module.exports = {
 				}
 
 				let content = '';
-				axios.get(client.endpoint + 'overlay/hattington/' + 2 + '/' + viewerID + '/check/hats/' + hat)
+				axios.get(client.endpoint + 'overlay/hattington/' + client.userID + '/' + viewerID + '/check/hats/' + hat)
 					.then(function(response) {
 						const resData = response.data;
 						if (resData.status === 'success') {
@@ -97,7 +90,6 @@ module.exports = {
 							}
 						}
 					});
-
 			},
 		},
 		snack: {
@@ -109,27 +101,20 @@ module.exports = {
 
 				let bypassCheck = false;
 
-				// Gotta set something up in the client to track timers...
-				if (!('overlay' in client)) {
-					client.overlay = [];
-				}
-				// If hattington isn't set...
-				if (!('hattington' in client.overlay)) {
-					client.overlay.hattington = [];
-				}
-				// If the hat timer is not set...
-				if (!('snack' in client.overlay.hattington)) {
-					client.overlay.hattington.snack = new Date();
+				// If there is no data set...
+				if (!('data' in client.overlay.hattington)) {
+					client.overlay.hattington.data = [];
+					client.overlay.hattington.data.snack = [];
+					client.overlay.hattington.data.snack.time = new Date();
 					bypassCheck = true;
 				}
 
 				if (!bypassCheck) {
-					const lastSnack = client.overlay.hattington.snack;
+					const lastSnack = new Date(client.overlay.hattington.data.snack.time);
 					const now = new Date();
 					const minsSince = Math.round((((now - lastSnack) % 86400000) % 3600000) / 60000);
 
-					// MOVE TIME LIMITS TO DASHBOARD
-					const timeLimit = 5;
+					const timeLimit = client.overlay.hattington.data.settings.timeBetweenSnacks;
 					if (minsSince < timeLimit) {
 						client.say(channel, `Hattington seems to be enjoying their last snack, give them a little time! (Roughly ${timeLimit - minsSince} minutes)`);
 						return;
@@ -137,7 +122,7 @@ module.exports = {
 				}
 
 				let content = '';
-				axios.get(client.endpoint + 'overlay/hattington/' + 2 + '/' + viewerID + '/use/snacks/' + snack)
+				axios.get(client.endpoint + 'overlay/hattington/' + client.userID + '/' + viewerID + '/use/snacks/' + snack)
 					.then(function(response) {
 						const resData = response.data;
 						if (resData.status === 'success') {
