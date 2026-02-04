@@ -43,16 +43,20 @@ module.exports = {
 				// If a channel point redeem...
 				if (message.payload.subscription.type == 'channel.channel_points_custom_reward_redemption.add') {
 					const redemptionID = message.payload.event.reward.id;
-					client.redeems[redemptionID].redeemHandler(message.payload.event, client);
+					if (redemptionID in client.redeems) {
+						client.redeems[redemptionID].redeemHandler(message.payload.event, client);
+					}
 				}
 				else if (message.payload.subscription.type == 'stream.online') {
 					console.log(`Channel ${event.broadcaster_user_name} is now ONLINE.`);
+					axios.get(client.endpoint + 'live/update' + client.userID);
 					client.isLive = true;
 				}
 				else if (message.payload.subscription.type == 'stream.offline') {
 					console.log(`Channel ${event.broadcaster_user_name} is now OFFLINE.`);
 					// Come up with logic to set isLive to false...
-					// client.isLive = false;
+					// axios.get(client.endpoint + 'live/update' + client.userID);
+					// client.isLive = true;
 				}
 			}
 			else if (message.metadata.message_type === 'session_reconnect') {

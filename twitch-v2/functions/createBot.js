@@ -7,8 +7,8 @@ module.exports = {
 		const channels = await parent.retrieveBotUsers(globals);
 		const channel = channels[userID];
 		const botDataJson = JSON.parse(channel['botData'], 'utf-8');
-		const settingsJson = JSON.parse(channel['settings'], 'utf-8');
-		const addonsJson = JSON.parse(channel['addons'], 'utf-8');
+		// const settingsJson = JSON.parse(channel['settings'], 'utf-8');
+		// const addonsJson = JSON.parse(channel['addons'], 'utf-8');
 
 		const clientData = {
 			channels: [ channel['username'] ],
@@ -43,17 +43,8 @@ module.exports = {
 			.then(() => {
 				parent.eventsLoad(client);
 
-				// All of these should be one call...
-				// parent.loadFromDashboard(client, globals);
-
-				// Until I get that done...
-				parent.addonsLoad(client, globals, channel['userID'], addonsJson);
-				parent.overlaysLoad(client, globals, channel['userID']);
-				parent.settingsLoad(client, globals, channel['userID'], settingsJson);
-				parent.commandsLoad(client, globals, channel['userID']);
-				parent.redeemsLoad(client, globals, channel['userID']);
-				parent.timersLoad(client, globals, channel['userID']);
-				parent.reactwordsLoad(client, globals, channel['userID']);
+				// One call to load them all...
+				parent.dashboardLoad(client, globals);
 
 				parent.liveLoad(client, globals, channel['userID']);
 				parent.refreshConnection(client, globals, clientData);
@@ -61,9 +52,9 @@ module.exports = {
 				// Load in data...
 				parent.dataLoad('chatters', client, globals);
 
-				// Create websocket connection...
+				// Create websocket connections...
 				parent.socketLoad(client);
-				parent.eventsubLoad(client);
+				parent.eventSubLoad(client);
 			})
 			.catch(err => console.log(err));
 

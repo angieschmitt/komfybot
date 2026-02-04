@@ -1,9 +1,8 @@
-const axios = require('axios');
 const fs = require('node:fs');
 const path = require('node:path');
 
 module.exports = {
-	async function(client, globals, userID, reset = false) {
+	async function(commands, client, reset = false) {
 
 		client.commands = [];
 		client.commands['global'] = [];
@@ -73,48 +72,41 @@ module.exports = {
 			}
 		}
 
-		await axios.get(globals['endpoint'] + 'load/commands/' + userID)
-			.then(function(response) {
-				if (response.data.status == 'success') {
-					const commands = response.data.response;
-					Object.entries(commands).forEach(([index, command]) => { // eslint-disable-line no-unused-vars
-						Object.entries(command).forEach(([name, data]) => {
+		// Now handle the commands from the dashboard...
+		Object.entries(commands).forEach(([index, command]) => { // eslint-disable-line no-unused-vars
+			Object.entries(command).forEach(([name, data]) => {
 
-							// If we've altered a global command, overwrite the default function...
-							if (name in client.commands['global']) {
-								client.commands['global'][name]['actions']['default'] = data;
-							}
-							// If it's a user created on, add it to the list..
-							else if (!(name in client.commands['user'])) {
-								client.commands['user'][name] = [];
-								client.commands['user'][name]['name'] = name;
-								client.commands['user'][name]['list'] = data['list'];
-								client.commands['user'][name]['allowOffline'] = data['allowOffline'];
+				// If we've altered a global command, overwrite the default function...
+				if (name in client.commands['global']) {
+					client.commands['global'][name]['actions']['default'] = data;
+				}
+				// If it's a user created on, add it to the list..
+				else if (!(name in client.commands['user'])) {
+					client.commands['user'][name] = [];
+					client.commands['user'][name]['name'] = name;
+					client.commands['user'][name]['list'] = data['list'];
+					client.commands['user'][name]['allowOffline'] = data['allowOffline'];
 
-								delete data['list'];
-								delete data['allowOffline'];
+					delete data['list'];
+					delete data['allowOffline'];
 
-								client.commands['user'][name]['actions'] = [];
-								client.commands['user'][name]['actions']['default'] = data;
-							}
+					client.commands['user'][name]['actions'] = [];
+					client.commands['user'][name]['actions']['default'] = data;
+				}
 
-							// Handle Aliases
-							if ('aliases' in data) {
-								Object.entries(data['aliases']).forEach(([alias]) => {
-									client.commands['user'][alias] = [];
-									client.commands['user'][alias]['alias'] = name;
-									client.commands['user'][alias]['arg'] = false;
-									client.commands['user'][alias]['list'] = false;
-								});
-							}
-						});
+				// Handle Aliases
+				if ('aliases' in data) {
+					Object.entries(data['aliases']).forEach(([alias]) => {
+						client.commands['user'][alias] = [];
+						client.commands['user'][alias]['alias'] = name;
+						client.commands['user'][alias]['arg'] = false;
+						client.commands['user'][alias]['list'] = false;
 					});
 				}
-			})
-			.catch(err => console.log(err))
-			.finally(() => {
-				return client;
 			});
+		});
+
+		return client;
 	},
 	handleAlias(baseCommand, name, details, commands) {
 		if (!('disabled' in details)) {

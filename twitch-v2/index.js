@@ -18,7 +18,7 @@ globals['bots'] = functions.createBots(globals);
 
 // Handle refreshing commands and timers...
 globals['refreshHandlers'] = [];
-globals['refreshHandlers']['load'] = functions.refreshHandler(globals);
+globals['refreshHandlers']['load'] = functions.dashboardRefresh(globals);
 // globals['refreshHandlers']['live'] = functions.liveRefreshHandler(globals); <- Replaced with eventsub
 
 // Handle watching for redeems...
