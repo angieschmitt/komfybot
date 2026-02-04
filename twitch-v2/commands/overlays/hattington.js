@@ -2,7 +2,7 @@ const axios = require('axios');
 
 module.exports = {
 	list: false,
-	channel: ['2'],
+	channel: [ 2 ],
 	name: 'hatty',
 	help: 'Commands for Hattington',
 	aliases: {
@@ -61,6 +61,7 @@ module.exports = {
 						if (resData.status === 'success') {
 							content = `@${viewer}, found your hat, giving it to Hattington!`;
 							client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'type' : 'hat', 'response': resData.response, 'target': 'hattington' }, 'source': 'komfybot' }));
+							client.overlay.hattington.data.hat.time = new Date();
 						}
 						else if (resData.status === 'failure') {
 							if (resData.err_msg === 'not_in_inventory') {
@@ -128,6 +129,7 @@ module.exports = {
 						if (resData.status === 'success') {
 							content = `@${viewer}, found your snack, giving it to Hattington! You have ${resData.response.remaining} left.`;
 							client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'type' : 'snack', 'response': resData.response, 'target': 'hattington' }, 'source': 'komfybot' }));
+							client.overlay.hattington.data.snack.time = new Date();
 						}
 						else if (resData.status === 'failure') {
 							if (resData.err_msg === 'not_in_inventory') {
