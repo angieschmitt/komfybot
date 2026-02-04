@@ -28,9 +28,15 @@ module.exports = {
 		// Make ^ client, assign some stuff...
 		const client = globals['bots'][ channel['userID'] ];
 		client['userID'] = channel['userID'];
+		client['twitchUUID'] = userID;
 		client['channel'] = '#' + channel['username'];
 		client['endpoint'] = globals['endpoint'];
 		client['socketInfo'] = globals['websocket'];
+
+		// Set the bot info...
+		client['clientID'] = botDataJson['clientID'];
+		client['appToken'] = botDataJson['appToken'];
+		client['botToken'] = botDataJson['botToken'];
 
 		// Then connect to twitch...
 		client.connect()
@@ -50,6 +56,7 @@ module.exports = {
 
 				// Create websocket connection...
 				parent.socketLoad(client);
+				parent.eventsubLoad(client);
 			})
 			.catch(err => console.log(err));
 

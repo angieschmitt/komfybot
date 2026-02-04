@@ -14,6 +14,11 @@ module.exports = {
 							const resultData = Object.values(results.response)[0];
 							const botDataJson = JSON.parse(resultData['botData'], 'utf-8');
 							clientData.identity.password = botDataJson['botToken'];
+
+							// Update the bot info...
+							client['clientID'] = botDataJson['clientID'];
+							client['appToken'] = botDataJson['appToken'];
+							client['botToken'] = botDataJson['botToken'];
 						}
 					})
 					.catch(err => console.log(err))

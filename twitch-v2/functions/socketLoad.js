@@ -45,7 +45,9 @@ module.exports = {
 		};
 
 		setInterval(() => {
-			websocket.send(JSON.stringify({ 'action': 'live-check', 'data': { 'timestamp': new Date().toISOString() }, 'source': identifier }));
+			if (websocket.readyState != 0) {
+				websocket.send(JSON.stringify({ 'action': 'live-check', 'data': { 'timestamp': new Date().toISOString() }, 'source': identifier }));
+			}
 		}, 10000);
 
 		client.websocket = websocket;

@@ -15,7 +15,7 @@ const redeem = {
 
 		// Set chaosMode state...
 		client.redeems.states.chaosMode = true;
-		client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'redeemID' : redeemData['id'], 'content' : redeemData['userInput'], 'target': 'chaos-mode:' + client.userID }, 'source': 'komfybot' }));
+		client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'redeemID' : redeemData.id, 'content' : redeemData.user_input, 'target': 'chaos-mode:' + client.userID }, 'source': 'komfybot' }));
 
 		// Start timer to turn it off...
 		setTimeout(function() {
