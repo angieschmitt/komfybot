@@ -38,7 +38,7 @@ module.exports = {
 			}
 			else if (message.metadata.message_type === 'notification') {
 
-				const event = message.payload.event;
+				// const event = message.payload.event;
 
 				// If a channel point redeem...
 				if (message.payload.subscription.type == 'channel.channel_points_custom_reward_redemption.add') {
@@ -48,22 +48,27 @@ module.exports = {
 					}
 				}
 				else if (message.payload.subscription.type == 'stream.online') {
-					console.log(`Channel ${event.broadcaster_user_name} is now ONLINE.`);
+					// console.log(`Channel ${event.broadcaster_user_name} is now ONLINE.`);
 					axios.get(client.endpoint + 'live/update' + client.userID);
 					client.isLive = true;
+
+					// If online comes in, clear offline timer...
+					clearTimeout(client.offlineTimer);
 				}
 				else if (message.payload.subscription.type == 'stream.offline') {
-					console.log(`Channel ${event.broadcaster_user_name} is now OFFLINE.`);
-					// Come up with logic to set isLive to false...
-					// axios.get(client.endpoint + 'live/update' + client.userID);
-					// client.isLive = true;
+					// console.log(`Channel ${event.broadcaster_user_name} is now OFFLINE.`);
+
+					// Once we get the offline ping, wait 10 mins to mark offline...
+					client.offlineTimer = setTimeout(() => {
+						axios.get(client.endpoint + 'live/update' + client.userID);
+						client.isLive = false;
+					}, 600000);
+
 				}
 			}
 			else if (message.metadata.message_type === 'session_reconnect') {
+				// console.log(`Maintenance incoming! Reconnecting to: ${reconnectUrl}`);
 				const reconnectUrl = message.payload.session.reconnect_url;
-				console.log(`Maintenance incoming! Reconnecting to: ${reconnectUrl}`);
-
-				// Start the new connection without closing this one yet
 				module.exports.connect(reconnectUrl);
 			}
 
