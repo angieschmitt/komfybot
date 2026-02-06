@@ -15,8 +15,8 @@ const actions = loadActions();
 function init() {
 
     const server = createServer({
-        cert: readFileSync( path.resolve(__dirname, './certs/server-cert.pem') ),
-        key: readFileSync( path.resolve(__dirname, './certs/server-key.pem') )
+        cert: readFileSync( path.resolve(__dirname, './certs/cert.pem') ),
+        key: readFileSync( path.resolve(__dirname, './certs/privkey.pem') )
     });
 
     const wss = new WebSocketServer({ server });
