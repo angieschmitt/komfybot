@@ -54,7 +54,7 @@ module.exports = {
 
 				// Create websocket connections...
 				parent.socketLoad(client);
-				parent.eventSubLoad(client);
+				parent.eventsubLoad(client);
 			})
 			.catch(err => console.log(err));
 
