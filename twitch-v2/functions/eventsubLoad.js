@@ -2,7 +2,7 @@ const axios = require('axios');
 const ws = require('ws');
 
 module.exports = {
-	function(client) {
+	async function(client) {
 
 		client.eventsub = false;
 		client.eventsub = module.exports.connect(client);

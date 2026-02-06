@@ -213,9 +213,6 @@ module.exports = {
 		Object.entries(redeemsJson).forEach(([index, extra]) => { // eslint-disable-line no-unused-vars
 			client.redeems[index] = module.exports.redeemFileHandler(index);
 		});
-
-		console.log(client.redeems);
-
 		return client;
 	},
 	settingsHandler(data, client, reset = false) {
