@@ -1,6 +1,8 @@
 // REDEEM: Chaos mode
 // USER: kittenAngie
 
+const path = require('path');
+
 const redeem = {
 	redeemHandler(redeemData, client) {
 
@@ -15,7 +17,7 @@ const redeem = {
 
 		// Set chaosMode state...
 		client.redeems.states.chaosMode = true;
-		client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'redeemID' : redeemData.id, 'content' : redeemData.user_input, 'target': 'chaos-mode:' + client.userID }, 'source': 'komfybot' }));
+		client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'redeemID' : path.basename(__filename, '.js'), 'redemptionID': redeemData.id, 'content' : redeemData.user_input, 'target': 'chaos-mode:' + client.userID }, 'source': 'komfybot' }));
 
 		// Start timer to turn it off...
 		setTimeout(function() {

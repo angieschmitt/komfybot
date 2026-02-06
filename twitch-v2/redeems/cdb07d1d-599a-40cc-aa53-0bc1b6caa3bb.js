@@ -1,9 +1,11 @@
 // REDEEM: Bird Magic
 // USER: kittenAngie
 
+const path = require('path');
+
 const redeem = {
 	redeemHandler(redeemData, client) {
-		client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'redeemID' : redeemData.id, 'content' : redeemData.user_input, 'target': 'bird-magic:' + client.userID }, 'source': 'komfybot' }));
+		client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'redeemID' : path.basename(__filename, '.js'), 'redemptionID': redeemData.id, 'content' : redeemData.user_input, 'target': 'bird-magic:' + client.userID }, 'source': 'komfybot' }));
 	},
 };
 
