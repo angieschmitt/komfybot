@@ -28,8 +28,6 @@ function init() {
         // get userID...
         var userID = req.url.substr(1);
 
-        console.log(userID);
-
         users = handleUsers(userID, users);
         groups = handleGroups(userID, groups);
 
@@ -79,7 +77,7 @@ function init() {
                     output.userList = users;
                     output.groupList = groups;
                     output.action = 'refresh';
-                    output.target = 'all';
+                    output.target = source;
                     output.source = 'server';
                 }
 
@@ -89,12 +87,12 @@ function init() {
                         client.send( JSON.stringify(output) );
                     });
                 } else if ( typeof output.target === 'object' ){
-                    let iter = 0;
+                    // let iter = 0;
                     wss.clients.forEach(function (client) {
-                        if (Object.values(output.target).indexOf(iter.toString()) > -1) {
+                    //     // if (Object.values(output.target).indexOf(iter.toString()) > -1) {
                             client.send( JSON.stringify(output) );
-                        }
-                        iter++;
+                    //     // }
+                    //     iter++;
                     });
                 }
 
