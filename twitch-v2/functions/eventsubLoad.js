@@ -81,7 +81,7 @@ module.exports = {
 			await axios.post('https://api.twitch.tv/helix/eventsub/subscriptions', {
 				type: 'stream.online',
 				version: '1',
-				condition: { broadcaster_user_id: '188049880' },
+				condition: { broadcaster_user_id: client.twitchUUID },
 				transport: {
 					method: 'websocket',
 					session_id: sessionId,

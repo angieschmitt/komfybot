@@ -199,8 +199,6 @@ module.exports = {
 		return client;
 	},
 	redeemsHandler(data, client, reset = false) {
-		const parent = this;
-
 		if (reset) {
 			client.redeems = new Array();
 			client.redeems.states = new Array();
@@ -212,9 +210,11 @@ module.exports = {
 		}
 
 		const redeemsJson = JSON.parse(data);
-		Object.entries(redeemsJson).forEach(([index, timer]) => { // eslint-disable-line no-unused-vars
-			client.redeems[index] = parent.redeemsHandler(index);
+		Object.entries(redeemsJson).forEach(([index, extra]) => { // eslint-disable-line no-unused-vars
+			client.redeems[index] = module.exports.redeemFileHandler(index);
 		});
+
+		console.log(client.redeems);
 
 		return client;
 	},
@@ -316,5 +316,10 @@ module.exports = {
 			}
 		}
 		return commands;
+	},
+	redeemFileHandler(redeemID) {
+		const redeemFile = require('../redeems/' + redeemID);
+		const redeem = redeemFile.content();
+		return redeem;
 	},
 };

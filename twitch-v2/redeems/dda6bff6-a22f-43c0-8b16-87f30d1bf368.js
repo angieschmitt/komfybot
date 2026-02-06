@@ -1,9 +1,9 @@
-// REDEEM: Test
+// REDEEM: Who's That Pokémon
 // USER: kittenAngie
 
 const redeem = {
 	redeemHandler(redeemData, client) {
-		client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'redeemID' : redeemData.id, 'content' : redeemData.user_input, 'target': 'test:' + client.userID }, 'source': 'komfybot' }));
+		client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'redeemID' : redeemData.id, 'content' : redeemData.user_input, 'target': 'pokemon:' + client.userID }, 'source': 'komfybot' }));
 	},
 };
 
