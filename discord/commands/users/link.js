@@ -79,15 +79,15 @@ module.exports = {
 				}
 
 				interaction.editReply({ content: `${content}`, ephemeral: true });
-				// interaction.channel.client.channels.fetch(channels.bot_log)
-				// 	.then(channel => {
-				// 		debug.forEach((dbgMsg) => {
-				// 			channel.send({
-				// 				content: `${dbgMsg}`,
-				// 			});
-				// 		});
-				// 	})
-				// 	.catch(err => console.log(err));
+				interaction.channel.client.channels.fetch(channels.bot_log)
+					.then(channel => {
+						debug.forEach((dbgMsg) => {
+							channel.send({
+								content: `${dbgMsg}`,
+							});
+						});
+					})
+					.catch(err => console.log(err));
 			})
 			.catch(function(error) {
 				console.log('y');
