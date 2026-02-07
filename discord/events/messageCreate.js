@@ -57,9 +57,8 @@ module.exports = {
 						const outcome = response.data;
 						if (outcome.status === 'success') {
 
-							// If they are, we pay out the coins
-							if (outcome.response.syncOptOut !== '1') {
-
+							// If we have a connected account...
+							if ('twitchUUID' in outcome.response) {
 								// set winner
 								winner = true;
 
@@ -67,7 +66,7 @@ module.exports = {
 								message.react('🪙');
 
 								// Actually add the coins
-								axios.get(urls.endpoint + 'coins/insert/2/' + outcome.response.twitchUsername + '/10/' + encodeURIComponent('Chatting in discord'))
+								axios.get(urls.endpoint + 'coins/insert/2/' + outcome.response.twitchUUID + '/10/' + encodeURIComponent('Chatting in discord'))
 									.then(function(response) {
 										const outcome = response.data;
 
@@ -90,18 +89,23 @@ module.exports = {
 											.catch(err => console.log(err));
 									})
 									.catch(console.error);
-
 							}
-							// If not, we alert them to the /link command
-							else if (outcome.response.opt_out === true) {
-								message.reply({ content: `<@${userID}>, I attempted to give you free 🪙 KomfyCoins, but you haven't linked your Twitch account! To make sure you don't miss any in the future, make sure you use the /link command!` });
+							// If we don't...
+							else if (!('twitchUUID' in outcome.response)) {
+								// If they haven't opted out...
+								if (outcome.response.syncOptOut !== '1') {
+									message.reply({ content: `<@${userID}>, I attempted to give you free 🪙 KomfyCoins, but you haven't linked your Twitch account! To make sure you don't miss any in the future, make sure you use the /link command!` });
+								}
 							}
-
 						}
 						// If we're here, something went wrong...
+						else if (outcome.status === 'failure') {
+							// message.react('‼️');
+							// message.reply({ content: `<@${userID}>, something went wrong! I'll ping <@215630012060139522>!` });
+						}
 						else {
-							message.react('‼️');
-							message.reply({ content: `<@${userID}>, something went wrong! I'll ping <@215630012060139522>!` });
+							// message.react('‼️');
+							// message.reply({ content: `<@${userID}>, I don't know how you got here! I'll ping <@215630012060139522>!` });
 						}
 					})
 					.catch(function(error) {
