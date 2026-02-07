@@ -37,6 +37,8 @@ module.exports = {
 				// If there is no data set...
 				if (!('data' in client.overlay.hattington)) {
 					client.overlay.hattington.data = [];
+				}
+				if (!('hat' in client.overlay.hattington.data)) {
 					client.overlay.hattington.data.hat = [];
 					client.overlay.hattington.data.hat.time = new Date();
 					bypassCheck = true;
@@ -105,6 +107,8 @@ module.exports = {
 				// If there is no data set...
 				if (!('data' in client.overlay.hattington)) {
 					client.overlay.hattington.data = [];
+				}
+				if (!('snack' in client.overlay.hattington.data)) {
 					client.overlay.hattington.data.snack = [];
 					client.overlay.hattington.data.snack.time = new Date();
 					bypassCheck = true;
@@ -121,6 +125,8 @@ module.exports = {
 						return;
 					}
 				}
+
+				console.log(client.endpoint + 'overlay/hattington/' + client.userID + '/' + viewerID + '/use/snacks/' + encodeURIComponent(snack));
 
 				let content = '';
 				axios.get(client.endpoint + 'overlay/hattington/' + client.userID + '/' + viewerID + '/use/snacks/' + encodeURIComponent(snack))

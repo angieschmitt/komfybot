@@ -38,7 +38,7 @@ module.exports = {
 			}
 			else if (message.metadata.message_type === 'notification') {
 
-				// const event = message.payload.event;
+				const event = message.payload.event;
 
 				// If a channel point redeem...
 				if (message.payload.subscription.type == 'channel.channel_points_custom_reward_redemption.add') {
@@ -48,7 +48,8 @@ module.exports = {
 					}
 				}
 				else if (message.payload.subscription.type == 'stream.online') {
-					// console.log(`Channel ${event.broadcaster_user_name} is now ONLINE.`);
+					console.log(`Channel ${event.broadcaster_user_name} is now ONLINE.`);
+
 					axios.get(client.endpoint + 'live/update' + client.userID);
 					client.isLive = true;
 
@@ -56,7 +57,7 @@ module.exports = {
 					clearTimeout(client.offlineTimer);
 				}
 				else if (message.payload.subscription.type == 'stream.offline') {
-					// console.log(`Channel ${event.broadcaster_user_name} is now OFFLINE.`);
+					console.log(`Channel ${event.broadcaster_user_name} is now OFFLINE.`);
 
 					// Once we get the offline ping, wait 10 mins to mark offline...
 					client.offlineTimer = setTimeout(() => {

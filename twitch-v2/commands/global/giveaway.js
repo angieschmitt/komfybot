@@ -86,6 +86,51 @@ module.exports = {
 					});
 			},
 		},
+		list: {
+			execute(args, tags, message, channel, client) {
+				let content = '';
+				axios.get(client.endpoint + 'data/giveaway/' + client.userID + '/list')
+					.then(function(response) {
+						const resData = response.data;
+						if (resData.status === 'success') {
+							const list = resData.response.users;
+							if (Object.keys(list).length) {
+								content = 'Current entrees: ';
+								// eslint-disable-next-line no-unused-vars
+								Object.entries(list).forEach(([key, value]) => {
+									content += `@${value} || `;
+								});
+								content = content.substring(0, (content.length - 3));
+							}
+							else {
+								content = 'Seems like there aren\'t any entries!';
+							}
+						}
+						else if (resData.status === 'failure') {
+							if (resData.err_msg == 'no_giveaway_exists') {
+								content = 'Seems like there is not a giveaway running.';
+							}
+							else if (resData.err_msg === 'missing_authorization') {
+								// data.errorMsg.handle(channel, client, 'checkin', 'Authorization issue');
+							}
+							else {
+								// data.errorMsg.handle(channel, client, 'checkin', 'Failed response');
+							}
+						}
+						else {
+							// data.errorMsg.handle(channel, client, 'checkin', 'Not sure how you got here');
+						}
+					})
+					.catch(function() {
+						// data.errorMsg.handle(channel, client, 'checkin', 'Issue while handling command');
+					})
+					.finally(function() {
+						if (content !== '') {
+							client.say(channel, content);
+						}
+					});
+			},
+		},
 		end: {
 			execute(args, tags, message, channel, client) {
 				let content = '';

@@ -9,6 +9,8 @@ const redeem = {
 		const message2 = `!coins add ${redeemData['user_login']} 160 Coin Conversion`;
 		client.commands.global.coins.actions.add.execute(args2, { 'silent': true }, message2, client.channel, client);
 
+		client.say(client.channel, 'Redeem processed!');
+
 		axios.get('https://api.komfybot.com/v2/endpoint/redeems/redeem/' + client.userID + '/' + redeemData.id + '/' + redeemData.reward.id)
 			.catch(err => console.log(err));
 	},
