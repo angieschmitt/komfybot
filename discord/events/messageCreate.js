@@ -9,8 +9,6 @@ axios.defaults.headers.common['Authorization'] = apiKey;
 module.exports = {
 	name: Events.MessageCreate,
 	async execute(message) {
-		const discordData = { 'id': message.author.id, 'username': message.author.username };
-		await axios.get(urls.baseUrl + 'insert/user_reference/?discord=' + encodeURIComponent(JSON.stringify(discordData))).catch(console.error);
 
 		// Handle the KomfyCoin handouts
 		const channel = message.channel;
@@ -54,13 +52,13 @@ module.exports = {
 			let winner = false;
 			if (chances.includes(value)) {
 				// First, we check if their accounts are linked..
-				await axios.get(urls.finalUrl + 'userdata/retrieve/' + username)
+				await axios.get(urls.endpoint + 'user/lookup/discordUsername' + username)
 					.then(function(response) {
 						const outcome = response.data;
 						if (outcome.status === 'success') {
 
 							// If they are, we pay out the coins
-							if (outcome.response.linked === true && outcome.response.opt_out !== true) {
+							if (outcome.response.syncOptOut !== '1') {
 
 								// set winner
 								winner = true;
@@ -69,8 +67,7 @@ module.exports = {
 								message.react('🪙');
 
 								// Actually add the coins
-								const data = { 'amt': 10, 'ident_type': 'discord_username', 'ident': message.author.username, 'reason': 'Chatting in discord' };
-								axios.get(urls.baseUrl2 + 'coins/insert/json/' + encodeURIComponent(JSON.stringify(data)))
+								axios.get(urls.endpoint + 'coins/insert/2/' + outcome.response.twitchUsername + '/10/' + encodeURIComponent('Chatting in discord'))
 									.then(function(response) {
 										const outcome = response.data;
 

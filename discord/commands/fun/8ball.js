@@ -21,33 +21,58 @@ module.exports = {
 
 		await interaction.deferReply();
 
-		await axios.get(urls.finalUrl + '8ball/retrieve')
-			.then(function(response) {
+		const answers = [
+			'It is certain',
+			'It is decidedly so',
+			'Without a doubt',
+			'Yes definitely',
+			'You may rely on it',
+			'As I see it, yes',
+			'Most likely',
+			'Outlook good',
+			'Yes',
+			'Signs point to yes',
+			'Reply hazy, try again',
+			'Ask again later',
+			'Better not tell you now',
+			'Cannot predict now',
+			'Concentrate and ask again',
+			'Don\'t count on it',
+			'My reply is no',
+			'My sources say no',
+			'Outlook not so good',
+			'Very doubtful',
+		];
 
-				const output = response.data;
+		shuffle(answers);
 
-				if (output.status === 'success') {
-					const embed = new EmbedBuilder()
-						.setColor(0xC44578)
-						.setTitle('Magic 8 Ball')
-						.setThumbnail('https://kittenangie.com/bots/images/8ball.png')
-						.addFields(
-							{ name: question, value: output.response },
-						)
-						.setTimestamp();
+		const answer = answers[Math.floor(Math.random() * answers.length)];
+		const embed = new EmbedBuilder()
+			.setColor(0xC44578)
+			.setTitle('Magic 8 Ball')
+			.setThumbnail('https://kittenangie.com/bots/images/8ball.png')
+			.addFields(
+				{ name: question, value: answer },
+			)
+			.setTimestamp();
 
-					interaction.editReply({ embeds: [embed] });
-				}
-				else {
-					interaction.editReply({ content: 'Something went wrong?' });
-				}
-
-			})
-			.catch(function(error) {
-				interaction.editReply({ content: `Something went wrong? ${error}` });
-			})
-			.finally(function() {
-				// always executed
-			});
+		interaction.editReply({ embeds: [embed] });
 	},
+};
+
+const shuffle = function(array) {
+	let currentIndex = array.length;
+
+	// While there remain elements to shuffle...
+	while (currentIndex != 0) {
+
+		// Pick a remaining element...
+		const randomIndex = Math.floor(Math.random() * currentIndex);
+		currentIndex--;
+
+		// And swap it with the current element.
+		[array[currentIndex], array[randomIndex]] = [
+			array[randomIndex], array[currentIndex],
+		];
+	}
 };

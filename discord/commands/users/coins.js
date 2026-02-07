@@ -6,13 +6,26 @@ const { urls, apiKey } = require(configFile); // eslint-disable-line
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('puns')
-		.setDescription('Puns. Cause she likes em for some reason.'),
+		.setName('coins')
+		.setDescription('Check a KomfyCoin wallet, provide twitch username if different')
+		.addStringOption(option =>
+			option
+				.setName('username')
+				.setDescription('Twitch Username')
+				.setRequired(false)),
 	async execute(interaction) {
+		const client = interaction.client;
 
 		await interaction.deferReply();
+		let user = (interaction.options.getString('username') ? interaction.options.getString('username') : interaction.user.username);
 
-		await axios.get(urls.finalUrl + 'pun/retrieve')
+		if (user.startsWith('<')) {
+			const temp = user.replaceAll(/[<>@]/gi, '');
+			const userData = await client.users.fetch(temp).catch(console.error);
+			user = userData.username;
+		}
+
+		await axios.get(urls.endpoint + 'coins/retrieve/2/' + user)
 			.then(function(response) {
 
 				const output = response.data;
@@ -20,14 +33,11 @@ module.exports = {
 				if (output.status === 'success') {
 					const embed = new EmbedBuilder()
 						.setColor(0xC44578)
-						.setTitle('Pun Delivery Service')
+						.setTitle('KomfyCoin Wallet for ' + user)
 						.addFields(
-							{ name: 'Pun:', value: output.response },
+							{ name: 'Current KomfyCoin(s)', value: (output.response ? output.response : 0) },
 						)
-						.setTimestamp()
-						.setFooter(
-							{ text: `ID: ${output.id}` },
-						);
+						.setTimestamp();
 
 					interaction.editReply({ embeds: [embed] });
 				}
