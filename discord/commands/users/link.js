@@ -19,16 +19,6 @@ module.exports = {
 
 		await interaction.deferReply({ ephemeral: true });
 
-		// const jsonData = {
-		// 	'id': interaction.user.id,
-		// 	'ident_type': 'discord_id',
-		// 	'data': {
-		// 		'discord_username': interaction.user.username,
-		// 		'twitch_username': (interaction.options.getString('twitch_username') ?? false'),
-		// 		'opt_out': (interaction.options.getBoolean('opt_out') ?? ''),
-		// 	},
-		// };
-
 		const discordUsername = interaction.user.username;
 		const twitchUsername = (interaction.options.getString('twitch_username') ?? 'skipped');
 		const optOut = (interaction.options.getBoolean('opt_out') ?? 'skipped');
@@ -51,7 +41,7 @@ module.exports = {
 						debug.push(`LINK, FAILURE, ${interaction.user.username}, ${twitchUsername}, twitch_already_linked`);
 					}
 					if ('no_match' in outcome.errors) {
-						content += `${twitchUsername} was not found in our database. Make sure you chat in Kiwi\'s stream to fix that!\r\n`;
+						content += `${twitchUsername} was not found in our database. Make sure you chat in Kiwi's stream to fix that!\r\n`;
 						debug.push(`LINK, FAILURE, ${interaction.user.username}, ${twitchUsername}, no_match`);
 					}
 
