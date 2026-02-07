@@ -1,12 +1,16 @@
 module.exports = {
 	list: false,
-	channel: ['1'],
+	channel: ['1','2'],
 	name: 'streamdata',
 	help: 'An assortment of ascii emojis',
 	aliases: {
 	},
 	actions: {
 		default: {
+			perms: {
+				levels: ['streamer', 'mod'],
+				error: 'this command is for the streamer and mods only.',
+			},
 			execute(args, tags, message, channel, client) {
 				let content = '';
 
