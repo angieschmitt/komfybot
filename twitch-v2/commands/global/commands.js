@@ -11,7 +11,7 @@ module.exports = {
 		default: {
 			execute(args, tags, message, channel, client) {
 
-				let output = client.opts.identity + ' has the following commands: ';
+				let output = client.opts.identity.username + ' has the following commands: ';
 
 				// Build out the command list
 				let commandList = [];
