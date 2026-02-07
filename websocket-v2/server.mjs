@@ -15,8 +15,8 @@ const actions = loadActions();
 function init() {
 
     const server = createServer({
-        cert: readFileSync( path.resolve(__dirname, './certs/cert.pem') ),
-        key: readFileSync( path.resolve(__dirname, './certs/privkey.pem') )
+        cert: readFileSync( '/etc/letsencrypt/live/server.komfybot.com/cert.pem' ),
+        key: readFileSync( '/etc/letsencrypt/live/server.komfybot.com/privkey.pem' )
     });
 
     const wss = new WebSocketServer({ server });
