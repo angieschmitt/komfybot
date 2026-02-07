@@ -52,7 +52,7 @@ module.exports = {
 			let winner = false;
 			if (chances.includes(value)) {
 				// First, we check if their accounts are linked..
-				await axios.get(urls.endpoint + 'user/lookup/discordUsername' + username)
+				await axios.get(urls.endpoint + 'user/lookup/discordUsername/' + username)
 					.then(function(response) {
 						const outcome = response.data;
 						if (outcome.status === 'success') {
