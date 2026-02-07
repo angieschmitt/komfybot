@@ -30,7 +30,7 @@ module.exports = {
 
 				const viewer = tags['username'];
 				const viewerID = tags['user-id'];
-				const hat = encodeURIComponent(message.substr(message.indexOf(args[2])).trim());
+				const hat = message.substr(message.indexOf(args[2])).trim();
 
 				let bypassCheck = false;
 
@@ -55,7 +55,7 @@ module.exports = {
 				}
 
 				let content = '';
-				axios.get(client.endpoint + 'overlay/hattington/' + client.userID + '/' + viewerID + '/check/hats/' + hat)
+				axios.get(client.endpoint + 'overlay/hattington/' + client.userID + '/' + viewerID + '/check/hats/' + encodeURIComponent(hat))
 					.then(function(response) {
 						const resData = response.data;
 						if (resData.status === 'success') {
@@ -98,7 +98,7 @@ module.exports = {
 
 				const viewer = tags['username'];
 				const viewerID = tags['user-id'];
-				const snack = encodeURIComponent(message.substr(message.indexOf(args[2])).trim());
+				const snack = message.substr(message.indexOf(args[2])).trim();
 
 				let bypassCheck = false;
 
@@ -123,7 +123,7 @@ module.exports = {
 				}
 
 				let content = '';
-				axios.get(client.endpoint + 'overlay/hattington/' + client.userID + '/' + viewerID + '/use/snacks/' + snack)
+				axios.get(client.endpoint + 'overlay/hattington/' + client.userID + '/' + viewerID + '/use/snacks/' + encodeURIComponent(snack))
 					.then(function(response) {
 						const resData = response.data;
 						if (resData.status === 'success') {
