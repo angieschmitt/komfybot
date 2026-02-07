@@ -1,18 +1,18 @@
 const axios = require('axios');
 
 module.exports = {
-	list: false,
+	list: true,
 	channel: [ 2 ],
 	name: 'hatty',
 	help: 'Commands for Hattington',
 	aliases: {
 		'hat': {
 			arg: 'hat',
-			list: false,
+			list: true,
 		},
 		'snack': {
 			arg: 'snack',
-			list: false,
+			list: true,
 		},
 	},
 	actions: {
