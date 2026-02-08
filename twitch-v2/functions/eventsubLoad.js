@@ -50,7 +50,7 @@ module.exports = {
 				else if (message.payload.subscription.type == 'stream.online') {
 					console.log(`Channel ${event.broadcaster_user_name} is now ONLINE.`);
 
-					axios.get(client.endpoint + 'live/update' + client.userID);
+					axios.get(client.endpoint + 'live/update/' + client.userID);
 					client.isLive = true;
 
 					// If online comes in, clear offline timer...
@@ -61,7 +61,7 @@ module.exports = {
 
 					// Once we get the offline ping, wait 10 mins to mark offline...
 					client.offlineTimer = setTimeout(() => {
-						axios.get(client.endpoint + 'live/update' + client.userID);
+						axios.get(client.endpoint + 'live/update/' + client.userID);
 						client.isLive = false;
 					}, 600000);
 
