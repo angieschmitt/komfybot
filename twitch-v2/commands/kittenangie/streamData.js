@@ -1,6 +1,6 @@
 module.exports = {
 	list: false,
-	channel: ['1','2'],
+	channel: ['1', '2'],
 	name: 'streamdata',
 	help: 'An assortment of ascii emojis',
 	aliases: {
