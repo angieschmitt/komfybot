@@ -50,7 +50,7 @@ module.exports = {
 				parent.refreshConnection(client, globals);
 
 				// Load in data...
-				parent.dataLoad('chatters', client, globals);
+				parent.dataLoad('chatters', client);
 
 				// Create websocket connections...
 				parent.socketLoad(client);

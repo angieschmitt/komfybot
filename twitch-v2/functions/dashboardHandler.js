@@ -31,7 +31,7 @@ module.exports = {
 		}
 		else if (type == 'timers') {
 			module.exports.timersHandler(data, client, reset);
-			parent.timersHandler(client);
+			parent.timersHandler(client, true);
 		}
 
 		if (reset) {

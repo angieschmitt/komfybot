@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 module.exports = {
-	async function(dataType, client, globals) {
+	async function(dataType, client) {
 
 		// If the data bucket doesn't exist...
 		if (!('data' in client)) {
@@ -23,7 +23,7 @@ module.exports = {
 		client.data.chaosWords = ['angie', 'antidisestablishmentarianism', 'butt', 'chicken', 'halloween', 'kiwi', 'lizard', '🦎', 'snail', 'supercalifragilisticexpialidocious', 'tittle', 'v', 'whale'];
 
 		if (dataType == 'chatters') {
-			axios.get(globals['endpoint'] + 'data/chatters/' + client.userID + '/all')
+			axios.get(client.endpoint + 'data/chatters/' + client.userID + '/all')
 				.then(function(response) {
 					if (response.data.status === 'success') {
 						client.data.chatters = response.data.response;

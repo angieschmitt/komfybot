@@ -1,7 +1,11 @@
 module.exports = {
-	async function(client) {
+	async function(client, reset = false) {
 		const timerInterval = 60000;
 		// const timerInterval = 10000;
+
+		if (reset) {
+			clearInterval(client.timerCount);
+		}
 
 		// If not set up, set it up
 		if (!('timerOffset' in client)) {
@@ -12,7 +16,7 @@ module.exports = {
 		// Now load in the timerOffsets
 		if ('timerOffset' in client) {
 
-			setInterval(
+			client.timerCount = setInterval(
 				function() {
 					console.log('Timer - ' + client.userID + ' : ' + client.timerOffset);
 
@@ -39,7 +43,11 @@ module.exports = {
 						if (client.lastMessage !== messageData['message']) {
 							if (client.isLive) {
 								console.log('Timer: SENT ' + ident + ' IN ' + client['channel']);
-								client.say(client['channel'], messageData['message']);
+								client.say(client['channel'], messageData['message']).catch(() => {
+									setTimeout(() => {
+										client.say(client['channel'], messageData['message']);
+									}, 2500);
+								});
 								Object.keys(timerQueue).forEach(key => delete timerQueue[key]);
 							}
 							else {
