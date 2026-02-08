@@ -24,14 +24,14 @@ module.exports = {
 					})
 					.catch(err => console.log(err))
 					.finally(() => {
-						client.connect(true).catch(err => console.log(err));
+						// client.connect(true).catch(err => console.log(err));
 						// Disconnect, then reconnect
-						// client.disconnect()
-						// 	.then(() => {
-						// 		client.connect(true).catch(err => console.log(err));
-						// 		console.log('Connection - Refreshed');
-						// 	})
-						// 	.catch(err => console.log(err));
+						client.disconnect()
+							.then(() => {
+								client.connect(true).catch(err => console.log(err));
+								console.log('Connection - Refreshed');
+							})
+							.catch(err => console.log(err));
 					});
 			}
 		}, interval);
