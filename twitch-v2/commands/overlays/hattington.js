@@ -119,14 +119,12 @@ module.exports = {
 					const now = new Date();
 					const minsSince = Math.round((((now - lastSnack) % 86400000) % 3600000) / 60000);
 
-					const timeLimit = client.overlay.hattington.data.settings.timeBetweenSnacks;
+					const timeLimit = client.overlay.hattington.settings.timeBetweenSnacks;
 					if (minsSince < timeLimit) {
 						client.say(channel, `Hattington seems to be enjoying their last snack, give them a little time! (Roughly ${timeLimit - minsSince} minutes)`);
 						return;
 					}
 				}
-
-				console.log(client.endpoint + 'overlay/hattington/' + client.userID + '/' + viewerID + '/use/snacks/' + encodeURIComponent(snack));
 
 				let content = '';
 				axios.get(client.endpoint + 'overlay/hattington/' + client.userID + '/' + viewerID + '/use/snacks/' + encodeURIComponent(snack))

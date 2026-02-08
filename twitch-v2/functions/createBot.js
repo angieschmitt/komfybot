@@ -47,7 +47,7 @@ module.exports = {
 				parent.dashboardLoad(client, globals);
 
 				parent.liveLoad(client, globals, channel['userID']);
-				parent.refreshConnection(client, globals, clientData);
+				parent.refreshConnection(client, globals);
 
 				// Load in data...
 				parent.dataLoad('chatters', client, globals);

@@ -187,10 +187,16 @@ module.exports = {
 					amt = 1;
 				}
 
+				if (item == '') {
+					client.say(channel, 'You need to include the item to buy.');
+					return;
+				}
+
 				let content = '';
 				axios.get(client.endpoint + 'store/buy/' + client.userID + '/' + viewerID + '/' + item + '/' + amt)
 					.then(function(response) {
 						const resData = response.data;
+
 						if (resData.status === 'success') {
 
 							// If a gacha item, handle it...
@@ -221,11 +227,14 @@ module.exports = {
 							if (resData.err_msg == 'not_enough_coins') {
 								content = `It looks like you need ${resData.response} more ${(resData.response > 1 ? client.settings.currency.name.plural : client.settings.currency.name.single)} to complete the purchase.`;
 							}
+							else if (resData.err_msg == 'gacha_item') {
+								content = 'You can\'t directly buy a Gacha item.';
+							}
 							else if (resData.err_msg == 'product_disabled') {
 								content = 'It looks like that product is currently disabled.';
 							}
 							else if (resData.err_msg == 'couldnt_locate_product') {
-								content = 'That product couldn\'t be located.';
+								content = `The product "${item}" couldn't be located in the store`;
 							}
 							else if (resData.err_msg === 'missing_authorization') {
 								// data.errorMsg.handle(channel, client, 'checkin', 'Authorization issue');
@@ -263,8 +272,13 @@ module.exports = {
 					amt = 1;
 				}
 
+				if (item == '') {
+					client.say(channel, 'You need to include the item to sell.');
+					return;
+				}
+
 				let content = '';
-				axios.get(client.endpoint + 'store/sell/' + client.userID + '/' + viewerID + '/' + item + '/' + amt)
+				axios.get(client.endpoint + 'store/sell/' + client.userID + '/' + viewerID + '/' + encodeURIComponent(item) + '/' + amt)
 					.then(function(response) {
 						const resData = response.data;
 						if (resData.status === 'success') {
@@ -292,7 +306,7 @@ module.exports = {
 								content = 'It looks like that product is currently disabled.';
 							}
 							else if (resData.err_msg == 'couldnt_locate_product') {
-								content = 'That product couldn\'t be located.';
+								content = `The product "${item}" couldn't be located in the store`;
 							}
 							else if (resData.err_msg === 'missing_authorization') {
 								// data.errorMsg.handle(channel, client, 'checkin', 'Authorization issue');
@@ -328,8 +342,6 @@ module.exports = {
 		};
 
 		let gachaOutput = '';
-
-		console.log(rarity);
 
 		// If passed a rarity, we output the items...
 		if (rarity) {

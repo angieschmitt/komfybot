@@ -1,19 +1,20 @@
 const axios = require('axios');
 
 module.exports = {
-	function(client, globals, clientData) {
-		// const interval = 5000;
-		const interval = 1800000;
+	function(client, globals) {
+		const interval = 10000;
+		// const interval = 1800000;
 		setInterval(() => {
 			if (client.readyState() == 'OPEN') {
-				const channelName = clientData.channels[0].replace('#', '');
-				axios.get(globals['endpoint'] + 'token/update/' + channelName)
+				axios.get(globals['endpoint'] + 'token/update/' + client.userID)
 					.then(function(response) {
 						const results = response.data;
 						if (results.status == 'success') {
 							const resultData = Object.values(results.response)[0];
 							const botDataJson = JSON.parse(resultData['botData'], 'utf-8');
-							clientData.identity.password = botDataJson['botToken'];
+
+							// Update the password
+							client.opts.identity.password = botDataJson['botToken'];
 
 							// Update the bot info...
 							client['clientID'] = botDataJson['clientID'];
@@ -23,13 +24,14 @@ module.exports = {
 					})
 					.catch(err => console.log(err))
 					.finally(() => {
+						client.connect(true).catch(err => console.log(err));
 						// Disconnect, then reconnect
-						client.disconnect().catch(err => console.log(err));
-						setTimeout(() => {
-							client.connect(true).catch(err => console.log(err));
-							// console.log('Connection - Refreshed');
-							// console.log('- - -');
-						}, 5000);
+						// client.disconnect()
+						// 	.then(() => {
+						// 		client.connect(true).catch(err => console.log(err));
+						// 		console.log('Connection - Refreshed');
+						// 	})
+						// 	.catch(err => console.log(err));
 					});
 			}
 		}, interval);
