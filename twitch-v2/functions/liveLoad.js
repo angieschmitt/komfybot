@@ -1,8 +1,8 @@
 const axios = require('axios');
 
 module.exports = {
-	async function(client, globals, userID) {
-		axios.get(globals['endpoint'] + 'live/retrieve/' + userID)
+	async function(client, userID) {
+		axios.get(client.endpoint + 'live/retrieve/' + userID)
 			.then(function(response) {
 				const responseData = response.data;
 				if (responseData.status === 'success') {

@@ -44,10 +44,10 @@ module.exports = {
 				parent.eventsLoad(client);
 
 				// One call to load them all...
-				parent.dashboardLoad(client, globals);
+				parent.dashboardLoad(client);
 
-				parent.liveLoad(client, globals, channel['userID']);
-				parent.refreshConnection(client, globals);
+				parent.liveLoad(client, channel['userID']);
+				parent.refreshConnection(client);
 
 				// Load in data...
 				parent.dataLoad('chatters', client);

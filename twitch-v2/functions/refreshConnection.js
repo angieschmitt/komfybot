@@ -1,12 +1,12 @@
 const axios = require('axios');
 
 module.exports = {
-	function(client, globals) {
+	function(client) {
 		// const interval = 10000;
 		const interval = 1800000;
 		setInterval(() => {
 			if (client.readyState() == 'OPEN') {
-				axios.get(globals['endpoint'] + 'token/update/' + client.userID)
+				axios.get(client.endpoint + 'token/update/' + client.userID)
 					.then(function(response) {
 						const results = response.data;
 						if (results.status == 'success') {

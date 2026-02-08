@@ -20,39 +20,36 @@ module.exports = {
 								Object.entries(users).forEach(([idx, userID]) => { // eslint-disable-line no-unused-vars
 
 									if (userID in globals.bots) {
+
+										const client = globals.bots[userID];
+
 										if (type == 'addons') {
-											parent.dashboardLoad(globals.bots[userID], globals, 'addons', true);
-											// parent.addonsLoad(globals.bots[userID], globals, userID, {}, true);
+											parent.dashboardLoad(client, 'addons', true);
 										}
 										else if (type == 'command') {
-											parent.dashboardLoad(globals.bots[userID], globals, 'commands', true);
-											// parent.commandsLoad(globals.bots[userID], globals, userID, true);
+											parent.dashboardLoad(client, 'commands', true);
 										}
 										else if (type == 'overlay') {
-											parent.dashboardLoad(globals.bots[userID], globals, 'overlays', true);
-											// parent.overlaysLoad(globals.bots[userID], globals, true);
+											parent.dashboardLoad(client, 'overlays', true);
 										}
 										else if (type == 'reactwords') {
-											parent.dashboardLoad(globals.bots[userID], globals, 'reactwords', true);
-											// parent.reactwordsLoad(globals.bots[userID], globals, userID, true);
+											parent.dashboardLoad(client, 'reactwords', true);
 										}
 										else if (type == 'redeems') {
-											parent.dashboardLoad(globals.bots[userID], globals, 'redeems', true);
-											// parent.reactwordsLoad(globals.bots[userID], globals, userID, true);
+											parent.dashboardLoad(client, 'redeems', true);
 										}
 										else if (type == 'settings') {
-											parent.dashboardLoad(globals.bots[userID], globals, 'settings', true);
-											// parent.settingsLoad(globals.bots[userID], globals, userID, {}, true);
+											parent.dashboardLoad(client, 'settings', true);
 										}
 										else if (type == 'timer') {
-											parent.dashboardLoad(globals.bots[userID], globals, 'timers', true);
-											// parent.timersLoad(globals.bots[userID], globals, userID, true);
+											parent.dashboardLoad(client, 'timers', true);
 										}
+
+										// Pass back to remove the flag...
+										axios.get(client.endpoint + 'load/refresh/' + userID + '/' + type)
+											.catch(err => console.log(err));
 									}
 
-									// Pass back to remove the flag...
-									axios.get(globals['endpoint'] + 'load/refresh/' + userID + '/' + type)
-										.catch(err => console.log(err));
 								});
 							});
 						}
