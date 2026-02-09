@@ -6,8 +6,8 @@ module.exports = {
 			.then(function(response) {
 				const responseData = response.data;
 				if (responseData.status === 'success') {
-					const userData = responseData.response[ Object.keys(responseData.response)[0] ];
-					client['isLive'] = (userData.isLive == '0' ? false : true);
+					const userData = responseData.response[ client['twitchUUID'] ];
+					client['isLive'] = (userData.isLive === '0' ? false : true);
 					client['streamData'] = userData.streamData;
 				}
 			})
