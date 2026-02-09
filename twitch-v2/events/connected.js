@@ -8,12 +8,12 @@ module.exports = {
 		const client = this;
 
 		// One call to load them all...
-		// functions.dashboardLoad(client);
+		functions.dashboardLoad(client);
 
 		// Load in data...
 		functions.liveLoad(client, client.userID);
 		functions.dataLoad('chatters', client);
 
-		return client;
+		// return client;
 	},
 };

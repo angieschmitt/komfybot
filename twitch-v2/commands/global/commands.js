@@ -61,7 +61,11 @@ module.exports = {
 				});
 				output = output.trim().slice(0, -1);
 
-				client.say(channel, `${output}`);
+				client.say(channel, `${output}`).catch(() => {
+					setTimeout(() => {
+						client.say(channel, `${output}`);
+					}, 2500);
+				});
 			},
 		},
 	},

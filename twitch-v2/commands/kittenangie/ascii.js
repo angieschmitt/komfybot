@@ -43,7 +43,11 @@ module.exports = {
 				check = randomIntFromInterval(0, (Object.keys(emotes).length - 1));
 				content += emotes[ Object.keys(emotes)[check] ];
 
-				client.say(channel, `${content}`);
+				client.say(channel, content).catch(() => {
+					setTimeout(() => {
+						client.say(channel, content);
+					}, 2500);
+				});
 			},
 		},
 		cat: {
@@ -61,7 +65,11 @@ module.exports = {
 				check = randomIntFromInterval(0, (Object.keys(emotes).length - 1));
 				content += emotes[ Object.keys(emotes)[check] ];
 
-				client.say(channel, `${content}`);
+				client.say(channel, content).catch(() => {
+					setTimeout(() => {
+						client.say(channel, content);
+					}, 2500);
+				});
 			},
 		},
 		shrug: {
@@ -75,7 +83,11 @@ module.exports = {
 				check = randomIntFromInterval(0, (Object.keys(emotes).length - 1));
 				content += emotes[ Object.keys(emotes)[check] ];
 
-				client.say(channel, `${content}`);
+				client.say(channel, content).catch(() => {
+					setTimeout(() => {
+						client.say(channel, content);
+					}, 2500);
+				});
 			},
 		},
 		sigh: {
@@ -91,7 +103,11 @@ module.exports = {
 				check = randomIntFromInterval(0, (Object.keys(emotes).length - 1));
 				content += emotes[ Object.keys(emotes)[check] ];
 
-				client.say(channel, `${content}`);
+				client.say(channel, content).catch(() => {
+					setTimeout(() => {
+						client.say(channel, content);
+					}, 2500);
+				});
 			},
 		},
 	},

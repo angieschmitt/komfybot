@@ -29,7 +29,11 @@ module.exports = {
 				if (client.settings.currency.enabled) {
 					// Must be a valid number for a wager...
 					if (!isNumeric(args[1])) {
-						client.say(channel, `@${viewer}, you can only wager whole numbers of ${client.settings.currency.name.plural}.`);
+						client.say(channel, `@${viewer}, you can only wager whole numbers of ${client.settings.currency.name.plural}.`).catch(() => {
+							setTimeout(() => {
+								client.say(channel, `@${viewer}, you can only wager whole numbers of ${client.settings.currency.name.plural}.`);
+							}, 2500);
+						});
 						return;
 					}
 				}
@@ -64,7 +68,11 @@ module.exports = {
 						content += `@${viewer}, you got ${outcome} and lost!`;
 					}
 
-					client.say(channel, `${content}`);
+					client.say(channel, content).catch(() => {
+						setTimeout(() => {
+							client.say(channel, content);
+						}, 2500);
+					});
 				}
 				// If it is, we have work to do...
 				else if (client.settings.currency.enabled && risk > 0) {
@@ -107,7 +115,11 @@ module.exports = {
 						})
 						.catch(err => console.log(err))
 						.finally(function() {
-							client.say(channel, `${content}`);
+							client.say(channel, content).catch(() => {
+								setTimeout(() => {
+									client.say(channel, content);
+								}, 2500);
+							});
 						});
 
 				}

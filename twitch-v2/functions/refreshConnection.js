@@ -24,7 +24,6 @@ module.exports = {
 					})
 					.catch(err => console.log(err))
 					.finally(() => {
-						// client.connect(true).catch(err => console.log(err));
 						// Disconnect, then reconnect
 						client.disconnect()
 							.then(() => {

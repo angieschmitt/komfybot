@@ -26,10 +26,18 @@ module.exports = {
 
 			// Now only run if it's supposed to...
 			if (data.action === 'ping' && targets.includes('komfybot:' + client.userID)) {
-				// client.say(client.channel, 'Pong!');
+				// client.say(client.channel, 'Pong').catch(() => {
+				// 	setTimeout(() => {
+				// 		client.say(client.channel, 'Pong');
+				// 	}, 2500);
+				// });
 			}
 			else if (data.action === 'speak' && targets.includes('komfybot:' + client.userID)) {
-				client.say(client.channel, data['data']['message']);
+				client.say(client.channel, data['data']['message']).catch(() => {
+					setTimeout(() => {
+						client.say(client.channel, data['data']['message']);
+					}, 2500);
+				});
 			}
 		};
 

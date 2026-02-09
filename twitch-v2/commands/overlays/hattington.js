@@ -51,7 +51,11 @@ module.exports = {
 
 					const timeLimit = client.overlay.hattington.settings.timeBetweenHats;
 					if (minsSince < timeLimit) {
-						client.say(channel, `Hattington seems to be enjoying their current hat, give them a little time! (Roughly ${timeLimit - minsSince} minutes)`);
+						client.say(channel, `Hattington seems to be enjoying their current hat, give them a little time! (Roughly ${timeLimit - minsSince} minutes)`).catch(() => {
+							setTimeout(() => {
+								client.say(channel, `Hattington seems to be enjoying their current hat, give them a little time! (Roughly ${timeLimit - minsSince} minutes)`);
+							}, 2500);
+						});
 						return;
 					}
 				}
@@ -89,7 +93,11 @@ module.exports = {
 					.finally(function() {
 						if (!('silent' in tags)) {
 							if (content !== '') {
-								client.say(channel, content);
+								client.say(channel, content).catch(() => {
+									setTimeout(() => {
+										client.say(channel, content);
+									}, 2500);
+								});
 							}
 						}
 					});
@@ -121,7 +129,11 @@ module.exports = {
 
 					const timeLimit = client.overlay.hattington.settings.timeBetweenSnacks;
 					if (minsSince < timeLimit) {
-						client.say(channel, `Hattington seems to be enjoying their last snack, give them a little time! (Roughly ${timeLimit - minsSince} minutes)`);
+						client.say(channel, `Hattington seems to be enjoying their last snack, give them a little time! (Roughly ${timeLimit - minsSince} minutes)`).catch(() => {
+							setTimeout(() => {
+								client.say(channel, `Hattington seems to be enjoying their last snack, give them a little time! (Roughly ${timeLimit - minsSince} minutes)`);
+							}, 2500);
+						});
 						return;
 					}
 				}
@@ -159,7 +171,11 @@ module.exports = {
 					.finally(function() {
 						if (!('silent' in tags)) {
 							if (content !== '') {
-								client.say(channel, content);
+								client.say(channel, content).catch(() => {
+									setTimeout(() => {
+										client.say(channel, content);
+									}, 2500);
+								});
 							}
 						}
 					});

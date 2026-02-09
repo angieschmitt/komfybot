@@ -42,7 +42,11 @@ module.exports = {
 		const reactwordCheck = functions.messageLocateReactword(client, channel, message, tags);
 		if (reactwordCheck) {
 			const chosen = functions.funcRandomProperty(reactwordCheck);
-			client.say(channel, chosen);
+			client.say(channel, chosen).catch(() => {
+				setTimeout(() => {
+					client.say(channel, chosen);
+				}, 2500);
+			});
 		}
 
 		// Chaos Mode stuff...

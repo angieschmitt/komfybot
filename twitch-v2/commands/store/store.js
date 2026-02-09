@@ -64,7 +64,11 @@ module.exports = {
 					})
 					.finally(function() {
 						if (content !== '') {
-							client.say(channel, content);
+							client.say(channel, content).catch(() => {
+								setTimeout(() => {
+									client.say(channel, content);
+								}, 2500);
+							});
 						}
 					});
 			},
@@ -108,7 +112,11 @@ module.exports = {
 					})
 					.finally(function() {
 						if (content !== '') {
-							client.say(channel, content);
+							client.say(channel, content).catch(() => {
+								setTimeout(() => {
+									client.say(channel, content);
+								}, 2500);
+							});
 						}
 					});
 			},
@@ -167,7 +175,11 @@ module.exports = {
 					})
 					.finally(function() {
 						if (content !== '') {
-							client.say(channel, content);
+							client.say(channel, content).catch(() => {
+								setTimeout(() => {
+									client.say(channel, content);
+								}, 2500);
+							});
 						}
 					});
 			},
@@ -188,7 +200,11 @@ module.exports = {
 				}
 
 				if (item == '') {
-					client.say(channel, 'You need to include the item to buy.');
+					client.say(channel, 'You need to include the item to buy.').catch(() => {
+						setTimeout(() => {
+							client.say(channel, 'You need to include the item to buy.');
+						}, 2500);
+					});
 					return;
 				}
 
@@ -252,7 +268,11 @@ module.exports = {
 					})
 					.finally(function() {
 						if (content !== '') {
-							client.say(channel, content);
+							client.say(channel, content).catch(() => {
+								setTimeout(() => {
+									client.say(channel, content);
+								}, 2500);
+							});
 						}
 					});
 			},
@@ -273,7 +293,11 @@ module.exports = {
 				}
 
 				if (item == '') {
-					client.say(channel, 'You need to include the item to sell.');
+					client.say(channel, 'You need to include the item to sell.').catch(() => {
+						setTimeout(() => {
+							client.say(channel, 'You need to include the item to sell.');
+						}, 2500);
+					});
 					return;
 				}
 
@@ -324,7 +348,11 @@ module.exports = {
 					})
 					.finally(function() {
 						if (content !== '') {
-							client.say(channel, content);
+							client.say(channel, content).catch(() => {
+								setTimeout(() => {
+									client.say(channel, content);
+								}, 2500);
+							});
 						}
 					});
 			},

@@ -16,7 +16,12 @@ module.exports = {
 						const resData = response.data;
 						if (resData.status === 'success') {
 							setTimeout((resData) => {
-								client.say(channel, `@${viewer} generated a clip! Check it out at: ${resData.response}`);
+								client.say(channel, `@${viewer} generated a clip! Check it out at: ${resData.response}`)
+									.catch(() => {
+										setTimeout(() => {
+											client.say(channel, `@${viewer} generated a clip! Check it out at: ${resData.response}`);
+										}, 2500);
+									});
 							},
 							5000, resData);
 						}
@@ -43,7 +48,11 @@ module.exports = {
 					})
 					.finally(function() {
 						if (content !== '') {
-							client.say(channel, content);
+							client.say(channel, content).catch(() => {
+								setTimeout(() => {
+									client.say(channel, content);
+								}, 2500);
+							});
 						}
 					});
 			},

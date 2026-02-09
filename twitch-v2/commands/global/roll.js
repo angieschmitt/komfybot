@@ -39,11 +39,19 @@ module.exports = {
 					// Begin overflow check
 					const check = parts[i].split('d');
 					if (parseInt(check[0]) > 10) {
-						client.say(channel, `@${username}, that's too many dice.`);
+						client.say(channel, `@${username}, that's too many dice.`).catch(() => {
+							setTimeout(() => {
+								client.say(channel, `@${username}, that's too many dice.`);
+							}, 2500);
+						});
 						return;
 					}
 					if (parseInt(check[1]) > 20) {
-						client.say(channel, `@${username}, that's too high of a die.`);
+						client.say(channel, `@${username}, that's too high of a die.`).catch(() => {
+							setTimeout(() => {
+								client.say(channel, `@${username}, that's too high of a die.`);
+							}, 2500);
+						});
 						return;
 					}
 
@@ -80,7 +88,11 @@ module.exports = {
 
 				content += '= ' + total;
 
-				client.say(channel, `@${username}, here's your outcome: ${content}`);
+				client.say(channel, `@${username}, here's your outcome: ${content}`).catch(() => {
+					setTimeout(() => {
+						client.say(channel, `@${username}, here's your outcome: ${content}`);
+					}, 2500);
+				});
 			},
 		},
 	},

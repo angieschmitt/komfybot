@@ -19,7 +19,11 @@ module.exports = {
 				content = content.substring(0, content.length - 2);
 				content = content.trim();
 
-				client.say(channel, `${content}`);
+				client.say(channel, content).catch(() => {
+					setTimeout(() => {
+						client.say(channel, content);
+					}, 2500);
+				});
 			},
 		},
 	},

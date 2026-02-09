@@ -13,7 +13,11 @@ const redeem = {
 		});
 
 		// Now say the message in kiwi's channel
-		client.say(client.channel, message.substring(0, message.length - 2));
+		client.say(client.channel, message.substring(0, message.length - 2)).catch(() => {
+			setTimeout(() => {
+				client.say(client.channel, message.substring(0, message.length - 2));
+			}, 2500);
+		});
 
 		// Set chaosMode state...
 		client.redeems.states.chaosMode = true;

@@ -18,7 +18,11 @@ module.exports = {
 				// Database resets...
 				axios.get(client.endpoint + 'data/chatters/' + client.userID + '/reset');
 
-				client.say(client.channel, 'Reset complete');
+				client.say(channel, 'Reset complete').catch(() => {
+					setTimeout(() => {
+						client.say(channel, 'Reset complete');
+					}, 2500);
+				});
 			},
 		},
 	},

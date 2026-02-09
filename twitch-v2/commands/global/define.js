@@ -52,7 +52,11 @@ module.exports = {
 					})
 					.finally(function() {
 						if (output !== '') {
-							client.say(channel, output);
+							client.say(channel, output).catch(() => {
+								setTimeout(() => {
+									client.say(channel, output);
+								}, 2500);
+							});
 						}
 					});
 			},

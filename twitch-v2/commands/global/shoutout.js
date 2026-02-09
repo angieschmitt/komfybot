@@ -129,7 +129,11 @@ module.exports = {
 									content = `Go check out @${username} at https://www.twitch.tv/${username}!`;
 								})
 								.finally(function() {
-									client.say(channel, content);
+									client.say(channel, content).catch(() => {
+										setTimeout(() => {
+											client.say(channel, content);
+										}, 2500);
+									});
 								});
 						}
 						else if (resData.status === 'failure') {
@@ -148,7 +152,11 @@ module.exports = {
 						content = 'Something went wrong, tell @kittenAngie.';
 					})
 					.finally(function() {
-						client.say(channel, content);
+						client.say(channel, content).catch(() => {
+							setTimeout(() => {
+								client.say(channel, content);
+							}, 2500);
+						});
 					});
 			},
 		},

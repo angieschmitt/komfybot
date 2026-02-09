@@ -43,7 +43,11 @@ module.exports = {
 					})
 					.finally(function() {
 						if (content !== '') {
-							client.say(channel, content);
+							client.say(channel, content).catch(() => {
+								setTimeout(() => {
+									client.say(channel, content);
+								}, 2500);
+							});
 						}
 					});
 			},
@@ -101,7 +105,11 @@ module.exports = {
 					})
 					.finally(function() {
 						if (content !== '') {
-							client.say(channel, content);
+							client.say(channel, content).catch(() => {
+								setTimeout(() => {
+									client.say(channel, content);
+								}, 2500);
+							});
 						}
 					});
 			},

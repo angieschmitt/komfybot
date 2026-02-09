@@ -53,7 +53,11 @@ module.exports = {
 					.finally(function() {
 						if (!('silent' in tags)) {
 							if (content !== '') {
-								client.say(channel, content);
+								client.say(channel, content).catch(() => {
+									setTimeout(() => {
+										client.say(channel, content);
+									}, 2500);
+								});
 							}
 						}
 					});
@@ -73,7 +77,11 @@ module.exports = {
 				const target = args[2].replace('@', '');
 				const amount = args[3];
 				if (!module.exports.isInt(amount)) {
-					client.say(channel, 'The amount goes after the username');
+					client.say(channel, 'The amount goes after the username').catch(() => {
+						setTimeout(() => {
+							client.say(channel, 'The amount goes after the username');
+						}, 2500);
+					});
 					return;
 				}
 
@@ -106,7 +114,11 @@ module.exports = {
 					.finally(function() {
 						if (!('silent' in tags)) {
 							if (content !== '') {
-								client.say(channel, content);
+								client.say(channel, content).catch(() => {
+									setTimeout(() => {
+										client.say(channel, content);
+									}, 2500);
+								});
 							}
 						}
 					});
@@ -124,7 +136,11 @@ module.exports = {
 				const target = args[2].replace('@', '');
 				const amount = args[3];
 				if (!module.exports.isInt(amount)) {
-					client.say(channel, 'The amount goes after the username');
+					client.say(channel, 'The amount goes after the username').catch(() => {
+						setTimeout(() => {
+							client.say(channel, 'The amount goes after the username');
+						}, 2500);
+					});
 					return;
 				}
 
@@ -156,7 +172,11 @@ module.exports = {
 					.finally(function() {
 						if (!('silent' in tags)) {
 							if (content !== '') {
-								client.say(channel, content);
+								client.say(channel, content).catch(() => {
+									setTimeout(() => {
+										client.say(channel, content);
+									}, 2500);
+								});
 							}
 						}
 					});
@@ -196,7 +216,11 @@ module.exports = {
 					})
 					.finally(function() {
 						if (content !== '') {
-							client.say(channel, `${content}`);
+							client.say(channel, content).catch(() => {
+								setTimeout(() => {
+									client.say(channel, content);
+								}, 2500);
+							});
 						}
 					});
 			},
@@ -234,7 +258,11 @@ module.exports = {
 						// data.errorMsg.handle(channel, client, 'leaderboard-spenders', 'Issue while handling command');
 					})
 					.finally(function() {
-						client.say(channel, `${content}`);
+						client.say(channel, content).catch(() => {
+							setTimeout(() => {
+								client.say(channel, content);
+							}, 2500);
+						});
 					});
 			},
 		},
