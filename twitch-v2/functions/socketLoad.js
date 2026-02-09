@@ -20,7 +20,13 @@ module.exports = {
 			const targets = [];
 			if (typeof data.target === 'object') {
 				data.target.forEach(element => {
-					targets.push(data.userList[ element ]);
+					let iter = 0;
+					Object.entries(data.userList).forEach(([idx, data]) => { // eslint-disable-line no-unused-vars
+						if (iter == element) {
+							targets.push(idx);
+						}
+						iter++;
+					});
 				});
 			}
 
