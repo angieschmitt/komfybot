@@ -81,8 +81,8 @@ module.exports = {
 				}
 			}
 			else if (message.metadata.message_type === 'session_reconnect') {
-				console.log(`Maintenance incoming! Reconnecting to: ${reconnectUrl}`);
 				const reconnectUrl = message.payload.session.reconnect_url;
+				console.log(`Maintenance incoming! Reconnecting to: ${reconnectUrl}`);
 				module.exports.connect(client, reconnectUrl);
 			}
 			else if (message.metadata.message_type === 'session_keepalive') {
