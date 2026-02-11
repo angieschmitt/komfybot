@@ -4,41 +4,54 @@ const ws = require('ws');
 module.exports = {
 	async function(client) {
 
-		client.eventsub = false;
-		client.eventsub = module.exports.connect(client);
+		await module.exports.connect(client);
+
+		return client;
 
 	},
-	connect(client) {
+	async connect(client, refreshUrl = false) {
 
-		let activeEventSocket = client.eventsub;
+		const connectUrl = (refreshUrl == false ? 'wss://eventsub.wss.twitch.tv/ws?keepalive_timeout_seconds=30' : refreshUrl);
 
-		const websocket = new ws('wss://eventsub.wss.twitch.tv/ws');
-		websocket.on('message', async (data) => {
+		let activeEventsub = client.eventsub;
+
+		// If it's already an object, create it...
+		if ((typeof activeEventsub) != 'object') {
+			activeEventsub = new ws(connectUrl);
+		}
+
+		activeEventsub.onopen = () => {
+			// console.log(client.channel + ' : Opened successful!');
+		};
+
+		activeEventsub.on('message', async (data) => {
 			const message = JSON.parse(data);
 
 			if (message.metadata.message_type === 'session_welcome') {
 				const sessionId = message.payload.session.id;
-				console.log(`Connected! Session ID: ${sessionId}`);
 
-				if (activeEventSocket !== false) {
-					if (websocket && websocket !== activeEventSocket) {
-						console.log('Closing old socket after successful migration.');
-						if (activeEventSocket) {
-							activeEventSocket.close();
-						}
-					}
-				}
-				activeEventSocket = websocket;
+				activeEventsub.keepAlive = message.metadata.message_timestamp;
+				activeEventsub.keepAliveMax = message.payload.session.keepalive_timeout_seconds;
 
 				if (client.appToken) {
 					await module.exports.subscribeToOnline(sessionId, client);
 					await module.exports.subscribeToOffline(sessionId, client);
 					await module.exports.subscribeToChannelPoints(sessionId, client);
 				}
+
+				activeEventsub.keepAliveTimer = setInterval(() => {
+					const now = new Date();
+					const keepAlive = new Date(activeEventsub.keepAlive);
+					const diffInSeconds = Math.floor((now.getTime() - keepAlive.getTime()) / 1000);
+					if (diffInSeconds >= activeEventsub.keepAliveMax) {
+						console.log(client.channel + ' : keepAlive reset!');
+						activeEventsub.close();
+					}
+				}, (activeEventsub.keepAliveMax * 1000));
 			}
 			else if (message.metadata.message_type === 'notification') {
 
-				const event = message.payload.event;
+				activeEventsub.keepAlive = message.metadata.message_timestamp;
 
 				// If a channel point redeem...
 				if (message.payload.subscription.type == 'channel.channel_points_custom_reward_redemption.add') {
@@ -48,7 +61,7 @@ module.exports = {
 					}
 				}
 				else if (message.payload.subscription.type == 'stream.online') {
-					console.log(`Channel ${event.broadcaster_user_name} is now ONLINE.`);
+					// console.log(`Channel ${message.payload.event.broadcaster_user_name} is now ONLINE.`);
 
 					axios.get(client.endpoint + 'live/update/' + client.userID);
 					client.isLive = true;
@@ -57,7 +70,7 @@ module.exports = {
 					clearTimeout(client.offlineTimer);
 				}
 				else if (message.payload.subscription.type == 'stream.offline') {
-					console.log(`Channel ${event.broadcaster_user_name} is now OFFLINE.`);
+					// console.log(`Channel ${message.payload.event.broadcaster_user_name} is now OFFLINE.`);
 
 					// Once we get the offline ping, wait 10 mins to mark offline...
 					client.offlineTimer = setTimeout(() => {
@@ -68,14 +81,27 @@ module.exports = {
 				}
 			}
 			else if (message.metadata.message_type === 'session_reconnect') {
-				// console.log(`Maintenance incoming! Reconnecting to: ${reconnectUrl}`);
+				console.log(`Maintenance incoming! Reconnecting to: ${reconnectUrl}`);
 				const reconnectUrl = message.payload.session.reconnect_url;
-				module.exports.connect(reconnectUrl);
+				module.exports.connect(client, reconnectUrl);
+			}
+			else if (message.metadata.message_type === 'session_keepalive') {
+				activeEventsub.keepAlive = message.metadata.message_timestamp;
 			}
 
 		});
 
-		return activeEventSocket;
+		activeEventsub.onclose = () => {
+			console.log(client.channel + ' : Closed successful!');
+			setTimeout(function() {
+				console.log(client.channel + ' : Sending refresh!');
+				module.exports.connect(client);
+			}, 500, client);
+		};
+
+		client.eventsub = activeEventsub;
+
+		return client;
 	},
 	async subscribeToOnline(sessionId, client) {
 		try {
