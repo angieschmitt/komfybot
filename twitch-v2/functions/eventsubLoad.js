@@ -16,7 +16,7 @@ module.exports = {
 		let activeEventsub = client.eventsub;
 
 		// If it's already an object, create it...
-		if ((typeof activeEventsub) != 'object') {
+		if ((typeof activeEventsub) != 'object' || refreshUrl) {
 			activeEventsub = new ws(connectUrl);
 		}
 
