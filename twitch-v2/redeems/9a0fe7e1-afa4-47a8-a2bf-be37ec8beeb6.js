@@ -26,7 +26,7 @@ const redeem = {
 		// Start timer to turn it off...
 		setTimeout(function() {
 			client.redeems.states.chaosMode = false;
-		}, 30000);
+		}, 90000);
 	},
 };
 
