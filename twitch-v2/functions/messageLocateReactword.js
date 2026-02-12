@@ -11,7 +11,7 @@ module.exports = {
 				if (message.includes(match)) {
 					output[match] = response.replace('<@username>', '@' + tags.username);
 				}
-				else if (message.toLowerCase().includes(match)) {
+				else if (message.toLowerCase().includes(match.toLowerCase())) {
 					output[match] = response.replace('<@username>', '@' + tags.username);
 				}
 			});
@@ -23,7 +23,7 @@ module.exports = {
 				if (message.includes(match)) {
 					output[match] = response.replace('<@username>', '@' + tags.username);
 				}
-				else if (message.toLowerCase().includes(match)) {
+				else if (message.toLowerCase().includes(match.toLowerCase())) {
 					output[match] = response.replace('<@username>', '@' + tags.username);
 				}
 			});

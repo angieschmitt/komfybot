@@ -5,11 +5,6 @@ module.exports = {
 	async function(type, data, client, reset = false) {
 		const parent = this;
 
-		// If it's just empty data, return early...
-		if (data === false) {
-			return client;
-		}
-
 		// Otherwise process based on type...
 		if (type == 'addons') {
 			module.exports.addonsHandler(data, client, reset);
@@ -45,14 +40,16 @@ module.exports = {
 	},
 	addonsHandler(data, client, reset = false) {
 		if (reset) {
-			client.settings.addons = new Array();
+			client.addons = new Array();
 		}
 
 		if (!('settings' in client)) {
-			client.settings = [];
+			client.addons = [];
 		}
 
-		client.settings.addons = JSON.parse(data, 'utf-8');
+		if (data !== false) {
+			client.addons = JSON.parse(data, 'utf-8');
+		}
 
 		return client;
 	},
@@ -88,7 +85,7 @@ module.exports = {
 				}
 
 				if ('addon' in command) {
-					if (!client.settings.addons.includes(command.addon)) {
+					if (!client.addons.includes(command.addon)) {
 						command.disabled = true;
 					}
 				}
@@ -123,38 +120,40 @@ module.exports = {
 		}
 
 		// Now handle the commands from the dashboard...
-		Object.entries(data).forEach(([index, command]) => { // eslint-disable-line no-unused-vars
-			Object.entries(command).forEach(([name, data]) => {
+		if (data !== false) {
+			Object.entries(data).forEach(([index, command]) => { // eslint-disable-line no-unused-vars
+				Object.entries(command).forEach(([name, data]) => {
 
-				// If we've altered a global command, overwrite the default function...
-				if (name in client.commands['global']) {
-					client.commands['global'][name]['actions']['default'] = data;
-				}
-				// If it's a user created on, add it to the list..
-				else if (!(name in client.commands['user'])) {
-					client.commands['user'][name] = [];
-					client.commands['user'][name]['name'] = name;
-					client.commands['user'][name]['list'] = data['list'];
-					client.commands['user'][name]['allowOffline'] = data['allowOffline'];
+					// If we've altered a global command, overwrite the default function...
+					if (name in client.commands['global']) {
+						client.commands['global'][name]['actions']['default'] = data;
+					}
+					// If it's a user created on, add it to the list..
+					else if (!(name in client.commands['user'])) {
+						client.commands['user'][name] = [];
+						client.commands['user'][name]['name'] = name;
+						client.commands['user'][name]['list'] = data['list'];
+						client.commands['user'][name]['allowOffline'] = data['allowOffline'];
 
-					delete data['list'];
-					delete data['allowOffline'];
+						delete data['list'];
+						delete data['allowOffline'];
 
-					client.commands['user'][name]['actions'] = [];
-					client.commands['user'][name]['actions']['default'] = data;
-				}
+						client.commands['user'][name]['actions'] = [];
+						client.commands['user'][name]['actions']['default'] = data;
+					}
 
-				// Handle Aliases
-				if ('aliases' in data) {
-					Object.entries(data['aliases']).forEach(([alias]) => {
-						client.commands['user'][alias] = [];
-						client.commands['user'][alias]['alias'] = name;
-						client.commands['user'][alias]['arg'] = false;
-						client.commands['user'][alias]['list'] = false;
-					});
-				}
+					// Handle Aliases
+					if ('aliases' in data) {
+						Object.entries(data['aliases']).forEach(([alias]) => {
+							client.commands['user'][alias] = [];
+							client.commands['user'][alias]['alias'] = name;
+							client.commands['user'][alias]['arg'] = false;
+							client.commands['user'][alias]['list'] = false;
+						});
+					}
+				});
 			});
-		});
+		}
 
 		return client;
 	},
@@ -167,16 +166,18 @@ module.exports = {
 			client.overlay = [];
 		}
 
-		Object.entries(data).forEach(([idx, item]) => { // eslint-disable-line no-unused-vars
-			const overlayContent = JSON.parse(item['content']);
-			client.overlay[item['name'].toLowerCase()] = [];
-			if ('data' in overlayContent) {
-				client.overlay[item['name'].toLowerCase()]['data'] = overlayContent['data'];
-			}
-			if ('settings' in overlayContent) {
-				client.overlay[item['name'].toLowerCase()]['settings'] = overlayContent['settings'];
-			}
-		});
+		if (data !== false) {
+			Object.entries(data).forEach(([idx, item]) => { // eslint-disable-line no-unused-vars
+				const overlayContent = JSON.parse(item['content']);
+				client.overlay[item['name'].toLowerCase()] = [];
+				if ('data' in overlayContent) {
+					client.overlay[item['name'].toLowerCase()]['data'] = overlayContent['data'];
+				}
+				if ('settings' in overlayContent) {
+					client.overlay[item['name'].toLowerCase()]['settings'] = overlayContent['settings'];
+				}
+			});
+		}
 
 		return client;
 	},
@@ -189,12 +190,14 @@ module.exports = {
 			client.reactwords = {};
 		}
 
-		Object.entries(data).forEach(([uuid, reactWords]) => { // eslint-disable-line no-unused-vars
-			client.reactwords[uuid] = {};
-			Object.entries(reactWords).forEach(([word, response]) => {
-				client.reactwords[uuid][ word ] = response;
+		if (data !== false) {
+			Object.entries(data).forEach(([uuid, reactWords]) => { // eslint-disable-line no-unused-vars
+				client.reactwords[uuid] = {};
+				Object.entries(reactWords).forEach(([word, response]) => {
+					client.reactwords[uuid][ word ] = response;
+				});
 			});
-		});
+		}
 
 		return client;
 	},
@@ -209,10 +212,13 @@ module.exports = {
 			client.redeems.states = [];
 		}
 
-		const redeemsJson = JSON.parse(data);
-		Object.entries(redeemsJson).forEach(([index, extra]) => { // eslint-disable-line no-unused-vars
-			client.redeems[index] = module.exports.redeemFileHandler(index);
-		});
+		if (data !== false) {
+			const redeemsJson = JSON.parse(data);
+			Object.entries(redeemsJson).forEach(([index, extra]) => { // eslint-disable-line no-unused-vars
+				client.redeems[index] = module.exports.redeemFileHandler(index);
+			});
+		}
+
 		return client;
 	},
 	settingsHandler(data, client, reset = false) {
@@ -226,56 +232,58 @@ module.exports = {
 			client.settings = [];
 		}
 
-		const settingsJson = JSON.parse(data, 'utf-8');
-		if (Object.keys(settingsJson).length) {
+		if (data !== false) {
+			const settingsJson = JSON.parse(data, 'utf-8');
+			if (Object.keys(settingsJson).length) {
 
-			client.settings.currency = [];
-			client.settings.passive = [];
-			client.settings.commands = [];
-			client.settings.slots = [];
-
-			// Handle currency settings
-			if ('currency' in settingsJson) {
-				if ('enabled' in settingsJson.currency) {
-					// Basic Settings
-					client.settings.currency['enabled'] = settingsJson.currency.enabled;
-					client.settings.currency['name'] = [];
-					client.settings.currency['name']['single'] = settingsJson.currency.name_single;
-					client.settings.currency['name']['plural'] = settingsJson.currency.name_plural;
-				}
-			}
-			else {
-				client.settings.currency['enabled'] = false;
-			}
-
-			if ('passive' in settingsJson) {
-				if ('enabled' in settingsJson.passive) {
-					client.settings.passive['enabled'] = settingsJson.passive.enabled;
-					client.settings.passive['amts'] = [];
-					client.settings.passive['amts']['default'] = settingsJson.passive.default;
-					client.settings.passive['amts']['subscribers'] = settingsJson.passive.subscribers;
-				}
-			}
-			else {
-				client.settings.passive['enabled'] = false;
-			}
-
-			if ('commands' in settingsJson) {
-				Object.entries(settingsJson.commands).forEach(([key, value]) => {
-					client.settings.commands[ key ] = value;
-				});
-			}
-			else {
+				client.settings.currency = [];
+				client.settings.passive = [];
 				client.settings.commands = [];
-			}
-
-			if ('slots' in settingsJson) {
-				Object.entries(settingsJson.slots).forEach(([key, value]) => {
-					client.settings.slots[ key ] = value;
-				});
-			}
-			else {
 				client.settings.slots = [];
+
+				// Handle currency settings
+				if ('currency' in settingsJson) {
+					if ('enabled' in settingsJson.currency) {
+						// Basic Settings
+						client.settings.currency['enabled'] = settingsJson.currency.enabled;
+						client.settings.currency['name'] = [];
+						client.settings.currency['name']['single'] = settingsJson.currency.name_single;
+						client.settings.currency['name']['plural'] = settingsJson.currency.name_plural;
+					}
+				}
+				else {
+					client.settings.currency['enabled'] = false;
+				}
+
+				if ('passive' in settingsJson) {
+					if ('enabled' in settingsJson.passive) {
+						client.settings.passive['enabled'] = settingsJson.passive.enabled;
+						client.settings.passive['amts'] = [];
+						client.settings.passive['amts']['default'] = settingsJson.passive.default;
+						client.settings.passive['amts']['subscribers'] = settingsJson.passive.subscribers;
+					}
+				}
+				else {
+					client.settings.passive['enabled'] = false;
+				}
+
+				if ('commands' in settingsJson) {
+					Object.entries(settingsJson.commands).forEach(([key, value]) => {
+						client.settings.commands[ key ] = value;
+					});
+				}
+				else {
+					client.settings.commands = [];
+				}
+
+				if ('slots' in settingsJson) {
+					Object.entries(settingsJson.slots).forEach(([key, value]) => {
+						client.settings.slots[ key ] = value;
+					});
+				}
+				else {
+					client.settings.slots = [];
+				}
 			}
 		}
 
@@ -290,13 +298,15 @@ module.exports = {
 			client.timers = [];
 		}
 
-		Object.entries(data).forEach(([index, timer]) => { // eslint-disable-line no-unused-vars
-			Object.entries(timer).forEach(([name, data]) => {
-				client.timers[name] = [];
-				client.timers[name]['timer'] = parseInt(data['timer']);
-				client.timers[name]['message'] = data['message'];
+		if (data !== false) {
+			Object.entries(data).forEach(([index, timer]) => { // eslint-disable-line no-unused-vars
+				Object.entries(timer).forEach(([name, data]) => {
+					client.timers[name] = [];
+					client.timers[name]['timer'] = parseInt(data['timer']);
+					client.timers[name]['message'] = data['message'];
+				});
 			});
-		});
+		}
 
 		return client;
 	},
