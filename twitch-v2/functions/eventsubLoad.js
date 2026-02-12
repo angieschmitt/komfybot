@@ -33,7 +33,7 @@ module.exports = {
 				activeEventsub.keepAlive = message.metadata.message_timestamp;
 				activeEventsub.keepAliveMax = message.payload.session.keepalive_timeout_seconds;
 
-				if (client.appToken) {
+				if (client.appToken && !refreshUrl) {
 					await module.exports.subscribeToOnline(sessionId, client);
 					await module.exports.subscribeToOffline(sessionId, client);
 					await module.exports.subscribeToChannelPoints(sessionId, client);
@@ -61,7 +61,7 @@ module.exports = {
 					}
 				}
 				else if (message.payload.subscription.type == 'stream.online') {
-					// console.log(`Channel ${message.payload.event.broadcaster_user_name} is now ONLINE.`);
+					console.log(`Channel ${message.payload.event.broadcaster_user_name} is now ONLINE.`);
 
 					axios.get(client.endpoint + 'live/update/' + client.userID);
 					client.isLive = true;
@@ -70,23 +70,24 @@ module.exports = {
 					clearTimeout(client.offlineTimer);
 				}
 				else if (message.payload.subscription.type == 'stream.offline') {
-					// console.log(`Channel ${message.payload.event.broadcaster_user_name} is now OFFLINE.`);
+					console.log(`Channel ${message.payload.event.broadcaster_user_name} is now OFFLINE.`);
 
 					// Once we get the offline ping, wait 10 mins to mark offline...
 					client.offlineTimer = setTimeout(() => {
+						console.log(`Channel ${message.payload.event.broadcaster_user_name} is now OFFICIALLY offline.`);
 						axios.get(client.endpoint + 'live/update/' + client.userID);
 						client.isLive = false;
 					}, 600000);
 
 				}
 			}
+			else if (message.metadata.message_type === 'session_keepalive') {
+				activeEventsub.keepAlive = message.metadata.message_timestamp;
+			}
 			else if (message.metadata.message_type === 'session_reconnect') {
 				const reconnectUrl = message.payload.session.reconnect_url;
 				console.log(`Maintenance incoming! Reconnecting to: ${reconnectUrl}`);
 				module.exports.connect(client, reconnectUrl);
-			}
-			else if (message.metadata.message_type === 'session_keepalive') {
-				activeEventsub.keepAlive = message.metadata.message_timestamp;
 			}
 
 		});
