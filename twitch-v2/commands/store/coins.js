@@ -192,8 +192,7 @@ module.exports = {
 						if (resData.status === 'success') {
 							if (Object.keys(resData.response).length) {
 								content += 'Top Coin Holders: ';
-								// eslint-disable-next-line no-unused-vars
-								Object.entries(resData.response).forEach(([key, details]) => {
+								Object.entries(resData.response).forEach(([key, details]) => { // eslint-disable-line no-unused-vars
 									content += `${details['twitchUsername']} :: ${details['total']} || `;
 								});
 								content = content.substring(0, content.length - 4);
@@ -235,8 +234,7 @@ module.exports = {
 						if (resData.status === 'success') {
 							if (Object.keys(resData.response).length) {
 								content += 'Top Coin Spenders: ';
-								// eslint-disable-next-line no-unused-vars
-								Object.entries(resData.response).forEach(([key, details]) => {
+								Object.entries(resData.response).forEach(([key, details]) => { // eslint-disable-line no-unused-vars
 									content += `${details['twitchUsername']} :: ${parseInt(details['total']) * -1} || `;
 								});
 								content = content.substring(0, content.length - 4);

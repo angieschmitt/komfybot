@@ -104,8 +104,7 @@ module.exports = {
 							const list = resData.response.users;
 							if (Object.keys(list).length) {
 								content = 'Current entrees: ';
-								// eslint-disable-next-line no-unused-vars
-								Object.entries(list).forEach(([key, value]) => {
+								Object.entries(list).forEach(([key, value]) => { // eslint-disable-line no-unused-vars
 									content += `@${value} || `;
 								});
 								content = content.substring(0, (content.length - 3));
