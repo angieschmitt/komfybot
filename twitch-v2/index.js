@@ -12,14 +12,12 @@ const globals = [];
 globals['endpoint'] = settings.endpoint;
 globals['websocket'] = settings.socket[ settings.env ];
 
-// Handle creating bots...
-globals['bots'] = [];
-globals['bots'] = functions.createBots(globals);
+// Create containers...
+globals['bots'] = {};
 
-// Handle refreshing commands and timers...
-globals['refreshHandlers'] = [];
-globals['refreshHandlers']['load'] = functions.dashboardRefresh(globals);
-// globals['refreshHandlers']['live'] = functions.liveRefreshHandler(globals); <- Replaced with eventsub
-
-// Handle watching for redeems...
-// globals['redeemWatcher'] = functions.redeemWatcher(globals); <- Replaced with eventsub
+// Create the bots...
+functions.createBots(globals)
+	.then((bots) => {
+		globals['bots'] = bots;
+		globals['refreshHandler'] = functions.dashboardRefresh(globals);
+	});
