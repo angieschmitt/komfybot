@@ -31,5 +31,16 @@ module.exports = {
 				})
 				.catch(err => console.log(err));
 		}
+		if (dataType == 'chaos-mode') {
+			if ('chaos mode' in client.overlay) {
+				client.data.chaosWords = {};
+				Object.entries(client.overlay['chaos mode'].data).forEach(([idx, data]) => { // eslint-disable-line no-unused-vars
+					const triggers = data.trigger.split(',');
+					triggers.forEach((idx) => {
+						client.data.chaosWords[idx] = data.mediaID;
+					});
+				});
+			}
+		}
 	},
 };

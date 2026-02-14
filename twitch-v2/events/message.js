@@ -56,17 +56,9 @@ module.exports = {
 				// If a single word...
 				if (!cleanedMessage.includes(' ')) {
 					// If it's in the channels chaos words...
-					if (client.data.chaosWords.includes(cleanedMessage.toLowerCase())) {
-
-						if (cleanedMessage.toLowerCase() == 'lizard' || cleanedMessage.toLowerCase() == '🦎') {
-							client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'content' : 'tts-lizard', 'type' : 'chat', 'target': 'chaos-mode:' + client.userID }, 'source': 'komfybot' }));
-						}
-						else if (cleanedMessage.toLowerCase() == 'v') {
-							client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'content' : 'tts-vee', 'type' : 'chat', 'target': 'chaos-mode:' + client.userID }, 'source': 'komfybot' }));
-						}
-						else {
-							client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'content' : 'tts-' + cleanedMessage.toLowerCase(), 'type' : 'chat', 'target': 'chaos-mode:' + client.userID }, 'source': 'komfybot' }));
-						}
+					if (cleanedMessage.toLowerCase() in client.data.chaosWords) {
+						// Pass it off to the websocket...
+						client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'content' : client.data.chaosWords[cleanedMessage.toLowerCase()], 'type' : 'chat', 'target': 'chaos-mode:' + client.userID }, 'source': 'komfybot' }));
 
 						// Chaos-mode doesn't give passive...
 						passive = false;

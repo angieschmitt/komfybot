@@ -1,5 +1,5 @@
 // REDEEM: Chaos mode
-// USER: kittenAngie
+// USER: KomfyKiwi
 
 const path = require('path');
 
@@ -7,15 +7,16 @@ const redeem = {
 	redeemHandler(redeemData, client) {
 
 		// Build message...
-		let message = 'Chaos mode word list: ';
-		Object.entries(client.data.chaosWords).forEach(([idx]) => {
-			message += client.data.chaosWords[idx] + ', ';
+		let content = 'Chaos mode word list: ';
+		Object.entries(client.overlay['chaos mode'].data).forEach(([idx, data]) => { // eslint-disable-line no-unused-vars
+			content += data.trigger.replace(',', ', ') + ', ';
 		});
+		content = content.substring(0, content.length - 2);
 
 		// Now say the message in kiwi's channel
-		client.say(client.channel, message.substring(0, message.length - 2)).catch(() => {
+		client.say(client.channel, content).catch(() => {
 			setTimeout(() => {
-				client.say(client.channel, message.substring(0, message.length - 2));
+				client.say(client.channel, content);
 			}, 2500);
 		});
 
@@ -26,7 +27,7 @@ const redeem = {
 		// Start timer to turn it off...
 		setTimeout(function() {
 			client.redeems.states.chaosMode = false;
-		}, 30000);
+		}, 90000);
 	},
 };
 
