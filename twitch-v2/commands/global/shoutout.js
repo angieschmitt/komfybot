@@ -4,6 +4,7 @@ module.exports = {
 	list: true,
 	name: 'shoutout',
 	help: 'Command to shoutout a user in chat',
+	allowOffline: false,
 	aliases: {
 		'so': {
 			arg: false,

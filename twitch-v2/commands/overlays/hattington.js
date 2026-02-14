@@ -5,6 +5,7 @@ module.exports = {
 	channel: [ 2 ],
 	name: 'hatty',
 	help: 'Commands for Hattington',
+	allowOffline: false,
 	aliases: {
 		'hat': {
 			arg: 'hat',

@@ -2,8 +2,8 @@ const axios = require('axios');
 
 module.exports = {
 	name: 'clip',
-	// disabled: true,
 	help: 'Make a quick clip of the stream',
+	allowOffline: false,
 	actions: {
 		default: {
 			execute(args, tags, message, channel, client) {

@@ -3,6 +3,7 @@ const axios = require('axios');
 module.exports = {
 	name: 'checkin',
 	help: 'Command to checkin to a stream',
+	allowOffline: false,
 	aliases: {
 		'ch': {
 			arg: false,
