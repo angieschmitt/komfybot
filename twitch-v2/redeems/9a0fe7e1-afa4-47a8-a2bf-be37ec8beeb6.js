@@ -8,8 +8,8 @@ const redeem = {
 
 		// Build message...
 		let content = 'Chaos mode word list: ';
-		Object.entries(client.overlay['chaos mode'].data).forEach(([idx, data]) => { // eslint-disable-line no-unused-vars
-			content += data.trigger.replace(',', ', ') + ', ';
+		Object.entries(client.data.chaosWords).forEach(([idx, data]) => { // eslint-disable-line no-unused-vars
+			content += idx + ', ';
 		});
 		content = content.substring(0, content.length - 2);
 

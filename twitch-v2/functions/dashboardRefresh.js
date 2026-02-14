@@ -17,32 +17,33 @@ module.exports = {
 							Object.entries(refreshData).forEach((data) => {
 								const type = data[0];
 								const users = data[1];
-								Object.entries(users).forEach(([idx, userID]) => { // eslint-disable-line no-unused-vars
+								Object.entries(users).forEach(async ([idx, userID]) => { // eslint-disable-line no-unused-vars
 
 									if (userID in globals.bots) {
 
 										const client = globals.bots[userID];
 
 										if (type == 'addons') {
-											parent.dashboardLoad(client, 'addons', true);
+											await parent.dashboardLoad(client, 'addons', true);
 										}
 										else if (type == 'command') {
-											parent.dashboardLoad(client, 'commands', true);
+											await parent.dashboardLoad(client, 'commands', true);
 										}
 										else if (type == 'overlay') {
-											parent.dashboardLoad(client, 'overlays', true);
+											await parent.dashboardLoad(client, 'overlays', true);
+											parent.dataLoad('chaos-mode', client);
 										}
 										else if (type == 'reactwords') {
-											parent.dashboardLoad(client, 'reactwords', true);
+											await parent.dashboardLoad(client, 'reactwords', true);
 										}
 										else if (type == 'redeems') {
-											parent.dashboardLoad(client, 'redeems', true);
+											await parent.dashboardLoad(client, 'redeems', true);
 										}
 										else if (type == 'settings') {
-											parent.dashboardLoad(client, 'settings', true);
+											await parent.dashboardLoad(client, 'settings', true);
 										}
 										else if (type == 'timer') {
-											parent.dashboardLoad(client, 'timers', true);
+											await parent.dashboardLoad(client, 'timers', true);
 										}
 
 										// Pass back to remove the flag...

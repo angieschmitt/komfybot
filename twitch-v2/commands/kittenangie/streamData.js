@@ -1,7 +1,6 @@
 module.exports = {
 	list: false,
-	channel: ['1', '2'],
-	name: 'streamdata',
+	name: 'check',
 	help: 'An assortment of ascii emojis',
 	aliases: {
 	},
@@ -15,11 +14,35 @@ module.exports = {
 				let content = '';
 
 				content += ' Live: ' + (client.isLive ? 'Yes' : 'No');
-				// content += ' ||';
-				// content += ' Chatters: ' + (client.data.chatters.length ? client.data.chatters : 'None') + ' ||';
-				// content = content.substring(0, content.length - 2);
-				// content = content.trim();
+				client.say(channel, content).catch(() => {
+					setTimeout(() => {
+						client.say(channel, content);
+					}, 2500);
+				});
+			},
+		},
+		chaos: {
+			execute(args, tags, message, channel, client) {
 
+				// Build message...
+				let content = 'Chaos mode word list: ';
+				Object.entries(client.data.chaosWords).forEach(([idx, data]) => { // eslint-disable-line no-unused-vars
+					content += idx + ', ';
+				});
+				content = content.substring(0, content.length - 2);
+				client.say(channel, content).catch(() => {
+					setTimeout(() => {
+						client.say(channel, content);
+					}, 2500);
+				});
+			},
+		},
+		chatters: {
+			execute(args, tags, message, channel, client) {
+
+				let content = ' Chatters: ' + (client.data.chatters.length ? client.data.chatters : 'None');
+				content = content.substring(0, content.length - 2);
+				content = content.trim();
 				client.say(channel, content).catch(() => {
 					setTimeout(() => {
 						client.say(channel, content);
