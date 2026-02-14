@@ -55,7 +55,7 @@ module.exports = {
 		activeEventsub.onclose = () => {
 			eventsub.reconnecting = setTimeout(function() {
 				console.log(client.channel + ' : Connection lost, attempting to reconnect!');
-				module.exports.connect(client);
+				module.exports.connect(client, baseWS);
 			}, 1000, client);
 		};
 
@@ -89,7 +89,6 @@ module.exports = {
 				}, ((eventsub.keepAliveMax - 5) * 1000));
 			}
 			else if (message.metadata.message_type === 'notification') {
-
 				eventsub.keepAlive = message.metadata.message_timestamp;
 
 				// If a channel point redeem...

@@ -38,21 +38,22 @@ module.exports = {
 
 		// Then connect to twitch...
 		client.connect()
-			.then(() => {
-				parent.eventsLoad(client);
+			.then(async () => {
+				await parent.eventsLoad(client);
 
 				// One call to load them all...
-				parent.dashboardLoad(client);
+				await parent.dashboardLoad(client);
 
-				parent.liveLoad(client, channel['userID']);
-				parent.refreshConnection(client);
+				await parent.liveLoad(client, channel['userID']);
+				await parent.refreshConnection(client);
 
 				// Load in data...
-				parent.dataLoad('chatters', client);
+				await parent.dataLoad('chatters', client);
+				await parent.dataLoad('chaos-mode', client);
 
 				// Create websocket connections...
-				parent.socketLoad(client);
-				parent.eventsubLoad(client);
+				await parent.socketLoad(client);
+				await parent.eventsubLoad(client);
 			})
 			.catch(err => console.log(err));
 
