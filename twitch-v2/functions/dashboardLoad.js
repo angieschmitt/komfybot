@@ -26,17 +26,17 @@ module.exports = {
 						const timers = resData.timers;
 
 						// Important ones first...
-						parent.dashboardHandler('settings', settings, client, reset);
-						parent.dashboardHandler('addons', addons, client, reset);
-						parent.dashboardHandler('overlays', overlays, client, reset);
+						parent.dashboardHandler('settings', settings, client, true);
+						parent.dashboardHandler('addons', addons, client, true);
+						parent.dashboardHandler('overlays', overlays, client, true);
 
 						// Now the interactive ones...
-						parent.dashboardHandler('redeems', redeems, client, reset);
-						parent.dashboardHandler('reactwords', reactwords, client, reset);
-						parent.dashboardHandler('timers', timers, client, reset);
+						parent.dashboardHandler('redeems', redeems, client, true);
+						parent.dashboardHandler('reactwords', reactwords, client, true);
+						parent.dashboardHandler('timers', timers, client, true);
 
 						// Commands are always last...
-						parent.dashboardHandler('commands', commands, client, reset);
+						parent.dashboardHandler('commands', commands, client, true);
 					}
 				}
 			})

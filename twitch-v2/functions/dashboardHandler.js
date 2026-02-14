@@ -5,6 +5,12 @@ module.exports = {
 	async function(type, data, client, reset = false) {
 		const parent = this;
 
+		if (reset) {
+			for (const i in require.cache) {
+				delete require.cache[i];
+			}
+		}
+
 		// Otherwise process based on type...
 		if (type == 'addons') {
 			module.exports.addonsHandler(data, client, reset);
@@ -29,22 +35,13 @@ module.exports = {
 			parent.timersHandler(client, true);
 		}
 
-		if (reset) {
-			for (const i in require.cache) {
-				delete require.cache[i];
-			}
-		}
-
 		return client;
 
 	},
 	addonsHandler(data, client, reset = false) {
-		if (reset) {
-			client.addons = new Array();
-		}
 
-		if (!('settings' in client)) {
-			client.addons = [];
+		if (!('settings' in client) || reset) {
+			client.addons = new Array();
 		}
 
 		if (data !== false) {
@@ -54,17 +51,11 @@ module.exports = {
 		return client;
 	},
 	commandsHandler(data, client, reset = false) {
-		if (reset) {
-			Object.entries(client.commands).forEach(([channel]) => {
-				client.commands[channel] = [];
-				client.commands[channel] = new Array();
-			});
-		}
 
-		if (!('commands' in client)) {
-			client.commands = [];
-			client.commands['global'] = [];
-			client.commands['user'] = [];
+		if (!('commands' in client) || reset) {
+			client.commands = new Array();
+			client.commands['global'] = new Array();
+			client.commands['user'] = new Array();
 		}
 
 		// Handle the folder first...
@@ -79,7 +70,7 @@ module.exports = {
 				const command = require(filePath);
 
 				if (command.name in client.settings.commands) {
-					if (client.settings.commands[command.name] == 0) {
+					if (client.settings.commands[command.name] === 0) {
 						command.disabled = true;
 					}
 				}
@@ -158,12 +149,9 @@ module.exports = {
 		return client;
 	},
 	overlaysHandler(data, client, reset = false) {
-		if (reset) {
-			client.overlay = new Array();
-		}
 
-		if (!('overlay' in client)) {
-			client.overlay = [];
+		if (!('overlay' in client) || reset) {
+			client.overlay = new Array();
 		}
 
 		if (data !== false) {
@@ -182,12 +170,9 @@ module.exports = {
 		return client;
 	},
 	reactwordsHandler(data, client, reset = false) {
-		if (reset) {
-			client.reactwords = new Array();
-		}
 
-		if (!('reactwords' in client)) {
-			client.reactwords = {};
+		if (!('reactwords' in client) || reset) {
+			client.reactwords = new Array();
 		}
 
 		if (data !== false) {
@@ -202,14 +187,10 @@ module.exports = {
 		return client;
 	},
 	redeemsHandler(data, client, reset = false) {
-		if (reset) {
+
+		if (!('redeems' in client) || reset) {
 			client.redeems = new Array();
 			client.redeems.states = new Array();
-		}
-
-		if (!('redeems' in client)) {
-			client.redeems = [];
-			client.redeems.states = [];
 		}
 
 		if (data !== false) {
@@ -222,24 +203,18 @@ module.exports = {
 		return client;
 	},
 	settingsHandler(data, client, reset = false) {
-		if (reset) {
-			client.settings.currency = new Array();
-			client.settings.passive = new Array();
-			client.settings.commands = new Array();
-		}
 
-		if (!('settings' in client)) {
-			client.settings = [];
+		if (!('settings' in client) || reset) {
+			client.settings = new Array();
+			client.settings.currency = [];
+			client.settings.passive = [];
+			client.settings.commands = [];
+			client.settings.slots = [];
 		}
 
 		if (data !== false) {
 			const settingsJson = JSON.parse(data, 'utf-8');
 			if (Object.keys(settingsJson).length) {
-
-				client.settings.currency = [];
-				client.settings.passive = [];
-				client.settings.commands = [];
-				client.settings.slots = [];
 
 				// Handle currency settings
 				if ('currency' in settingsJson) {
@@ -290,12 +265,9 @@ module.exports = {
 		return client;
 	},
 	timersHandler(data, client, reset = false) {
-		if (reset) {
-			client.timers = new Array();
-		}
 
-		if (!('timers' in client)) {
-			client.timers = [];
+		if (!('timers' in client) || reset) {
+			client.timers = new Array();
 		}
 
 		if (data !== false) {

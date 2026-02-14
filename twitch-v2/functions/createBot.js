@@ -7,8 +7,6 @@ module.exports = {
 		const channels = await parent.retrieveBotUsers(globals);
 		const channel = channels[userID];
 		const botDataJson = JSON.parse(channel['botData'], 'utf-8');
-		// const settingsJson = JSON.parse(channel['settings'], 'utf-8');
-		// const addonsJson = JSON.parse(channel['addons'], 'utf-8');
 
 		const clientData = {
 			channels: [ channel['username'] ],
