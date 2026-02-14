@@ -8,89 +8,50 @@ const baseSub = 'https://api.twitch.tv/helix/eventsub/subscriptions';
 // const baseSub = 'http://localhost:8080/eventsub/subscriptions';
 
 module.exports = {
-	async function(client) {
+	async function(client, refreshUrl = false) {
+		const parent = this;
 
-		client.eventsub = {};
-		client.eventsub = await module.exports.connect(client);
-
-		return client;
-
-	},
-	async connect(client, refreshUrl = false, forceClose = false) {
+		if (!('eventsub' in client)) {
+			client.eventsub = {};
+			client.eventsub.websocket = false;
+		}
 
 		const eventsub = client.eventsub;
-		if (!('websocket' in eventsub)) {
-			eventsub.websocket = false;
-			eventsub.reconnecting = false;
-		}
-
 		const connectUrl = (refreshUrl == false ? baseWS : refreshUrl);
 
-		let activeEventsub = eventsub.websocket;
+		// If it's not an object, create it...
+		if ((typeof eventsub.websocket) != 'object') {
+			eventsub.websocket = new ws(connectUrl);
+		}
 
-		// If it's already an object, create it...
-		if ((typeof activeEventsub) != 'object') {
-			activeEventsub = new ws(connectUrl);
-		}
-		else if ((typeof activeEventsub) == 'object') {
-			if (forceClose) {
-				activeEventsub.close();
-			}
-			if (refreshUrl) {
-				activeEventsub = new ws(connectUrl);
-			}
-		}
+		eventsub.websocket = new ws(connectUrl);
 
 		// Handle the basics...
-		activeEventsub.onopen = () => {
+		eventsub.websocket.onopen = () => {
 			console.log(client.channel + ' : Open successful!');
-
-			// Reset the timeouts and intervals...
-			clearTimeout(eventsub.reconnecting);
-			eventsub.reconnecting = false;
-			clearInterval(eventsub.keepAliveTimer);
-			eventsub.keepAliveTimer = false;
 		};
 
-		activeEventsub.onclose = () => {
-			eventsub.reconnecting = setTimeout(function() {
-				console.log(client.channel + ' : Connection lost, attempting to reconnect!');
-				module.exports.connect(client, baseWS);
-			}, 5000, client);
-		};
-
-		activeEventsub.onerror = (error) => {
+		eventsub.websocket.onerror = (error) => {
 			console.log(client.channel + ' : Error : ' + error.message);
 		};
 
-		// Handle the more complicated stuff...
-		activeEventsub.on('message', async (data) => {
+		eventsub.websocket.on('message', async (data) => {
 			const message = JSON.parse(data);
 
 			if (message.metadata.message_type === 'session_welcome') {
+				// Setup the new data...
 				eventsub.sessionID = message.payload.session.id;
-				eventsub.keepAlive = message.metadata.message_timestamp;
 				eventsub.keepAliveMax = message.payload.session.keepalive_timeout_seconds;
+				eventsub.keepAlive = message.metadata.message_timestamp;
 
+				// If there's a token and we're NOT refreshing...
 				if (client.appToken && !refreshUrl) {
 					await module.exports.subscribeToOnline(eventsub.sessionID, client);
 					await module.exports.subscribeToOffline(eventsub.sessionID, client);
 					await module.exports.subscribeToChannelPoints(eventsub.sessionID, client);
 				}
-
-				eventsub.keepAliveTimer = setInterval(() => {
-					const now = new Date();
-					const keepAlive = new Date(eventsub.keepAlive);
-					const diffInSeconds = Math.floor((now.getTime() - keepAlive.getTime()) / 1000);
-					if (diffInSeconds >= eventsub.keepAliveMax) {
-						console.log(client.channel + ' : keepAlive reset!');
-						module.exports.connect(client, baseWS, true);
-					}
-				}, ((eventsub.keepAliveMax - 5) * 1000));
 			}
 			else if (message.metadata.message_type === 'notification') {
-				eventsub.keepAlive = message.metadata.message_timestamp;
-
 				// If a channel point redeem...
 				if (message.payload.subscription.type == 'channel.channel_points_custom_reward_redemption.add') {
 					const redemptionID = message.payload.event.reward.id;
@@ -116,7 +77,6 @@ module.exports = {
 						axios.get(client.endpoint + 'live/update/' + client.userID);
 						client.isLive = false;
 					}, 600000);
-
 				}
 			}
 			else if (message.metadata.message_type === 'session_keepalive') {
@@ -125,14 +85,34 @@ module.exports = {
 			else if (message.metadata.message_type === 'session_reconnect') {
 				eventsub.keepAlive = message.metadata.message_timestamp;
 				console.log(`Maintenance incoming! Reconnecting to: ${message.payload.session.reconnect_url}`);
-				module.exports.connect(client, message.payload.session.reconnect_url);
+				parent.eventsubLoad(client, message.payload.session.reconnect_url);
 			}
 
 		});
 
-		eventsub.websocket = activeEventsub;
+		// const eventsubProxy = new Proxy(eventsub, {
+		// 	set: function(target, key, value) {
+		// 		let counter = eventsub.keepAliveMax;
+		// 		client.intervals.clearAll();
+		// 		client.intervals.make(
+		// 			(parent) => {
+		// 				console.log(counter);
+		// 				if (counter <= 2) {
+		// 					console.log('keepalive refresh');
+		// 					parent.eventsubLoad(client, baseWS);
+		// 				}
+		// 				counter--;
+		// 			}, 1000, parent,
+		// 		);
+		// 		target[key] = value;
+		// 		return true;
+		// 	},
+		// });
 
-		return eventsub;
+		client.eventsub = eventsub;
+
+		return client;
+
 	},
 	async subscribeToOnline(sessionId, client) {
 		try {

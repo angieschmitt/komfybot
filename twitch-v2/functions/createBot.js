@@ -24,7 +24,7 @@ module.exports = {
 		globals['bots'][ channel['userID'] ] = new tmi.client(clientData);
 
 		// Make ^ client, assign some stuff...
-		const client = globals['bots'][ channel['userID'] ];
+		let client = globals['bots'][ channel['userID'] ];
 		client['userID'] = channel['userID'];
 		client['twitchUUID'] = userID;
 		client['channel'] = '#' + channel['username'];
@@ -35,6 +35,31 @@ module.exports = {
 		client['clientID'] = botDataJson['clientID'];
 		client['appToken'] = botDataJson['appToken'];
 		client['botToken'] = botDataJson['botToken'];
+
+		client['intervals'] = {
+			// to keep a reference to all the intervals
+			intervals : new Set(),
+
+			// create another interval
+			make(...args) {
+				const newInterval = setInterval(...args);
+				this.intervals.add(newInterval);
+				return newInterval;
+			},
+
+			// clear a single interval
+			clear(id) {
+				this.intervals.delete(id);
+				return clearInterval(id);
+			},
+
+			// clear all intervals
+			clearAll() {
+				for (const id of this.intervals) {
+					this.clear(id);
+				}
+			},
+		};
 
 		// Then connect to twitch...
 		client.connect()
