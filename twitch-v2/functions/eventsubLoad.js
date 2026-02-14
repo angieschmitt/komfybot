@@ -56,7 +56,7 @@ module.exports = {
 			eventsub.reconnecting = setTimeout(function() {
 				console.log(client.channel + ' : Connection lost, attempting to reconnect!');
 				module.exports.connect(client, baseWS);
-			}, 1000, client);
+			}, 5000, client);
 		};
 
 		activeEventsub.onerror = (error) => {
