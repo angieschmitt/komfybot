@@ -1,11 +1,11 @@
 const axios = require('axios');
 const ws = require('ws');
 
-// const baseWS = 'wss://eventsub.wss.twitch.tv/ws?keepalive_timeout_seconds=30';
-const baseWS = 'ws://127.0.0.1:8080/ws?keepalive_timeout_seconds=10';
+const baseWS = 'wss://eventsub.wss.twitch.tv/ws?keepalive_timeout_seconds=30';
+// const baseWS = 'ws://127.0.0.1:8080/ws?keepalive_timeout_seconds=10';
 
-// const baseSub = 'https://api.twitch.tv/helix/eventsub/subscriptions';
-const baseSub = 'http://localhost:8080/eventsub/subscriptions';
+const baseSub = 'https://api.twitch.tv/helix/eventsub/subscriptions';
+// const baseSub = 'http://localhost:8080/eventsub/subscriptions';
 
 module.exports = {
 	async function(client, refreshUrl = false, forceClose = false) {
