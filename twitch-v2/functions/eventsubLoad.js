@@ -52,10 +52,8 @@ module.exports = {
 				client.intervals.make(
 					(parent) => {
 						if (counter <= 0) {
-							console.log('keepalive refresh');
 							parent.eventsubLoad(client, baseWS, true);
 						}
-						console.log(counter);
 						counter--;
 					}, 1000, parent,
 				);
