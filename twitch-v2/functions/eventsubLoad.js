@@ -1,30 +1,68 @@
 const axios = require('axios');
 const ws = require('ws');
 
-const baseWS = 'wss://eventsub.wss.twitch.tv/ws?keepalive_timeout_seconds=30';
-// const baseWS = 'ws://127.0.0.1:8080/ws?keepalive_timeout_seconds=10';
+// const baseWS = 'wss://eventsub.wss.twitch.tv/ws?keepalive_timeout_seconds=30';
+const baseWS = 'ws://127.0.0.1:8080/ws?keepalive_timeout_seconds=10';
 
-const baseSub = 'https://api.twitch.tv/helix/eventsub/subscriptions';
-// const baseSub = 'http://localhost:8080/eventsub/subscriptions';
+// const baseSub = 'https://api.twitch.tv/helix/eventsub/subscriptions';
+const baseSub = 'http://localhost:8080/eventsub/subscriptions';
 
 module.exports = {
-	async function(client, refreshUrl = false) {
+	async function(client, refreshUrl = false, forceClose = false) {
 		const parent = this;
 
+		// Assign the url we're connecting to...
+		const connectUrl = (refreshUrl == false ? baseWS : refreshUrl);
+
+		// If we have to forceClose for some reason...
+		if (forceClose) {
+			if ('eventsub' in client) {
+				client.eventsub.websocket.close();
+				client.eventsub = {};
+				client.eventsub.websocket = false;
+			}
+		}
+
+		// If the eventsub object doesn't exist at all...
 		if (!('eventsub' in client)) {
 			client.eventsub = {};
 			client.eventsub.websocket = false;
 		}
 
+		// Build the current eventsub...
 		const eventsub = client.eventsub;
-		const connectUrl = (refreshUrl == false ? baseWS : refreshUrl);
 
 		// If it's not an object, create it...
 		if ((typeof eventsub.websocket) != 'object') {
 			eventsub.websocket = new ws(connectUrl);
 		}
+		// If we have a refreshURL...
+		if (refreshUrl) {
+			eventsub.websocket = new ws(connectUrl);
+		}
 
-		eventsub.websocket = new ws(connectUrl);
+		// Setup the keepAliveHandler and proxy...
+		eventsub.keepAliveHandler = {
+			get(target, prop) {
+				return prop;
+			},
+			set() {
+				let counter = (eventsub.keepAliveMax + 2);
+				client.intervals.clearAll();
+				client.intervals.make(
+					(parent) => {
+						if (counter <= 0) {
+							console.log('keepalive refresh');
+							parent.eventsubLoad(client, baseWS, true);
+						}
+						console.log(counter);
+						counter--;
+					}, 1000, parent,
+				);
+				return Reflect.get(...arguments);
+			},
+		};
+		eventsub.keepAliveProxy = new Proxy({}, eventsub.keepAliveHandler);
 
 		// Handle the basics...
 		eventsub.websocket.onopen = () => {
@@ -35,6 +73,7 @@ module.exports = {
 			console.log(client.channel + ' : Error : ' + error.message);
 		};
 
+		// Handle the complicated stuff...
 		eventsub.websocket.on('message', async (data) => {
 			const message = JSON.parse(data);
 
@@ -42,7 +81,6 @@ module.exports = {
 				// Setup the new data...
 				eventsub.sessionID = message.payload.session.id;
 				eventsub.keepAliveMax = message.payload.session.keepalive_timeout_seconds;
-				eventsub.keepAlive = message.metadata.message_timestamp;
 
 				// If there's a token and we're NOT refreshing...
 				if (client.appToken && !refreshUrl) {
@@ -50,6 +88,9 @@ module.exports = {
 					await module.exports.subscribeToOffline(eventsub.sessionID, client);
 					await module.exports.subscribeToChannelPoints(eventsub.sessionID, client);
 				}
+
+				// Update the keepAlive...
+				eventsub.keepAliveProxy.value = message.metadata.message_timestamp;
 			}
 			else if (message.metadata.message_type === 'notification') {
 				// If a channel point redeem...
@@ -78,36 +119,25 @@ module.exports = {
 						client.isLive = false;
 					}, 600000);
 				}
+
+				// Update the keepAlive...
+				eventsub.keepAliveProxy.value = message.metadata.message_timestamp;
 			}
 			else if (message.metadata.message_type === 'session_keepalive') {
-				eventsub.keepAlive = message.metadata.message_timestamp;
+				// Update the keepAlive...
+				eventsub.keepAliveProxy.value = message.metadata.message_timestamp;
 			}
 			else if (message.metadata.message_type === 'session_reconnect') {
-				eventsub.keepAlive = message.metadata.message_timestamp;
+
+				// Reset a bunch of things before reloading...
+				client.intervals.clearAll();
+
+				// Now reset the connection...
 				console.log(`Maintenance incoming! Reconnecting to: ${message.payload.session.reconnect_url}`);
-				parent.eventsubLoad(client, message.payload.session.reconnect_url);
+				return parent.eventsubLoad(client, message.payload.session.reconnect_url);
 			}
 
 		});
-
-		// const eventsubProxy = new Proxy(eventsub, {
-		// 	set: function(target, key, value) {
-		// 		let counter = eventsub.keepAliveMax;
-		// 		client.intervals.clearAll();
-		// 		client.intervals.make(
-		// 			(parent) => {
-		// 				console.log(counter);
-		// 				if (counter <= 2) {
-		// 					console.log('keepalive refresh');
-		// 					parent.eventsubLoad(client, baseWS);
-		// 				}
-		// 				counter--;
-		// 			}, 1000, parent,
-		// 		);
-		// 		target[key] = value;
-		// 		return true;
-		// 	},
-		// });
 
 		client.eventsub = eventsub;
 
