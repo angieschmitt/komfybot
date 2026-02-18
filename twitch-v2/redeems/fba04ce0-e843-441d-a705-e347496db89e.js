@@ -3,6 +3,9 @@
 
 const path = require('path');
 
+const functionsFile = require('../functions/index');
+const functions = functionsFile.content();
+
 const redeem = {
 	redeemHandler(redeemData, client) {
 
@@ -14,11 +17,7 @@ const redeem = {
 		content = content.substring(0, content.length - 2);
 
 		// Now say the message in kiwi's channel
-		client.say(client.channel, content).catch(() => {
-			setTimeout(() => {
-				client.say(client.channel, content);
-			}, 2500);
-		});
+		functions.sayHandler(client, content);
 
 		// Set chaosMode state...
 		client.redeems.states.chaosMode = true;

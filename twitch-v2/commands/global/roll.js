@@ -1,3 +1,6 @@
+const functionsFile = require('../../functions/index');
+const functions = functionsFile.content();
+
 module.exports = {
 	name: 'roll',
 	help: 'Roll a die and get a number!',
@@ -39,19 +42,13 @@ module.exports = {
 					// Begin overflow check
 					const check = parts[i].split('d');
 					if (parseInt(check[0]) > 10) {
-						client.say(channel, `@${username}, that's too many dice.`).catch(() => {
-							setTimeout(() => {
-								client.say(channel, `@${username}, that's too many dice.`);
-							}, 2500);
-						});
+						content = `@${username}, that's too many dice.`;
+						functions.sayHandler(client, content);
 						return;
 					}
 					if (parseInt(check[1]) > 20) {
-						client.say(channel, `@${username}, that's too high of a die.`).catch(() => {
-							setTimeout(() => {
-								client.say(channel, `@${username}, that's too high of a die.`);
-							}, 2500);
-						});
+						content = `@${username}, that's too high of a die.`;
+						functions.sayHandler(client, content);
 						return;
 					}
 
@@ -87,12 +84,8 @@ module.exports = {
 				}
 
 				content += '= ' + total;
-
-				client.say(channel, `@${username}, here's your outcome: ${content}`).catch(() => {
-					setTimeout(() => {
-						client.say(channel, `@${username}, here's your outcome: ${content}`);
-					}, 2500);
-				});
+				content = `@${username}, here's your outcome: ${content}`;
+				functions.sayHandler(client, content);
 			},
 		},
 	},

@@ -1,5 +1,8 @@
 const axios = require('axios');
 
+const functionsFile = require('../../functions/index');
+const functions = functionsFile.content();
+
 module.exports = {
 	list: true,
 	channel: [ 2 ],
@@ -52,11 +55,8 @@ module.exports = {
 
 					const timeLimit = client.overlay.hattington.settings.timeBetweenHats;
 					if (minsSince < timeLimit) {
-						client.say(channel, `Hattington seems to be enjoying their current hat, give them a little time! (Roughly ${timeLimit - minsSince} minutes)`).catch(() => {
-							setTimeout(() => {
-								client.say(channel, `Hattington seems to be enjoying their current hat, give them a little time! (Roughly ${timeLimit - minsSince} minutes)`);
-							}, 2500);
-						});
+						content = `Hattington seems to be enjoying their current hat, give them a little time! (Roughly ${timeLimit - minsSince} minutes)`;
+						functions.sayHandler(client, content);
 						return;
 					}
 				}
@@ -94,11 +94,7 @@ module.exports = {
 					.finally(function() {
 						if (!('silent' in tags)) {
 							if (content !== '') {
-								client.say(channel, content).catch(() => {
-									setTimeout(() => {
-										client.say(channel, content);
-									}, 2500);
-								});
+								functions.sayHandler(client, content);
 							}
 						}
 					});
@@ -130,11 +126,8 @@ module.exports = {
 
 					const timeLimit = client.overlay.hattington.settings.timeBetweenSnacks;
 					if (minsSince < timeLimit) {
-						client.say(channel, `Hattington seems to be enjoying their last snack, give them a little time! (Roughly ${timeLimit - minsSince} minutes)`).catch(() => {
-							setTimeout(() => {
-								client.say(channel, `Hattington seems to be enjoying their last snack, give them a little time! (Roughly ${timeLimit - minsSince} minutes)`);
-							}, 2500);
-						});
+						content = `Hattington seems to be enjoying their last snack, give them a little time! (Roughly ${timeLimit - minsSince} minutes)`;
+						functions.sayHandler(client, content);
 						return;
 					}
 				}
@@ -172,11 +165,7 @@ module.exports = {
 					.finally(function() {
 						if (!('silent' in tags)) {
 							if (content !== '') {
-								client.say(channel, content).catch(() => {
-									setTimeout(() => {
-										client.say(channel, content);
-									}, 2500);
-								});
+								functions.sayHandler(client, content);
 							}
 						}
 					});

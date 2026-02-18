@@ -1,5 +1,8 @@
 const axios = require('axios');
 
+const functionsFile = require('../../functions/index');
+const functions = functionsFile.content();
+
 module.exports = {
 	name: 'clip',
 	help: 'Make a quick clip of the stream',
@@ -15,15 +18,11 @@ module.exports = {
 					.then(function(response) {
 						const resData = response.data;
 						if (resData.status === 'success') {
-							setTimeout((resData) => {
-								client.say(channel, `@${viewer} generated a clip! Check it out at: ${resData.response}`)
-									.catch(() => {
-										setTimeout(() => {
-											client.say(channel, `@${viewer} generated a clip! Check it out at: ${resData.response}`);
-										}, 2500);
-									});
+							content = `@${viewer} generated a clip! Check it out at: ${resData.response}`;
+							setTimeout((content) => {
+								functions.sayHandler(client, content);
 							},
-							5000, resData);
+							5000, content);
 						}
 						else if (resData.status === 'failure') {
 							if (resData.err_msg === 'Channel offline.') {
@@ -48,11 +47,7 @@ module.exports = {
 					})
 					.finally(function() {
 						if (content !== '') {
-							client.say(channel, content).catch(() => {
-								setTimeout(() => {
-									client.say(channel, content);
-								}, 2500);
-							});
+							functions.sayHandler(client, content);
 						}
 					});
 			},

@@ -1,5 +1,8 @@
 const axios = require('axios');
 
+const functionsFile = require('../../functions/index');
+const functions = functionsFile.content();
+
 module.exports = {
 	name: 'store',
 	help: 'Command to interact with the store. Additional args: add',
@@ -64,11 +67,7 @@ module.exports = {
 					})
 					.finally(function() {
 						if (content !== '') {
-							client.say(channel, content).catch(() => {
-								setTimeout(() => {
-									client.say(channel, content);
-								}, 2500);
-							});
+							functions.sayHandler(client, content);
 						}
 					});
 			},
@@ -112,11 +111,7 @@ module.exports = {
 					})
 					.finally(function() {
 						if (content !== '') {
-							client.say(channel, content).catch(() => {
-								setTimeout(() => {
-									client.say(channel, content);
-								}, 2500);
-							});
+							functions.sayHandler(client, content);
 						}
 					});
 			},
@@ -175,11 +170,7 @@ module.exports = {
 					})
 					.finally(function() {
 						if (content !== '') {
-							client.say(channel, content).catch(() => {
-								setTimeout(() => {
-									client.say(channel, content);
-								}, 2500);
-							});
+							functions.sayHandler(client, content);
 						}
 					});
 			},
@@ -190,6 +181,7 @@ module.exports = {
 				const viewer = tags['username'];
 				const viewerID = tags['user-id'];
 
+				let content = '';
 				let item = message.replace(args[0], '').replace(args[1], '').trim();
 				let amt = args.at(-1);
 				if (!amt.match(/[^$,.\d]/)) {
@@ -200,15 +192,11 @@ module.exports = {
 				}
 
 				if (item == '') {
-					client.say(channel, 'You need to include the item to buy.').catch(() => {
-						setTimeout(() => {
-							client.say(channel, 'You need to include the item to buy.');
-						}, 2500);
-					});
+					content = 'You need to include the item to buy.';
+					functions.sayHandler(client, content);
 					return;
 				}
 
-				let content = '';
 				axios.get(client.endpoint + 'store/buy/' + client.userID + '/' + viewerID + '/' + item + '/' + amt)
 					.then(function(response) {
 						const resData = response.data;
@@ -268,11 +256,7 @@ module.exports = {
 					})
 					.finally(function() {
 						if (content !== '') {
-							client.say(channel, content).catch(() => {
-								setTimeout(() => {
-									client.say(channel, content);
-								}, 2500);
-							});
+							functions.sayHandler(client, content);
 						}
 					});
 			},
@@ -283,6 +267,7 @@ module.exports = {
 				const viewer = tags['username'];
 				const viewerID = tags['user-id'];
 
+				let content = '';
 				let item = message.replace(args[0], '').replace(args[1], '').trim();
 				let amt = args.at(-1);
 				if (!amt.match(/[^$,.\d]/)) {
@@ -293,68 +278,114 @@ module.exports = {
 				}
 
 				if (item == '') {
-					client.say(channel, 'You need to include the item to sell.').catch(() => {
-						setTimeout(() => {
-							client.say(channel, 'You need to include the item to sell.');
-						}, 2500);
-					});
+					content = 'You need to include the item to sell.';
+					functions.sayHandler(client, content);
 					return;
 				}
 
-				let content = '';
-				axios.get(client.endpoint + 'store/sell/' + client.userID + '/' + viewerID + '/' + encodeURIComponent(item) + '/' + amt)
-					.then(function(response) {
-						const resData = response.data;
-						if (resData.status === 'success') {
+				// Check for a dupes sell...
+				if (item.indexOf('dupes') !== false) {
+					const category = item.split(' ')[1];
+					if (category == undefined) {
+						functions.sayHandler(client, 'You have to provide a category.');
+					}
+					else if (!(client.store.categories.includes(category.toLowerCase()))) {
+						functions.sayHandler(client, `"${category}" isn't a valid category`);
+					}
+					// Now we handle the dupes sell...
+					else {
+						axios.get(client.endpoint + 'store/dupes/' + client.userID + '/' + viewerID + '/' + category)
+							.then(function(response) {
+								const resData = response.data;
+								if (resData.status === 'success') {
 
-							// If the qty was adjusted, adjust message...
-							if (resData.response.qtyAdjusted) {
-								if (resData.response.qty == 0) {
-									if (resData.response.type == 'default') {
-										content = `Sorry @${viewer}, you don't have any ${resData.response.name} to sell.`;
+									let total = 0;
+									content += 'You\'ve sold the following items: ';
+									Object.entries(resData.response).forEach(([idx, details]) => { // eslint-disable-line no-unused-vars
+										content += details.qty + 'x ' + details.name + ' || ';
+										total += details.value;
+									});
+									content = content.substring(0, content.length - 3).trim();
+									content += ` for a total of ${total} ${(total > 1 ? client.settings.currency.name.plural : client.settings.currency.name.single)}.`;
+								}
+								else if (resData.status === 'failure') {
+									if (resData.err_msg == 'no_dupes') {
+										content = 'No dupes located for that category.';
 									}
-									else if (resData.response.type == 'gacha') {
-										content = `Sorry @${viewer}, you can't sell your last ${resData.response.name}`;
+									else if (resData.err_msg === 'missing_authorization') {
+										// data.errorMsg.handle(channel, client, 'checkin', 'Authorization issue');
+									}
+									else {
+										// data.errorMsg.handle(channel, client, 'checkin', 'Failed response');
 									}
 								}
 								else {
-									content = `Congrats @${viewer}, you sold ${resData.response.qty}x ${resData.response.name} for ${resData.response.value} ${(resData.response.value > 1 ? client.settings.currency.name.plural : client.settings.currency.name.single)}. `;
+									// data.errorMsg.handle(channel, client, 'checkin', 'Not sure how you got here');
+								}
+							})
+							.catch(function() {
+								// data.errorMsg.handle(channel, client, 'checkin', 'Issue while handling command');
+							})
+							.finally(function() {
+								if (content !== '') {
+									functions.sayHandler(client, content);
+								}
+							});
+					}
+				}
+				// If not a dupes sell, handle normally...
+				else {
+					let content = '';
+					axios.get(client.endpoint + 'store/sell/' + client.userID + '/' + viewerID + '/' + encodeURIComponent(item) + '/' + amt)
+						.then(function(response) {
+							const resData = response.data;
+							if (resData.status === 'success') {
+
+								// If the qty was adjusted, adjust message...
+								if (resData.response.qtyAdjusted) {
+									if (resData.response.qty == 0) {
+										if (resData.response.type == 'default') {
+											content = `Sorry @${viewer}, you don't have any ${resData.response.name} to sell.`;
+										}
+										else if (resData.response.type == 'gacha') {
+											content = `Sorry @${viewer}, you can't sell your last ${resData.response.name}`;
+										}
+									}
+									else {
+										content = `Congrats @${viewer}, you sold ${resData.response.qty}x ${resData.response.name} for ${resData.response.value} ${(resData.response.value > 1 ? client.settings.currency.name.plural : client.settings.currency.name.single)}. `;
+									}
+								}
+								else {
+									content = `Congrats @${viewer}, you sold ${resData.response.qty}x ${resData.response.name} for ${resData.response.value} ${(resData.response.value > 1 ? client.settings.currency.name.plural : client.settings.currency.name.single)}`;
+								}
+							}
+							else if (resData.status === 'failure') {
+								if (resData.err_msg == 'product_disabled') {
+									content = 'It looks like that product is currently disabled.';
+								}
+								else if (resData.err_msg == 'couldnt_locate_product') {
+									content = `The product "${item}" couldn't be located in the store`;
+								}
+								else if (resData.err_msg === 'missing_authorization') {
+									// data.errorMsg.handle(channel, client, 'checkin', 'Authorization issue');
+								}
+								else {
+									// data.errorMsg.handle(channel, client, 'checkin', 'Failed response');
 								}
 							}
 							else {
-								content = `Congrats @${viewer}, you sold ${resData.response.qty}x ${resData.response.name} for ${resData.response.value} ${(resData.response.value > 1 ? client.settings.currency.name.plural : client.settings.currency.name.single)}`;
+								// data.errorMsg.handle(channel, client, 'checkin', 'Not sure how you got here');
 							}
-						}
-						else if (resData.status === 'failure') {
-							if (resData.err_msg == 'product_disabled') {
-								content = 'It looks like that product is currently disabled.';
+						})
+						.catch(function() {
+							// data.errorMsg.handle(channel, client, 'checkin', 'Issue while handling command');
+						})
+						.finally(function() {
+							if (content !== '') {
+								functions.sayHandler(client, content);
 							}
-							else if (resData.err_msg == 'couldnt_locate_product') {
-								content = `The product "${item}" couldn't be located in the store`;
-							}
-							else if (resData.err_msg === 'missing_authorization') {
-								// data.errorMsg.handle(channel, client, 'checkin', 'Authorization issue');
-							}
-							else {
-								// data.errorMsg.handle(channel, client, 'checkin', 'Failed response');
-							}
-						}
-						else {
-							// data.errorMsg.handle(channel, client, 'checkin', 'Not sure how you got here');
-						}
-					})
-					.catch(function() {
-						// data.errorMsg.handle(channel, client, 'checkin', 'Issue while handling command');
-					})
-					.finally(function() {
-						if (content !== '') {
-							client.say(channel, content).catch(() => {
-								setTimeout(() => {
-									client.say(channel, content);
-								}, 2500);
-							});
-						}
-					});
+						});
+				}
 			},
 		},
 	},

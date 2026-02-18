@@ -1,3 +1,6 @@
+const functionsFile = require('../../functions/index');
+const functions = functionsFile.content();
+
 const links = {
 	'kiwi' : 'https://clips.twitch.tv/AbrasiveIncredulousFishMVGame-Zs5rxq2JhgjKgOat',
 	'lycan' : 'https://clips.twitch.tv/PoliteBrainyInternVoteYea-eVSsDvIPLWCh5MKR',
@@ -30,11 +33,7 @@ module.exports = {
 
 				content += links[ Object.keys(links)[check] ];
 
-				client.say(channel, content).catch(() => {
-					setTimeout(() => {
-						client.say(channel, content);
-					}, 2500);
-				});
+				functions.sayHandler(client, content);
 			},
 		},
 	},

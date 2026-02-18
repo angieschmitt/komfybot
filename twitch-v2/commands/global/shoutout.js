@@ -1,5 +1,8 @@
 const axios = require('axios');
 
+const functionsFile = require('../../functions/index');
+const functions = functionsFile.content();
+
 module.exports = {
 	list: true,
 	name: 'shoutout',
@@ -130,11 +133,7 @@ module.exports = {
 									content = `Go check out @${username} at https://www.twitch.tv/${username}!`;
 								})
 								.finally(function() {
-									client.say(channel, content).catch(() => {
-										setTimeout(() => {
-											client.say(channel, content);
-										}, 2500);
-									});
+									functions.sayHandler(client, content);
 								});
 						}
 						else if (resData.status === 'failure') {
@@ -153,11 +152,7 @@ module.exports = {
 						content = 'Something went wrong, tell @kittenAngie.';
 					})
 					.finally(function() {
-						client.say(channel, content).catch(() => {
-							setTimeout(() => {
-								client.say(channel, content);
-							}, 2500);
-						});
+						functions.sayHandler(client, content);
 					});
 			},
 		},

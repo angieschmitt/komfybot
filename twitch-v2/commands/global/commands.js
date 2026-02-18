@@ -1,3 +1,6 @@
+const functionsFile = require('../../functions/index');
+const functions = functionsFile.content();
+
 module.exports = {
 	list: false,
 	name: 'commands',
@@ -11,7 +14,7 @@ module.exports = {
 		default: {
 			execute(args, tags, message, channel, client) {
 
-				let output = client.opts.identity.username + ' has the following commands: ';
+				let content = client.opts.identity.username + ' has the following commands: ';
 
 				// Build out the command list
 				let commandList = [];
@@ -57,15 +60,11 @@ module.exports = {
 				commandList = commandList.sort();
 				// Turn it into a string, amd clean it
 				commandList.forEach(element => {
-					output += '!' + element + ', ';
+					content += '!' + element + ', ';
 				});
-				output = output.trim().slice(0, -1);
+				content = content.trim().slice(0, -1);
 
-				client.say(channel, `${output}`).catch(() => {
-					setTimeout(() => {
-						client.say(channel, `${output}`);
-					}, 2500);
-				});
+				functions.sayHandler(client, content);
 			},
 		},
 	},

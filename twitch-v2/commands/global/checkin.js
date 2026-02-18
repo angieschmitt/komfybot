@@ -1,5 +1,8 @@
 const axios = require('axios');
 
+const functionsFile = require('../../functions/index');
+const functions = functionsFile.content();
+
 module.exports = {
 	name: 'checkin',
 	help: 'Command to checkin to a stream',
@@ -47,11 +50,7 @@ module.exports = {
 					})
 					.finally(function() {
 						if (content !== '') {
-							client.say(channel, content).catch(() => {
-								setTimeout(() => {
-									client.say(channel, content);
-								}, 2500);
-							});
+							functions.sayHandler(client, content);
 						}
 					});
 			},
@@ -92,11 +91,7 @@ module.exports = {
 					})
 					.finally(function() {
 						if (content !== '') {
-							client.say(channel, content).catch(() => {
-								setTimeout(() => {
-									client.say(channel, content);
-								}, 2500);
-							});
+							functions.sayHandler(client, content);
 						}
 					});
 			},

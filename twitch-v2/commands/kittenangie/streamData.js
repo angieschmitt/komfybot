@@ -1,3 +1,6 @@
+const functionsFile = require('../../functions/index');
+const functions = functionsFile.content();
+
 module.exports = {
 	list: false,
 	name: 'check',
@@ -14,11 +17,7 @@ module.exports = {
 				let content = '';
 
 				content += ' Live: ' + (client.isLive ? 'Yes' : 'No');
-				client.say(channel, content).catch(() => {
-					setTimeout(() => {
-						client.say(channel, content);
-					}, 2500);
-				});
+				functions.sayHandler(client, content);
 			},
 		},
 		chaos: {
@@ -30,11 +29,7 @@ module.exports = {
 					content += idx + ', ';
 				});
 				content = content.substring(0, content.length - 2);
-				client.say(channel, content).catch(() => {
-					setTimeout(() => {
-						client.say(channel, content);
-					}, 2500);
-				});
+				functions.sayHandler(client, content);
 			},
 		},
 		chatters: {
@@ -43,11 +38,7 @@ module.exports = {
 				let content = ' Chatters: ' + (client.data.chatters.length ? client.data.chatters : 'None');
 				content = content.substring(0, content.length - 2);
 				content = content.trim();
-				client.say(channel, content).catch(() => {
-					setTimeout(() => {
-						client.say(channel, content);
-					}, 2500);
-				});
+				functions.sayHandler(client, content);
 			},
 		},
 	},

@@ -1,3 +1,6 @@
+const functionsFile = require('../../functions/index');
+const functions = functionsFile.content();
+
 module.exports = {
 	list: false,
 	channel: ['1'],
@@ -43,11 +46,7 @@ module.exports = {
 				check = randomIntFromInterval(0, (Object.keys(emotes).length - 1));
 				content += emotes[ Object.keys(emotes)[check] ];
 
-				client.say(channel, content).catch(() => {
-					setTimeout(() => {
-						client.say(channel, content);
-					}, 2500);
-				});
+				functions.sayHandler(client, content);
 			},
 		},
 		cat: {
@@ -65,11 +64,7 @@ module.exports = {
 				check = randomIntFromInterval(0, (Object.keys(emotes).length - 1));
 				content += emotes[ Object.keys(emotes)[check] ];
 
-				client.say(channel, content).catch(() => {
-					setTimeout(() => {
-						client.say(channel, content);
-					}, 2500);
-				});
+				functions.sayHandler(client, content);
 			},
 		},
 		shrug: {
@@ -83,11 +78,7 @@ module.exports = {
 				check = randomIntFromInterval(0, (Object.keys(emotes).length - 1));
 				content += emotes[ Object.keys(emotes)[check] ];
 
-				client.say(channel, content).catch(() => {
-					setTimeout(() => {
-						client.say(channel, content);
-					}, 2500);
-				});
+				functions.sayHandler(client, content);
 			},
 		},
 		sigh: {
@@ -103,11 +94,7 @@ module.exports = {
 				check = randomIntFromInterval(0, (Object.keys(emotes).length - 1));
 				content += emotes[ Object.keys(emotes)[check] ];
 
-				client.say(channel, content).catch(() => {
-					setTimeout(() => {
-						client.say(channel, content);
-					}, 2500);
-				});
+				functions.sayHandler(client, content);
 			},
 		},
 	},

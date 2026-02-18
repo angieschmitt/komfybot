@@ -30,6 +30,9 @@ module.exports = {
 		else if (type == 'settings') {
 			module.exports.settingsHandler(data, client, reset);
 		}
+		else if (type == 'store') {
+			module.exports.storeHandler(data, client, reset);
+		}
 		else if (type == 'timers') {
 			module.exports.timersHandler(data, client, reset);
 			parent.timersHandler(client, true);
@@ -259,6 +262,31 @@ module.exports = {
 				else {
 					client.settings.slots = [];
 				}
+			}
+		}
+
+		return client;
+	},
+	storeHandler(data, client, reset = false) {
+
+		if (!('store' in client) || reset) {
+			client.store = new Array();
+			client.store.categories = [];
+		}
+
+		if (data !== false) {
+			if (Object.keys(data).length) {
+
+				// Handle currency settings
+				if ('categories' in data) {
+					Object.entries(data.categories).forEach(([idx, details]) => { // eslint-disable-line no-unused-vars
+						client.store.categories.push(idx);
+					});
+				}
+				else {
+					client.store.categories = [];
+				}
+
 			}
 		}
 

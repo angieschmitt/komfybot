@@ -1,5 +1,8 @@
 const axios = require('axios');
 
+const functionsFile = require('../../functions/index');
+const functions = functionsFile.content();
+
 module.exports = {
 	name: 'coins',
 	help: 'Command to interact with coins. Additional args: add',
@@ -53,11 +56,7 @@ module.exports = {
 					.finally(function() {
 						if (!('silent' in tags)) {
 							if (content !== '') {
-								client.say(channel, content).catch(() => {
-									setTimeout(() => {
-										client.say(channel, content);
-									}, 2500);
-								});
+								functions.sayHandler(client, content);
 							}
 						}
 					});
@@ -77,11 +76,8 @@ module.exports = {
 				const target = args[2].replace('@', '');
 				const amount = args[3];
 				if (!module.exports.isInt(amount)) {
-					client.say(channel, 'The amount goes after the username').catch(() => {
-						setTimeout(() => {
-							client.say(channel, 'The amount goes after the username');
-						}, 2500);
-					});
+					content = 'The amount goes after the username';
+					functions.sayHandler(client, content);
 					return;
 				}
 
@@ -114,11 +110,7 @@ module.exports = {
 					.finally(function() {
 						if (!('silent' in tags)) {
 							if (content !== '') {
-								client.say(channel, content).catch(() => {
-									setTimeout(() => {
-										client.say(channel, content);
-									}, 2500);
-								});
+								functions.sayHandler(client, content);
 							}
 						}
 					});
@@ -136,11 +128,8 @@ module.exports = {
 				const target = args[2].replace('@', '');
 				const amount = args[3];
 				if (!module.exports.isInt(amount)) {
-					client.say(channel, 'The amount goes after the username').catch(() => {
-						setTimeout(() => {
-							client.say(channel, 'The amount goes after the username');
-						}, 2500);
-					});
+					content = 'The amount goes after the username';
+					functions.sayHandler(client, content);
 					return;
 				}
 
@@ -172,11 +161,7 @@ module.exports = {
 					.finally(function() {
 						if (!('silent' in tags)) {
 							if (content !== '') {
-								client.say(channel, content).catch(() => {
-									setTimeout(() => {
-										client.say(channel, content);
-									}, 2500);
-								});
+								functions.sayHandler(client, content);
 							}
 						}
 					});
@@ -215,11 +200,7 @@ module.exports = {
 					})
 					.finally(function() {
 						if (content !== '') {
-							client.say(channel, content).catch(() => {
-								setTimeout(() => {
-									client.say(channel, content);
-								}, 2500);
-							});
+							functions.sayHandler(client, content);
 						}
 					});
 			},
@@ -256,11 +237,7 @@ module.exports = {
 						// data.errorMsg.handle(channel, client, 'leaderboard-spenders', 'Issue while handling command');
 					})
 					.finally(function() {
-						client.say(channel, content).catch(() => {
-							setTimeout(() => {
-								client.say(channel, content);
-							}, 2500);
-						});
+						functions.sayHandler(client, content);
 					});
 			},
 		},

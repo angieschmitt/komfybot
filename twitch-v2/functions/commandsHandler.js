@@ -12,11 +12,8 @@ module.exports = {
 			if (!settings.allowOffline) {
 				// And user isn't live...
 				if (!client.isLive) {
-					client.say(channel, 'This command cannot be used while the streamer is offline.').catch(() => {
-						setTimeout(() => {
-							client.say(channel, 'This command cannot be used while the streamer is offline.');
-						}, 2500);
-					});
+					const content = 'This command cannot be used while the streamer is offline.';
+					parent.sayHandler(client, content);
 					return;
 				}
 			}
@@ -70,22 +67,15 @@ module.exports = {
 						output = output.replace('{@target}', args[1]);
 					}
 					else {
-						client.say(channel, 'You are missing a target for that command.').catch(() => {
-							setTimeout(() => {
-								client.say(channel, 'You are missing a target for that command.');
-							}, 2500);
-						});
+						const content = 'You are missing a target for that command.';
+						parent.sayHandler(client, content);
 						return true;
 					}
 				}
 			}
 
 			// Output output...
-			client.say(channel, output).catch(() => {
-				setTimeout(() => {
-					client.say(channel, output);
-				}, 2500);
-			});
+			parent.sayHandler(client, output);
 			return true;
 		}
 		else if ('random' in action) {
@@ -152,22 +142,15 @@ module.exports = {
 						output = output.replace('{@target}', args[1]);
 					}
 					else {
-						client.say(channel, 'You are missing a target for that command.').catch(() => {
-							setTimeout(() => {
-								client.say(channel, 'You are missing a target for that command.');
-							}, 2500);
-						});
+						const content = 'You are missing a target for that command.';
+						parent.sayHandler(client, content);
 						return true;
 					}
 				}
 			}
 
 			// Output output...
-			client.say(channel, output).catch(() => {
-				setTimeout(() => {
-					client.say(channel, output);
-				}, 2500);
-			});
+			parent.sayHandler(client, output);
 			return true;
 		}
 		else if ('execute' in action) {
@@ -218,11 +201,8 @@ module.exports = {
 						output = output.replace('{@target}', args[1]);
 					}
 					else {
-						client.say(channel, 'You are missing a target for that command.').catch(() => {
-							setTimeout(() => {
-								client.say(channel, 'You are missing a target for that command.');
-							}, 2500);
-						});
+						const content = 'You are missing a target for that command.';
+						parent.sayHandler(client, content);
 						return true;
 					}
 				}
@@ -235,11 +215,7 @@ module.exports = {
 			}
 			// Otherwise, output output...
 			else {
-				client.say(channel, output).catch(() => {
-					setTimeout(() => {
-						client.say(channel, output);
-					}, 2500);
-				});
+				parent.sayHandler(client, output);
 				return true;
 			}
 		}

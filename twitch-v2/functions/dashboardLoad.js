@@ -23,6 +23,7 @@ module.exports = {
 						const redeems = resData.redeems;
 						const overlays = resData.overlays;
 						const settings = resData.settings;
+						const store = resData.store;
 						const timers = resData.timers;
 
 						// Important ones first...
@@ -32,6 +33,7 @@ module.exports = {
 
 						// Now the interactive ones...
 						parent.dashboardHandler('redeems', redeems, client, true);
+						parent.dashboardHandler('store', store, client, true);
 						parent.dashboardHandler('reactwords', reactwords, client, true);
 						parent.dashboardHandler('timers', timers, client, true);
 

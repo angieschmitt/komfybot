@@ -1,3 +1,6 @@
+const functionsFile = require('../../functions/index');
+const functions = functionsFile.content();
+
 module.exports = {
 	name: 'slots',
 	help: 'Spin the slots and (optionally) wager some of your coins!',
@@ -29,11 +32,8 @@ module.exports = {
 				if (client.settings.currency.enabled) {
 					// Must be a valid number for a wager...
 					if (!isNumeric(args[1])) {
-						client.say(channel, `@${viewer}, you can only wager whole numbers of ${client.settings.currency.name.plural}.`).catch(() => {
-							setTimeout(() => {
-								client.say(channel, `@${viewer}, you can only wager whole numbers of ${client.settings.currency.name.plural}.`);
-							}, 2500);
-						});
+						content = `@${viewer}, you can only wager whole numbers of ${client.settings.currency.name.plural}.`;
+						functions.sayHandler(client, content);
 						return;
 					}
 				}
@@ -67,12 +67,7 @@ module.exports = {
 					else {
 						content += `@${viewer}, you got ${outcome} and lost!`;
 					}
-
-					client.say(channel, content).catch(() => {
-						setTimeout(() => {
-							client.say(channel, content);
-						}, 2500);
-					});
+					functions.sayHandler(client, content);
 				}
 				// If it is, we have work to do...
 				else if (client.settings.currency.enabled && risk > 0) {
@@ -115,11 +110,7 @@ module.exports = {
 						})
 						.catch(err => console.log(err))
 						.finally(function() {
-							client.say(channel, content).catch(() => {
-								setTimeout(() => {
-									client.say(channel, content);
-								}, 2500);
-							});
+							functions.sayHandler(client, content);
 						});
 
 				}
