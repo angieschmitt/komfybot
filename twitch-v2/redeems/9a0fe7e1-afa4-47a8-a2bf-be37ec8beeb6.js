@@ -24,9 +24,14 @@ const redeem = {
 		client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'redeemID' : path.basename(__filename, '.js'), 'redemptionID': redeemData.id, 'content' : redeemData.user_input, 'target': 'chaos-mode:' + client.userID }, 'source': 'komfybot' }));
 
 		// Start timer to turn it off...
-		setTimeout(function() {
-			client.redeems.states.chaosMode = false;
-		}, 90000);
+		client.timeouts.make(
+			'chaosMode',
+			() => {
+				client.redeems.states.chaosMode = false;
+				client.timeouts.clear('chaosMode');
+			},
+			90000,
+		);
 	},
 };
 

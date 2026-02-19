@@ -1,3 +1,5 @@
+const e = require("express");
+
 module.exports = {
 	function(command, channel, perms, tags, message, client) {
 		const parent = this;
@@ -25,18 +27,16 @@ module.exports = {
 			let proceed = true;
 
 			// Handle perms/proceed, assign output if needed
-			if (action.perms !== undefined) {
-				if (action.perms) {
-					let hasPerm = false;
-					for (const [key] of Object.entries(perms)) {
-						if (action.perms['levels'].includes(key)) {
-							hasPerm = true;
-						}
+			if (action.perms && action.perms !== undefined) {
+				let hasPerm = false;
+				action.perms['levels'].forEach((perm) => {
+					if (perms[perm]) {
+						hasPerm = true;
 					}
-					if (!hasPerm) {
-						output = `${tags.username}, ${action.perms.error}`;
-						proceed = false;
-					}
+				});
+				if (!hasPerm) {
+					output = `@${tags.username}, ${action.perms.error}`;
+					proceed = false;
 				}
 			}
 
@@ -99,18 +99,16 @@ module.exports = {
 			let proceed = true;
 
 			// Handle perms/proceed, assign output if needed
-			if (action.perms !== undefined) {
-				if (action.perms) {
-					let hasPerm = false;
-					for (const [key] of Object.entries(perms)) {
-						if (action.perms['levels'].includes(key)) {
-							hasPerm = true;
-						}
+			if (action.perms && action.perms !== undefined) {
+				let hasPerm = false;
+				action.perms['levels'].forEach((perm) => {
+					if (perms[perm]) {
+						hasPerm = true;
 					}
-					if (!hasPerm) {
-						output = `${tags.username}, ${action.perms.error}`;
-						proceed = false;
-					}
+				});
+				if (!hasPerm) {
+					output = `@${tags.username}, ${action.perms.error}`;
+					proceed = false;
 				}
 			}
 
@@ -158,15 +156,15 @@ module.exports = {
 			let proceed = true;
 
 			// Handle perms/proceed, assign output if needed
-			if (action.perms) {
+			if (action.perms && action.perms !== undefined) {
 				let hasPerm = false;
-				for (const [key] of Object.entries(perms)) {
-					if (action.perms['levels'].includes(key)) {
+				action.perms['levels'].forEach((perm) => {
+					if (perms[perm]) {
 						hasPerm = true;
 					}
-				}
+				});
 				if (!hasPerm) {
-					output = `${tags.username}, ${action.perms.error}`;
+					output = `@${tags.username}, ${action.perms.error}`;
 					proceed = false;
 				}
 			}

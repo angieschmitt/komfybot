@@ -48,14 +48,17 @@ module.exports = {
 			},
 			set() {
 				let counter = (eventsub.keepAliveMax + 2);
-				client.intervals.clearAll();
+				client.intervals.clear('eventsubKeepAlive');
 				client.intervals.make(
+					'eventsubKeepAlive',
 					(parent) => {
 						if (counter <= 0) {
-							parent.eventsubLoad(client, baseWS, true);
+							parent.eventsubLoad(client, false, true);
 						}
 						counter--;
-					}, 1000, parent,
+					},
+					1000,
+					parent,
 				);
 				return Reflect.get(...arguments);
 			},
@@ -67,8 +70,12 @@ module.exports = {
 			console.log(client.channel + ' : Open successful!');
 		};
 
-		eventsub.websocket.onerror = (error) => {
-			console.log(client.channel + ' : Error : ' + error.message);
+		eventsub.websocket.onerror = () => {
+			client.eventsub.keepAliveProxy.value = new Date(Date.now() - 5000);
+		};
+
+		eventsub.websocket.onclose = () => {
+			client.eventsub.keepAliveProxy.value = new Date(Date.now() - 5000);
 		};
 
 		// Handle the complicated stuff...
@@ -105,17 +112,22 @@ module.exports = {
 					client.isLive = true;
 
 					// If online comes in, clear offline timer...
-					clearTimeout(client.offlineTimer);
+					client.timeouts.clear('offlineTimer');
 				}
 				else if (message.payload.subscription.type == 'stream.offline') {
 					console.log(`Channel ${message.payload.event.broadcaster_user_name} is now OFFLINE.`);
 
-					// Once we get the offline ping, wait 10 mins to mark offline...
-					client.offlineTimer = setTimeout(() => {
-						console.log(`Channel ${message.payload.event.broadcaster_user_name} is now OFFICIALLY offline.`);
-						axios.get(client.endpoint + 'live/update/' + client.userID);
-						client.isLive = false;
-					}, 600000);
+					// Once we get the offline ping, wait 5 mins to mark offline...
+					client.timeouts.clear('offlineTimer');
+					client.timeouts.make(
+						'offlineTimer',
+						() => {
+							console.log(`Channel ${message.payload.event.broadcaster_user_name} is now OFFICIALLY offline.`);
+							axios.get(client.endpoint + 'live/update/' + client.userID);
+							client.isLive = false;
+						},
+						300000,
+					);
 				}
 
 				// Update the keepAlive...
@@ -127,8 +139,8 @@ module.exports = {
 			}
 			else if (message.metadata.message_type === 'session_reconnect') {
 
-				// Reset a bunch of things before reloading...
-				client.intervals.clearAll();
+				// Reset eventsubKeepAlive before reloading...
+				client.intervals.clear('eventsubKeepAlive');
 
 				// Now reset the connection...
 				console.log(`Maintenance incoming! Reconnecting to: ${message.payload.session.reconnect_url}`);

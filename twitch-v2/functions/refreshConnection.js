@@ -6,7 +6,7 @@ module.exports = {
 		const interval = 1800000;
 		setInterval(() => {
 			if (client.readyState() == 'OPEN') {
-				axios.get(client.endpoint + 'token/update/' + client.userID)
+				axios.get(client.endpoint + 'token/retrieve/' + client.userID)
 					.then(function(response) {
 						const results = response.data;
 						if (results.status == 'success') {

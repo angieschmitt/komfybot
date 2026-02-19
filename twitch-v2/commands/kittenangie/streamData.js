@@ -10,8 +10,8 @@ module.exports = {
 	actions: {
 		default: {
 			perms: {
-				levels: ['streamer', 'mod'],
-				error: 'this command is for the streamer and mods only.',
+				levels: ['admin'],
+				error: 'this command is for admins only.',
 			},
 			execute(args, tags, message, channel, client) {
 				let content = '';
@@ -21,6 +21,10 @@ module.exports = {
 			},
 		},
 		chaos: {
+			perms: {
+				levels: ['admin'],
+				error: 'this command is for admins only.',
+			},
 			execute(args, tags, message, channel, client) {
 
 				// Build message...
@@ -33,12 +37,36 @@ module.exports = {
 			},
 		},
 		chatters: {
+			perms: {
+				levels: ['admin'],
+				error: 'this command is for admins only.',
+			},
 			execute(args, tags, message, channel, client) {
 
 				let content = ' Chatters: ' + (client.data.chatters.length ? client.data.chatters : 'None');
 				content = content.substring(0, content.length - 2);
 				content = content.trim();
 				functions.sayHandler(client, content);
+			},
+		},
+		timer: {
+			perms: {
+				levels: ['admin'],
+				error: 'this command is for admins only.',
+			},
+			execute(args, tags, message, channel, client) {
+
+				const content = `${tags.username}, this is delayed content...`;
+
+				// Timer for output...
+				client.timeouts.make(
+					'checkTimer',
+					(client, content) => {
+						functions.sayHandler(client, content);
+						client.timeouts.clear('checkTimer');
+					},
+					5000, client, content,
+				);
 			},
 		},
 	},

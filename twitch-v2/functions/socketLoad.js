@@ -4,12 +4,12 @@ module.exports = {
 	async function(client) {
 		const parent = this;
 
-		// let interval = false;
 		const identifier = 'komfybot:' + client.userID;
 		const websocket = new ws('wss://' + client.socketInfo.ip + ':' + client.socketInfo.port + '/' + identifier, { rejectUnauthorized: false });
 
 		websocket.onopen = () => {
 			websocket.send(JSON.stringify({ 'action': 'refresh', 'data': { 'target': 'all' }, 'source': identifier }));
+			client.timeouts.clear('websocketRetry');
 			// data.debug.write('global', 'WEBSOCKET_CONNECTED');
 		};
 
@@ -46,16 +46,25 @@ module.exports = {
 		};
 
 		websocket.onclose = () => {
-			setTimeout(function() {
-				parent.socketLoad(client);
-			}, 1000, client);
+			client.timeouts.clear('websocketRetry');
+			client.timeouts.make(
+				'websocketRetry',
+				(client) => { parent.socketLoad(client); },
+				1000,
+				client,
+			);
 		};
 
-		setInterval(() => {
-			if (websocket.readyState != 0) {
-				websocket.send(JSON.stringify({ 'action': 'live-check', 'data': { 'timestamp': new Date().toISOString() }, 'source': identifier }));
-			}
-		}, 10000);
+		client.intervals.clear('websocketLiveCheck');
+		client.intervals.make(
+			'websocketLiveCheck',
+			() => {
+				if (websocket.readyState != 0) {
+					websocket.send(JSON.stringify({ 'action': 'live-check', 'data': { 'timestamp': new Date().toISOString() }, 'source': identifier }));
+				}
+			},
+			10000,
+		);
 
 		client.websocket = websocket;
 	},

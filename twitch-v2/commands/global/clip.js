@@ -19,10 +19,16 @@ module.exports = {
 						const resData = response.data;
 						if (resData.status === 'success') {
 							content = `@${viewer} generated a clip! Check it out at: ${resData.response}`;
-							setTimeout((content) => {
-								functions.sayHandler(client, content);
-							},
-							5000, content);
+
+							// Timer for output...
+							client.timeouts.make(
+								'clipTimer',
+								(client, content) => {
+									functions.sayHandler(client, content);
+									client.timeouts.clear('clipTimer');
+								},
+								5000, client, content,
+							);
 						}
 						else if (resData.status === 'failure') {
 							if (resData.err_msg === 'Channel offline.') {
