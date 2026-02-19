@@ -24,7 +24,7 @@ module.exports = {
 		globals['bots'][ channel['userID'] ] = new tmi.client(clientData);
 
 		// Make ^ client, assign some stuff...
-		let client = globals['bots'][ channel['userID'] ];
+		const client = globals['bots'][ channel['userID'] ];
 		client['userID'] = channel['userID'];
 		client['twitchUUID'] = userID;
 		client['channel'] = '#' + channel['username'];
