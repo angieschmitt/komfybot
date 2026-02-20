@@ -81,7 +81,7 @@ module.exports = {
 					'message': message,
 				};
 				// Manually emit the event to test logic
-				client.emit('raided', channel, userstate, message);
+				client.emit('cheer', channel, userstate, message);
 			},
 		},
 	},

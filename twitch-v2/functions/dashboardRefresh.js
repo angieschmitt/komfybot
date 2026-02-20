@@ -29,6 +29,9 @@ module.exports = {
 										else if (type == 'command') {
 											await parent.dashboardLoad(client, 'commands', true);
 										}
+										else if (type == 'events') {
+											await parent.dashboardLoad(client, 'events', true);
+										}
 										else if (type == 'overlay') {
 											await parent.dashboardLoad(client, 'overlays', true);
 											parent.dataLoad('chaos-mode', client);
