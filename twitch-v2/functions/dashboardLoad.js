@@ -19,6 +19,7 @@ module.exports = {
 						// Setup the containers..
 						const addons = resData.addons;
 						const commands = resData.commands;
+						const events = resData.events;
 						const reactwords = resData.reactwords;
 						const redeems = resData.redeems;
 						const overlays = resData.overlays;
@@ -32,6 +33,7 @@ module.exports = {
 						parent.dashboardHandler('overlays', overlays, client, true);
 
 						// Now the interactive ones...
+						parent.dashboardHandler('events', events, client, true);
 						parent.dashboardHandler('redeems', redeems, client, true);
 						parent.dashboardHandler('store', store, client, true);
 						parent.dashboardHandler('reactwords', reactwords, client, true);

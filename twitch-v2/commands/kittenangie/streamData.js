@@ -69,5 +69,20 @@ module.exports = {
 				);
 			},
 		},
+		event: {
+			perms: {
+				levels: ['admin'],
+				error: 'this command is for admins only.',
+			},
+			execute(args, tags, message, channel, client) {
+				const userstate = {
+					'display-name': tags['username'],
+					'bits': 100,
+					'message': message,
+				};
+				// Manually emit the event to test logic
+				client.emit('raided', channel, userstate, message);
+			},
+		},
 	},
 };

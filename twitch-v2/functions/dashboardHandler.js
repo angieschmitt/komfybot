@@ -18,6 +18,9 @@ module.exports = {
 		else if (type == 'commands') {
 			module.exports.commandsHandler(data, client, reset);
 		}
+		else if (type == 'events') {
+			module.exports.eventsHandler(data, client, reset);
+		}
 		else if (type == 'overlays') {
 			module.exports.overlaysHandler(data, client, reset);
 		}
@@ -146,6 +149,20 @@ module.exports = {
 						});
 					}
 				});
+			});
+		}
+
+		return client;
+	},
+	eventsHandler(data, client, reset = false) {
+
+		if (!('events' in client) || reset) {
+			client.events = new Array();
+		}
+
+		if (data !== false) {
+			Object.entries(data).forEach(([idx, item]) => { // eslint-disable-line no-unused-vars
+				client.events[idx] = item;
 			});
 		}
 
