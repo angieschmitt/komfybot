@@ -15,7 +15,7 @@ module.exports = {
 							const refreshData = response.data.response;
 
 							Object.entries(refreshData).forEach((data) => {
-								const type = data[0];
+								const type = data[0].toLowerCase();
 								const users = data[1];
 								Object.entries(users).forEach(async ([idx, userID]) => { // eslint-disable-line no-unused-vars
 
