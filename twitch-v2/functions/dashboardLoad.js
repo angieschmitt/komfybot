@@ -11,7 +11,7 @@ module.exports = {
 
 					// If we have a specific type, only refresh that data...
 					if (type) {
-						console.log('refreshing: ' + type);
+						console.log(client.channel + ' : REFRESH : ' + type);
 						parent.dashboardHandler(type, resData[type], client, reset);
 					}
 					// Otherwise, refresh it all...

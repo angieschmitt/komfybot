@@ -27,7 +27,7 @@ module.exports = {
 										await parent.dashboardLoad(client, type, true);
 
 										// Special cleanups...
-										if (type == 'overlay') {
+										if (type == 'overlays') {
 											await parent.dataLoad('chaos-mode', client);
 										}
 

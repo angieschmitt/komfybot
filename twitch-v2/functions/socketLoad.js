@@ -32,8 +32,16 @@ module.exports = {
 
 			// Now only run if it's supposed to...
 			if (data.action === 'ping' && targets.includes('komfybot:' + client.userID)) {
-				const content = 'Beep Boop';
-				parent.sayHandler(client, content);
+				if ('refresh' in data.data) {
+					parent.dashboardLoad(client, data.data.refresh, true);
+					if (data.data.refresh == 'overlays') {
+						parent.dataLoad('chaos-mode', client);
+					}
+				}
+				else {
+					const content = 'Beep Boop';
+					parent.sayHandler(client, content);
+				}
 			}
 			else if (data.action === 'speak' && targets.includes('komfybot:' + client.userID)) {
 				const content = data['data']['message'];
