@@ -8,7 +8,7 @@ module.exports = {
 		const parent = this;
 
 		setInterval(
-			function() {
+			() => {
 				axios.get(globals['endpoint'] + 'load/refresh')
 					.then(function(response) {
 						if (response.data.status === 'success') {
@@ -23,30 +23,12 @@ module.exports = {
 
 										const client = globals.bots[userID];
 
-										if (type == 'addons') {
-											await parent.dashboardLoad(client, 'addons', true);
-										}
-										else if (type == 'command') {
-											await parent.dashboardLoad(client, 'commands', true);
-										}
-										else if (type == 'events') {
-											await parent.dashboardLoad(client, 'events', true);
-										}
-										else if (type == 'overlay') {
-											await parent.dashboardLoad(client, 'overlays', true);
-											parent.dataLoad('chaos-mode', client);
-										}
-										else if (type == 'reactwords') {
-											await parent.dashboardLoad(client, 'reactwords', true);
-										}
-										else if (type == 'redeems') {
-											await parent.dashboardLoad(client, 'redeems', true);
-										}
-										else if (type == 'settings') {
-											await parent.dashboardLoad(client, 'settings', true);
-										}
-										else if (type == 'timer') {
-											await parent.dashboardLoad(client, 'timers', true);
+										// Handle the refresh
+										await parent.dashboardLoad(client, type, true);
+
+										// Special cleanups...
+										if (type == 'overlay') {
+											await parent.dataLoad('chaos-mode', client);
 										}
 
 										// Pass back to remove the flag...
@@ -58,7 +40,7 @@ module.exports = {
 							});
 						}
 					})
-					.catch(err => console.log(err));
+					.catch();
 			},
 			timerInterval,
 		);

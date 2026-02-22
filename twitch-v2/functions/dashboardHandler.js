@@ -176,13 +176,13 @@ module.exports = {
 
 		if (data !== false) {
 			Object.entries(data).forEach(([idx, item]) => { // eslint-disable-line no-unused-vars
-				const overlayContent = JSON.parse(item['content']);
-				client.overlay[item['name'].toLowerCase()] = [];
-				if ('data' in overlayContent) {
-					client.overlay[item['name'].toLowerCase()]['data'] = overlayContent['data'];
+				const overlayName = item['name'].toLowerCase().replace(' ', '-');
+				client.overlay[overlayName] = [];
+				if ('data' in item.content) {
+					client.overlay[overlayName]['data'] = item.content.data;
 				}
-				if ('settings' in overlayContent) {
-					client.overlay[item['name'].toLowerCase()]['settings'] = overlayContent['settings'];
+				if ('settings' in item.content) {
+					client.overlay[overlayName]['settings'] = item.content.settings;
 				}
 			});
 		}
@@ -214,8 +214,7 @@ module.exports = {
 		}
 
 		if (data !== false) {
-			const redeemsJson = JSON.parse(data);
-			Object.entries(redeemsJson).forEach(([index, extra]) => { // eslint-disable-line no-unused-vars
+			Object.entries(data).forEach(([index, extra]) => { // eslint-disable-line no-unused-vars
 				client.redeems[index] = module.exports.redeemFileHandler(index);
 			});
 		}
@@ -233,37 +232,36 @@ module.exports = {
 		}
 
 		if (data !== false) {
-			const settingsJson = JSON.parse(data, 'utf-8');
-			if (Object.keys(settingsJson).length) {
+			if (Object.keys(data).length) {
 
 				// Handle currency settings
-				if ('currency' in settingsJson) {
-					if ('enabled' in settingsJson.currency) {
+				if ('currency' in data) {
+					if ('enabled' in data.currency) {
 						// Basic Settings
-						client.settings.currency['enabled'] = settingsJson.currency.enabled;
+						client.settings.currency['enabled'] = data.currency.enabled;
 						client.settings.currency['name'] = [];
-						client.settings.currency['name']['single'] = settingsJson.currency.name_single;
-						client.settings.currency['name']['plural'] = settingsJson.currency.name_plural;
+						client.settings.currency['name']['single'] = data.currency.name_single;
+						client.settings.currency['name']['plural'] = data.currency.name_plural;
 					}
 				}
 				else {
 					client.settings.currency['enabled'] = false;
 				}
 
-				if ('passive' in settingsJson) {
-					if ('enabled' in settingsJson.passive) {
-						client.settings.passive['enabled'] = settingsJson.passive.enabled;
+				if ('passive' in data) {
+					if ('enabled' in data.passive) {
+						client.settings.passive['enabled'] = data.passive.enabled;
 						client.settings.passive['amts'] = [];
-						client.settings.passive['amts']['default'] = settingsJson.passive.default;
-						client.settings.passive['amts']['subscribers'] = settingsJson.passive.subscribers;
+						client.settings.passive['amts']['default'] = data.passive.default;
+						client.settings.passive['amts']['subscribers'] = data.passive.subscribers;
 					}
 				}
 				else {
 					client.settings.passive['enabled'] = false;
 				}
 
-				if ('commands' in settingsJson) {
-					Object.entries(settingsJson.commands).forEach(([key, value]) => {
+				if ('commands' in data) {
+					Object.entries(data.commands).forEach(([key, value]) => {
 						client.settings.commands[ key ] = value;
 					});
 				}
@@ -271,8 +269,8 @@ module.exports = {
 					client.settings.commands = [];
 				}
 
-				if ('slots' in settingsJson) {
-					Object.entries(settingsJson.slots).forEach(([key, value]) => {
+				if ('slots' in data) {
+					Object.entries(data.slots).forEach(([key, value]) => {
 						client.settings.slots[ key ] = value;
 					});
 				}

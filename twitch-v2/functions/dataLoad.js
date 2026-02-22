@@ -6,9 +6,9 @@ module.exports = {
 		// If the data bucket doesn't exist...
 		if (!('data' in client)) {
 			client.data = [];
+			client.data.chatters = [];
+			client.data.walkOn = {};
 		}
-
-		client.data.chatters = [];
 
 		client.data.walkOn = {
 			1 : {
@@ -20,7 +20,6 @@ module.exports = {
 				90928645 : 'cute-and-fluffy',
 			},
 		};
-		client.data.chaosWords = ['angie', 'antidisestablishmentarianism', 'butt', 'chicken', 'halloween', 'kiwi', 'lizard', '🦎', 'snail', 'supercalifragilisticexpialidocious', 'tittle', 'v', 'whale'];
 
 		if (dataType == 'chatters') {
 			axios.get(client.endpoint + 'data/chatters/' + client.userID + '/all')
@@ -32,12 +31,12 @@ module.exports = {
 				.catch(err => console.log(err));
 		}
 		if (dataType == 'chaos-mode') {
-			if ('chaos mode' in client.overlay) {
-				client.data.chaosWords = {};
-				Object.entries(client.overlay['chaos mode'].data).forEach(([idx, data]) => { // eslint-disable-line no-unused-vars
+			if ('chaos-mode' in client.overlay) {
+				client.data.chaosMode = {};
+				Object.entries(client.overlay['chaos-mode'].data).forEach(([idx, data]) => { // eslint-disable-line no-unused-vars
 					const triggers = data.trigger.split(',');
-					triggers.forEach((idx) => {
-						client.data.chaosWords[idx] = data.mediaID;
+					triggers.forEach((idx2) => {
+						client.data.chaosMode[idx2.toString()] = data.mediaID;
 					});
 				});
 			}

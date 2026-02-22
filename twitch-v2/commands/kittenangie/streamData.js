@@ -27,13 +27,17 @@ module.exports = {
 			},
 			execute(args, tags, message, channel, client) {
 
-				// Build message...
-				let content = 'Chaos mode word list: ';
-				Object.entries(client.data.chaosWords).forEach(([idx, data]) => { // eslint-disable-line no-unused-vars
-					content += idx + ', ';
-				});
-				content = content.substring(0, content.length - 2);
-				functions.sayHandler(client, content);
+				if ('chaos-mode' in client.overlay) {
+					if ('data' in client.overlay['chaos-mode']) {
+						let content = 'Chaos mode word list: ';
+						Object.entries(client.data.chaosMode).forEach(([data]) => { // eslint-disable-line no-unused-vars
+							content += data + ', ';
+						});
+						content = content.substring(0, content.length - 2);
+						functions.sayHandler(client, content);
+					}
+				}
+
 			},
 		},
 		chatters: {
