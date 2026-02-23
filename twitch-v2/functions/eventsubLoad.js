@@ -108,8 +108,14 @@ module.exports = {
 				else if (message.payload.subscription.type == 'stream.online') {
 					console.log(`Channel ${message.payload.event.broadcaster_user_name} is now ONLINE.`);
 
-					axios.get(client.endpoint + 'live/update/' + client.userID);
+					// Locally mark the streamer as live...
 					client.isLive = true;
+
+					// Force the DB to update...
+					axios.get(client.endpoint + 'live/update/' + client.userID);
+
+					// Now we smack discord...
+					client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'target': 'discord:' + client.userID, 'live' : message.payload.event.broadcaster_user_id }, 'source': 'komfybot' }));
 
 					// If online comes in, clear offline timer...
 					client.timeouts.clear('offlineTimer');
