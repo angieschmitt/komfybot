@@ -12,6 +12,7 @@
         "discord": "node ./discord/index.js",
         "websocket": "node ./websocket/server.mjs",
         "twitchv2": "node ./twitch-v2/index.js",
+        "discordv2": "node ./discord-v2/index.js",
         "socketv2": "node ./websocket-v2/server.mjs"
     },
     "dependencies": {

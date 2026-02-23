@@ -10,3 +10,5 @@ websocket/certs
 
 twitch-v2/settings.js
 websocket-v2/certs
+
+discord-v2/settings.js
