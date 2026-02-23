@@ -33,10 +33,11 @@ module.exports = {
 
 			// Now only run if it's supposed to...
 			if (data.action === 'ping' && targets.includes(identifier)) {
+
 				if ('live' in data.data) {
 
 					// First, check if they've already pinged...
-					axios.get(client.endpoint + 'discord/shoutouts' + client.userID + '/' + data.data.live)
+					axios.get(client.endpoint + 'discord/shoutouts/' + client.userID + '/' + data.data.live)
 						.then(function(response) {
 							if (response.data.status == 'success') {
 								// If pinged = false...
@@ -50,30 +51,33 @@ module.exports = {
 												const data = response.data.response;
 												const streamData = data.streamData;
 
-												// Define a thumbnail...
-												let gameThumbnail = streamData['thumbnail_url'];
-												gameThumbnail = gameThumbnail.replace('{height}', '400');
-												gameThumbnail = gameThumbnail.replace('{width}', '640');
+												if (Object.keys(streamData).length) {
 
-												const embed = new EmbedBuilder()
-													.setColor(0xC44578)
-													.setAuthor({ name: streamData.user_name })
-													.setTitle(escapeMarkdown(streamData.title != '' ? streamData.title : 'Title goes here'))
-													.setURL('https://www.twitch.tv/' + streamData.user_login)
-													// .setThumbnail(streamData.user_thumbnail)
-													.setDescription(`Currently playing: ${streamData.game_name}!`)
-													.setImage(gameThumbnail + '?v=' + Math.random());
+													// Define a thumbnail...
+													let gameThumbnail = streamData['thumbnail_url'];
+													gameThumbnail = gameThumbnail.replace('{height}', '400');
+													gameThumbnail = gameThumbnail.replace('{width}', '640');
 
-												let outputChannel = client.settings.channels['recommends'];
-												let outputText = `Hey <@&${client.settings.notifications.recommends}>, ${ escapeMarkdown(streamData.user_name) } has gone live at https://www.twitch.tv/${streamData.user_login}.`;
-												if (client.userID == data.data.live) {
-													outputChannel = client.settings.channels['is_live'];
-													outputText = `Hey ${client.settings.notifications.twitch}, ${ escapeMarkdown(streamData.user_name) } has gone live at https://www.twitch.tv/${streamData.user_login}.`;
+													const embed = new EmbedBuilder()
+														.setColor(0xC44578)
+														.setAuthor({ name: streamData.user_name })
+														.setTitle(escapeMarkdown(streamData.title != '' ? streamData.title : 'Title goes here'))
+														.setURL('https://www.twitch.tv/' + streamData.user_login)
+														// .setThumbnail(streamData.user_thumbnail)
+														.setDescription(`Currently playing: ${streamData.game_name}!`)
+														.setImage(gameThumbnail + '?v=' + Math.random());
+
+													let outputChannel = client.settings.channels['recommends'];
+													let outputText = `Hey <@&${client.settings.notifications.recommends}>, ${ escapeMarkdown(streamData.user_name) } has gone live at https://www.twitch.tv/${streamData.user_login}.`;
+													if (client.userID == data.data.live) {
+														outputChannel = client.settings.channels['is_live'];
+														outputText = `Hey ${client.settings.notifications.twitch}, ${ escapeMarkdown(streamData.user_name) } has gone live at https://www.twitch.tv/${streamData.user_login}.`;
+													}
+													client.channels.cache.get(outputChannel).send({
+														content: outputText,
+														embeds: [embed],
+													});
 												}
-												client.channels.cache.get(outputChannel).send({
-													content: outputText,
-													embeds: [embed],
-												});
 											}
 										})
 										.catch(err => console.log(err));
@@ -85,40 +89,42 @@ module.exports = {
 				else if ('offline' in data.data) {
 
 					// First, check if they've already pinged...
-					axios.get(client.endpoint + 'discord/shoutouts' + client.userID + '/' + data.data.live)
+					axios.get(client.endpoint + 'discord/shoutouts/' + client.userID + '/' + data.data.offline)
 						.then(function(response) {
 							if (response.data.status == 'success') {
+
 								// If pinged = false...
 								if (response.data.response.pinged == 0) {
-
 									// Go get the data...
-									axios.get(client.endpoint + 'live/update/discord/' + data.data.live)
-										.then(function(response) {
-											if (response.data.status == 'success') {
+									axios.get(client.endpoint + 'live/update/discord/' + data.data.offline)
+										.then(function(response2) {
+											if (response2.data.status == 'success') {
 												// Set the streamData
-												const data = response.data.response;
+												const data = response2.data.response;
 												const streamData = data.streamData;
 
-												// Define a thumbnail...
-												let gameThumbnail = streamData['thumbnail_url'];
-												gameThumbnail = gameThumbnail.replace('{height}', '400');
-												gameThumbnail = gameThumbnail.replace('{width}', '640');
+												if (Object.keys(streamData).length) {
+													// Define a thumbnail...
+													let gameThumbnail = streamData['thumbnail_url'];
+													gameThumbnail = gameThumbnail.replace('{height}', '400');
+													gameThumbnail = gameThumbnail.replace('{width}', '640');
 
-												const embed = new EmbedBuilder()
-													.setColor(0xC44578)
-													.setAuthor({ name: streamData.user_name })
-													.setTitle(escapeMarkdown(streamData.title != '' ? streamData.title : 'Title goes here'))
-													.setURL('https://www.twitch.tv/' + streamData.user_login)
-													// .setThumbnail(streamData.user_thumbnail)
-													.setDescription(`Currently playing: ${streamData.game_name}!`)
-													.setImage(gameThumbnail + '?v=' + Math.random());
+													const embed = new EmbedBuilder()
+														.setColor(0xC44578)
+														.setAuthor({ name: streamData.user_name })
+														.setTitle(escapeMarkdown(streamData.title != '' ? streamData.title : 'Title goes here'))
+														.setURL('https://www.twitch.tv/' + streamData.user_login)
+														// .setThumbnail(streamData.user_thumbnail)
+														.setDescription(`Currently playing: ${streamData.game_name}!`)
+														.setImage(gameThumbnail + '?v=' + Math.random());
 
-												const outputChannel = client.settings.channels['bot_testing'];
-												const outputText = `Hey <@&${client.settings.notifications.recommends}>, ${ escapeMarkdown(streamData.user_name) } has gone live at https://www.twitch.tv/${streamData.user_login}.`;
-												client.channels.cache.get(outputChannel).send({
-													content: outputText,
-													embeds: [embed],
-												});
+													const outputChannel = client.settings.channels['bot_testing'];
+													const outputText = `Hey <@&${client.settings.notifications.recommends}>, ${ escapeMarkdown(streamData.user_name) } has gone live at https://www.twitch.tv/${streamData.user_login}.`;
+													client.channels.cache.get(outputChannel).send({
+														content: outputText,
+														embeds: [embed],
+													});
+												}
 											}
 										})
 										.catch(err => console.log(err));

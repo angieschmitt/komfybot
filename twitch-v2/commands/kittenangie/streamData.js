@@ -79,13 +79,14 @@ module.exports = {
 				error: 'this command is for admins only.',
 			},
 			execute(args, tags, message, channel, client) {
-				const userstate = {
-					'display-name': tags['username'],
-					'bits': 100,
-					'message': message,
-				};
-				// Manually emit the event to test logic
-				client.emit('cheer', channel, userstate, message);
+				// const userstate = {
+				// 	'display-name': tags['username'],
+				// 	'bits': 100,
+				// 	'message': message,
+				// };
+				// // Manually emit the event to test logic
+				// client.emit('cheer', channel, userstate, message);
+				client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'target': 'discord:' + client.userID, 'offline' : client.userID }, 'source': 'komfybot' }));
 			},
 		},
 	},
