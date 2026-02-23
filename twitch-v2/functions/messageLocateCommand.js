@@ -6,7 +6,7 @@ module.exports = {
 
 		// Check for a command...
 		let commandData = false;
-		if (cleanedMessage.indexOf('!') !== false) {
+		if (cleanedMessage.indexOf('!') !== -1) {
 			// Remove preceding text
 			const commandText = cleanedMessage.substr(cleanedMessage.indexOf('!'));
 
@@ -30,7 +30,8 @@ module.exports = {
 		return commandData;
 	},
 	locateCommand(command, args, commandMap, channel = false) {
-		if (command in commandMap) {
+
+		if (Object.hasOwn(commandMap, command)) {
 			let action = {};
 
 			// Check for alias
@@ -71,5 +72,6 @@ module.exports = {
 		else {
 			return false;
 		}
+
 	},
 };
