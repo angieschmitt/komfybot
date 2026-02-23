@@ -123,6 +123,8 @@ module.exports = {
 				else if (message.payload.subscription.type == 'stream.offline') {
 					console.log(`Channel ${message.payload.event.broadcaster_user_name} is now OFFLINE.`);
 
+					client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'target': 'discord:' + client.userID, 'offline' : message.payload.event.broadcaster_user_id }, 'source': 'komfybot' }));
+
 					// Once we get the offline ping, wait 5 mins to mark offline...
 					client.timeouts.clear('offlineTimer');
 					client.timeouts.make(
