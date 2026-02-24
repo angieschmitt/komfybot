@@ -32,18 +32,18 @@ module.exports = {
 						}
 						else if (resData.status === 'failure') {
 							if (resData.err_msg === 'missing_authorization') {
-								// data.errorMsg.handle(channel, client, 'checkin', 'Authorization issue');
+								client.debug.write(channel, 'bonk-default', 'Authorization issue');
 							}
 							else {
-								// data.errorMsg.handle(channel, client, 'checkin', 'Failed response');
+								client.debug.write(channel, 'bonk-default', 'Failed response');
 							}
 						}
 						else {
-							// data.errorMsg.handle(channel, client, 'checkin', 'Not sure how you got here');
+							client.debug.write(channel, 'bonk-default', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						// data.errorMsg.handle(channel, client, 'checkin', 'Issue while handling command');
+						client.debug.write(channel, 'bonk-default', 'Issue while handling command');
 					})
 					.finally(function() {
 						if (content !== '') {

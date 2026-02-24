@@ -34,18 +34,18 @@ module.exports = {
 								content = `@${viewer}, seems like you've already entered this giveaway!`;
 							}
 							else if (resData.err_msg === 'missing_authorization') {
-								// data.errorMsg.handle(channel, client, 'checkin', 'Authorization issue');
+								client.debug.write(channel, 'giveaway-default', 'Authorization issue');
 							}
 							else {
-								// data.errorMsg.handle(channel, client, 'checkin', 'Failed response');
+								client.debug.write(channel, 'giveaway-default', 'Failed response');
 							}
 						}
 						else {
-							// data.errorMsg.handle(channel, client, 'checkin', 'Not sure how you got here');
+							client.debug.write(channel, 'giveaway-default', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						// data.errorMsg.handle(channel, client, 'checkin', 'Issue while handling command');
+						client.debug.write(channel, 'giveaway-default', 'Issue while handling command');
 					})
 					.finally(function() {
 						if (content !== '') {
@@ -88,18 +88,18 @@ module.exports = {
 								content = 'You need to include the prize.';
 							}
 							else if (resData.err_msg === 'missing_authorization') {
-								// data.errorMsg.handle(channel, client, 'checkin', 'Authorization issue');
+								client.debug.write(channel, 'giveaway-start', 'Authorization issue');
 							}
 							else {
-								// data.errorMsg.handle(channel, client, 'checkin', 'Failed response');
+								client.debug.write(channel, 'giveaway-start', 'Failed response');
 							}
 						}
 						else {
-							// data.errorMsg.handle(channel, client, 'checkin', 'Not sure how you got here');
+							client.debug.write(channel, 'giveaway-start', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						// data.errorMsg.handle(channel, client, 'checkin', 'Issue while handling command');
+						client.debug.write(channel, 'giveaway-start', 'Issue while handling command');
 					})
 					.finally(function() {
 						if (content !== '') {
@@ -132,18 +132,18 @@ module.exports = {
 								content = 'Seems like there is not a giveaway running.';
 							}
 							else if (resData.err_msg === 'missing_authorization') {
-								// data.errorMsg.handle(channel, client, 'checkin', 'Authorization issue');
+								client.debug.write(channel, 'giveaway-list', 'Authorization issue');
 							}
 							else {
-								// data.errorMsg.handle(channel, client, 'checkin', 'Failed response');
+								client.debug.write(channel, 'giveaway-list', 'Failed response');
 							}
 						}
 						else {
-							// data.errorMsg.handle(channel, client, 'checkin', 'Not sure how you got here');
+							client.debug.write(channel, 'giveaway-list', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						// data.errorMsg.handle(channel, client, 'checkin', 'Issue while handling command');
+						client.debug.write(channel, 'giveaway-list', 'Issue while handling command');
 					})
 					.finally(function() {
 						if (content !== '') {
@@ -190,18 +190,18 @@ module.exports = {
 								content = 'Seems like there is not a giveaway running.';
 							}
 							else if (resData.err_msg === 'missing_authorization') {
-								// data.errorMsg.handle(channel, client, 'checkin', 'Authorization issue');
+								client.debug.write(channel, 'giveaway-end', 'Authorization issue');
 							}
 							else {
-								// data.errorMsg.handle(channel, client, 'checkin', 'Failed response');
+								client.debug.write(channel, 'giveaway-end', 'Failed response');
 							}
 						}
 						else {
-							// data.errorMsg.handle(channel, client, 'checkin', 'Not sure how you got here');
+							client.debug.write(channel, 'giveaway-end', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						// data.errorMsg.handle(channel, client, 'checkin', 'Issue while handling command');
+						client.debug.write(channel, 'giveaway-end', 'Issue while handling command');
 					})
 					.finally(function() {
 						if (content !== '') {

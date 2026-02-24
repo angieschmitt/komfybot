@@ -78,18 +78,18 @@ module.exports = {
 								content = `@${viewer}, I couldn't locate a ${hat} in the store.`;
 							}
 							else if (resData.err_msg === 'missing_authorization') {
-								// data.errorMsg.handle(channel, client, 'checkin', 'Authorization issue');
+								client.debug.write(channel, 'hattington-hat', 'Authorization issue');
 							}
 							else {
-								// data.errorMsg.handle(channel, client, 'checkin', 'Failed response');
+								client.debug.write(channel, 'hattington-hat', 'Failed response');
 							}
 						}
 						else {
-							// data.errorMsg.handle(channel, client, 'checkin', 'Not sure how you got here');
+							client.debug.write(channel, 'hattington-hat', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						// data.errorMsg.handle(channel, client, 'checkin', 'Issue while handling command');
+						client.debug.write(channel, 'hattington-hat', 'Issue while handling command');
 					})
 					.finally(function() {
 						if (!('silent' in tags)) {
@@ -149,18 +149,18 @@ module.exports = {
 								content = `@${viewer}, I couldn't locate a ${snack} in the store.`;
 							}
 							else if (resData.err_msg === 'missing_authorization') {
-								// data.errorMsg.handle(channel, client, 'checkin', 'Authorization issue');
+								client.debug.write(channel, 'hattington-snack', 'Authorization issue');
 							}
 							else {
-								// data.errorMsg.handle(channel, client, 'checkin', 'Failed response');
+								client.debug.write(channel, 'hattington-snack', 'Failed response');
 							}
 						}
 						else {
-							// data.errorMsg.handle(channel, client, 'checkin', 'Not sure how you got here');
+							client.debug.write(channel, 'hattington-snack', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						// data.errorMsg.handle(channel, client, 'checkin', 'Issue while handling command');
+						client.debug.write(channel, 'hattington-snack', 'Issue while handling command');
 					})
 					.finally(function() {
 						if (!('silent' in tags)) {

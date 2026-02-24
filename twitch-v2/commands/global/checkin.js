@@ -35,18 +35,18 @@ module.exports = {
 								content = `@${viewer}, you're at ${resData.response} ${swapText}, but you've already checked in today.`;
 							}
 							else if (resData.err_msg === 'missing_authorization') {
-								// data.errorMsg.handle(channel, client, 'checkin', 'Authorization issue');
+								client.debug.write(channel, 'checkin-default', 'Authorization issue');
 							}
 							else {
-								// data.errorMsg.handle(channel, client, 'checkin', 'Failed response');
+								client.debug.write(channel, 'checkin-default', 'Failed response');
 							}
 						}
 						else {
-							// data.errorMsg.handle(channel, client, 'checkin', 'Not sure how you got here');
+							client.debug.write(channel, 'checkin-default', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						// data.errorMsg.handle(channel, client, 'checkin', 'Issue while handling command');
+						client.debug.write(channel, 'checkin-default', 'Issue while handling command');
 					})
 					.finally(function() {
 						if (content !== '') {
@@ -76,18 +76,18 @@ module.exports = {
 								content = `@${viewer} has checked in an amazing ${resData.response} ${swapText}!`;
 							}
 							else if (resData.err_msg === 'missing_authorization') {
-								// data.errorMsg.handle(channel, client, 'checkin-brag', 'Authorization issue');
+								client.debug.write(channel, 'checkin-brag', 'Authorization issue');
 							}
 							else {
-								// data.errorMsg.handle(channel, client, 'checkin-brag', 'Failed response');
+								client.debug.write(channel, 'checkin-brag', 'Failed response');
 							}
 						}
 						else {
-							// data.errorMsg.handle(channel, client, 'checkin-brag', 'Not sure how you got here');
+							client.debug.write(channel, 'checkin-brag', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						// data.errorMsg.handle(channel, client, 'checkin-brag', 'Issue while handling command');
+						client.debug.write(channel, 'checkin-brag', 'Issue while handling command');
 					})
 					.finally(function() {
 						if (content !== '') {

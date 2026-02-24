@@ -52,18 +52,18 @@ module.exports = {
 						}
 						else if (resData.status === 'failure') {
 							if (resData.err_msg === 'missing_authorization') {
-								// data.errorMsg.handle(channel, client, 'checkin', 'Authorization issue');
+								client.debug.write(channel, 'store-default', 'Authorization issue');
 							}
 							else {
-								// data.errorMsg.handle(channel, client, 'checkin', 'Failed response');
+								client.debug.write(channel, 'store-default', 'Failed response');
 							}
 						}
 						else {
-							// data.errorMsg.handle(channel, client, 'checkin', 'Not sure how you got here');
+							client.debug.write(channel, 'store-default', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						// data.errorMsg.handle(channel, client, 'checkin', 'Issue while handling command');
+						client.debug.write(channel, 'store-default', 'Issue while handling command');
 					})
 					.finally(function() {
 						if (content !== '') {
@@ -96,18 +96,18 @@ module.exports = {
 						}
 						else if (resData.status === 'failure') {
 							if (resData.err_msg === 'missing_authorization') {
-								// data.errorMsg.handle(channel, client, 'checkin', 'Authorization issue');
+								client.debug.write(channel, 'store-cats', 'Authorization issue');
 							}
 							else {
-								// data.errorMsg.handle(channel, client, 'checkin', 'Failed response');
+								client.debug.write(channel, 'store-cats', 'Failed response');
 							}
 						}
 						else {
-							// data.errorMsg.handle(channel, client, 'checkin', 'Not sure how you got here');
+							client.debug.write(channel, 'store-cats', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						// data.errorMsg.handle(channel, client, 'checkin', 'Issue while handling command');
+						client.debug.write(channel, 'store-cats', 'Issue while handling command');
 					})
 					.finally(function() {
 						if (content !== '') {
@@ -155,18 +155,18 @@ module.exports = {
 								content += 'Looks like you don\'t have anything in your inventory.';
 							}
 							else if (resData.err_msg === 'missing_authorization') {
-								// data.errorMsg.handle(channel, client, 'checkin', 'Authorization issue');
+								client.debug.write(channel, 'store-inv', 'Authorization issue');
 							}
 							else {
-								// data.errorMsg.handle(channel, client, 'checkin', 'Failed response');
+								client.debug.write(channel, 'store-inv', 'Failed response');
 							}
 						}
 						else {
-							// data.errorMsg.handle(channel, client, 'checkin', 'Not sure how you got here');
+							client.debug.write(channel, 'store-inv', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						// data.errorMsg.handle(channel, client, 'checkin', 'Issue while handling command');
+						client.debug.write(channel, 'store-inv', 'Issue while handling command');
 					})
 					.finally(function() {
 						if (content !== '') {
@@ -241,18 +241,18 @@ module.exports = {
 								content = `The product "${item}" couldn't be located in the store`;
 							}
 							else if (resData.err_msg === 'missing_authorization') {
-								// data.errorMsg.handle(channel, client, 'checkin', 'Authorization issue');
+								client.debug.write(channel, 'store-buy', 'Authorization issue');
 							}
 							else {
-								// data.errorMsg.handle(channel, client, 'checkin', 'Failed response');
+								client.debug.write(channel, 'store-buy', 'Failed response');
 							}
 						}
 						else {
-							// data.errorMsg.handle(channel, client, 'checkin', 'Not sure how you got here');
+							client.debug.write(channel, 'store-buy', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						// data.errorMsg.handle(channel, client, 'checkin', 'Issue while handling command');
+						client.debug.write(channel, 'store-buy', 'Issue while handling command');
 					})
 					.finally(function() {
 						if (content !== '') {
@@ -313,18 +313,18 @@ module.exports = {
 										content = 'No dupes located for that category.';
 									}
 									else if (resData.err_msg === 'missing_authorization') {
-										// data.errorMsg.handle(channel, client, 'checkin', 'Authorization issue');
+										client.debug.write(channel, 'store-sell_dupes', 'Authorization issue');
 									}
 									else {
-										// data.errorMsg.handle(channel, client, 'checkin', 'Failed response');
+										client.debug.write(channel, 'store-sell_dupes', 'Failed response');
 									}
 								}
 								else {
-									// data.errorMsg.handle(channel, client, 'checkin', 'Not sure how you got here');
+									client.debug.write(channel, 'store-sell_dupes', 'Not sure how you got here');
 								}
 							})
 							.catch(function() {
-								// data.errorMsg.handle(channel, client, 'checkin', 'Issue while handling command');
+								client.debug.write(channel, 'store-sell_dupes', 'Issue while handling command');
 							})
 							.finally(function() {
 								if (content !== '') {
@@ -367,18 +367,18 @@ module.exports = {
 									content = `The product "${item}" couldn't be located in the store`;
 								}
 								else if (resData.err_msg === 'missing_authorization') {
-									// data.errorMsg.handle(channel, client, 'checkin', 'Authorization issue');
+									client.debug.write(channel, 'store-sell', 'Authorization issue');
 								}
 								else {
-									// data.errorMsg.handle(channel, client, 'checkin', 'Failed response');
+									client.debug.write(channel, 'store-sell', 'Failed response');
 								}
 							}
 							else {
-								// data.errorMsg.handle(channel, client, 'checkin', 'Not sure how you got here');
+								client.debug.write(channel, 'store-sell', 'Not sure how you got here');
 							}
 						})
 						.catch(function() {
-							// data.errorMsg.handle(channel, client, 'checkin', 'Issue while handling command');
+							client.debug.write(channel, 'store-sell', 'Issue while handling command');
 						})
 						.finally(function() {
 							if (content !== '') {

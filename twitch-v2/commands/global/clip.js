@@ -19,16 +19,6 @@ module.exports = {
 						const resData = response.data;
 						if (resData.status === 'success') {
 							content = `@${viewer} generated a clip! Check it out at: ${resData.response}`;
-
-							// Timer for output...
-							client.timeouts.make(
-								'clipTimer',
-								(client, content) => {
-									functions.sayHandler(client, content);
-									client.timeouts.clear('clipTimer');
-								},
-								5000, client, content,
-							);
 						}
 						else if (resData.status === 'failure') {
 							if (resData.err_msg === 'Channel offline.') {
@@ -41,19 +31,29 @@ module.exports = {
 								content = `@${viewer}: Can you please inform @kittenAngie about this error: ${resData.err_msg}.`;
 							}
 							else {
-								// data.errorMsg.handle(channel, client, 'clip-komfykiwi', 'Failed response');
+								client.debug.write(channel, 'clip-default', 'Failed response');
 							}
 						}
 						else {
-							// data.errorMsg.handle(channel, client, 'clip-komfykiwi', 'Not sure how you got here');
+							client.debug.write(channel, 'clip-default', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						// data.errorMsg.handle(channel, client, 'clip-komfykiwi', 'Issue while handling command');
+						client.debug.write(channel, 'clip-default', 'Issue while handling command');
 					})
 					.finally(function() {
 						if (content !== '') {
-							functions.sayHandler(client, content);
+							functions.sayHandler(client, 'Creating clip...');
+
+							// Timer for output...
+							client.timeouts.make(
+								'clipTimer',
+								(client, content) => {
+									functions.sayHandler(client, content);
+									client.timeouts.clear('clipTimer');
+								},
+								5000, client, content,
+							);
 						}
 					});
 			},
