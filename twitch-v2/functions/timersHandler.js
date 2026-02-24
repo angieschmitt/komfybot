@@ -23,8 +23,6 @@ module.exports = {
 
 					// If the user is live...
 					if (client.isLive) {
-						console.log('Timer : ' + client.timerOffset + ' [' + client.channel + ', ' + client.userID + ', live]');
-
 						// Enter messages into queue
 						const timerQueue = {};
 						Object.entries(client.timers).forEach(([index, data]) => {
@@ -46,7 +44,7 @@ module.exports = {
 							const messageData = timerQueue[ident];
 
 							if (client.lastMessage !== messageData['message']) {
-								console.log('Timer: SENT ' + ident + ' IN ' + client['channel']);
+								console.log('Timer : ' + ident + ' [' + client.channel + ', ' + client.userID + ', live]');
 
 								const content = messageData['message'];
 								parent.sayHandler(client, content);
