@@ -57,7 +57,6 @@ module.exports = {
 		await parent.loadCommands(client);
 		await parent.loadEvents(client);
 
-		await parent.socketLoad(client);
 		await parent.loadToken(client);
 		await parent.loadSettings(client);
 

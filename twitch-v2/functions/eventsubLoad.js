@@ -108,34 +108,33 @@ module.exports = {
 				else if (message.payload.subscription.type == 'stream.online') {
 					console.log(`Channel ${message.payload.event.broadcaster_user_name} is now ONLINE.`);
 
-					// Locally mark the streamer as live...
-					client.isLive = true;
-
-					// Force the DB to update...
-					axios.get(client.endpoint + 'live/update/' + client.userID);
-
-					// Now we smack discord...
-					client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'target': 'discord:' + client.userID, 'live' : message.payload.event.broadcaster_user_id }, 'source': 'komfybot' }));
-
-					// If online comes in, clear offline timer...
-					client.timeouts.clear('offlineTimer');
+					// If this message is about the user...
+					if (message.payload.event.broadcaster_user_id == client.twitchUUID) {
+						// Locally mark the user as live...
+						client.isLive = true;
+						// Force the DB to update...
+						axios.get(client.endpoint + 'live/update/' + client.userID);
+						// If online comes in, clear offline timer...
+						client.timeouts.clear('offlineTimer');
+					}
 				}
 				else if (message.payload.subscription.type == 'stream.offline') {
 					console.log(`Channel ${message.payload.event.broadcaster_user_name} is now OFFLINE.`);
 
-					client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'target': 'discord:' + client.userID, 'offline' : message.payload.event.broadcaster_user_id }, 'source': 'komfybot' }));
-
-					// Once we get the offline ping, wait 5 mins to mark offline...
-					client.timeouts.clear('offlineTimer');
-					client.timeouts.make(
-						'offlineTimer',
-						() => {
-							console.log(`Channel ${message.payload.event.broadcaster_user_name} is now OFFICIALLY offline.`);
-							axios.get(client.endpoint + 'live/update/' + client.userID);
-							client.isLive = false;
-						},
-						300000,
-					);
+					// If this message is about the user...
+					if (message.payload.event.broadcaster_user_id == client.twitchUUID) {
+						// Once we get the offline ping, wait 5 mins to mark offline...
+						client.timeouts.clear('offlineTimer');
+						client.timeouts.make(
+							'offlineTimer',
+							() => {
+								console.log(`Channel ${message.payload.event.broadcaster_user_name} is now OFFICIALLY offline.`);
+								axios.get(client.endpoint + 'live/update/' + client.userID);
+								client.isLive = false;
+							},
+							300000,
+						);
+					}
 				}
 
 				// Update the keepAlive...
