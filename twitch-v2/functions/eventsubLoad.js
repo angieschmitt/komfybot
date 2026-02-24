@@ -113,7 +113,10 @@ module.exports = {
 						// Locally mark the user as live...
 						client.isLive = true;
 						// Force the DB to update...
-						axios.get(client.endpoint + 'live/update/' + client.userID);
+						axios.get(client.endpoint + 'live/update/' + client.userID)
+							.catch((err) => {
+								client.debug.write(client.channel, 'USER_ONLINE', err.message);
+							});
 						// If online comes in, clear offline timer...
 						client.timeouts.clear('offlineTimer');
 					}

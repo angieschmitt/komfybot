@@ -10,7 +10,6 @@ module.exports = {
 		websocket.onopen = () => {
 			websocket.send(JSON.stringify({ 'action': 'refresh', 'data': { 'target': 'all' }, 'source': identifier }));
 			client.timeouts.clear('websocketRetry');
-			// data.debug.write('global', 'WEBSOCKET_CONNECTED');
 		};
 
 		websocket.onmessage = (event) => {
@@ -75,5 +74,8 @@ module.exports = {
 		);
 
 		client.websocket = websocket;
+
+		// Debug log..
+		client.debug.write(client.channel, 'WEBSOCKET_CONNECTED');
 	},
 };

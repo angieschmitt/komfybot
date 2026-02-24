@@ -1,4 +1,5 @@
 const tmi = require('tmi.js');
+const debug = require('./debugHandler');
 
 module.exports = {
 	async function(globals, userID) {
@@ -95,6 +96,10 @@ module.exports = {
 				// One call to load them all...
 				await parent.dashboardLoad(client);
 
+				// Setup debug handler...
+				client.debug = await debug.content();
+				client.debug.init(client);
+
 				await parent.liveLoad(client, channel['userID']);
 				await parent.refreshConnection(client);
 
@@ -105,6 +110,8 @@ module.exports = {
 				// Create websocket connections...
 				await parent.socketLoad(client);
 				await parent.eventsubLoad(client);
+
+				client.debug.write(client.channel, 'BOT_CREATED');
 			})
 			.catch(err => console.log(err));
 

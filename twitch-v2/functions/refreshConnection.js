@@ -31,9 +31,10 @@ module.exports = {
 							}
 						}
 					})
-					.catch(err => console.log(err))
+					.catch((err) => {
+						client.debug.write(client.channel, 'REFRESH_CONNECTION', err.message);
+					})
 					.finally(() => {
-
 						if (refresh) {
 							// Disconnect, then reconnect
 							client.disconnect()
