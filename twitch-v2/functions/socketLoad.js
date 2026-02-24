@@ -29,22 +29,23 @@ module.exports = {
 				});
 			}
 
-			// Now only run if it's supposed to...
-			if (data.action === 'ping' && targets.includes('komfybot:' + client.userID)) {
-				if ('refresh' in data.data) {
-					parent.dashboardLoad(client, data.data.refresh, true);
-					if (data.data.refresh == 'overlays') {
-						parent.dataLoad('chaos-mode', client);
+			if (targets.includes('komfybot:' + client.userID)) {
+				if (data.action === 'ping') {
+					if ('refresh' in data.data) {
+						parent.dashboardLoad(client, data.data.refresh, true);
+						if (data.data.refresh == 'overlays') {
+							parent.dataLoad('chaos-mode', client);
+						}
+					}
+					else {
+						const content = 'Beep Boop';
+						parent.sayHandler(client, content);
 					}
 				}
-				else {
-					const content = 'Beep Boop';
+				else if (data.action === 'speak') {
+					const content = data['data']['message'];
 					parent.sayHandler(client, content);
 				}
-			}
-			else if (data.action === 'speak' && targets.includes('komfybot:' + client.userID)) {
-				const content = data['data']['message'];
-				parent.sayHandler(client, content);
 			}
 		};
 
