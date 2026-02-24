@@ -1,5 +1,5 @@
 module.exports = {
-	name: 'ping',
+	name: 'speak',
 	actions: {
 		default: {
 			execute(users, groups, source, data) {
