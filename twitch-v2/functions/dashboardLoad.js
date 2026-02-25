@@ -44,7 +44,9 @@ module.exports = {
 					}
 				}
 			})
-			.catch(err => console.log(err))
+			.catch((err) => {
+				client.debug.write(client.channel, 'dashboardLoad', err.message);
+			})
 			.finally(() => {
 				return client;
 			});

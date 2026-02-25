@@ -35,18 +35,18 @@ module.exports = {
 								content = `@${viewer}, you're at ${resData.response} ${swapText}, but you've already checked in today.`;
 							}
 							else if (resData.err_msg === 'missing_authorization') {
-								client.debug.write(channel, 'checkin-default', 'Authorization issue');
+								client.debug.write(client.channel, 'checkin-default', 'Authorization issue');
 							}
 							else {
-								client.debug.write(channel, 'checkin-default', 'Failed response');
+								client.debug.write(client.channel, 'checkin-default', 'Failed response');
 							}
 						}
 						else {
-							client.debug.write(channel, 'checkin-default', 'Not sure how you got here');
+							client.debug.write(client.channel, 'checkin-default', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						client.debug.write(channel, 'checkin-default', 'Issue while handling command');
+						client.debug.write(client.channel, 'checkin-default', 'Issue while handling command');
 					})
 					.finally(function() {
 						if (content !== '') {
@@ -76,18 +76,18 @@ module.exports = {
 								content = `@${viewer} has checked in an amazing ${resData.response} ${swapText}!`;
 							}
 							else if (resData.err_msg === 'missing_authorization') {
-								client.debug.write(channel, 'checkin-brag', 'Authorization issue');
+								client.debug.write(client.channel, 'checkin-brag', 'Authorization issue');
 							}
 							else {
-								client.debug.write(channel, 'checkin-brag', 'Failed response');
+								client.debug.write(client.channel, 'checkin-brag', 'Failed response');
 							}
 						}
 						else {
-							client.debug.write(channel, 'checkin-brag', 'Not sure how you got here');
+							client.debug.write(client.channel, 'checkin-brag', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						client.debug.write(channel, 'checkin-brag', 'Issue while handling command');
+						client.debug.write(client.channel, 'checkin-brag', 'Issue while handling command');
 					})
 					.finally(function() {
 						if (content !== '') {

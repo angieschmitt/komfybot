@@ -37,18 +37,18 @@ module.exports = {
 						}
 						else if (resData.status === 'failure') {
 							if (resData.err_msg === 'missing_authorization') {
-								client.debug.write(channel, 'followage-default', 'Authorization issue');
+								client.debug.write(client.channel, 'followage-default', 'Authorization issue');
 							}
 							else {
-								client.debug.write(channel, 'followage-default', 'Failed response');
+								client.debug.write(client.channel, 'followage-default', 'Failed response');
 							}
 						}
 						else {
-							client.debug.write(channel, 'followage-default', 'Not sure how you got here');
+							client.debug.write(client.channel, 'followage-default', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						client.debug.write(channel, 'followage-default', 'Issue while handling command');
+						client.debug.write(client.channel, 'followage-default', 'Issue while handling command');
 					})
 					.finally(function() {
 						if (content !== '') {

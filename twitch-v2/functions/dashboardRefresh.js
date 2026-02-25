@@ -40,7 +40,9 @@ module.exports = {
 							});
 						}
 					})
-					.catch();
+					.catch((err) => {
+						globals.bots[1].debug.write('global', 'dashboard-refresh', err.message);
+					});
 			},
 			timerInterval,
 		);

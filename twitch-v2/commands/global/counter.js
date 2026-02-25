@@ -28,18 +28,18 @@ module.exports = {
 						}
 						else if (resData.status === 'failure') {
 							if (resData.err_msg === 'missing_authorization') {
-								client.debug.write(channel, 'counter-default', 'Authorization issue');
+								client.debug.write(client.channel, 'counter-default', 'Authorization issue');
 							}
 							else {
-								client.debug.write(channel, 'counter-default', 'Failed response');
+								client.debug.write(client.channel, 'counter-default', 'Failed response');
 							}
 						}
 						else {
-							client.debug.write(channel, 'counter-default', 'Not sure how you got here');
+							client.debug.write(client.channel, 'counter-default', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						client.debug.write(channel, 'counter-default', 'Issue while handling command');
+						client.debug.write(client.channel, 'counter-default', 'Issue while handling command');
 					})
 					.finally(function() {
 						if (content !== '') {
@@ -68,18 +68,18 @@ module.exports = {
 						}
 						else if (resData.status === 'failure') {
 							if (resData.err_msg === 'missing_authorization') {
-								client.debug.write(channel, 'counter-set', 'Authorization issue');
+								client.debug.write(client.channel, 'counter-set', 'Authorization issue');
 							}
 							else {
-								client.debug.write(channel, 'counter-set', 'Failed response');
+								client.debug.write(client.channel, 'counter-set', 'Failed response');
 							}
 						}
 						else {
-							client.debug.write(channel, 'counter-set', 'Not sure how you got here');
+							client.debug.write(client.channel, 'counter-set', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						client.debug.write(channel, 'counter-set', 'Issue while handling command');
+						client.debug.write(client.channel, 'counter-set', 'Issue while handling command');
 					})
 					.finally(function() {
 						if (content !== '') {
@@ -104,18 +104,18 @@ module.exports = {
 						}
 						else if (resData.status === 'failure') {
 							if (resData.err_msg === 'missing_authorization') {
-								client.debug.write(channel, 'counter-reset', 'Authorization issue');
+								client.debug.write(client.channel, 'counter-reset', 'Authorization issue');
 							}
 							else {
-								client.debug.write(channel, 'counter-reset', 'Failed response');
+								client.debug.write(client.channel, 'counter-reset', 'Failed response');
 							}
 						}
 						else {
-							client.debug.write(channel, 'counter-reset', 'Not sure how you got here');
+							client.debug.write(client.channel, 'counter-reset', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						client.debug.write(channel, 'counter-reset', 'Issue while handling command');
+						client.debug.write(client.channel, 'counter-reset', 'Issue while handling command');
 					})
 					.finally(function() {
 						if (content !== '') {

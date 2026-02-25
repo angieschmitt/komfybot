@@ -31,18 +31,18 @@ module.exports = {
 								content = `@${viewer}, it looks like you missed the window to guess!`;
 							}
 							else if (resData.err_msg === 'missing_authorization') {
-								client.debug.write(channel, 'guess-default', 'Authorization issue');
+								client.debug.write(client.channel, 'guess-default', 'Authorization issue');
 							}
 							else {
-								client.debug.write(channel, 'guess-default', 'Failed response');
+								client.debug.write(client.channel, 'guess-default', 'Failed response');
 							}
 						}
 						else {
-							client.debug.write(channel, 'guess-default', 'Not sure how you got here');
+							client.debug.write(client.channel, 'guess-default', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						client.debug.write(channel, 'guess-default', 'Issue while handling command');
+						client.debug.write(client.channel, 'guess-default', 'Issue while handling command');
 					})
 					.finally(function() {
 						if (content !== '') {
@@ -71,18 +71,18 @@ module.exports = {
 						}
 						else if (resData.status === 'failure') {
 							if (resData.err_msg === 'missing_authorization') {
-								client.debug.write(channel, 'guess-list', 'Authorization issue');
+								client.debug.write(client.channel, 'guess-list', 'Authorization issue');
 							}
 							else {
-								client.debug.write(channel, 'guess-list', 'Failed response');
+								client.debug.write(client.channel, 'guess-list', 'Failed response');
 							}
 						}
 						else {
-							client.debug.write(channel, 'guess-list', 'Not sure how you got here');
+							client.debug.write(client.channel, 'guess-list', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						client.debug.write(channel, 'guess-list', 'Issue while handling command');
+						client.debug.write(client.channel, 'guess-list', 'Issue while handling command');
 					})
 					.finally(function() {
 						if (content !== '') {
@@ -102,18 +102,18 @@ module.exports = {
 						}
 						else if (resData.status === 'failure') {
 							if (resData.err_msg === 'missing_authorization') {
-								client.debug.write(channel, 'guess-reset', 'Authorization issue');
+								client.debug.write(client.channel, 'guess-reset', 'Authorization issue');
 							}
 							else {
-								client.debug.write(channel, 'guess-reset', 'Failed response');
+								client.debug.write(client.channel, 'guess-reset', 'Failed response');
 							}
 						}
 						else {
-							client.debug.write(channel, 'guess-reset', 'Not sure how you got here');
+							client.debug.write(client.channel, 'guess-reset', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						client.debug.write(channel, 'guess-reset', 'Issue while handling command');
+						client.debug.write(client.channel, 'guess-reset', 'Issue while handling command');
 					})
 					.finally(function() {
 						if (content !== '') {
@@ -133,18 +133,18 @@ module.exports = {
 						}
 						else if (resData.status === 'failure') {
 							if (resData.err_msg === 'missing_authorization') {
-								client.debug.write(channel, 'guess-lock', 'Authorization issue');
+								client.debug.write(client.channel, 'guess-lock', 'Authorization issue');
 							}
 							else {
-								client.debug.write(channel, 'guess-lock', 'Failed response');
+								client.debug.write(client.channel, 'guess-lock', 'Failed response');
 							}
 						}
 						else {
-							client.debug.write(channel, 'guess-lock', 'Not sure how you got here');
+							client.debug.write(client.channel, 'guess-lock', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						client.debug.write(channel, 'guess-lock', 'Issue while handling command');
+						client.debug.write(client.channel, 'guess-lock', 'Issue while handling command');
 					})
 					.finally(function() {
 						if (content !== '') {
@@ -164,18 +164,18 @@ module.exports = {
 						}
 						else if (resData.status === 'failure') {
 							if (resData.err_msg === 'missing_authorization') {
-								client.debug.write(channel, 'guess-unlock', 'Authorization issue');
+								client.debug.write(client.channel, 'guess-unlock', 'Authorization issue');
 							}
 							else {
-								client.debug.write(channel, 'guess-unlock', 'Failed response');
+								client.debug.write(client.channel, 'guess-unlock', 'Failed response');
 							}
 						}
 						else {
-							client.debug.write(channel, 'guess-unlock', 'Not sure how you got here');
+							client.debug.write(client.channel, 'guess-unlock', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						client.debug.write(channel, 'guess-unlock', 'Issue while handling command');
+						client.debug.write(client.channel, 'guess-unlock', 'Issue while handling command');
 					})
 					.finally(function() {
 						if (content !== '') {

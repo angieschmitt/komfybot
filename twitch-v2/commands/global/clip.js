@@ -31,15 +31,15 @@ module.exports = {
 								content = `@${viewer}: Can you please inform @kittenAngie about this error: ${resData.err_msg}.`;
 							}
 							else {
-								client.debug.write(channel, 'clip-default', 'Failed response');
+								client.debug.write(client.channel, 'clip-default', 'Failed response');
 							}
 						}
 						else {
-							client.debug.write(channel, 'clip-default', 'Not sure how you got here');
+							client.debug.write(client.channel, 'clip-default', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						client.debug.write(channel, 'clip-default', 'Issue while handling command');
+						client.debug.write(client.channel, 'clip-default', 'Issue while handling command');
 					})
 					.finally(function() {
 						if (content !== '') {

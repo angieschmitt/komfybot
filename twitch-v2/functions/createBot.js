@@ -91,14 +91,16 @@ module.exports = {
 		// Then connect to twitch...
 		client.connect()
 			.then(async () => {
-				await parent.eventsLoad(client);
-
-				// One call to load them all...
-				await parent.dashboardLoad(client);
 
 				// Setup debug handler...
 				client.debug = await debug.content();
 				client.debug.init(client);
+
+				// Load events...
+				await parent.eventsLoad(client);
+
+				// One call to load them all...
+				await parent.dashboardLoad(client);
 
 				await parent.liveLoad(client, channel['userID']);
 				await parent.refreshConnection(client);

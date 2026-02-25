@@ -78,18 +78,18 @@ module.exports = {
 								content = `@${viewer}, I couldn't locate a ${hat} in the store.`;
 							}
 							else if (resData.err_msg === 'missing_authorization') {
-								client.debug.write(channel, 'hattington-hat', 'Authorization issue');
+								client.debug.write(client.channel, 'hattington-hat', 'Authorization issue');
 							}
 							else {
-								client.debug.write(channel, 'hattington-hat', 'Failed response');
+								client.debug.write(client.channel, 'hattington-hat', 'Failed response');
 							}
 						}
 						else {
-							client.debug.write(channel, 'hattington-hat', 'Not sure how you got here');
+							client.debug.write(client.channel, 'hattington-hat', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						client.debug.write(channel, 'hattington-hat', 'Issue while handling command');
+						client.debug.write(client.channel, 'hattington-hat', 'Issue while handling command');
 					})
 					.finally(function() {
 						if (!('silent' in tags)) {
@@ -149,18 +149,18 @@ module.exports = {
 								content = `@${viewer}, I couldn't locate a ${snack} in the store.`;
 							}
 							else if (resData.err_msg === 'missing_authorization') {
-								client.debug.write(channel, 'hattington-snack', 'Authorization issue');
+								client.debug.write(client.channel, 'hattington-snack', 'Authorization issue');
 							}
 							else {
-								client.debug.write(channel, 'hattington-snack', 'Failed response');
+								client.debug.write(client.channel, 'hattington-snack', 'Failed response');
 							}
 						}
 						else {
-							client.debug.write(channel, 'hattington-snack', 'Not sure how you got here');
+							client.debug.write(client.channel, 'hattington-snack', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						client.debug.write(channel, 'hattington-snack', 'Issue while handling command');
+						client.debug.write(client.channel, 'hattington-snack', 'Issue while handling command');
 					})
 					.finally(function() {
 						if (!('silent' in tags)) {

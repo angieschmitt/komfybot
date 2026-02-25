@@ -31,18 +31,18 @@ module.exports = {
 								content = `@${viewer}, I couldn't locate a quote with ID: ${args[1]}`;
 							}
 							else if (resData.err_msg === 'missing_authorization') {
-								client.debug.write(channel, 'quote-default', 'Authorization issue');
+								client.debug.write(client.channel, 'quote-default', 'Authorization issue');
 							}
 							else {
-								client.debug.write(channel, 'quote-default', 'Failed response');
+								client.debug.write(client.channel, 'quote-default', 'Failed response');
 							}
 						}
 						else {
-							client.debug.write(channel, 'quote-default', 'Not sure how you got here');
+							client.debug.write(client.channel, 'quote-default', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						client.debug.write(channel, 'quote-default', 'Issue while handling command');
+						client.debug.write(client.channel, 'quote-default', 'Issue while handling command');
 					})
 					.finally(function() {
 						if (content !== '') {
@@ -89,18 +89,18 @@ module.exports = {
 								content = `@${viewer}, I couldn't locate that username`;
 							}
 							else if (resData.err_msg === 'missing_authorization') {
-								client.debug.write(channel, 'quote-add', 'Authorization issue');
+								client.debug.write(client.channel, 'quote-add', 'Authorization issue');
 							}
 							else {
-								client.debug.write(channel, 'quote-add', 'Failed response');
+								client.debug.write(client.channel, 'quote-add', 'Failed response');
 							}
 						}
 						else {
-							client.debug.write(channel, 'quote-add', 'Not sure how you got here');
+							client.debug.write(client.channel, 'quote-add', 'Not sure how you got here');
 						}
 					})
 					.catch(function() {
-						client.debug.write(channel, 'quote-add', 'Issue while handling command');
+						client.debug.write(client.channel, 'quote-add', 'Issue while handling command');
 					})
 					.finally(function() {
 						if (content !== '') {
