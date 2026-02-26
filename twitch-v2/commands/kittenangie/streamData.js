@@ -38,6 +38,18 @@ module.exports = {
 					}
 				}
 
+				// Set chaosMode state...
+				client.redeems.states.chaosMode = true;
+				client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'redeemID' : 'force', 'redemptionID': 'force', 'content' : 'v', 'target': 'chaos-mode:' + client.userID }, 'source': 'komfybot' }));
+				client.timeouts.make(
+					'chaosMode',
+					() => {
+						client.redeems.states.chaosMode = false;
+						client.timeouts.clear('chaosMode');
+					},
+					90000,
+				);
+
 			},
 		},
 		chatters: {

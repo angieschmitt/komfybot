@@ -41,6 +41,7 @@ module.exports = {
 						}
 					})
 					.catch((err) => {
+						console.log(globals.bots[1].channel);
 						globals.bots[1].debug.write('global', 'dashboard-refresh', err.message);
 					});
 			},
