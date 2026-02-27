@@ -184,6 +184,11 @@ module.exports = {
 			console.log(client.channel + ' : Online successful!');
 		}
 		catch (err) {
+			const parent = this;
+			if (err.response.data.message == 'Invalid OAuth token') {
+				parent.refreshConnection(client);
+			}
+
 			console.error(client.channel + ' : Online failed : ' + err.response.data.message);
 		}
 	},
@@ -207,6 +212,11 @@ module.exports = {
 			console.log(client.channel + ' : Offline successful!');
 		}
 		catch (err) {
+			const parent = this;
+			if (err.response.data.message == 'Invalid OAuth token') {
+				parent.refreshConnection(client);
+			}
+
 			console.error(client.channel + ' : Offline failed : ' + err.response.data.message);
 		}
 	},
@@ -230,6 +240,11 @@ module.exports = {
 			console.log(client.channel + ' : Channel Points successful!');
 		}
 		catch (err) {
+			const parent = this;
+			if (err.response.data.message == 'Invalid OAuth token') {
+				parent.refreshConnection(client);
+			}
+
 			console.error(client.channel + ' : Channel Points failed : ' + err.response.data.message);
 		}
 	},

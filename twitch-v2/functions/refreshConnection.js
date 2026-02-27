@@ -20,15 +20,15 @@ module.exports = {
 							if (client.opts.identity.password !== botDataJson['botToken']) {
 								// Update the password
 								client.opts.identity.password = botDataJson['botToken'];
-
-								// Update the bot info...
-								client['clientID'] = botDataJson['clientID'];
-								client['appToken'] = botDataJson['appToken'];
 								client['botToken'] = botDataJson['botToken'];
 
 								// The password changed, need to refresh...
 								refresh = true;
 							}
+
+							// Always keep this up to date...
+							client['clientID'] = botDataJson['clientID'];
+							client['appToken'] = botDataJson['appToken'];
 						}
 					})
 					.catch((err) => {
