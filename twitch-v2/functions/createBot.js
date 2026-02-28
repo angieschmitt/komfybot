@@ -37,6 +37,10 @@ module.exports = {
 		client['appToken'] = botDataJson['appToken'];
 		client['botToken'] = botDataJson['botToken'];
 
+		// Silly data
+		client['launch'] = new Date();
+
+		// Interval and Timeouts containers...
 		client['intervals'] = {
 			// to keep a reference to all the intervals
 			intervals : new Array,
@@ -115,7 +119,9 @@ module.exports = {
 
 				client.debug.write(client.channel, 'BOT_CREATED');
 			})
-			.catch(err => console.log(err));
+			.catch((err) => {
+				client.debug.write(client.channel, 'BOT_CREATED', err.message);
+			});
 
 		return globals;
 	},

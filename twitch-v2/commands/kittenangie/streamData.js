@@ -30,7 +30,7 @@ module.exports = {
 				if ('chaos-mode' in client.overlay) {
 					if ('data' in client.overlay['chaos-mode']) {
 						let content = 'Chaos mode word list: ';
-						Object.entries(client.data.chaosMode).forEach(([data]) => { // eslint-disable-line no-unused-vars
+						Object.entries(client.data.chaosMode).forEach(([data]) => { // eslint-disable-line no-unused-consts
 							content += data + ', ';
 						});
 						content = content.substring(0, content.length - 2);
@@ -101,5 +101,32 @@ module.exports = {
 				client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'target': 'discord:' + client.userID, 'offline' : client.userID }, 'source': 'komfybot' }));
 			},
 		},
+		uptime: {
+			perms: {
+				levels: ['admin'],
+				error: 'this command is for admins only.',
+			},
+			execute(args, tags, message, channel, client) {
+				let content = '';
+				const launch = new Date(client.launch);
+				const newDate = module.exports.getTimeSince(launch);
+				content += `Launched: ${launch} || Uptime: ${newDate}`;
+				functions.sayHandler(client, content);
+			},
+		},
+	},
+	getTimeSince(date) {
+
+		let seconds = Math.floor(((new Date()) - date) / 1000);
+		let minutes = Math.floor(seconds / 60);
+		let hours = Math.floor(minutes / 60);
+		const days = Math.floor(hours / 24);
+
+		hours = hours - (days * 24);
+		minutes = minutes - (days * 24 * 60) - (hours * 60);
+		seconds = seconds - (days * 24 * 60 * 60) - (hours * 60 * 60) - (minutes * 60);
+
+		const str = `${days} days, ${hours} hrs, ${minutes} mins, ${seconds} secs`;
+		return str;
 	},
 };
