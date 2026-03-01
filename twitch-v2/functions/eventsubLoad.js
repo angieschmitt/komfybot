@@ -112,11 +112,16 @@ module.exports = {
 					if (message.payload.event.broadcaster_user_id == client.twitchUUID) {
 						// Locally mark the user as live...
 						client.isLive = true;
+
+						// Force the timer to reload...
+						parent.liveLoad(client, client.userID);
+
 						// Force the DB to update...
 						axios.get(client.endpoint + 'live/update/' + client.userID)
 							.catch((err) => {
 								client.debug.write(client.channel, 'USER_ONLINE', err.message);
 							});
+
 						// If online comes in, clear offline timer...
 						client.timeouts.clear('offlineTimer');
 					}
