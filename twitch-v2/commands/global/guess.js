@@ -17,7 +17,7 @@ module.exports = {
 			execute(args, tags, message, channel, client) {
 				const viewer = tags['username'];
 				const viewerID = tags['user-id'];
-				const guess = message.replace(args[0], '').trim().toLowerCase();
+				const guess = message.substr(message.indexOf('!')).replace(args[0], '').trim().toLowerCase();
 
 				let content = '';
 				axios.get(client.endpoint + 'data/guess/' + client.userID + '/' + viewerID + '/' + guess)

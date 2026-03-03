@@ -2,11 +2,11 @@ const axios = require('axios');
 
 module.exports = {
 	async function(client, userID) {
-		axios.get(client.endpoint + 'live/retrieve/' + userID)
+		axios.get(client.endpoint + 'live/update/' + userID)
 			.then(function(response) {
 				const responseData = response.data;
 				if (responseData.status === 'success') {
-					const userData = responseData.response[ client['twitchUUID'] ];
+					const userData = responseData.response;
 					client['isLive'] = (userData.isLive === '0' ? false : true);
 					client['streamData'] = userData.streamData;
 

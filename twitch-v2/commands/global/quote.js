@@ -64,7 +64,7 @@ module.exports = {
 
 				const viewer = tags['username'];
 
-				let quote = message.replace(args[0], '').replace(args[1], '').trim();
+				let quote = message.substr(message.indexOf('!')).replace(args[0], '').replace(args[1], '').trim();
 
 				// If we have an @ reference...
 				let referenceUser = false;

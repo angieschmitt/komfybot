@@ -81,7 +81,7 @@ module.exports = {
 					return;
 				}
 
-				let reason = message.replace(args[0], '').replace(args[1], '').replace(args[2], '').replace(args[3], '').trim();
+				let reason = message.substr(message.indexOf('!')).replace(args[0], '').replace(args[1], '').replace(args[2], '').replace(args[3], '').trim();
 				reason = encodeURIComponent(reason);
 
 				let content = '';
@@ -252,6 +252,9 @@ module.exports = {
 						const output = response.data;
 						if (output.status === 'success') {
 							coinCount = (output.response ? output.response : 0);
+						}
+						else {
+							coinCount = 0;
 						}
 					})
 					.catch(err => console.log(err))

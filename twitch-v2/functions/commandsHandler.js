@@ -1,5 +1,3 @@
-const e = require("express");
-
 module.exports = {
 	function(command, channel, perms, tags, message, client) {
 		const parent = this;
@@ -58,19 +56,11 @@ module.exports = {
 
 			// Handle cleaning the message...
 			if (proceed) {
-				// Handle special tags in message
-				if (output.indexOf('{@sender}') !== -1) {
-					output = output.replace('{@sender}', '@' + tags.username);
-				}
-				if (output.indexOf('{@target}') !== -1) {
-					if (args.length > 1) {
-						output = output.replace('{@target}', args[1]);
-					}
-					else {
-						const content = 'You are missing a target for that command.';
-						parent.sayHandler(client, content);
-						return true;
-					}
+				output = module.exports.replaceContentInMessage(output, args, tags);
+				if (output === false) {
+					const content = 'You are missing a target for that command.';
+					parent.sayHandler(client, content);
+					return true;
 				}
 			}
 
@@ -130,25 +120,66 @@ module.exports = {
 
 			// Handle cleaning the message...
 			if (proceed) {
-
-				// Handle special tags in message
-				if (output.indexOf('{@sender}') !== -1) {
-					output = output.replace('{@sender}', '@' + tags.username);
-				}
-				if (output.indexOf('{@target}') !== -1) {
-					if (args.length > 1) {
-						output = output.replace('{@target}', args[1]);
-					}
-					else {
-						const content = 'You are missing a target for that command.';
-						parent.sayHandler(client, content);
-						return true;
-					}
+				output = module.exports.replaceContentInMessage(output, args, tags);
+				if (output === false) {
+					const content = 'You are missing a target for that command.';
+					parent.sayHandler(client, content);
+					return true;
 				}
 			}
 
 			// Output output...
 			parent.sayHandler(client, output);
+			return true;
+		}
+		else if ('delayed' in action) {
+
+			// Handle perms/proceed, die here if bad...
+			if (action.perms && action.perms !== undefined) {
+				let hasPerm = false;
+				action.perms['levels'].forEach((perm) => {
+					if (perms[perm]) {
+						hasPerm = true;
+					}
+				});
+				if (!hasPerm) {
+					const output = `@${tags.username}, ${action.perms.error}`;
+					parent.sayHandler(client, output);
+					return false;
+				}
+			}
+
+			// Check for required targets...
+			const entries = Object.entries(action.delayed);
+			for (let i = 0; i < entries.length; i++) {
+				const [idx, data] = entries[i]; // eslint-disable-line no-unused-vars
+				const check = module.exports.replaceContentInMessage(data[0], args, tags);
+				if (check === false) {
+					const content = 'You are missing a target for that command.';
+					parent.sayHandler(client, content);
+					return true;
+				}
+			}
+
+			// If we've made it here...
+			let delay = 0;
+			Object.entries(action.delayed).forEach(([idx, data]) => { // eslint-disable-line no-unused-vars
+				// Create the delays...
+				client.timeouts.make(
+					settings.name + '-Timer-' + idx,
+					() => {
+						const content = module.exports.replaceContentInMessage(data[0], args, tags);
+						if (content !== '') {
+							parent.sayHandler(client, module.exports.replaceContentInMessage(data[0], args, tags));
+						}
+						client.timeouts.clear(settings.name + '-Timer-' + idx);
+					},
+					(delay * 1000),
+				);
+				// Increase the delay...
+				delay += parseInt(data[1]);
+			});
+
 			return true;
 		}
 		else if ('execute' in action) {
@@ -217,5 +248,28 @@ module.exports = {
 				return true;
 			}
 		}
+	},
+	replaceContentInMessage(message, args, tags) {
+
+		// map to output
+		let messageCleaned = message.trim();
+
+		// If there is actually a message...
+		if (messageCleaned !== '') {
+			// Handle special tags in message
+			if (messageCleaned.indexOf('{@sender}') !== -1) {
+				messageCleaned = message.replace('{@sender}', '@' + tags.username);
+			}
+			if (messageCleaned.indexOf('{@target}') !== -1) {
+				if (args.length > 1) {
+					messageCleaned = messageCleaned.replace('{@target}', args[1]);
+				}
+				else {
+					return false;
+				}
+			}
+		}
+
+		return messageCleaned;
 	},
 };

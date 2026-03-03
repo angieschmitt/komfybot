@@ -1,3 +1,5 @@
+const axios = require('axios');
+
 const functionsFile = require('../../functions/index');
 const functions = functionsFile.content();
 
@@ -32,7 +34,7 @@ module.exports = {
 				if ('chaos-mode' in client.overlay) {
 					if ('data' in client.overlay['chaos-mode']) {
 						let content = 'Chaos mode word list: ';
-						Object.entries(client.data.chaosMode).forEach(([data]) => { // eslint-disable-line no-unused-consts
+						Object.entries(client.data.chaosMode).forEach(([data]) => {
 							content += data + ', ';
 						});
 						content = content.substring(0, content.length - 2);
@@ -116,6 +118,13 @@ module.exports = {
 				functions.sayHandler(client, content);
 			},
 		},
+		fuck: {
+			execute(args, tags, message, channel, client) {
+				module.exports.getLastPlayed(client, tags.username).then((data) => {
+					console.log(data);
+				});
+			},
+		},
 	},
 	getTimeSince(date) {
 
@@ -130,5 +139,15 @@ module.exports = {
 
 		const str = `${days} days, ${hours} hrs, ${minutes} mins, ${seconds} secs`;
 		return str;
+	},
+	async getLastPlayed(client, username) {
+		const reponse = await axios.get(client.endpoint + 'shoutout/insert/' + username);
+		const reponse2 = await axios.get(client.endpoint + 'shoutout/retrieve/' + username);
+
+		const raidInfo = [];
+		raidInfo['lastplayed'] = reponse2.data.response;
+		raidInfo['recent'] = reponse.data.response;
+
+		return raidInfo;
 	},
 };

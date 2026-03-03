@@ -32,6 +32,8 @@ module.exports = {
 		hat: {
 			execute(args, tags, message, channel, client) {
 
+				let content = '';
+
 				const viewer = tags['username'];
 				const viewerID = tags['user-id'];
 				const hat = message.substr(message.indexOf(args[2])).trim();
@@ -61,7 +63,6 @@ module.exports = {
 					}
 				}
 
-				let content = '';
 				axios.get(client.endpoint + 'overlay/hattington/' + client.userID + '/' + viewerID + '/check/hats/' + encodeURIComponent(hat))
 					.then(function(response) {
 						const resData = response.data;
@@ -75,7 +76,7 @@ module.exports = {
 								content = `@${viewer}, it looks like you don't have a ${hat} to lend to Hattington.`;
 							}
 							else if (resData.err_msg === 'couldnt_locate_product') {
-								content = `@${viewer}, I couldn't locate a ${hat} in the store.`;
+								content = `@${viewer}, I couldn't locate a "${hat}" in the store.`;
 							}
 							else if (resData.err_msg === 'missing_authorization') {
 								client.debug.write(client.channel, 'hattington-hat', 'Authorization issue');
@@ -102,6 +103,8 @@ module.exports = {
 		},
 		snack: {
 			execute(args, tags, message, channel, client) {
+
+				let content = '';
 
 				const viewer = tags['username'];
 				const viewerID = tags['user-id'];
@@ -132,7 +135,6 @@ module.exports = {
 					}
 				}
 
-				let content = '';
 				axios.get(client.endpoint + 'overlay/hattington/' + client.userID + '/' + viewerID + '/use/snacks/' + encodeURIComponent(snack))
 					.then(function(response) {
 						const resData = response.data;

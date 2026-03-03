@@ -182,7 +182,7 @@ module.exports = {
 				const viewerID = tags['user-id'];
 
 				let content = '';
-				let item = message.replace(args[0], '').replace(args[1], '').trim();
+				let item = message.substr(message.indexOf('!')).replace(args[0], '').replace(args[1], '').trim();
 				let amt = args.at(-1);
 				if (!amt.match(/[^$,.\d]/)) {
 					item = item.substr(0, item.length - ((amt.length) + 1)).trim();
@@ -268,7 +268,7 @@ module.exports = {
 				const viewerID = tags['user-id'];
 
 				let content = '';
-				let item = message.replace(args[0], '').replace(args[1], '').trim();
+				let item = message.substr(message.indexOf('!')).replace(args[0], '').replace(args[1], '').trim();
 				let amt = args.at(-1);
 				if (!amt.match(/[^$,.\d]/)) {
 					item = item.substr(0, item.length - ((amt.length) + 1)).trim();

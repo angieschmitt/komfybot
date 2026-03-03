@@ -57,7 +57,7 @@ module.exports = {
 		start: {
 			execute(args, tags, message, channel, client) {
 				let content = '';
-				const prize = message.replace(args[0], '').replace(args[1], '').trim().toLowerCase();
+				const prize = message.substr(message.indexOf('!')).replace(args[0], '').replace(args[1], '').trim().toLowerCase();
 				axios.get(client.endpoint + 'data/giveaway/' + client.userID + '/start/' + prize)
 					.then(function(response) {
 						const resData = response.data;
