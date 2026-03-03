@@ -5,7 +5,7 @@ const functions = functionsFile.content();
 
 module.exports = {
 	name: 'clip',
-	help: 'Make a quick clip of the stream',
+	help: 'Make a quick clip of the stream. Usage: !clip',
 	allowOffline: false,
 	actions: {
 		default: {

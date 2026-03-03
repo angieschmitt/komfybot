@@ -6,7 +6,7 @@ const functions = functionsFile.content();
 module.exports = {
 	list: false,
 	name: 'define',
-	help: 'Provides a definition for a word',
+	help: 'Provides a definition for a word. Usage: !def <word:required>',
 	aliases: {
 		'def': {
 			arg: false,

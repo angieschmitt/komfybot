@@ -7,7 +7,7 @@ module.exports = {
 	list: true,
 	channel: [ 2 ],
 	name: 'hatty',
-	help: 'Commands for Hattington',
+	help: 'Commands for Hattington. Usage: !hatty || Additional arguments: hat, snack',
 	allowOffline: false,
 	aliases: {
 		'hat': {

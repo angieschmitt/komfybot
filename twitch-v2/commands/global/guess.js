@@ -5,7 +5,7 @@ const functions = functionsFile.content();
 
 module.exports = {
 	name: 'guess',
-	help: 'Command to accept guesses. Additional args: list, reset, lock, unlock',
+	help: 'Command to accept guesses. Usage: !guess <guess:required> || Additional args: list, reset, lock, unlock',
 	aliases: {
 	},
 	actions: {

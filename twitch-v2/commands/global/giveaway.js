@@ -5,7 +5,7 @@ const functions = functionsFile.content();
 
 module.exports = {
 	name: 'giveaway',
-	help: 'Command to interact with the giveaway. Additional arguments: start, end',
+	help: 'Command to interact with the giveaway. Usage: !giveaway || Additional arguments: start, list, end',
 	aliases: {
 		'g': {
 			arg: false,

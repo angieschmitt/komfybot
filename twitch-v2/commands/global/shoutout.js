@@ -6,7 +6,7 @@ const functions = functionsFile.content();
 module.exports = {
 	list: true,
 	name: 'shoutout',
-	help: 'Command to shoutout a user in chat',
+	help: 'Command to shoutout a user in chat. Usage: !shoutout <@username:required>',
 	allowOffline: false,
 	aliases: {
 		'so': {

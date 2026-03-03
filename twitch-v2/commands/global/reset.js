@@ -6,7 +6,7 @@ const functions = functionsFile.content();
 module.exports = {
 	list: false,
 	name: 'reset',
-	help: 'Reset data when starting stream',
+	help: 'Reset data when starting stream. Usage: !reset',
 	actions: {
 		default: {
 			perms: {

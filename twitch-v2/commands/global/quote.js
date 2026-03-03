@@ -5,7 +5,7 @@ const functions = functionsFile.content();
 
 module.exports = {
 	name: 'quote',
-	help: 'Command to handle quotes. Additional args: add',
+	help: 'Command to handle quotes. Usage: !quote <quoteID:optional> || Additional args: add',
 	aliases: {
 	},
 	actions: {

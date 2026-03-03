@@ -5,7 +5,7 @@ const functions = functionsFile.content();
 
 module.exports = {
 	name: 'followage',
-	help: 'Command to retrieve users followage',
+	help: 'Command to retrieve users followage. Usage: !followage',
 	aliases: {
 	},
 	actions: {

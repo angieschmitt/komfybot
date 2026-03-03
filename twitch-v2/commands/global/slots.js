@@ -3,7 +3,7 @@ const functions = functionsFile.content();
 
 module.exports = {
 	name: 'slots',
-	help: 'Spin the slots and (optionally) wager some of your coins!',
+	help: 'Command to spin on the slots and optionally bet your coins. Usage: !slots <amount:optional>',
 	aliases: {},
 	actions: {
 		default: {

@@ -5,7 +5,7 @@ const functions = functionsFile.content();
 
 module.exports = {
 	name: 'store',
-	help: 'Command to interact with the store. Additional args: add',
+	help: 'Command to interact with the store. Usage: !store || Additional arguments: cats, inv, buy, sell',
 	addon: 1,
 	aliases: {
 		'buy': {

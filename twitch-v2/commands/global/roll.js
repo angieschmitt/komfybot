@@ -3,7 +3,7 @@ const functions = functionsFile.content();
 
 module.exports = {
 	name: 'roll',
-	help: 'Roll a die and get a number!',
+	help: 'Command to roll dice. Usage: !roll <dice:required>',
 	aliases: {},
 	actions: {
 		default: {

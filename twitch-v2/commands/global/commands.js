@@ -4,7 +4,7 @@ const functions = functionsFile.content();
 module.exports = {
 	list: false,
 	name: 'commands',
-	help: 'Outputs a list of available commands',
+	help: 'Outputs a list of available commands. Usage: !commands',
 	aliases: {
 		'cmds': {
 			arg: false,

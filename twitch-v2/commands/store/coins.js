@@ -5,14 +5,9 @@ const functions = functionsFile.content();
 
 module.exports = {
 	name: 'coins',
-	help: 'Command to interact with coins. Additional args: add',
+	help: 'Command to interact with coins. Usage: !coins <@username:optional> || Additional arguments: add, remove, give, holders, spenders',
 	addon: 1,
-	aliases: {
-		'coin': {
-			arg: false,
-			list: false,
-		},
-	},
+	aliases: {},
 	actions: {
 		default: {
 			execute(args, tags, message, channel, client) {

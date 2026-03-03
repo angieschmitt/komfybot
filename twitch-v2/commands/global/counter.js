@@ -5,7 +5,7 @@ const functions = functionsFile.content();
 
 module.exports = {
 	name: 'counter',
-	help: 'Command to count something',
+	help: 'Command to count something. Usage: !count || Additional arguments: set, reset',
 	aliases: {
 		'count': {
 			arg: false,

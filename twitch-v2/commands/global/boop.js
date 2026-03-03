@@ -5,7 +5,7 @@ const functions = functionsFile.content();
 
 module.exports = {
 	name: 'boop',
-	help: 'Command to boop someone',
+	help: 'Command to boop someone. Usage: !boop <@username:optional>',
 	aliases: {
 	},
 	actions: {
