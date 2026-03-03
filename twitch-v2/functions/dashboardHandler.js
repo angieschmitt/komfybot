@@ -15,6 +15,9 @@ module.exports = {
 		if (type == 'addons') {
 			module.exports.addonsHandler(data, client, reset);
 		}
+		else if (type == 'aliases') {
+			module.exports.aliasesHandler(data, client, reset);
+		}
 		else if (type == 'commands') {
 			module.exports.commandsHandler(data, client, reset);
 		}
@@ -46,12 +49,24 @@ module.exports = {
 	},
 	addonsHandler(data, client, reset = false) {
 
-		if (!('settings' in client) || reset) {
+		if (!('addons' in client) || reset) {
 			client.addons = new Array();
 		}
 
 		if (data !== false) {
 			client.addons = JSON.parse(data, 'utf-8');
+		}
+
+		return client;
+	},
+	aliasesHandler(data, client, reset = false) {
+
+		if (!('aliases' in client) || reset) {
+			client.aliases = new Array();
+		}
+
+		if (data !== false) {
+			client.aliases = data;
 		}
 
 		return client;
@@ -105,10 +120,16 @@ module.exports = {
 					}
 					else {
 						client.commands['global'][command.name] = command;
-
 						if (command.aliases !== undefined && Object.keys(command.aliases).length > 0) {
 							Object.entries(command.aliases).forEach(([key, data]) => {
 								module.exports.handleAlias(command, key, data, client.commands['global']);
+							});
+						}
+						if (command.name in client.aliases) {
+							const aliasList = client.aliases[command.name].split(',');
+							Object.entries(aliasList).forEach(([key, text]) => { // eslint-disable-line no-unused-vars
+								const data = { arg: false, list: true };
+								module.exports.handleAlias(command, text, data, client.commands['global']);
 							});
 						}
 					}

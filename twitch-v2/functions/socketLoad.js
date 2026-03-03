@@ -33,9 +33,6 @@ module.exports = {
 				if (data.action === 'ping') {
 					if ('refresh' in data.data) {
 						parent.dashboardLoad(client, data.data.refresh, true);
-						if (data.data.refresh == 'overlays') {
-							parent.dataLoad('chaos-mode', client);
-						}
 					}
 					else {
 						const content = 'Beep Boop';

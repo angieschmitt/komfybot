@@ -13,11 +13,19 @@ module.exports = {
 					if (type) {
 						console.log(client.channel + ' : REFRESH : ' + type);
 						parent.dashboardHandler(type, resData[type], client, reset);
+
+						if (type == 'aliases') {
+							parent.dashboardHandler('commands', resData['commands'], client, reset);
+						}
+						else if (type == 'overlays') {
+							parent.dataLoad('chaos-mode', client);
+						}
 					}
 					// Otherwise, refresh it all...
 					else {
 						// Setup the containers..
 						const addons = resData.addons;
+						const aliases = resData.aliases;
 						const commands = resData.commands;
 						const events = resData.events;
 						const reactwords = resData.reactwords;
@@ -26,6 +34,9 @@ module.exports = {
 						const settings = resData.settings;
 						const store = resData.store;
 						const timers = resData.timers;
+
+						// Load in for later use...
+						parent.dashboardHandler('aliases', aliases, client, true);
 
 						// Important ones first...
 						parent.dashboardHandler('settings', settings, client, true);
