@@ -116,6 +116,60 @@ module.exports = {
 					});
 			},
 		},
+		remove: {
+			perms: {
+				levels: ['streamer', 'mod'],
+				error: 'this command is for the streamer and mods only.',
+			},
+			args: {
+				required: [ 2, 3 ],
+				error: 'don\'t forgot the user and the amount!',
+			},
+			execute(args, tags, message, channel, client) {
+
+				const target = args[2].replace('@', '');
+				const amount = args[3] * -1;
+				if (!module.exports.isInt(amount)) {
+					content = 'The amount goes after the username';
+					functions.sayHandler(client, content);
+					return;
+				}
+
+				let reason = message.substr(message.indexOf('!')).replace(args[0], '').replace(args[1], '').replace(args[2], '').replace(args[3], '').trim();
+				reason = encodeURIComponent(reason);
+
+				let content = '';
+				axios.get(client.endpoint + 'coins/insert/' + client.userID + '/' + target + '/' + amount + '/' + reason)
+					.then(function(response) {
+						const resData = response.data;
+						if (resData.status === 'success') {
+							content = `Congrats @${target} on adding ${amount} ${(amount > 1 ? client.settings.currency.name.plural : client.settings.currency.name.single)} to your wallet.`;
+							content += ` You have a total of ${resData.response} ${(resData.response > 1 ? client.settings.currency.name.plural : client.settings.currency.name.single)}.`;
+						}
+						else if (resData.status === 'failure') {
+							if (resData.err_msg === 'missing_authorization') {
+								// data.errorMsg.handle(channel, client, 'checkin', 'Authorization issue');
+							}
+							else {
+								// data.errorMsg.handle(channel, client, 'checkin', 'Failed response');
+							}
+						}
+						else {
+							// data.errorMsg.handle(channel, client, 'checkin', 'Not sure how you got here');
+						}
+					})
+					.catch(function() {
+						// data.errorMsg.handle(channel, client, 'checkin', 'Issue while handling command');
+					})
+					.finally(function() {
+						if (!('silent' in tags)) {
+							if (content !== '') {
+								functions.sayHandler(client, content);
+							}
+						}
+					});
+			},
+		},
 		give: {
 			args: {
 				required: [ 2, 3 ],
