@@ -128,7 +128,7 @@ module.exports = {
 			execute(args, tags, message, channel, client) {
 
 				const target = args[2].replace('@', '');
-				const amount = args[3] * -1;
+				const amount = Math.abs(args[3]) * -1;
 				if (!module.exports.isInt(amount)) {
 					content = 'The amount goes after the username';
 					functions.sayHandler(client, content);
