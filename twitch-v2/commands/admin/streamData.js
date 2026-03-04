@@ -18,10 +18,10 @@ module.exports = {
 			async execute(args, tags, message, channel, client) {
 				let content = '';
 
-				await functions.liveLoad(client, client.userID);
-
-				content += ' Live: ' + (client.isLive ? 'Yes' : 'No');
-				functions.sayHandler(client, content);
+				await functions.liveLoad(client, client.userID).then(() => {
+					content += ' Live: ' + (client.isLive ? 'Yes' : 'No');
+					functions.sayHandler(client, content);
+				});
 			},
 		},
 		chaos: {

@@ -16,6 +16,10 @@ module.exports = {
 			arg: 'sell',
 			list: false,
 		},
+		'inv': {
+			arg: 'inv',
+			list: false,
+		},
 	},
 	actions: {
 		default: {

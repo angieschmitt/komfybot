@@ -117,7 +117,7 @@ module.exports = {
 						parent.liveLoad(client, client.userID);
 
 						// Force the DB to update...
-						axios.get(client.endpoint + 'live/update/' + client.userID)
+						axios.get(client.endpoint + 'live/update/' + client.userID + '/force')
 							.catch((err) => {
 								client.debug.write(client.channel, 'USER_ONLINE', err.message);
 							});
