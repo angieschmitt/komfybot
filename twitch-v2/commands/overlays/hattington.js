@@ -18,6 +18,14 @@ module.exports = {
 			arg: 'snack',
 			list: true,
 		},
+		'hatbuy': {
+			arg: 'gacha',
+			list: false,
+		},
+		'buyhat': {
+			arg: 'gacha',
+			list: false,
+		},
 	},
 	actions: {
 		default: {
@@ -224,6 +232,15 @@ module.exports = {
 							}
 						});
 				}
+			},
+		},
+		gacha: {
+			execute(args, tags, message, channel, client) {
+				// Setup message to buy the hat...
+				const args2 = ['!store', 'buy', 'Gacha', 'Hat' ];
+				const message2 = '!store buy Gacha Hat';
+				tags['silent'] = true;
+				client.commands['global'].store.actions.buy.execute(args2, tags, message2, channel, client);
 			},
 		},
 	},

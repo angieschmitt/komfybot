@@ -306,7 +306,7 @@ module.exports = {
 									let total = 0;
 									content += 'You\'ve sold the following items: ';
 									Object.entries(resData.response).forEach(([idx, details]) => { // eslint-disable-line no-unused-vars
-										content += details.qty + 'x ' + details.name + ' || ';
+										content += `${details.qty}x ${details.name} (${details.value}) || `;
 										total += details.value;
 									});
 									content = content.substring(0, content.length - 3).trim();
