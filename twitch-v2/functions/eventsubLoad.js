@@ -67,7 +67,7 @@ module.exports = {
 
 		// Handle the basics...
 		eventsub.websocket.onopen = () => {
-			console.log(client.channel + ' : Open successful!');
+			// console.log(client.channel + ' : Open successful!');
 		};
 
 		eventsub.websocket.onerror = () => {
@@ -210,7 +210,7 @@ module.exports = {
 					'Content-Type': 'application/json',
 				},
 			});
-			console.log(client.channel + ' : Online successful!');
+			// console.log(client.channel + ' : Online successful!');
 		}
 		catch (err) {
 			const parent = this;
@@ -238,7 +238,7 @@ module.exports = {
 					'Content-Type': 'application/json',
 				},
 			});
-			console.log(client.channel + ' : Offline successful!');
+			// console.log(client.channel + ' : Offline successful!');
 		}
 		catch (err) {
 			const parent = this;
@@ -266,7 +266,7 @@ module.exports = {
 					'Content-Type': 'application/json',
 				},
 			});
-			console.log(client.channel + ' : Channel Points successful!');
+			// console.log(client.channel + ' : Channel Points successful!');
 		}
 		catch (err) {
 			const parent = this;

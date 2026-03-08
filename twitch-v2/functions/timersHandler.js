@@ -44,7 +44,7 @@ module.exports = {
 							const messageData = timerQueue[ident];
 
 							if (client.lastMessage !== messageData['message']) {
-								console.log('Timer : ' + ident + ' [' + client.channel + ', ' + client.userID + ', live]');
+								console.log('Timer : ' + ident + ' [' + client.channel + ', ' + client.userID + ', live, ' + messageData['timer'] + ']');
 
 								const content = messageData['message'];
 								parent.sayHandler(client, content);
