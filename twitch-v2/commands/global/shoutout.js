@@ -7,7 +7,7 @@ module.exports = {
 	list: true,
 	name: 'shoutout',
 	help: 'Command to shoutout a user in chat. Usage: !shoutout <@username:required>',
-	allowOffline: false,
+	// allowOffline: false,
 	aliases: {
 		'so': {
 			arg: false,
@@ -58,37 +58,24 @@ module.exports = {
 										}
 
 										// Next we work on recents
-										const recent = JSON.parse(resData.response);
+										const recents = JSON.parse(resData.response);
 
-										resData2.response = 'Genshin Impact';
+										// Remove lastplayed from recent...
+										const cleanedRecents = recents.filter(function(game) {
+											return game !== resData2.response;
+										});
 
 										// If there are recents...
-										if (Object.keys(recent).length) {
+										if (Object.keys(cleanedRecents).length) {
 
 											const items = [];
-											// If last is set, remove from recent
-											if (resData2.response) {
-												const index = recent.indexOf(resData2.response);
-												if (index !== false) {
-													recent.splice(index, 1);
-												}
-											}
 
-											// Select 3 randoms
-											if (Object.keys(recent).length) {
-												const rand1 = randomProperty(recent);
-												items.push(recent[rand1]);
-												recent.splice(rand1, 1);
-											}
-											if (Object.keys(recent).length) {
-												const rand2 = randomProperty(recent);
-												items.push(recent[rand2]);
-												recent.splice(rand2, 1);
-											}
-											if (Object.keys(recent).length) {
-												const rand3 = randomProperty(recent);
-												items.push(recent[rand3]);
-												recent.splice(rand3, 1);
+											for (let index = 0; index < 3; index++) {
+												if (Object.keys(cleanedRecents).length) {
+													const rand1 = randomProperty(cleanedRecents);
+													items.push(cleanedRecents[rand1]);
+													cleanedRecents.splice(rand1, 1);
+												}
 											}
 
 											// If we have items...

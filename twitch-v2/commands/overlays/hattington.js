@@ -236,9 +236,15 @@ module.exports = {
 		},
 		gacha: {
 			execute(args, tags, message, channel, client) {
+
+				let amt = '1';
+				if ('2' in args) {
+					amt = args[2];
+				}
+
 				// Setup message to buy the hat...
-				const args2 = ['!store', 'buy', 'Gacha', 'Hat' ];
-				const message2 = '!store buy Gacha Hat';
+				const args2 = ['!store', 'buy', 'Gacha', 'Hat', amt ];
+				const message2 = `!store buy Gacha Hat ${amt}`;
 				tags['silent'] = true;
 				client.commands['global'].store.actions.buy.execute(args2, tags, message2, channel, client);
 			},
