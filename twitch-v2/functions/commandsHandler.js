@@ -163,16 +163,19 @@ module.exports = {
 
 			// If we've made it here...
 			let delay = 0;
+			const uniqueID = Math.floor(Math.random() * Math.floor(Math.random() * Date.now()));
 			Object.entries(action.delayed).forEach(([idx, data]) => { // eslint-disable-line no-unused-vars
+				// Assign a name to the timers...
+				const timerName = settings.name + '-Timer-' + idx + '_' + uniqueID;
 				// Create the delays...
 				client.timeouts.make(
-					settings.name + '-Timer-' + idx,
+					timerName,
 					() => {
 						const content = module.exports.replaceContentInMessage(data[0], args, tags);
 						if (content !== '') {
 							parent.sayHandler(client, module.exports.replaceContentInMessage(data[0], args, tags));
 						}
-						client.timeouts.clear(settings.name + '-Timer-' + idx);
+						client.timeouts.clear(timerName);
 					},
 					(delay * 1000),
 				);

@@ -24,7 +24,48 @@ module.exports = {
 				});
 			},
 		},
-		chaos: {
+		chatters: {
+			perms: {
+				levels: ['admin'],
+				error: 'this command is for admins only.',
+			},
+			execute(args, tags, message, channel, client) {
+
+				let content = ' Chatters: ' + (client.data.chatters.length ? client.data.chatters : 'None');
+				content = content.substring(0, content.length - 2);
+				content = content.trim();
+				functions.sayHandler(client, content);
+			},
+		},
+		uptime: {
+			perms: {
+				levels: ['admin'],
+				error: 'this command is for admins only.',
+			},
+			execute(args, tags, message, channel, client) {
+				let content = '';
+				const launch = new Date(client.launch);
+				const newDate = module.exports.getTimeSince(launch);
+				content += `Launched: ${launch} || Uptime: ${newDate}`;
+				functions.sayHandler(client, content);
+			},
+		},
+		timers: {
+			perms: {
+				levels: ['admin'],
+				error: 'this command is for admins only.',
+			},
+			execute(args, tags, message, channel, client) {
+				let content = '';
+				const offset = client.timerOffset;
+				content += `Current Timer: ${offset}`;
+				functions.sayHandler(client, content);
+
+				console.log(client.timeouts);
+				console.log(client.intervals);
+			},
+		},
+		forcechaos: {
 			perms: {
 				levels: ['admin'],
 				error: 'this command is for admins only.',
@@ -54,75 +95,6 @@ module.exports = {
 					90000,
 				);
 
-			},
-		},
-		chatters: {
-			perms: {
-				levels: ['admin'],
-				error: 'this command is for admins only.',
-			},
-			execute(args, tags, message, channel, client) {
-
-				let content = ' Chatters: ' + (client.data.chatters.length ? client.data.chatters : 'None');
-				content = content.substring(0, content.length - 2);
-				content = content.trim();
-				functions.sayHandler(client, content);
-			},
-		},
-		timer: {
-			perms: {
-				levels: ['admin'],
-				error: 'this command is for admins only.',
-			},
-			execute(args, tags, message, channel, client) {
-
-				const content = `${tags.username}, this is delayed content...`;
-
-				// Timer for output...
-				client.timeouts.make(
-					'checkTimer',
-					(client, content) => {
-						functions.sayHandler(client, content);
-						client.timeouts.clear('checkTimer');
-					},
-					5000, client, content,
-				);
-			},
-		},
-		event: {
-			perms: {
-				levels: ['admin'],
-				error: 'this command is for admins only.',
-			},
-			execute(args, tags, message, channel, client) {
-				// const userstate = {
-				// 	'display-name': tags['username'],
-				// 	'bits': 100,
-				// 	'message': message,
-				// };
-				// // Manually emit the event to test logic
-				// client.emit('cheer', channel, userstate, message);
-				client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'target': 'discord:' + client.userID, 'offline' : client.userID }, 'source': 'komfybot' }));
-			},
-		},
-		uptime: {
-			perms: {
-				levels: ['admin'],
-				error: 'this command is for admins only.',
-			},
-			execute(args, tags, message, channel, client) {
-				let content = '';
-				const launch = new Date(client.launch);
-				const newDate = module.exports.getTimeSince(launch);
-				content += `Launched: ${launch} || Uptime: ${newDate}`;
-				functions.sayHandler(client, content);
-			},
-		},
-		fuck: {
-			execute(args, tags, message, channel, client) {
-				module.exports.getLastPlayed(client, tags.username).then((data) => {
-					console.log(data);
-				});
 			},
 		},
 	},
