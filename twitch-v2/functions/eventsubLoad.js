@@ -98,6 +98,7 @@ module.exports = {
 				eventsub.keepAliveProxy.value = message.metadata.message_timestamp;
 			}
 			else if (message.metadata.message_type === 'notification') {
+
 				// If a channel point redeem...
 				if (message.payload.subscription.type == 'channel.channel_points_custom_reward_redemption.add') {
 					const redemptionID = message.payload.event.reward.id;
@@ -110,20 +111,43 @@ module.exports = {
 
 					// If this message is about the user...
 					if (message.payload.event.broadcaster_user_id == client.twitchUUID) {
-						// Locally mark the user as live...
-						client.isLive = true;
-
-						// Force the timer to reload...
-						parent.liveLoad(client, client.userID);
-
-						// Force the DB to update...
-						axios.get(client.endpoint + 'live/update/' + client.userID + '/force')
-							.catch((err) => {
-								client.debug.write(client.channel, 'USER_ONLINE', err.message);
-							});
 
 						// If online comes in, clear offline timer...
 						client.timeouts.clear('offlineTimer');
+
+						// Locally mark the user as live...
+						client.isLive = true;
+
+						// Force the DB to update...
+						axios.get(client.endpoint + 'live/update/' + client.userID + '/force')
+							.then(function(response) {
+								const responseData = response.data;
+								if (responseData.status === 'success') {
+									const userData = responseData.response;
+									client.streamData = userData.streamData;
+
+									// If there is streamData, get the offset...
+									if (Object.keys(client.streamData).length > 0) {
+										const dateLive = new Date(userData.streamData.started_at);
+										const dateNow = new Date();
+										const minsLive = Math.floor(Math.floor((dateNow - (dateLive)) / 1000) / 60);
+
+										// Set the timerOffset
+										client.timerOffset = minsLive;
+									}
+									// If not, we set it to 0 because they just went live...
+									// NOTE: THIS CAN HAVE FUTURE ISSUES
+									else {
+										// Set the timerOffset
+										client.timerOffset = 1;
+									}
+
+									parent.timersHandler(client, true);
+								}
+							})
+							.catch((err) => {
+								client.debug.write(client.channel, 'USER_ONLINE', err.message);
+							});
 					}
 				}
 				else if (message.payload.subscription.type == 'stream.offline') {
