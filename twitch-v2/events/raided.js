@@ -13,7 +13,7 @@ module.exports = {
 				let content = client.events['raided'];
 				content = content.replace('{@user}', '@' + username);
 				content = content.replace('{@viewers}', viewers + (viewers > 1 ? ' viewers' : ' viewer'));
-				content = content.replace('{@lastplayed}', data.lastplayed);
+				content = content.replace('{@lastplayed}', data.latest);
 
 				functions.sayHandler(client, content);
 			});
@@ -27,13 +27,18 @@ module.exports = {
 		console.log(tags);
 	},
 	async getLastPlayed(client, username) {
-		const reponse = await axios.get(client.endpoint + 'shoutout/insert/' + username);
-		const reponse2 = await axios.get(client.endpoint + 'shoutout/retrieve/' + username);
-
-		const raidInfo = [];
-		raidInfo['lastplayed'] = reponse2.data.response;
-		raidInfo['recent'] = reponse.data.response;
-
-		return raidInfo;
+		const output = await axios.get(client.endpoint + 'shoutout/insert/' + username)
+			.then(function(response) {
+				if (response.data.status == 'success') {
+					return response.data.response;
+				}
+				else {
+					return false;
+				}
+			})
+			.catch(() => {
+				return false;
+			});
+		return output;
 	},
 };

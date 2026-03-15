@@ -112,14 +112,4 @@ module.exports = {
 		const str = `${days} days, ${hours} hrs, ${minutes} mins, ${seconds} secs`;
 		return str;
 	},
-	async getLastPlayed(client, username) {
-		const reponse = await axios.get(client.endpoint + 'shoutout/insert/' + username);
-		const reponse2 = await axios.get(client.endpoint + 'shoutout/retrieve/' + username);
-
-		const raidInfo = [];
-		raidInfo['lastplayed'] = reponse2.data.response;
-		raidInfo['recent'] = reponse.data.response;
-
-		return raidInfo;
-	},
 };

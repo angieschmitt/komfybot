@@ -117,6 +117,7 @@ module.exports = {
 
 						// Locally mark the user as live...
 						client.isLive = true;
+						parent.sayHandler(client, 'Live Check: ' + client.isLive);
 
 						// Force the DB to update...
 						axios.get(client.endpoint + 'live/update/' + client.userID + '/force')

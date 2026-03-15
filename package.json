@@ -16,6 +16,10 @@
         "socketv2": "node ./websocket-v2/server.mjs"
     },
     "dependencies": {
+        "@twurple/api": "^8.0.3",
+        "@twurple/auth": "^8.0.3",
+        "@twurple/chat": "^8.0.3",
+        "@twurple/eventsub-ws": "^8.0.3",
         "axios": "^1.2.0",
         "discord.js": "^14.14.1",
         "express": "^4.18.2",

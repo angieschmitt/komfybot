@@ -44,84 +44,61 @@ module.exports = {
 					.then(function(response) {
 						const resData = response.data;
 						if (resData.status === 'success') {
-							axios.get(client.endpoint + 'shoutout/retrieve/' + username)
-								.then(function(response2) {
-									const resData2 = response2.data;
-									if (resData2.status === 'success') {
+							// Start the content
+							content = `Make sure you check out @${username} over at https://www.twitch.tv/${username} !`;
 
-										// Start the content
-										content = `Make sure you check out @${username} over at https://www.twitch.tv/${username} !`;
+							// Slap in the last game
+							if (resData.response.latest) {
+								content += ` They were last seen playing ${resData.response.latest}`;
+							}
 
-										// Slap in the last game
-										if (resData2.response) {
-											content += ` They were last seen playing ${resData2.response}`;
-										}
+							// Next we work on recents
+							const recents = JSON.parse(resData.response.recent);
 
-										// Next we work on recents
-										const recents = JSON.parse(resData.response);
+							// Remove lastplayed from recent...
+							const cleanedRecents = recents.filter(function(game) {
+								return game !== resData.response.latest;
+							});
 
-										// Remove lastplayed from recent...
-										const cleanedRecents = recents.filter(function(game) {
-											return game !== resData2.response;
-										});
+							// If there are recents...
+							if (Object.keys(cleanedRecents).length) {
 
-										// If there are recents...
-										if (Object.keys(cleanedRecents).length) {
+								const items = [];
 
-											const items = [];
+								for (let index = 0; index < 3; index++) {
+									if (Object.keys(cleanedRecents).length) {
+										const rand1 = randomProperty(cleanedRecents);
+										items.push(cleanedRecents[rand1]);
+										cleanedRecents.splice(rand1, 1);
+									}
+								}
 
-											for (let index = 0; index < 3; index++) {
-												if (Object.keys(cleanedRecents).length) {
-													const rand1 = randomProperty(cleanedRecents);
-													items.push(cleanedRecents[rand1]);
-													cleanedRecents.splice(rand1, 1);
-												}
+								// If we have items...
+								if (items.length) {
+									// If we have more than 1, loop and add stuff..
+									if (items.length > 1) {
+										let games = '';
+										Object.entries(items).forEach(([key, value]) => {
+											if (items.length > (parseInt(key) + 1)) {
+												games += value + ', ';
 											}
-
-											// If we have items...
-											if (items.length) {
-												// If we have more than 1, loop and add stuff..
-												if (items.length > 1) {
-													let games = '';
-													Object.entries(items).forEach(([key, value]) => {
-														if (items.length > (parseInt(key) + 1)) {
-															games += value + ', ';
-														}
-														else {
-															games += ' and ' + value;
-														}
-													});
-													content += ' and other games like: ' + games + '.';
-												}
-												// Otherwise slap it on the end...
-												else {
-													content += ` and ${items[0]}.`;
-												}
-											}
-											// Otherwise, add the period...
 											else {
-												content += '.';
+												games += ' and ' + value;
 											}
-										}
+										});
+										content += ' and other games like: ' + games + '.';
 									}
-									else if (resData2.status === 'failure') {
-										if (resData2.err_msg === 'missing_authorization') {
-											content = 'Authorization issue. Tell @kittenAngie.';
-										}
-										else {
-											content = 'Something went wrong, tell @kittenAngie.';
-										}
-									}
+									// Otherwise slap it on the end...
 									else {
-										content = 'Something went wrong, tell @kittenAngie.';
+										content += ` and ${items[0]}.`;
 									}
-								})
-								.catch(function() {
-									content = `Go check out @${username} at https://www.twitch.tv/${username}!`;
-								})
-								.finally(function() {
-									functions.sayHandler(client, content);
-								});
+								}
+								// Otherwise, add the period...
+								else {
+									content += '.';
+								}
+							}
+
 						}
 						else if (resData.status === 'failure') {
 							if (resData.err_msg === 'missing_authorization') {
