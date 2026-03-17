@@ -11,6 +11,4 @@ Discord will only ever be for the KomfyKiwi server, but Twitch is slowly working
 - Move to final endpoints
 
 ### Twitch
-- Make Coins global
-- Make Store global
-- Move to final endpoints
+- Continue spot checking after move to twurple

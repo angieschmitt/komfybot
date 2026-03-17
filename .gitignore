@@ -1,6 +1,4 @@
 node_modules
-config.json
-config.new.json
 debug
 errors
 
@@ -12,5 +10,5 @@ discord-v2/settings.js
 # v3 cred files
 twitch-v3/settings.js
 
-# Don't push the archive...
+# Archived...
 archived
