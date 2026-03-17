@@ -4,14 +4,13 @@ config.new.json
 debug
 errors
 
-# Don't push cred files
-twitch/data/settings.js
-websocket/certs
-
+# v2 cred files
 twitch-v2/settings.js
 websocket-v2/certs
-
 discord-v2/settings.js
 
-# WIP, don't push for now...
-twitch-v3
+# v3 cred files
+twitch-v3/settings.js
+
+# Don't push the archive...
+archived

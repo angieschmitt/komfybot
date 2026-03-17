@@ -1,0 +1,38 @@
+// REDEEM: Chaos mode
+// USER: kittenAngie
+
+import { createRequire } from 'module';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const require = createRequire(import.meta.url);
+const __filename = fileURLToPath(import.meta.url);
+
+import functionsFunc from '../functions/index.js';
+const functions = functionsFunc();
+
+export default function(redeemData, client) {
+    // Build message...
+    let content = 'Chaos mode word list: ';
+    Object.entries(client.data.chaosMode).forEach(([data]) => { // eslint-disable-line no-unused-vars
+        content += data + ', ';
+    });
+    content = content.substring(0, content.length - 2);
+
+    // Now say the message in kiwi's channel
+    functions.sayHandler(client, content);
+
+    // Set chaosMode state...
+    client.redeems.states.chaosMode = true;
+    client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'redeemID' : path.basename(__filename, '.js'), 'redemptionID': redeemData.id, 'content' : redeemData.input, 'target': 'chaos-mode:' + client.userID }, 'source': 'komfybot' }));
+
+    // Start timer to turn it off...
+    client.timeouts.make(
+        'chaosMode',
+        () => {
+            client.redeems.states.chaosMode = false;
+            client.timeouts.clear('chaosMode');
+        },
+        90000,
+    );
+};

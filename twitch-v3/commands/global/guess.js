@@ -1,0 +1,190 @@
+import axios from 'axios';
+
+import functionsFunc from '../../functions/index.js';
+let functions = functionsFunc();
+
+export const settings = {
+    name: 'guess',
+	help: 'Command to accept guesses. Usage: !guess <guess:required> || Additional args: list, reset, lock, unlock',
+    list: true,
+    allowOffline: false,
+    aliases: {}
+};
+
+export const actions = {
+    default: {
+        args: {
+            required: [ 1 ],
+            error: 'don\'t forgot your guess!',
+        },
+        execute(args, tags, message, channel, client) {
+            const viewer = tags['username'];
+            const viewerID = tags['user-id'];
+            const guess = message.substr(message.indexOf('!')).replace(args[0], '').trim().toLowerCase();
+
+            let content = '';
+            axios.get(client.endpoint + 'data/guess/' + client.userID + '/' + viewerID + '/' + guess)
+                .then(function(response) {
+                    const resData = response.data;
+                    if (resData.status === 'success') {
+                        content = `@${viewer} guessed ${guess}!`;
+                    }
+                    else if (resData.status === 'failure') {
+                        if (resData.err_msg === 'guesses_locked') {
+                            content = `@${viewer}, it looks like you missed the window to guess!`;
+                        }
+                        else if (resData.err_msg === 'missing_authorization') {
+                            client.debug.write(client.channel, 'guess-default', 'Authorization issue');
+                        }
+                        else {
+                            client.debug.write(client.channel, 'guess-default', 'Failed response');
+                        }
+                    }
+                    else {
+                        client.debug.write(client.channel, 'guess-default', 'Not sure how you got here');
+                    }
+                })
+                .catch(function() {
+                    client.debug.write(client.channel, 'guess-default', 'Issue while handling command');
+                })
+                .finally(function() {
+                    if (content !== '') {
+                        functions.sayHandler(client, content);
+                    }
+                });
+        },
+    },
+    list: {
+        execute(args, tags, message, channel, client) {
+            let content = '';
+            axios.get(client.endpoint + 'data/guess/' + client.userID + '/retrieve')
+                .then(function(response) {
+                    const resData = response.data;
+                    if (resData.status === 'success') {
+                        const list = JSON.parse(resData.response.content);
+                        if (Object.keys(list).length) {
+                            Object.entries(list).forEach(([key, value]) => {
+                                content += `${key}: ${value} || `;
+                            });
+                            content = content.substring(0, (content.length - 3));
+                        }
+                        else {
+                            content = 'Seems like there aren\'t any guesses!';
+                        }
+                    }
+                    else if (resData.status === 'failure') {
+                        if (resData.err_msg === 'missing_authorization') {
+                            client.debug.write(client.channel, 'guess-list', 'Authorization issue');
+                        }
+                        else {
+                            client.debug.write(client.channel, 'guess-list', 'Failed response');
+                        }
+                    }
+                    else {
+                        client.debug.write(client.channel, 'guess-list', 'Not sure how you got here');
+                    }
+                })
+                .catch(function() {
+                    client.debug.write(client.channel, 'guess-list', 'Issue while handling command');
+                })
+                .finally(function() {
+                    if (content !== '') {
+                        functions.sayHandler(client, content);
+                    }
+                });
+        },
+    },
+    reset: {
+        execute(args, tags, message, channel, client) {
+            let content = '';
+            axios.get(client.endpoint + 'data/guess/' + client.userID + '/reset')
+                .then(function(response) {
+                    const resData = response.data;
+                    if (resData.status === 'success') {
+                        content += 'Guesses have been reset!';
+                    }
+                    else if (resData.status === 'failure') {
+                        if (resData.err_msg === 'missing_authorization') {
+                            client.debug.write(client.channel, 'guess-reset', 'Authorization issue');
+                        }
+                        else {
+                            client.debug.write(client.channel, 'guess-reset', 'Failed response');
+                        }
+                    }
+                    else {
+                        client.debug.write(client.channel, 'guess-reset', 'Not sure how you got here');
+                    }
+                })
+                .catch(function() {
+                    client.debug.write(client.channel, 'guess-reset', 'Issue while handling command');
+                })
+                .finally(function() {
+                    if (content !== '') {
+                        functions.sayHandler(client, content);
+                    }
+                });
+        },
+    },
+    lock: {
+        execute(args, tags, message, channel, client) {
+            let content = '';
+            axios.get(client.endpoint + 'data/guess/' + client.userID + '/lock')
+                .then(function(response) {
+                    const resData = response.data;
+                    if (resData.status === 'success') {
+                        content += 'Guesses are now locked!';
+                    }
+                    else if (resData.status === 'failure') {
+                        if (resData.err_msg === 'missing_authorization') {
+                            client.debug.write(client.channel, 'guess-lock', 'Authorization issue');
+                        }
+                        else {
+                            client.debug.write(client.channel, 'guess-lock', 'Failed response');
+                        }
+                    }
+                    else {
+                        client.debug.write(client.channel, 'guess-lock', 'Not sure how you got here');
+                    }
+                })
+                .catch(function() {
+                    client.debug.write(client.channel, 'guess-lock', 'Issue while handling command');
+                })
+                .finally(function() {
+                    if (content !== '') {
+                        functions.sayHandler(client, content);
+                    }
+                });
+        },
+    },
+    unlock: {
+        execute(args, tags, message, channel, client) {
+            let content = '';
+            axios.get(client.endpoint + 'data/guess/' + client.userID + '/unlock')
+                .then(function(response) {
+                    const resData = response.data;
+                    if (resData.status === 'success') {
+                        content += 'Guesses are now unlocked!';
+                    }
+                    else if (resData.status === 'failure') {
+                        if (resData.err_msg === 'missing_authorization') {
+                            client.debug.write(client.channel, 'guess-unlock', 'Authorization issue');
+                        }
+                        else {
+                            client.debug.write(client.channel, 'guess-unlock', 'Failed response');
+                        }
+                    }
+                    else {
+                        client.debug.write(client.channel, 'guess-unlock', 'Not sure how you got here');
+                    }
+                })
+                .catch(function() {
+                    client.debug.write(client.channel, 'guess-unlock', 'Issue while handling command');
+                })
+                .finally(function() {
+                    if (content !== '') {
+                        functions.sayHandler(client, content);
+                    }
+                });
+        },
+    },
+};

@@ -1,0 +1,61 @@
+import axios from 'axios';
+
+import functionsFunc from '../../functions/index.js';
+let functions = functionsFunc();
+
+export const settings = {
+    name: 'checkin',
+	help: 'Command to checkin to a stream. Usage: !checkin',
+    list: true,
+    allowOffline: false,
+    aliases: {
+		'ch': {
+			arg: false,
+			list: false,
+		},
+    }
+};
+
+export const actions = {
+    default: {
+        help: 'Checkin to the stream. !checkin',
+        execute(args, tags, message, channel, client) {
+            // Get channel and userID
+            const viewer = tags['username'];
+            const viewerID = tags['user-id'];
+
+            let content = '';
+            axios.get(client.endpoint + 'data/checkin/' + client.userID + '/' + viewerID)
+                .then(function(response) {
+
+                    const resData = response.data;
+                    const swapText = (resData.response > 1 ? 'checkins' : 'checkin');
+                    if (resData.status === 'success') {
+                        content = `Welcome in @${viewer}! You're at ${resData.response} ${swapText}!`;
+                    }
+                    else if (resData.status === 'failure') {
+                        if (resData.err_msg === 'already_checked_in') {
+                            content = `@${viewer}, you're at ${resData.response} ${swapText}, but you've already checked in today.`;
+                        }
+                        else if (resData.err_msg === 'missing_authorization') {
+                            client.debug.write(client.channel, 'checkin-default', 'Authorization issue');
+                        }
+                        else {
+                            client.debug.write(client.channel, 'checkin-default', 'Failed response');
+                        }
+                    }
+                    else {
+                        client.debug.write(client.channel, 'checkin-default', 'Not sure how you got here');
+                    }
+                })
+                .catch(function() {
+                    client.debug.write(client.channel, 'checkin-default', 'Issue while handling command');
+                })
+                .finally(function() {
+                    if (content !== '') {
+                        functions.sayHandler(client, content);
+                    }
+                });
+        },
+    },
+};
