@@ -9,12 +9,9 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "twitch": "node ./twitch/index.js",
-        "discord": "node ./discord/index.js",
-        "websocket": "node ./websocket/server.mjs",
-        "twitchv2": "node ./twitch-v2/index.js",
-        "discordv2": "node ./discord-v2/index.js",
-        "socketv2": "node ./websocket-v2/server.mjs",
+        "twitch": "node ./twitch-v2/index.js",
+        "discord": "node ./discord-v2/index.js",
+        "websocket": "node ./websocket-v2/server.mjs",
         "twitchv3": "node ./twitch-v3/index.js"
     },
     "dependencies": {
