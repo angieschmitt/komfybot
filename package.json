@@ -7,7 +7,6 @@
     "author": "Angie Schmitt",
     "license": "MIT",
     "private": true,
-    "type": "module",
     "scripts": {
         "twitch": "node ./twitch-v2/index.js",
         "discord": "node ./discord-v2/index.js",
