@@ -119,11 +119,12 @@ export async function createBot(globals, twitchUUID, userData) {
     // Setup the botAuthProvider...
     client.botAuthProvider = new RefreshingAuthProvider({ 'clientId': client.clientID, 'clientSecret': client.clientSecret });
     await client.botAuthProvider.addUserForToken(
-        { "accessToken": client.botToken, "refreshToken": client.botRefresh },
+        { "accessToken": client.botToken, "refreshToken": client.botRefresh, "expiresIn": 0, "obtainmentTimestamp": 0 },
         ['chat']
     );
     client.botAuthProvider.onRefresh(async (userID, tknData) => {
-        axios.get( `${globals['endpoint']}token/insert/1/bot/${tknData.accessToken}/${tknData.refreshToken}/${tknData.expiresIn}`);
+        console.log(`${globals['endpoint']}token/insert/${client.userID}/bot/${tknData.accessToken}/${tknData.refreshToken}/${tknData.expiresIn}`);
+        axios.get( `${globals['endpoint']}token/insert/${client.userID}/bot/${tknData.accessToken}/${tknData.refreshToken}/${tknData.expiresIn}`);
     });
     
     // Handle the chat connection and watch for input...
@@ -133,11 +134,12 @@ export async function createBot(globals, twitchUUID, userData) {
     // Setup the appAuthProvider...
     client.appAuthProvider = new RefreshingAuthProvider({ 'clientId': client.clientID, 'clientSecret': client.clientSecret });
     await client.appAuthProvider.addUserForToken(
-        { "accessToken": client.appToken, "refreshToken": client.appRefresh },
+        { "accessToken": client.appToken, "refreshToken": client.appRefresh, "expiresIn": 0, "obtainmentTimestamp": 0 },
         []
     );
     client.appAuthProvider.onRefresh(async (userID, tknData) => {
-        axios.get( `${globals['endpoint']}token/insert/1/app/${tknData.accessToken}/${tknData.refreshToken}/${tknData.expiresIn}`);
+        console.log(`${globals['endpoint']}token/insert/${client.userID}/bot/${tknData.accessToken}/${tknData.refreshToken}/${tknData.expiresIn}`);
+        axios.get( `${globals['endpoint']}token/insert/${client.userID}/app/${tknData.accessToken}/${tknData.refreshToken}/${tknData.expiresIn}`);
     });
 
     // Handle the eventSub stuff...
