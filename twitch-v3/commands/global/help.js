@@ -20,6 +20,7 @@ export const actions = {
         execute(args, tags, message, channel, client) {
 
             let content = '';
+            let alias = false;
 
             let commandLookup = client.commands['user'][args[1]];
             if (commandLookup === undefined) {
@@ -30,10 +31,15 @@ export const actions = {
             if (commandLookup !== undefined) {
                 // If no actions, we have an alias..
                 if (!('actions' in commandLookup)) {
+
+                    alias = args[1];
+
                     let commandLookup2 = client.commands['user'][commandLookup.alias];
+
                     if (commandLookup2 === undefined) {
                         commandLookup2 = client.commands['global'][commandLookup.alias];
                     }
+
                     if (commandLookup2 !== undefined) {
                         commandLookup = commandLookup2;
                     }
@@ -45,17 +51,25 @@ export const actions = {
                 const actions = commandLookup.actions;
                 const settings = commandLookup.settings;
 
-                if ('help' in settings) {
-                    content = `!${args[1]} : ${settings.help.replace('!' + settings.name, '!' + args[1])}`;
-                    
-                    if (args.length == 3) {
-                        const actionData = actions[args[2]];
-                        if ('help' in actionData) {
-                            content = `!${args[1]} ${args[2]} : ${actionData.help.replace('!' + settings.name, '!' + args[1])}`;
+                if (alias) {
+                    const actionData = actions[alias];
+                    let adjusted = actionData.help.replaceAll('!' + settings.name + ' ' + args[1], '!' + args[1]);
+                    content = `!${args[1]} : ${adjusted}`;
+                }
+                else {
+                    if ('help' in settings) {
+                        content = `!${args[1]} : ${settings.help.replaceAll('!' + settings.name, '!' + args[1])}`;
+                        
+                        if (args.length == 3) {
+                            const actionData = actions[args[2]];
+                            if ('help' in actionData) {
+                                content = `!${args[1]} ${args[2]} : ${actionData.help.replaceAll('!' + settings.name, '!' + args[1])}`;
+                            }
                         }
                     }
                 }
-                else {
+                
+                if (content === '') {
                     content = 'User generated commands do not have help text';
                 }
             }

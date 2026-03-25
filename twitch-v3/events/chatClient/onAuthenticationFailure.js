@@ -8,7 +8,7 @@ export default async function(client) {
     client.chatClient = new ChatClient({ 'authProvider': client.AuthProvider, channels: [userData.username] });
     client.chatClient.connect();
 
-    functions.eventLoader(client, chat);
+    functions.eventLoader(client, 'chat');
 
     return client;
 };

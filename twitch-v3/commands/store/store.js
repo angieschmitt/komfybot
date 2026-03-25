@@ -5,7 +5,7 @@ let functions = functionsFunc();
 
 export const settings = {
     name: 'store',
-	help: 'Command to interact with the store. Usage: !store || Additional arguments: cats, inv, buy, sell',
+	help: 'Command to interact with the store. Usage: !store <category:optional> || Additional arguments: cats, inv, buy, sell',
     list: true,
     allowOffline: true,
     addon: 1,
@@ -81,6 +81,7 @@ export const actions = {
         },
     },
     cats: {
+        help: 'Command to list the categories in the store. Usage: !store cats',
         execute(args, tags, message, channel, client) {
             let content = '';
             axios.get(client.endpoint + 'store/categories/' + client.userID)
@@ -125,6 +126,7 @@ export const actions = {
         },
     },
     inv: {
+        help: 'Command to view your items. Usage: !store inv <category:optional> <rarity:optional>',
         execute(args, tags, message, channel, client) {
 
             const viewerID = tags['user-id'];
@@ -188,6 +190,7 @@ export const actions = {
         },
     },
     buy: {
+        help: 'Command to buy items. Usage: !store buy <item:required> <amt:optional>',
         execute(args, tags, message, channel, client) {
 
             const viewer = tags['username'];
@@ -274,6 +277,7 @@ export const actions = {
         },
     },
     sell: {
+        help: 'Command to sell items. Usage: !store sell <item:required> <amt:optional>, !store sell dupes <category:required>',
         execute(args, tags, message, channel, client) {
 
             const viewer = tags['username'];
@@ -290,7 +294,7 @@ export const actions = {
             }
 
             if (item == '') {
-                content = 'You need to include the item to sell.';
+                content = 'You either need to include the item to sell, or "dupes <category>" to sell duplicates.';
                 functions.sayHandler(client, content);
                 return;
             }
