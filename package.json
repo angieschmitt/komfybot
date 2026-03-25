@@ -9,11 +9,9 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "twitch": "node ./twitch-v2/index.js",
-        "discord": "node ./discord-v2/index.js",
-        "websocket": "node ./websocket-v2/server.mjs",
-        "twitchv3": "node ./twitch-v3/index.js",
-        "discordv3": "node ./discord-v3/index.js"
+        "twitch": "node ./twitch-v3/index.js",
+        "discord": "node ./discord-v3/index.js",
+        "websocket": "node ./websocket-v2/server.mjs"
     },
     "dependencies": {
         "@twurple/api": "^8.0.3",
