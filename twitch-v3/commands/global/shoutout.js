@@ -99,6 +99,10 @@ export const actions = {
                             else {
                                 content += '.';
                             }
+
+                        }
+                        else {
+                            content += '.';
                         }
 
                     }
