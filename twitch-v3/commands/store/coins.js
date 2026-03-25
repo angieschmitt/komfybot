@@ -191,7 +191,7 @@ export const actions = {
                 .then(function(response) {
                     const resData = response.data;
                     if (resData.status === 'success') {
-                        content = `Transfer complete: @${viewer} gave @${target} ${amount} ${(amount > 1 ? client.settings.currency.name.plural : client.settings.currency.name.single)} to your wallet.`;
+                        content = `Transfer complete: @${viewer} gave @${target} ${amount} ${(amount > 1 ? client.settings.currency.name.plural : client.settings.currency.name.single)}.`;
                     }
                     else if (resData.status === 'failure') {
                         if (resData.err_msg === 'not_enough_coins') {
