@@ -120,33 +120,31 @@ export async function createBot(globals, twitchUUID, userData) {
 
     // Setup the botAuthProvider...
     client.AuthProvider = new RefreshingAuthProvider({ 'clientId': client.clientID, 'clientSecret': client.clientSecret });
-    await client.AuthProvider.addUserForToken(
-        { "accessToken": client.botToken, "refreshToken": client.botRefresh, "expiresIn": 0, "obtainmentTimestamp": 0 },
-        ['chat']
-    );
-    await client.AuthProvider.addUserForToken(
-        { "accessToken": client.appToken, "refreshToken": client.appRefresh, "expiresIn": 0, "obtainmentTimestamp": 0 },
-        []
-    );
+  
+    await client.AuthProvider.addUserForToken({ "accessToken": client.appToken, "refreshToken": client.appRefresh } );
+    await client.AuthProvider.addUserForToken({ "accessToken": client.botToken, "refreshToken": client.botRefresh }, ['chat'] );
+
+    // client.AuthProvider.refreshAccessTokenForUser(client.appUserID);
+    // client.AuthProvider.refreshAccessTokenForUser(client.botUserID);
+
     client.AuthProvider.onRefresh(async (userID, tknData) => {
-
-        console.log(userID);
-        console.log(`app: ${client.appUserID}`);
-        console.log(`bot: ${client.botUserID}`);
-
         if (userID == client.appUserID){
-            console.log('appUpdate');
+            console.log(`${client.channel} : appToken : Update`);
+            // console.log(`${globals['endpoint']}token/insert/${client.userID}/app/${tknData.accessToken}/${tknData.refreshToken}/${tknData.expiresIn}`);
             axios.get(`${globals['endpoint']}token/insert/${client.userID}/app/${tknData.accessToken}/${tknData.refreshToken}/${tknData.expiresIn}`);
         }
         else if (userID == client.botUserID){
-            console.log('botUpdate');
+            console.log(`${client.channel} : botToken : Update`);
+            // console.log(`${globals['endpoint']}token/insert/${client.userID}/bot/${tknData.accessToken}/${tknData.refreshToken}/${tknData.expiresIn}`);
             axios.get(`${globals['endpoint']}token/insert/${client.userID}/bot/${tknData.accessToken}/${tknData.refreshToken}/${tknData.expiresIn}`);
         }
     });
+
+    return;
     
     // Handle the chat connection and watch for input...
-    client.chatClient = new ChatClient({ 'authProvider': client.AuthProvider, channels: [userData.username] });
-    client.chatClient.connect();        
+    // client.chatClient = new ChatClient({ 'authProvider': client.AuthProvider, channels: [userData.username] });
+    // client.chatClient.connect();        
 
     // Handle the eventSub stuff...
     client.apiClient = new ApiClient({ 'authProvider': client.AuthProvider });
