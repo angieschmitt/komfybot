@@ -1,3 +1,5 @@
+import { ChatClient } from '@twurple/chat';
+
 import functionsFunc from '../../functions/index.js';
 let functions = functionsFunc();
 
