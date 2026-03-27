@@ -20,13 +20,6 @@ export async function messageHandler(channel, user, text, msg, client) {
         passive = false;
     }
 
-    // Handle reactwords...
-    const reactwordCheck = await parent.reactwordLocator(text, msg, client);
-    if (reactwordCheck) {
-        const chosen = parent.randomObjValue(reactwordCheck);
-        parent.sayHandler(client, chosen);
-    }
-
     // Chaos Mode stuff...
     if ('chaosMode' in client.redeems.states) {
         if (client.redeems.states.chaosMode) {
@@ -42,6 +35,25 @@ export async function messageHandler(channel, user, text, msg, client) {
                     passive = false;
                 }
             }
+        }
+    }
+
+    // Handle reactwords...
+    const reactwordCheck = await parent.reactwordLocator(text, msg, client);
+    if (reactwordCheck) {
+        const chosen = parent.randomObjValue(reactwordCheck);
+
+        // If chaosMode exists...
+        if ('chaosMode' in client.redeems.states) {
+
+            // And we're NOT in chaosMode
+            if (!client.redeems.states.chaosMode) {
+                parent.sayHandler(client, chosen);
+            }
+        }
+        // If chaosMode doesn't exist...
+        else {
+            parent.sayHandler(client, chosen);
         }
     }
 
