@@ -4,6 +4,7 @@
 		"node": true,
 		"es6": true
 	},
+    "sourceType": "module",
 	"parserOptions": {
 		"ecmaVersion": 2021
 	},
