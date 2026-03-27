@@ -47,11 +47,11 @@ export const actions = {
                     const resData = response.data;
                     if (resData.status === 'success') {
                         // Start the content
-                        content = `Make sure you check out @${username} over at https://www.twitch.tv/${username} !`;
+                        content = `Make sure you check out @${username} over at https://www.twitch.tv/${username}`;
 
                         // Slap in the last game
                         if (resData.response.latest) {
-                            content += ` They were last seen playing ${resData.response.latest}`;
+                            content += `! They were last seen playing ${resData.response.latest}`;
                         }
 
                         // Next we work on recents
