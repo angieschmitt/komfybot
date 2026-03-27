@@ -63,6 +63,16 @@ export const actions = {
             functions.sayHandler(client, content);
         },
     },
+    tokens: {
+        perms: {
+            levels: ['admin'],
+            error: 'this command is for admins only.',
+        },
+        execute(args, tags, message, channel, client) {
+            client.AuthProvider.refreshAccessTokenForUser(client.appUserID);
+            client.AuthProvider.refreshAccessTokenForUser(client.botUserID);
+        }
+    },
     forcechaos: {
         perms: {
             levels: ['admin'],
