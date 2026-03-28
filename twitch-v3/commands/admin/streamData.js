@@ -75,7 +75,7 @@ export const actions = {
             console.log(client.appToken);
             console.log(client.botToken);
 
-            if (args[1] == 'refresh'){
+            if (args[2] == 'refresh'){
                 client.AuthProvider.refreshAccessTokenForUser(client.appUserID);
                 client.AuthProvider.refreshAccessTokenForUser(client.botUserID);
             }
