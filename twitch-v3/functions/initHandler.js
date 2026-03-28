@@ -126,10 +126,14 @@ export async function createBot(globals, twitchUUID, userData) {
     client.AuthProvider.onRefresh(async (userID, tknData) => {
         if (userID == client.appUserID){
             console.log(`${client.channel} : appToken : Update`);
+            client.appToken = tknData.accessToken;
+            client.appRefresh = tknData.refreshToken;
             axios.get(`${globals['endpoint']}token/insert/${client.userID}/app/${tknData.accessToken}/${tknData.refreshToken}/${tknData.expiresIn}`);
         }
         else if (userID == client.botUserID){
             console.log(`${client.channel} : botToken : Update`);
+            client.botToken = tknData.accessToken;
+            client.botRefresh = tknData.refreshToken;
             axios.get(`${globals['endpoint']}token/insert/${client.userID}/bot/${tknData.accessToken}/${tknData.refreshToken}/${tknData.expiresIn}`);
         }
     });

@@ -69,8 +69,16 @@ export const actions = {
             error: 'this command is for admins only.',
         },
         execute(args, tags, message, channel, client) {
-            client.AuthProvider.refreshAccessTokenForUser(client.appUserID);
-            client.AuthProvider.refreshAccessTokenForUser(client.botUserID);
+
+            console.log(args);
+
+            console.log(client.appToken);
+            console.log(client.botToken);
+
+            if (args[1] == 'refresh'){
+                client.AuthProvider.refreshAccessTokenForUser(client.appUserID);
+                client.AuthProvider.refreshAccessTokenForUser(client.botUserID);
+            }
         }
     },
     forcechaos: {
