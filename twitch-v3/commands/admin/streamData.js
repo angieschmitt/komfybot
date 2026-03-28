@@ -70,8 +70,6 @@ export const actions = {
         },
         execute(args, tags, message, channel, client) {
 
-            console.log(args);
-
             console.log(client.appToken);
             console.log(client.botToken);
 
