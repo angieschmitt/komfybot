@@ -125,6 +125,11 @@ export async function createBot(globals, twitchUUID, userData) {
     await client.AuthProvider.addUserForToken({ "accessToken": client.appToken, "refreshToken": client.appRefresh, "expiresIn": 0, "obtainmentTimestamp": 0 } );
     await client.AuthProvider.addUserForToken({ "accessToken": client.botToken, "refreshToken": client.botRefresh, "expiresIn": 0, "obtainmentTimestamp": 0 }, ['chat'] );
 
+    // Force refresh on startup...
+    client.AuthProvider.refreshAccessTokenForUser(client.appUserID);
+    client.AuthProvider.refreshAccessTokenForUser(client.botUserID);
+
+    // onRefresh, do stuff...
     client.AuthProvider.onRefresh(async (userID, tknData) => {
 
         const date = new Date(tknData.obtainmentTimestamp);
@@ -132,10 +137,20 @@ export async function createBot(globals, twitchUUID, userData) {
         
         if (userID == client.appUserID){
             console.log(`${client.channel} : appToken : Update`);
+
             client.appToken = tknData.accessToken;
             client.appRefresh = tknData.refreshToken;
             client.appRefreshTime = refreshDate;
             axios.get(`${globals['endpoint']}token/insert/${client.userID}/app/${tknData.accessToken}/${tknData.refreshToken}/${tknData.expiresIn}`);
+
+            client.timeouts.make(
+                'appTokenUpdater',
+                () => {
+                    client.AuthProvider.refreshAccessTokenForUser(client.appUserID);
+                    client.timeouts.clear('appTokenUpdater');
+                },
+                ((tknData.expiresIn - 5) * 1000),
+            );
         }
         else if (userID == client.botUserID){
             console.log(`${client.channel} : botToken : Update`);
@@ -143,12 +158,18 @@ export async function createBot(globals, twitchUUID, userData) {
             client.botRefresh = tknData.refreshToken;
             client.botRefreshTime = refreshDate;
             axios.get(`${globals['endpoint']}token/insert/${client.userID}/bot/${tknData.accessToken}/${tknData.refreshToken}/${tknData.expiresIn}`);
+
+            // Not needed for this one, apparently...
+            // client.timeouts.make(
+            //     'botTokenUpdater',
+            //     () => {
+            //         client.AuthProvider.refreshAccessTokenForUser(client.botUserID);
+            //         client.timeouts.clear('botTokenUpdater');
+            //     },
+            //     ((tknData.expiresIn - 5) * 1000),
+            // );
         }
-    });
-    client.AuthProvider.onRefreshFailure(async (userID, error) => {
-        console.log('-- REFRESH FAIL START --');
-        console.log(`${userID} - ${error}`);
-        console.log('-- REFRESH FAIL END --');
+
     });
     
     // Create the ChatClient...
