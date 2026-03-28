@@ -70,8 +70,8 @@ export const actions = {
         },
         execute(args, tags, message, channel, client) {
 
-            console.log(client.appToken);
-            console.log(client.botToken);
+            console.log(client.appToken + ' -> ' + client.appRefreshTime.toLocaleString('en-US', { timeZone: "America/New_York" }));
+            console.log(client.botToken + ' -> ' + client.botRefreshTime.toLocaleString('en-US', { timeZone: "America/New_York" }));
 
             if (args[2] == 'refresh'){
                 client.AuthProvider.refreshAccessTokenForUser(client.appUserID);

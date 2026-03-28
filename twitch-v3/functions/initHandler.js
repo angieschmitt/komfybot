@@ -40,9 +40,11 @@ export async function createBot(globals, twitchUUID, userData) {
     client.appUserID = botDataJson.appUserID;
     client.appToken = botDataJson.appToken;
     client.appRefresh = botDataJson.appRefresh;
+    client.appRefreshTime = getRefreshTime(botDataJson.appLastUpdate, botDataJson.appExpires);
     client.botUserID = botDataJson.botUserID;
     client.botToken = botDataJson.botToken;
     client.botRefresh = botDataJson.botRefresh;
+    client.botRefreshTime = getRefreshTime(botDataJson.botLastUpdate, botDataJson.botExpires);
 
     // Assign some extra stuff...
     client.userID = userData.userID;
@@ -124,16 +126,22 @@ export async function createBot(globals, twitchUUID, userData) {
     await client.AuthProvider.addUserForToken({ "accessToken": client.botToken, "refreshToken": client.botRefresh, "expiresIn": 0, "obtainmentTimestamp": 0 }, ['chat'] );
 
     client.AuthProvider.onRefresh(async (userID, tknData) => {
+
+        const date = new Date(tknData.obtainmentTimestamp);
+        const refreshDate = new Date(date.setUTCSeconds(date.getUTCSeconds() + tknData.expiresIn));
+        
         if (userID == client.appUserID){
             console.log(`${client.channel} : appToken : Update`);
             client.appToken = tknData.accessToken;
             client.appRefresh = tknData.refreshToken;
+            client.appRefreshTime = refreshDate;
             axios.get(`${globals['endpoint']}token/insert/${client.userID}/app/${tknData.accessToken}/${tknData.refreshToken}/${tknData.expiresIn}`);
         }
         else if (userID == client.botUserID){
             console.log(`${client.channel} : botToken : Update`);
             client.botToken = tknData.accessToken;
             client.botRefresh = tknData.refreshToken;
+            client.botRefreshTime = refreshDate;
             axios.get(`${globals['endpoint']}token/insert/${client.userID}/bot/${tknData.accessToken}/${tknData.refreshToken}/${tknData.expiresIn}`);
         }
     });
@@ -177,3 +185,11 @@ export async function retrieveBotUsers(globals) {
         console.log(error);
     }
 };
+
+export function getRefreshTime(time, offset){
+
+    const date = new Date(time);
+    const refreshDate = new Date(date.setUTCSeconds(date.getUTCSeconds() + offset));
+
+    return refreshDate;
+}
