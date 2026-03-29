@@ -136,7 +136,7 @@ export async function createBot(globals, twitchUUID, userData) {
         const refreshDate = new Date(date.setUTCSeconds(date.getUTCSeconds() + tknData.expiresIn));
         
         if (userID == client.appUserID){
-            console.log(`${client.channel} : appToken : Update`);
+            console.log(`${client.channel} : appToken : Update : ${date.toLocaleString('en-US', { timeZone: "America/New_York" })}`);
 
             client.appToken = tknData.accessToken;
             client.appRefresh = tknData.refreshToken;
@@ -153,7 +153,7 @@ export async function createBot(globals, twitchUUID, userData) {
             );
         }
         else if (userID == client.botUserID){
-            console.log(`${client.channel} : botToken : Update`);
+            console.log(`${client.channel} : botToken : Update : ${date.toLocaleString('en-US', { timeZone: "America/New_York" })}`);
             client.botToken = tknData.accessToken;
             client.botRefresh = tknData.refreshToken;
             client.botRefreshTime = refreshDate;
