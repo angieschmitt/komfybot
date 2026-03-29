@@ -149,7 +149,7 @@ export async function createBot(globals, twitchUUID, userData) {
                     client.AuthProvider.refreshAccessTokenForUser(client.appUserID);
                     client.timeouts.clear('appTokenUpdater');
                 },
-                ((tknData.expiresIn - 5) * 1000),
+                ((tknData.expiresIn - 300) * 1000),
             );
         }
         else if (userID == client.botUserID){
@@ -166,7 +166,7 @@ export async function createBot(globals, twitchUUID, userData) {
             //         client.AuthProvider.refreshAccessTokenForUser(client.botUserID);
             //         client.timeouts.clear('botTokenUpdater');
             //     },
-            //     ((tknData.expiresIn - 5) * 1000),
+            //     ((tknData.expiresIn - 300) * 1000),
             // );
         }
 
