@@ -13,53 +13,50 @@ export const settings = {
 
 export const actions = {
     default: {
-        execute(args, tags, message, channel, client) {
+        async execute(args, tags, message, channel, client) {
 
             const viewer = tags['username'];
 
-            let content = '';
-            axios.get(client.endpoint + 'clip/insert/' + client.userID)
-                .then(function(response) {
-                    const resData = response.data;
-                    if (resData.status === 'success') {
-                        content = `@${viewer} generated a clip! Check it out at: ${resData.response}`;
-                    }
-                    else if (resData.status === 'failure') {
-                        if (resData.err_msg === 'Channel offline.') {
-                            content = `@${viewer}, you can't clip an offline channel.`;
-                        }
-                        else if (resData.err_msg === 'missing_permissions') {
-                            content = `@${channel.replace('#', '')}, it looks like the bot is missing certain permissions.`;
-                        }
-                        else if (resData.err_msg) {
-                            content = `@${viewer}: Can you please inform @kittenAngie about this error: ${resData.err_msg}.`;
-                        }
-                        else {
-                            client.debug.write(client.channel, 'clip-default', 'Failed response');
-                        }
-                    }
-                    else {
-                        client.debug.write(client.channel, 'clip-default', 'Not sure how you got here');
-                    }
-                })
-                .catch(function() {
-                    client.debug.write(client.channel, 'clip-default', 'Issue while handling command');
-                })
-                .finally(function() {
-                    if (content !== '') {
-                        functions.sayHandler(client, 'Creating clip...');
+            try {
 
-                        // Timer for output...
-                        client.timeouts.make(
-                            'clipTimer',
-                            (client, content) => {
-                                functions.sayHandler(client, content);
-                                client.timeouts.clear('clipTimer');
-                            },
-                            5000, client, content,
-                        );
-                    }
+                const clipData = await client.apiClient.asUser(client.botUserID, ctx => {
+                    const clipData = ctx.clips.createClip({ channel: client.twitchUUID, createAfterDelay: false, duration: 30, title: `Created by ${viewer}` });
+                    return clipData;
                 });
+
+                if ( clipData ){
+                    functions.sayHandler(client, 'Creating clip...');
+                    const clipURL = `https://www.twitch.tv/${client.channel.replace('#','')}/clip/${clipData}`;
+                    const content = `@${viewer} generated a clip! Check it out at: ${clipURL}`;
+
+                    // Timer for output...
+                    client.timeouts.make(
+                        'clipTimer',
+                        (client, content) => {
+                            functions.sayHandler(client, content);
+                            client.timeouts.clear('clipTimer');
+                        },
+                        2500, client, content,
+                    );
+                }
+
+            } catch (error) {
+
+                let content = '';
+
+                if ('_body' in error){
+                    const body = JSON.parse(error._body);
+                    if (body.message === 'Channel offline.') {
+                        content = `@${viewer}, you can't clip an offline channel.`;
+                    }
+                }
+                else {
+                    content = `Something went wrong. Tell @kittenAngie.`;
+                    client.debug.write(client.channel, 'clip-default', error);
+                }
+
+                functions.sayHandler(client, content);
+            }
         },
     },
 };

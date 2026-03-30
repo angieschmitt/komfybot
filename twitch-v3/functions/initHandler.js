@@ -120,10 +120,13 @@ export async function createBot(globals, twitchUUID, userData) {
     // Connect to our websocket...
     parent.websocketCreate(client);
 
-    // Setup the botAuthProvider...
+    // Setup the AuthProvider...
     client.AuthProvider = new RefreshingAuthProvider({ 'clientId': client.clientID, 'clientSecret': client.clientSecret });
-    await client.AuthProvider.addUserForToken({ "accessToken": client.appToken, "refreshToken": client.appRefresh, "expiresIn": 0, "obtainmentTimestamp": 0 } );
     await client.AuthProvider.addUserForToken({ "accessToken": client.botToken, "refreshToken": client.botRefresh, "expiresIn": 0, "obtainmentTimestamp": 0 }, ['chat'] );
+    await client.AuthProvider.addUserForToken({ "accessToken": client.appToken, "refreshToken": client.appRefresh, "expiresIn": 0, "obtainmentTimestamp": 0 } );
+
+    // Setup apiClients...
+    client.apiClient = new ApiClient({ 'authProvider': client.AuthProvider });
 
     // Force refresh on startup...
     client.AuthProvider.refreshAccessTokenForUser(client.appUserID);
@@ -177,7 +180,6 @@ export async function createBot(globals, twitchUUID, userData) {
     client.chatClient.connect();        
 
     // Create the EventSub listener...
-    client.apiClient = new ApiClient({ 'authProvider': client.AuthProvider });
     client.eventsubListener = new EventSubWsListener({ 'apiClient': client.apiClient });
     client.eventsubListener.start();
 
