@@ -24,9 +24,6 @@ export async function dashboardLoader(client, type = false, reset = false){
                     if (type == 'aliases') {
                         parent.dashboardHandler('commands', resData['commands'], client, reset);
                     }
-                    else if (type == 'overlays') {
-                        parent.dataLoad('chaos-mode', client);
-                    }
                 }
                 // Otherwise, refresh it all...
                 else {
@@ -280,6 +277,7 @@ export async function eventsHandler(data, client, reset = false) {
 };
 
 export async function overlaysHandler(data, client, reset = false) {
+    const parent = this;
 
     if (!('overlay' in client) || reset) {
         client.overlay = new Array();
@@ -294,6 +292,17 @@ export async function overlaysHandler(data, client, reset = false) {
             }
             if ('settings' in item.content) {
                 client.overlay[overlayName]['settings'] = item.content.settings;
+            }
+
+            // Special callouts...
+            if (overlayName == 'chaos-mode'){
+                client.overlay[overlayName]['triggers'] = [];
+                Object.entries(client.overlay['chaos-mode'].data).forEach(([idx, data]) => { // eslint-disable-line no-unused-vars
+                    const triggers = data.trigger.split(',');
+                    triggers.forEach((idx2) => {
+                        client.overlay[overlayName]['triggers'][idx2.toString()] = data.mediaID;
+                    });
+                });
             }
         });
     }

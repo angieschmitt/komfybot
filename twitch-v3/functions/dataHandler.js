@@ -3,10 +3,14 @@ import axios from 'axios';
 export async function dataChatters(msg, channel, client) {
     const viewerID = parseInt(msg.userInfo.userId);
     if (!client.data.chatters.includes(viewerID)) {
-        if (viewerID in client.data.walkons) {
-            const walkon = client.data.walkons[viewerID];
-            if (walkon) {
-                client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'content' : walkon, 'type' : 'walkOn', 'target': 'chaos-mode:' + client.userID }, 'source': 'komfybot' }));
+        
+        // Check for walk-on...
+        if ('walk-ons' in client.overlay){
+            const walkonsData = client.overlay['walk-ons'].data;
+            const walkonData = walkonsData.find((developer) => developer.twitchUUID === tags['user-id']);
+
+            if (walkonData){
+                client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'content' : walkonData.mediaID, 'type' : 'walkOn', 'target': 'walk-ons:' + client.userID }, 'source': 'komfybot' }));
             }
         }
 
@@ -14,22 +18,6 @@ export async function dataChatters(msg, channel, client) {
         await axios.get(client.endpoint + 'data/chatters/' + client.userID + '/' + viewerID)
             .catch(err => console.log(err));
     }
-}
-
-export async function dataChaosWords(client) {
-    const parent = this;
-
-    if ('chaos-mode' in client.overlay) {
-        client.data.chaosMode = {};
-        Object.entries(client.overlay['chaos-mode'].data).forEach(([idx, data]) => { // eslint-disable-line no-unused-vars
-            const triggers = data.trigger.split(',');
-            triggers.forEach((idx2) => {
-                client.data.chaosMode[idx2.toString()] = data.mediaID;
-            });
-        });
-    }
-
-    return client;
 }
 
 export async function dataLive(client) {

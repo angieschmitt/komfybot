@@ -79,6 +79,21 @@ export const actions = {
             }
         }
     },
+    walkon: {
+        perms: {
+            levels: ['admin'],
+            error: 'this command is for admins only.',
+        },
+        execute(args, tags, message, channel, client) {
+            
+            const walkonsData = client.overlay['walk-ons'].data;
+            const walkonData = walkonsData.find((developer) => developer.twitchUUID === tags['user-id']);
+
+            if (walkonData){
+                client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'content' : walkonData.mediaID, 'type' : 'walkOn', 'target': 'walk-ons:' + client.userID }, 'source': 'komfybot' }));
+            }
+        }
+    },
     forcechaos: {
         perms: {
             levels: ['admin'],
@@ -87,9 +102,9 @@ export const actions = {
         execute(args, tags, message, channel, client) {
 
             if ('chaos-mode' in client.overlay) {
-                if ('data' in client.overlay['chaos-mode']) {
+                if ('triggers' in client.overlay['chaos-mode']) {
                     let content = 'Chaos mode word list: ';
-                    Object.entries(client.data.chaosMode).forEach(([data]) => {
+                    Object.entries(client.overlay['chaos-mode'].triggers).forEach(([data]) => {
                         content += data + ', ';
                     });
                     content = content.substring(0, content.length - 2);

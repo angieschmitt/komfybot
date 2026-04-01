@@ -15,7 +15,7 @@ export default function(redeemData, client) {
 
     // Build message...
     let content = 'Chaos mode word list: ';
-    Object.entries(client.data.chaosMode).forEach(([data]) => { // eslint-disable-line no-unused-vars
+    Object.entries(client.overlay['chaos-mode'].triggers).forEach(([data]) => { // eslint-disable-line no-unused-vars
         content += data + ', ';
     });
     content = content.substring(0, content.length - 2);

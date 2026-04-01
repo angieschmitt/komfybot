@@ -20,6 +20,8 @@ export async function messageHandler(channel, user, text, msg, client) {
         passive = false;
     }
 
+    client.redeems.states.chaosMode = true;
+
     // Chaos Mode stuff...
     if ('chaosMode' in client.redeems.states) {
         if (client.redeems.states.chaosMode) {
@@ -27,9 +29,9 @@ export async function messageHandler(channel, user, text, msg, client) {
             // If a single word...
             if (!cleanedMessage.includes(' ')) {
                 // If it's in the channels chaos words...
-                if (cleanedMessage.toLowerCase() in client.data.chaosMode) {
+                if (cleanedMessage.toLowerCase() in client.overlay['chaos-mode'].triggers) {
                     // Pass it off to the websocket...
-                    client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'content' : client.data.chaosMode[cleanedMessage.toLowerCase()], 'type' : 'chat', 'target': 'chaos-mode:' + client.userID }, 'source': 'komfybot' }));
+                    client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'content' : client.overlay['chaos-mode'].triggers[cleanedMessage.toLowerCase()], 'type' : 'chat', 'target': 'chaos-mode:' + client.userID }, 'source': 'komfybot' }));
 
                     // Chaos-mode doesn't give passive...
                     passive = false;
