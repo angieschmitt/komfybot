@@ -20,7 +20,7 @@ export async function messageHandler(channel, user, text, msg, client) {
         passive = false;
     }
 
-    client.redeems.states.chaosMode = true;
+    // client.redeems.states.chaosMode = true;
 
     // Chaos Mode stuff...
     if ('chaosMode' in client.redeems.states) {
