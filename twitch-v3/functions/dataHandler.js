@@ -7,7 +7,7 @@ export async function dataChatters(msg, channel, client) {
         // Check for walk-on...
         if ('walk-ons' in client.overlay){
             const walkonsData = client.overlay['walk-ons'].data;
-            const walkonData = walkonsData.find((developer) => developer.twitchUUID === tags['user-id']);
+            const walkonData = walkonsData.find((developer) => developer.twitchUUID === msg.userInfo.userId);
 
             if (walkonData){
                 client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'content' : walkonData.mediaID, 'type' : 'walkOn', 'target': 'walk-ons:' + client.userID }, 'source': 'komfybot' }));
