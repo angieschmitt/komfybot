@@ -1,4 +1,4 @@
-// REDEEM: VIP - Level 1
+// REDEEM: VIP - Level 2
 // USER: komfyKiwi
 
 import axios from 'axios';
@@ -24,7 +24,19 @@ export default function(redeemData, client) {
                 content = `@${redeemData.userName} - Welcome to the VIP Lounge. Grab a blankie and some cookies!`;
                 
                 // Actually give them VIP
-                client.apiClient.channels.addVip(client.twitchUUID, redeemData.userId);
+                client.apiClient.channels.addVip(client.twitchUUID, redeemData.userId)
+                    .then(function(response) {
+                        const resData = response.data;
+                        console.log(resData);
+                    })
+                    .catch(function(error) {
+                        if ('_body' in error){
+                            const body = JSON.parse(error._body);
+                            if (body.message !== 'The specified user is already a VIP of this channel.') {
+                                client.debug.write(client.channel, 'vip-lvl1-default', body.message);
+                            }
+                        }
+                    });
 
                 // Mark it as redeemed?
                 redeemData.updateStatus('FULFILLED');
