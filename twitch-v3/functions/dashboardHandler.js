@@ -339,7 +339,9 @@ export async function redeemsHandler(data, client, reset = false) {
     if (data !== false) {
         Object.entries(data).forEach(([index, extra]) => { // eslint-disable-line no-unused-vars
             let redeemFunction = parent.redeemFileHandler(index);
-            client.redeems[index] = redeemFunction['default'];
+            if ( redeemFunction ){
+                client.redeems[index] = redeemFunction['default'];
+            }
         });
     }
 
@@ -469,6 +471,10 @@ export async function handleAlias(baseCommand, name, details, commands) {
 };
 
 export function redeemFileHandler(redeemID) {
-    const redeemFile = require('../redeems/' + redeemID);
-    return redeemFile;
+    const filePath = path.join(__dirname, '../redeems/' + redeemID + '.js');
+    if (fs.existsSync(filePath)) {
+        const redeemFile = require('../redeems/' + redeemID);
+        return redeemFile;
+    }
+    return false;
 };
