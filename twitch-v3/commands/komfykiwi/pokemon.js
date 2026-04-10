@@ -78,7 +78,7 @@ export const actions = {
                 let evoTree = false;
 
                 // Do the snowflake check...
-                if ( args[2].toLowerCase().indexOf('nidoran') !== false ){
+                if ( args[2].toLowerCase().indexOf('nidoran') !== -1 ){
                     if ( args[2].toLowerCase().indexOf('-f') == -1 || args[2].toLowerCase().indexOf('-m') == -1 ){
                         functions.sayHandler(client, 'NOTE: Nidoran is formatted as nidoran-f or nidoran-m ');
                         return;
