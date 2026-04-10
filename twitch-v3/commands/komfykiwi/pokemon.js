@@ -57,7 +57,7 @@ export const actions = {
                         output += `${ flavorText }`;
                     })
                     .catch(function(error) {
-                        // data.debug.handle(channel, client, 'pokemon', error.response.data);
+                        client.debug.write(client.channel, 'pkmn-default', error.response.data);
                     })
                     .finally(function() {
                         if (output !== '') {
@@ -82,7 +82,7 @@ export const actions = {
                         evoTree = resData.evolution_chain.url;
                     })
                     .catch(function(error) {
-                        // data.errorMsg.handle(channel, client, 'pokemon-evolve', error.response.data);
+                        client.debug.write(client.channel, 'pkmn-evolve', error.response.data);
                     })
                     .finally(function() {
 
@@ -102,15 +102,13 @@ export const actions = {
                                     functions.sayHandler(client, output);
                                 })
                                 .catch(function() {
-                                    // data.errorMsg.handle(channel, client, 'pokemon-evolve', 'Issue while handling step 2');
+                                    client.debug.write(client.channel, 'pkmn-evolve', 'Issue while handling step 2');
                                 });
                         }
                         else {
-                            // data.errorMsg.handle(channel, client, 'pokemon-evolve', 'Failed to build evo-tree');
+                            client.debug.write(client.channel, 'pkmn-evolve', 'Failed to build evo-tree');
                         }
                     });
-
-                // !pkmn evolve eevee
             }
         },
     },
@@ -169,11 +167,11 @@ export const actions = {
                             output = output.substring(0, output.length - 3).trim();
                         }
                         else {
-                            // data.errorMsg.handle(channel, client, 'pokemon-stats', 'Issue locating stats');
+                            client.debug.write(client.channel, 'pkmn-stats', 'Issue locating stats');
                         }
                     })
                     .catch(function(error) {
-                        // data.errorMsg.handle(channel, client, 'pokemon-stats', error.response.data);
+                        client.debug.write(client.channel, 'pkmn-stats', error.response.data);
                     })
                     .finally(function() {
                         if (output !== '') {

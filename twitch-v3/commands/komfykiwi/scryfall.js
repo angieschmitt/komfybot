@@ -29,7 +29,7 @@ export const actions = {
                 axios.get('https://api.scryfall.com/cards/named?fuzzy=' + cardName.toLowerCase())
                     .then(function(response) {
                         const resData = response.data;
-
+                        
                         if (resData.object === 'card') {
                             output += `${resData.name}: `;
                             if (resData.mana_cost !== '') {
@@ -62,14 +62,15 @@ export const actions = {
                         const resData = error.response.data;
                         if (resData.object == 'error') {
                             if (resData.details != '') {
-                                // data.errorMsg.handle(channel, client, 'scryfall', resData.details);
+                                output = resData.details;
+                                client.debug.write(client.channel, 'scry-default', resData.details);
                             }
                             else {
-                                // data.errorMsg.handle(channel, client, 'scryfall', 'Scryfall API issue');
+                                client.debug.write(client.channel, 'scry-default', 'Scryfall API issue');
                             }
                         }
                         else {
-                            // data.errorMsg.handle(channel, client, 'scryfall', 'Failed response');
+                            client.debug.write(client.channel, 'scry-default', 'Failed response');
                         }
                     })
                     .finally(function() {
