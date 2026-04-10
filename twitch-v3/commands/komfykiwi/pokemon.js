@@ -277,53 +277,109 @@ function buildEvolutionDetails(data, pkmn) {
 		let out = '';
 		methodData.forEach(loop => {
 			if (output[evolution] === '') {
-				out += `${(methodData['previous'] ? methodData['previous'] : pkmn)}`;
-				out += `${(loop['gender'] ? (loop['gender'] == 1 ? ', if female,' : ', if male,') : '')}`;
-				out += ' evolves';
-				out += ` into ${evolution}`;
-				out += `${(loop['trigger'] === 'level-up' ? ' when leveled up' : '')}`;
-				out += `${(loop['trigger'] === 'trade' ? ' when traded' : '')}`;
-				out += `${(loop['trigger'] === 'shed' ? ' by shedding' : '')}`;
-				out += `${(loop['trigger'] === 'take-damage' ? ' when taking damage' : '')}`;
-				out += `${(loop['time_of_day'] ? ' during the ' + loop['time_of_day'] : '')}`;
-				out += `${(loop['min_level'] ? ` to level ${loop['min_level']}` : '')}`;
-				out += `${(loop['held_item'] ? ' while holding ' + loop['held_item'] : '')}`;
-				out += `${(loop['item'] ? ' with a ' + loop['item'] : '')}`;
-				out += `${(loop['known_move'] ? ' while knowing ' + loop['known_move'] : '')}`;
-				out += `${(loop['known_move_type'] ? ' while knowing a ' + loop['known_move_type'] + ' type move' : '')}`;
-				out += `${(loop['min_affection'] ? ' while having a minimum of ' + loop['min_affection'] + ' affection' : '')}`;
-				out += `${(loop['min_beauty'] ? ' while having a minimum of ' + loop['min_beauty'] + ' beauty' : '')}`;
-				out += `${(loop['min_happiness'] ? ' while having a minimum of ' + loop['min_happiness'] + ' happiness' : '')}`;
-				out += `${(loop['needs_overworld_rain'] ? ' while it\'s raining' : '')}`;
-				out += `${(loop['party_species'] ? ' while having a ' + loop['party_species'] + ' in the party' : '')}`;
-				out += `${(loop['party_type'] ? loop['party_type'] : '')}`;
-				out += `${(loop['relative_physical_stats'] ? loop['relative_physical_stats'] : '')}`;
-				out += `${(loop['trade_species'] ? ' while trading a ' + loop['party_species'] + ' in the party' : '')}`;
-				out += `${(loop['turn_upside_down'] ? ' while it\'s upside down' : '')}`;
-				if (methodData.locations.length > 0) {
-					out += ` at the following locations: ${Object.values(methodData.locations).join(', ')}`;
-				}
-			}
-			else {
-				out += ', or';
-				out += `${(loop['trigger'] === 'level-up' ? ' when leveled up' : '')}`;
-				out += `${(loop['trigger'] === 'trade' ? ' when traded' : '')}`;
-				out += `${(loop['time_of_day'] ? ' during the ' + loop['time_of_day'] : '')}`;
-				out += `${(loop['min_level'] ? ` to level ${loop['min_level']}` : '')}`;
-				out += `${(loop['held_item'] ? ' while holding ' + loop['held_item'] : '')}`;
-				out += `${(loop['item'] ? ' with a ' + loop['item'] : '')}`;
-				out += `${(loop['known_move'] ? ' while knowing ' + loop['known_move'] : '')}`;
-				out += `${(loop['known_move_type'] ? ' while knowing a ' + loop['known_move_type'] + ' type move' : '')}`;
-				out += `${(loop['min_affection'] ? ' while having a minimum of ' + loop['min_affection'] + ' affection' : '')}`;
-				out += `${(loop['min_beauty'] ? ' while having a minimum of ' + loop['min_beauty'] + ' beauty' : '')}`;
-				out += `${(loop['min_happiness'] ? ' while having a minimum of ' + loop['min_happiness'] + ' happiness' : '')}`;
-				out += `${(loop['needs_overworld_rain'] ? ' while it\'s raining' : '')}`;
-				out += `${(loop['party_species'] ? ' while having a ' + loop['party_species'] + ' in the party' : '')}`;
-				out += `${(loop['party_type'] ? loop['party_type'] : '')}`;
-				out += `${(loop['relative_physical_stats'] ? loop['relative_physical_stats'] : '')}`;
-				out += `${(loop['trade_species'] ? ' while trading a ' + loop['party_species'] + ' in the party' : '')}`;
-				out += `${(loop['turn_upside_down'] ? ' while it\'s upside down' : '')}`;
-			}
+                    out += `${(methodData['previous'] ? methodData['previous'] : pkmn)}`;
+                    out += `${(loop['gender'] ? (loop['gender'] == 1 ? ', if female,' : ', if male,') : '')}`;
+                    out += ' evolves';
+                    out += ` into ${evolution}`;
+                    out += `${(loop['trigger'] === 'level-up' ? ' when leveled up' : '')}`;
+                    out += `${(loop['trigger'] === 'trade' ? ' when traded' : '')}`;
+                    out += `${(loop['trigger'] === 'shed' ? ' by shedding' : '')}`;
+                    out += `${(loop['trigger'] === 'take-damage' ? ' when taking ' + loop['min_damage_taken'] + '+ damage' : '')}`;
+                    
+                    if ( loop['used_move'] && loop['used_move'] !== null ) {
+                        out += ` after using the move ${loop['used_move']}`;
+                        if ( loop['min_move_count'] !== null ) {
+                            out += ` ${loop['min_move_count']} times`;
+                        }
+                        if ( loop['trigger'] ){
+                            if (loop['trigger'] == 'agile-style-move') {
+                                out += ` as an ${loop['trigger'].replaceAll('-', ' ')}`;
+                            }
+                            if (loop['trigger'] == 'strong-style-move' ) {
+                                out += ` as a ${loop['trigger'].replaceAll('-', ' ')}`;
+                            }
+                        }
+                    }
+
+                    out += `${(loop['time_of_day'] ? ' during the ' + loop['time_of_day'] : '')}`;
+                    out += `${(loop['min_level'] ? ` to level ${loop['min_level']}` : '')}`;
+                    out += `${(loop['held_item'] ? ' while holding ' + loop['held_item'] : '')}`;
+                    out += `${(loop['item'] ? ' with a ' + loop['item'] : '')}`;
+                    out += `${(loop['known_move'] ? ' while knowing ' + loop['known_move'] : '')}`;
+                    out += `${(loop['known_move_type'] ? ' while knowing a ' + loop['known_move_type'] + ' type move' : '')}`;
+                    out += `${(loop['min_affection'] ? ' while having a minimum of ' + loop['min_affection'] + ' affection' : '')}`;
+                    out += `${(loop['min_beauty'] ? ' while having a minimum of ' + loop['min_beauty'] + ' beauty' : '')}`;
+                    out += `${(loop['min_happiness'] ? ' while having a minimum of ' + loop['min_happiness'] + ' happiness' : '')}`;
+                    out += `${(loop['needs_overworld_rain'] ? ' while it\'s raining' : '')}`;
+                    out += `${(loop['party_species'] ? ' while having a ' + loop['party_species'] + ' in the party' : '')}`;
+                    out += `${(loop['party_type'] ? loop['party_type'] : '')}`;
+
+                    if ( loop['relative_physical_stats'] ){
+                        if ( loop['relative_physical_stats'] == -1 ){
+                            out += ` with Defense > Attack`;
+                        }
+                        if ( loop['relative_physical_stats'] == 0 ){
+                            out += ` with Attack = Defense`;
+                        }
+                        if ( loop['relative_physical_stats'] == 1 ){
+                            out += ` with Attack > Defense`;
+                        }
+                    }
+
+                    out += `${(loop['trade_species'] ? ' while trading a ' + loop['party_species'] + ' in the party' : '')}`;
+                    out += `${(loop['turn_upside_down'] ? ' while it\'s upside down' : '')}`;
+                    if (methodData.locations.length > 0) {
+                        out += ` at the following locations: ${Object.values(methodData.locations).join(', ')}`;
+                    }
+            }
+            else {
+                out += ', or';
+                out += `${(loop['trigger'] === 'level-up' ? ' when leveled up' : '')}`;
+                out += `${(loop['trigger'] === 'trade' ? ' when traded' : '')}`;
+
+                if ( loop['used_move'] && loop['used_move'] !== null ) {
+                    out += ` after using the move ${loop['used_move']}`;
+                    if ( loop['min_move_count'] !== null ) {
+                        out += ` ${loop['min_move_count']} times`;
+                    }
+                    if ( loop['trigger'] ){
+                        if (loop['trigger'] == 'agile-style-move') {
+                            out += ` as an ${loop['trigger'].replaceAll('-', ' ')}`;
+                        }
+                        if (loop['trigger'] == 'strong-style-move' ) {
+                            out += ` as a ${loop['trigger'].replaceAll('-', ' ')}`;
+                        }
+                    }
+                }
+
+                out += `${(loop['time_of_day'] ? ' during the ' + loop['time_of_day'] : '')}`;
+                out += `${(loop['min_level'] ? ` to level ${loop['min_level']}` : '')}`;
+                out += `${(loop['held_item'] ? ' while holding ' + loop['held_item'] : '')}`;
+                out += `${(loop['item'] ? ' with a ' + loop['item'] : '')}`;
+                out += `${(loop['known_move'] ? ' while knowing ' + loop['known_move'] : '')}`;
+                out += `${(loop['known_move_type'] ? ' while knowing a ' + loop['known_move_type'] + ' type move' : '')}`;
+                out += `${(loop['min_affection'] ? ' while having a minimum of ' + loop['min_affection'] + ' affection' : '')}`;
+                out += `${(loop['min_beauty'] ? ' while having a minimum of ' + loop['min_beauty'] + ' beauty' : '')}`;
+                out += `${(loop['min_happiness'] ? ' while having a minimum of ' + loop['min_happiness'] + ' happiness' : '')}`;
+                out += `${(loop['needs_overworld_rain'] ? ' while it\'s raining' : '')}`;
+                out += `${(loop['party_species'] ? ' while having a ' + loop['party_species'] + ' in the party' : '')}`;
+                out += `${(loop['party_type'] ? loop['party_type'] : '')}`;
+                
+                if ( loop['relative_physical_stats'] ){
+                    if ( loop['relative_physical_stats'] == -1 ){
+                        out += ` with Defense > Attack`;
+                    }
+                    if ( loop['relative_physical_stats'] == 0 ){
+                        out += ` with Attack = Defense`;
+                    }
+                    if ( loop['relative_physical_stats'] == 1 ){
+                        out += ` with Attack > Defense`;
+                    }
+                }
+
+                out += `${(loop['trade_species'] ? ' while trading a ' + loop['party_species'] + ' in the party' : '')}`;
+                out += `${(loop['turn_upside_down'] ? ' while it\'s upside down' : '')}`;
+            }
 
 			output[evolution] = out;
 		});
