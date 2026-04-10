@@ -1,5 +1,5 @@
 module.exports = {
-	name: 'speak',
+	name: 'redeem',
 	actions: {
 		default: {
 			execute(users, groups, source, data) {
