@@ -314,6 +314,8 @@ function buildEvolutionDetails(data, pkmn) {
                     out += `${(loop['party_species'] ? ' while having a ' + loop['party_species'] + ' in the party' : '')}`;
                     out += `${(loop['party_type'] ? loop['party_type'] : '')}`;
 
+                    out += `${(loop['min_steps'] ? ' after taking ' + loop['min_steps'] + ' steps' : '')}`;
+
                     if ( loop['relative_physical_stats'] ){
                         if ( loop['relative_physical_stats'] == -1 ){
                             out += ` with Defense > Attack`;
@@ -365,6 +367,8 @@ function buildEvolutionDetails(data, pkmn) {
                 out += `${(loop['party_species'] ? ' while having a ' + loop['party_species'] + ' in the party' : '')}`;
                 out += `${(loop['party_type'] ? loop['party_type'] : '')}`;
                 
+                out += `${(loop['min_steps'] ? ' after taking ' + loop['min_steps'] + ' steps' : '')}`;
+                
                 if ( loop['relative_physical_stats'] ){
                     if ( loop['relative_physical_stats'] == -1 ){
                         out += ` with Defense > Attack`;
@@ -387,7 +391,9 @@ function buildEvolutionDetails(data, pkmn) {
 
 	let finalOutput = '';
 	Object.entries(output).forEach(([id]) => {
-		finalOutput += output[id] + '. ';
+        if ( output[id] !== ""){
+		    finalOutput += output[id] + '. ';
+        }
 	});
 
 	return finalOutput.trim();
