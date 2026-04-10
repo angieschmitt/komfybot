@@ -10,7 +10,10 @@ export const settings = {
     allowOffline: true,
     channel: ['2'],
     aliases: {
-
+        'scryfall': {
+			arg: false,
+			list: false,
+		},
     }
 };
 
