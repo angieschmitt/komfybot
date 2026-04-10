@@ -3,7 +3,12 @@
 export default async function(event, client) {
 
     if (event.rewardId in client.redeems) {
-        client.redeems[event.rewardId](event, client);
+        if ('default' in client.redeems[event.rewardId]){
+           client.redeems[event.rewardId].default(event, client); 
+        }
+        else {
+            client.redeems[event.rewardId].input(event, client); 
+        }
     }
 
 };

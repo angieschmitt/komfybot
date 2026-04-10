@@ -340,7 +340,7 @@ export async function redeemsHandler(data, client, reset = false) {
         Object.entries(data).forEach(([index, extra]) => { // eslint-disable-line no-unused-vars
             let redeemFunction = parent.redeemFileHandler(index);
             if ( redeemFunction ){
-                client.redeems[index] = redeemFunction['default'];
+                client.redeems[index] = redeemFunction;
             }
         });
     }

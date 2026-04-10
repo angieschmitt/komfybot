@@ -42,6 +42,9 @@ export async function websocketCreate(client){
                 const content = data['data']['message'];
                 parent.sayHandler(client, content);
             }
+            else if (data.action === 'redeem') {
+                client.redeems[data.data.redeemID].output(data, client);
+            }
         }
     };
 

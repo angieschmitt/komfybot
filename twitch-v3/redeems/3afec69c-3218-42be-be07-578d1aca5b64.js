@@ -1,5 +1,5 @@
 // REDEEM: Background Swapper
-// USER: komfykiwi
+// USER: kittenangie
 
 import { createRequire } from 'module';
 import path from 'path';
