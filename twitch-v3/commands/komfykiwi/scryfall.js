@@ -9,7 +9,9 @@ export const settings = {
     list: true,
     allowOffline: true,
     channel: ['2'],
-    aliases: {}
+    aliases: {
+
+    }
 };
 
 export const actions = {
@@ -57,14 +59,14 @@ export const actions = {
                         const resData = error.response.data;
                         if (resData.object == 'error') {
                             if (resData.details != '') {
-                                data.errorMsg.handle(channel, client, 'scryfall', resData.details);
+                                // data.errorMsg.handle(channel, client, 'scryfall', resData.details);
                             }
                             else {
-                                data.errorMsg.handle(channel, client, 'scryfall', 'Scryfall API issue');
+                                // data.errorMsg.handle(channel, client, 'scryfall', 'Scryfall API issue');
                             }
                         }
                         else {
-                            data.errorMsg.handle(channel, client, 'scryfall', 'Failed response');
+                            // data.errorMsg.handle(channel, client, 'scryfall', 'Failed response');
                         }
                     })
                     .finally(function() {

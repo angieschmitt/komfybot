@@ -57,7 +57,7 @@ export const actions = {
                         output += `${ flavorText }`;
                     })
                     .catch(function(error) {
-                        data.errorMsg.handle(channel, client, 'pokemon', error.response.data);
+                        // data.debug.handle(channel, client, 'pokemon', error.response.data);
                     })
                     .finally(function() {
                         if (output !== '') {
@@ -82,7 +82,7 @@ export const actions = {
                         evoTree = resData.evolution_chain.url;
                     })
                     .catch(function(error) {
-                        data.errorMsg.handle(channel, client, 'pokemon-evolve', error.response.data);
+                        // data.errorMsg.handle(channel, client, 'pokemon-evolve', error.response.data);
                     })
                     .finally(function() {
 
@@ -102,11 +102,11 @@ export const actions = {
                                     functions.sayHandler(client, output);
                                 })
                                 .catch(function() {
-                                    data.errorMsg.handle(channel, client, 'pokemon-evolve', 'Issue while handling step 2');
+                                    // data.errorMsg.handle(channel, client, 'pokemon-evolve', 'Issue while handling step 2');
                                 });
                         }
                         else {
-                            data.errorMsg.handle(channel, client, 'pokemon-evolve', 'Failed to build evo-tree');
+                            // data.errorMsg.handle(channel, client, 'pokemon-evolve', 'Failed to build evo-tree');
                         }
                     });
 
@@ -169,11 +169,11 @@ export const actions = {
                             output = output.substring(0, output.length - 3).trim();
                         }
                         else {
-                            data.errorMsg.handle(channel, client, 'pokemon-stats', 'Issue locating stats');
+                            // data.errorMsg.handle(channel, client, 'pokemon-stats', 'Issue locating stats');
                         }
                     })
                     .catch(function(error) {
-                        data.errorMsg.handle(channel, client, 'pokemon-stats', error.response.data);
+                        // data.errorMsg.handle(channel, client, 'pokemon-stats', error.response.data);
                     })
                     .finally(function() {
                         if (output !== '') {
