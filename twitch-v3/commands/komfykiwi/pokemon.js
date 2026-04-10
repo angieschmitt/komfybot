@@ -76,6 +76,15 @@ export const actions = {
             }
             else {
                 let evoTree = false;
+
+                // Do the snowflake check...
+                if ( args[2].toLowerCase().indexOf('nidoran') !== false ){
+                    if ( args[2].toLowerCase().indexOf('-f') == -1 || args[2].toLowerCase().indexOf('-m') == -1 ){
+                        functions.sayHandler(client, 'NOTE: Nidoran is formatted as nidoran-f or nidoran-m ');
+                        return;
+                    }
+                }
+
                 axios.get('https://pokeapi.co/api/v2/pokemon-species/' + args[2].toLowerCase())
                     .then(function(response) {
                         const resData = response.data;
