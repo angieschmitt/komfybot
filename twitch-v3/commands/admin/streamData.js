@@ -94,6 +94,15 @@ export const actions = {
             }
         }
     },
+    debug: {
+        perms: {
+            levels: ['admin'],
+            error: 'this command is for admins only.',
+        },
+        execute(args, tags, message, channel, client) {
+            client.debug.write(client.channel, 'streamdata-debug', 'Hi Boss!');
+        }
+    },
     forcechaos: {
         perms: {
             levels: ['admin'],
