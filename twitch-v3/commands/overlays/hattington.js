@@ -59,9 +59,9 @@ export const actions = {
             const viewerID = tags['user-id'];
 
             const timeLimit = client.overlay.hattington.settings.timeBetweenHats;
-            const lastHat = new Date(client.overlay.hattington.data.hat.time);
-            const now = new Date();
-            const minsSince = Math.round((((now - lastHat) % 86400000) % 3600000) / 60000);
+            const lastHat = new Date(client.overlay.hattington.data.hat.time.replace(' ', 'T'));
+            const now = new Date(); 
+            const minsSince = Math.floor(((Math.abs(lastHat - now)) / 1000) / 60);
 
             let hat = false;
             // If a hat was passed in...
@@ -157,9 +157,9 @@ export const actions = {
             const viewerID = tags['user-id'];
 
             const timeLimit = client.overlay.hattington.settings.timeBetweenSnacks;
-            const lastSnack = new Date(client.overlay.hattington.data.snack.time);
+            const lastSnack = new Date(client.overlay.hattington.data.snack.time.replace(' ', 'T'));
             const now = new Date();
-            const minsSince = Math.round((((now - lastSnack) % 86400000) % 3600000) / 60000);
+            const minsSince = Math.floor(((Math.abs(lastSnack - now)) / 1000) / 60);
 
             let snack = false;
             // If a snack was passed in...
