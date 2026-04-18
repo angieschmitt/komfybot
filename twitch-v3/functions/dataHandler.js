@@ -1,16 +1,32 @@
 import axios from 'axios';
 
 export async function dataChatters(msg, channel, client) {
+    const parent = this;
+
     const viewerID = parseInt(msg.userInfo.userId);
     if (!client.data.chatters.includes(viewerID)) {
         
         // Check for walk-on...
         if ('walk-ons' in client.overlay){
             const walkonsData = client.overlay['walk-ons'].data;
-            const walkonData = walkonsData.find((developer) => developer.twitchUUID === msg.userInfo.userId);
 
-            if (walkonData){
-                client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'content' : walkonData.mediaID, 'type' : 'walkOn', 'target': 'walk-ons:' + client.userID }, 'source': 'komfybot' }));
+            // If there is walkonsData..
+            if (Object.keys(walkonsData).length > 0){
+
+                // Assume there isn't a match...
+                let walkonData = false;
+                
+                // Loop to check...
+                Object.entries(walkonsData).forEach(([key, val]) => {
+                    if (val.twitchUUID === msg.userInfo.userId){
+                        walkonData = val;
+                    }
+                });
+
+                // If there was a match...
+                if (walkonData !== false){
+                    client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'content' : walkonData.mediaID, 'type' : 'walkOn', 'target': 'walk-ons:' + client.userID }, 'source': 'komfybot' }));
+                }
             }
         }
 
