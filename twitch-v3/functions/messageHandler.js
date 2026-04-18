@@ -87,14 +87,24 @@ export async function passiveHandler(msg, perms, client){
         .catch(err => console.log(err));
 }
 
-export async function sayHandler(client, message) {
+export async function sayHandler(client, message, forSourceOnly = false) {
     const parent = this;
 
-    client.chatClient.say(client.channel, message).catch(() => {
-        setTimeout(() => {
-            client.chatClient.say(client.channel, message);
-        }, 2500);
-    });
+    if (forSourceOnly) {
+        console.log('here');
+        client.apiClient.chat.sendChatMessageAsApp(client.botUserID, client.twitchUUID, message, {'forSourceOnly': true}).catch((error) => {
+            setTimeout(() => {
+                client.chatClient.say(client.channel, message);
+            }, 2500);
+        });
+    }
+    else {
+        client.chatClient.say(client.channel, message).catch(() => {
+            setTimeout(() => {
+                client.chatClient.say(client.channel, message);
+            }, 2500);
+        });
+    }
 };
 
 export function getUserPermissions(msg){

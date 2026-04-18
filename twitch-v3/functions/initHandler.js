@@ -123,7 +123,7 @@ export async function createBot(globals, twitchUUID, userData) {
     // Setup the AuthProvider...
     client.AuthProvider = new RefreshingAuthProvider({ 'clientId': client.clientID, 'clientSecret': client.clientSecret });
     await client.AuthProvider.addUserForToken({ "accessToken": client.botToken, "refreshToken": client.botRefresh, "expiresIn": 0, "obtainmentTimestamp": 0 }, ['chat'] );
-    await client.AuthProvider.addUserForToken({ "accessToken": client.appToken, "refreshToken": client.appRefresh, "expiresIn": 0, "obtainmentTimestamp": 0 } );
+    await client.AuthProvider.addUserForToken({ "accessToken": client.appToken, "refreshToken": client.appRefresh, "expiresIn": 0, "obtainmentTimestamp": 0 }, ['app'] );
 
     // Setup apiClients...
     client.apiClient = new ApiClient({ 'authProvider': client.AuthProvider });

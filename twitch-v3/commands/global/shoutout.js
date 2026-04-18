@@ -122,7 +122,7 @@ export const actions = {
                     content = 'Something went wrong, tell @kittenAngie.';
                 })
                 .finally(function() {
-                    functions.sayHandler(client, content);
+                    functions.sayHandler(client, content, true);
                 });
         },
     },
