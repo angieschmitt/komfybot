@@ -91,7 +91,6 @@ export async function sayHandler(client, message, forSourceOnly = false) {
     const parent = this;
 
     if (forSourceOnly) {
-        console.log('here');
         client.apiClient.chat.sendChatMessageAsApp(client.botUserID, client.twitchUUID, message, {'forSourceOnly': true}).catch((error) => {
             setTimeout(() => {
                 client.chatClient.say(client.channel, message);
