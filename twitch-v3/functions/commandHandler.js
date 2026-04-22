@@ -36,13 +36,13 @@ export async function loadCommandData(command, args, commandMap) {
     if (Object.hasOwn(commandMap, command)) {
         let action = {};
 
+        // Shorten to this...
+        const settings = commandMap[command].settings;
+
         // Check for alias
-        if ('alias' in commandMap[command]) {
-            if (commandMap[command].arg) {
-                args.splice(1, 0, commandMap[command].arg);
-            }
+        if ('name' in settings && settings.name !== command) {
             // Swap alias for actual command
-            command = commandMap[command].alias;
+            command = settings.name;
         }
 
         // Start with the default action

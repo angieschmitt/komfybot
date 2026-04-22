@@ -180,7 +180,9 @@ export async function commandsHandler(data, client, reset = false) {
                                 client.commands['user'][settings.name] = {'actions':actions, 'settings':settings};
                                 if (settings.aliases !== undefined && Object.keys(settings.aliases).length > 0) {
                                     Object.entries(settings.aliases).forEach(([key, data]) => {
-                                        parent.handleAlias(command, key, data, client.commands['user']);
+                                        client.commands['user'][key] = {
+                                            'settings': { name: key, arg: data.arg, list: data.list }
+                                        };
                                     });
                                 }
                             }
@@ -192,14 +194,17 @@ export async function commandsHandler(data, client, reset = false) {
 
                     if (settings.aliases !== undefined && Object.keys(settings.aliases).length > 0) {
                         Object.entries(settings.aliases).forEach(([key, data]) => {
-                            parent.handleAlias(command, key, data, client.commands['global']);
+                            client.commands['global'][key] = {
+                                'settings': { name: settings.name, arg: data.arg, list: data.list }
+                            };
                         });
                     }
                     if (settings.name in client.aliases) {
                         const aliasList = client.aliases[settings.name].split(',');
                         Object.entries(aliasList).forEach(([key, text]) => { // eslint-disable-line no-unused-vars
-                            const data = { arg: false, list: true };
-                            parent.handleAlias(command, text, data, client.commands['global']);
+                            client.commands['global'][key] = {
+                                'settings': { name: settings.name, arg: false, list: true }
+                            };
                         });
                     }
                 }
@@ -243,6 +248,9 @@ export async function commandsHandler(data, client, reset = false) {
             });
         });
     }
+
+    console.log(client.commands.global);
+    // console.log(client.commands.user);
 
     return client;
 };
@@ -453,21 +461,6 @@ export async function timersHandler(data, client, reset = false) {
     }
 
     return client;
-};
-
-export async function handleAlias(baseCommand, name, details, commands) {
-    if (!('disabled' in details)) {
-        commands[name] = {
-            'alias': baseCommand.settings['name'],
-        };
-        if (details.arg) {
-            commands[name]['arg'] = details.arg;
-        }
-        if (details.list === false) {
-            commands[name]['list'] = false;
-        }
-    }
-    return commands;
 };
 
 export function redeemFileHandler(redeemID) {
