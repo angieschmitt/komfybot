@@ -201,8 +201,9 @@ export async function commandsHandler(data, client, reset = false) {
                     }
                     if (settings.name in client.aliases) {
                         const aliasList = client.aliases[settings.name].split(',');
-                        Object.entries(aliasList).forEach(([key, text]) => { // eslint-disable-line no-unused-vars
-                            client.commands['global'][key] = {
+
+                        Object.entries(aliasList).forEach(([idx, data]) => { // eslint-disable-line no-unused-vars
+                            client.commands['global'][data] = {
                                 'settings': { name: settings.name, arg: false, list: true }
                             };
                         });
@@ -249,7 +250,7 @@ export async function commandsHandler(data, client, reset = false) {
         });
     }
 
-    console.log(client.commands.global);
+    // console.log(client.commands.global);
     // console.log(client.commands.user);
 
     return client;
