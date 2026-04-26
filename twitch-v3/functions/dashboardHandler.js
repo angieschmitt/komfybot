@@ -144,6 +144,7 @@ export async function commandsHandler(data, client, reset = false) {
         client.commands = new Array();
         client.commands['global'] = new Array();
         client.commands['user'] = new Array();
+        client.commands['alias'] = new Array();
     }
 
     // Handle the folder first...
@@ -178,10 +179,12 @@ export async function commandsHandler(data, client, reset = false) {
                         Object.entries(settings.channel).forEach(([key, channel]) => { // eslint-disable-line no-unused-vars
                             if (client.userID == channel) {
                                 client.commands['user'][settings.name] = {'actions':actions, 'settings':settings};
+
+                                // Handle aliases...
                                 if (settings.aliases !== undefined && Object.keys(settings.aliases).length > 0) {
                                     Object.entries(settings.aliases).forEach(([key, data]) => {
-                                        client.commands['user'][key] = {
-                                            'settings': { name: key, arg: data.arg, list: data.list }
+                                        client.commands['alias'][key] = {
+                                            'settings': { name: settings.name, arg: data.arg, list: data.list }
                                         };
                                     });
                                 }
@@ -192,18 +195,18 @@ export async function commandsHandler(data, client, reset = false) {
                 else {
                     client.commands['global'][settings.name] = {'actions':actions, 'settings':settings};
 
+                    // Handle aliases...
                     if (settings.aliases !== undefined && Object.keys(settings.aliases).length > 0) {
                         Object.entries(settings.aliases).forEach(([key, data]) => {
-                            client.commands['global'][key] = {
+                            client.commands['alias'][key] = {
                                 'settings': { name: settings.name, arg: data.arg, list: data.list }
                             };
                         });
                     }
                     if (settings.name in client.aliases) {
                         const aliasList = client.aliases[settings.name].split(',');
-
                         Object.entries(aliasList).forEach(([idx, data]) => { // eslint-disable-line no-unused-vars
-                            client.commands['global'][data] = {
+                            client.commands['alias'][data] = {
                                 'settings': { name: settings.name, arg: false, list: true }
                             };
                         });
@@ -218,14 +221,10 @@ export async function commandsHandler(data, client, reset = false) {
         Object.entries(data).forEach(([index, command]) => { // eslint-disable-line no-unused-vars
             Object.entries(command).forEach(([name, data]) => {
 
-                // If it's a user created on, add it to the list..
+                // If it's a user created one, add it to the list..
                 if (!(name in client.commands['user'])) {
                     client.commands['user'][name] = {
-                        'settings': {
-                            list: data['list'],
-                            name: name,
-                            allowOffline: data['allowOffline']
-                        }
+                        'settings': { list: data['list'], name: name, allowOffline: data['allowOffline'] }
                     };
 
                     delete data['list'];
@@ -234,15 +233,11 @@ export async function commandsHandler(data, client, reset = false) {
                     client.commands['user'][name]['actions'] = { 'default': data };
                 }
 
-                // Handle Aliases
+                // Handle aliases...
                 if ('aliases' in data) {
                     Object.entries(data['aliases']).forEach(([alias]) => {
-                        client.commands['user'][alias] = {
-                            'settings': {
-                                name: name,
-                                arg: false,
-                                list: false,
-                            }
+                        client.commands['alias'][alias] = {
+                            'settings': { name: name, arg: false, list: false }
                         };
                     });
                 }
@@ -252,6 +247,7 @@ export async function commandsHandler(data, client, reset = false) {
 
     // console.log(client.commands.global);
     // console.log(client.commands.user);
+    // console.log(client.commands.alias);
 
     return client;
 };

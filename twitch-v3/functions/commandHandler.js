@@ -19,11 +19,15 @@ export async function commandLocator(text, client) {
         // Define command buckets
         const globalCommands = client.commands['global'];
         const userCommands = client.commands['user'];
+        const aliasCommands = client.commands['alias'];
         if (baseCommand in globalCommands) {
-            commandData = parent.loadCommandData(baseCommand, args, globalCommands);
+            commandData = parent.loadCommandData(baseCommand, args, 'global', client.commands);
         }
         else if (baseCommand in userCommands) {
-            commandData = parent.loadCommandData(baseCommand, args, userCommands);
+            commandData = parent.loadCommandData(baseCommand, args, 'user', client.commands);
+        }
+        else if (baseCommand in aliasCommands) {
+            commandData = parent.loadCommandData(baseCommand, args, 'alias', client.commands);
         }
     }
     
@@ -31,27 +35,43 @@ export async function commandLocator(text, client) {
 
 }
 
-export async function loadCommandData(command, args, commandMap) {
+export async function loadCommandData(command, args, type, commandsList) {
 
-    if (Object.hasOwn(commandMap, command)) {
+    if (Object.hasOwn(commandsList[type], command)) {
         let action = {};
+        
+        // Isolate the type list..
+        let commandsTypeList = commandsList[type];
 
-        // Shorten to this...
-        const settings = commandMap[command].settings;
+        // Set the command to the provided one, and get the settings...
+        let commandDetails = commandsTypeList[command];
+        let settings = commandDetails.settings;
 
-        // Check for alias
-        if ('name' in settings && settings.name !== command) {
-            // Swap alias for actual command
-            command = settings.name;
+        // If we're handling an alias, hunt down the real command...
+        if (type == 'alias'){
+
+            // Slap in the arg that we need...
+            if (settings.arg) {
+                args.splice(1, 0, settings.arg);
+            }
+
+            if ( settings.name in commandsList.global ){
+                commandDetails = commandsList.global[ settings.name ];
+                settings = commandDetails.settings;
+            }
+            else if ( settings.name in commandsList.user ){
+                commandDetails = commandsList.user[ settings.name ];
+                settings = commandDetails.settings;
+            }
         }
 
         // Start with the default action
-        action = commandMap[command].actions.default;
+        action = commandDetails.actions.default;
 
         // Allow override
         if (args.length !== 1) {
-            if (commandMap[command].actions[args[1]]) {
-                action = commandMap[command].actions[args[1]];
+            if (commandDetails.actions[args[1]]) {
+                action = commandDetails.actions[args[1]];
             }
         }
 
@@ -65,7 +85,7 @@ export async function loadCommandData(command, args, commandMap) {
         const commandOutput = {
             'action': action,
             'args': args,
-            'settings': commandMap[command].settings
+            'settings': commandDetails.settings
         };
 
         return commandOutput;
