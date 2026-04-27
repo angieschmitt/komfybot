@@ -33,6 +33,7 @@ export const actions = {
         execute(args, tags, message, channel, client) {
 
             const hats = [
+                'Chicken Mask',
                 'Party Hat - Blue',
                 'Party Hat - Green',
                 'Party Hat - Red',
