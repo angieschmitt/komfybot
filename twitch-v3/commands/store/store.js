@@ -404,4 +404,88 @@ export const actions = {
             }
         },
     },
+    give: {
+        help: 'Command to give a user an item. Usage: !store give <@user:required> <item:required> <amt:optional>',
+        perms: {
+            levels: ['streamer', 'mod'],
+            error: 'this command is for the streamer and mods only.',
+        },
+        args: {
+            required: [ 2, 3 ],
+            error: 'don\'t forgot the user and the item!',
+        },
+        execute(args, tags, message, channel, client) {
+            
+            const viewer = args['2'].replace('@', '');            
+
+            let content = '';
+            let item = message.substr(message.indexOf('!')).replace(args[0], '').replace(args[1], '').replace(args[2], '').trim();
+            let amt = args.at(-1);
+            if (!amt.match(/[^$,.\d]/)) {
+                item = item.substr(0, item.length - ((amt.length) + 1)).trim();
+            }
+            else {
+                amt = 1;
+            }
+
+            axios.get(client.endpoint + 'store/give/' + client.userID + '/' + viewer + '/' + item + '/' + amt)
+                .then(function(response) {
+                    const resData = response.data;
+
+                    if (resData.status === 'success') {
+
+                        // If a gacha item, handle it...
+                        if ('gacha' in resData.response) {
+                            content = `Congrats @${viewer}, you received ${resData.response.qty}x free Gacha Rolls`;
+                            if (Object.keys(resData.response.gacha).length > 1) {
+                                content += ' and it rolled the following items: ';
+                            }
+                            else {
+                                content += ' and it rolled the following item: ';
+                            }
+                            Object.entries(resData.response.gacha).forEach(([idx, entry]) => { // eslint-disable-line no-unused-vars
+                                if (entry.qty > 1) {
+                                    content += ` Another ${entry.item} (${entry.rarity}) from Set #${entry.itemSet}, `;
+                                }
+                                else {
+                                    content += ` A ${entry.item} (${entry.rarity}) from Set #${entry.itemSet}, `;
+                                }
+                            });
+                            content = content.substring(0, (content.length - 2));
+                        }
+                        else {
+                            content = `Congrats @${viewer} on receiving ${resData.response.qty}x free ${resData.response.item}!`;
+                        }
+
+                    }
+                    else if (resData.status === 'failure') {
+                        if (resData.err_msg == 'product_disabled') {
+                            content = 'It looks like that product is currently disabled.';
+                        }
+                        else if (resData.err_msg == 'couldnt_locate_product') {
+                            content = `The product "${item}" couldn't be located in the store`;
+                        }
+                        else if (resData.err_msg === 'missing_authorization') {
+                            client.debug.write(client.channel, 'store-give', 'Authorization issue');
+                        }
+                        else {
+                            client.debug.write(client.channel, 'store-give', 'Failed response');
+                        }
+                    }
+                    else {
+                        client.debug.write(client.channel, 'store-give', 'Not sure how you got here');
+                    }
+                })
+                .catch(function() {
+                    client.debug.write(client.channel, 'store-give', 'Issue while handling command');
+                })
+                .finally(function() {
+                    if (!('silent' in tags)) {
+                        if (content !== '') {
+                            functions.sayHandler(client, content);
+                        }
+                    }
+                });
+        },
+    },
 };
