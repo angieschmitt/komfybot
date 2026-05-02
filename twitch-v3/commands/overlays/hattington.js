@@ -55,6 +55,9 @@ export const actions = {
                 bypassCheck = true;
             }
 
+            console.log(client.overlay.hattington.data.hat.time);
+            console.log(typeof client.overlay.hattington.data.hat.time);
+
             const viewer = tags['username'];
             const viewerID = tags['user-id'];
 
@@ -100,7 +103,7 @@ export const actions = {
                             client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'type' : 'hat', 'response': resData.response, 'target': 'hattington' }, 'source': 'komfybot' }));
 
                             // Update the local data..
-                            client.overlay.hattington.data.hat.time = new Date();
+                            client.overlay.hattington.data.hat.time = new Date().toISOString();
                             client.overlay.hattington.data.hat.hat = response.data.response.name;
                             client.overlay.hattington.data.hat.twitchUsername = viewer;
                             client.overlay.hattington.data.hat.prodData = response.data.response;
@@ -198,7 +201,7 @@ export const actions = {
                             client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'type' : 'snack', 'response': resData.response, 'target': 'hattington' }, 'source': 'komfybot' }));
 
                             // Update the local data..
-                            client.overlay.hattington.data.snack.time = new Date();
+                            client.overlay.hattington.data.snack.time = new Date().toISOString();
                             client.overlay.hattington.data.snack.snack = response.data.response.name;
                             client.overlay.hattington.data.snack.twitchUsername = viewer;
                             client.overlay.hattington.data.snack.prodData = response.data.response;
