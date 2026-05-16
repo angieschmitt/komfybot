@@ -55,9 +55,6 @@ export const actions = {
                 bypassCheck = true;
             }
 
-            console.log(client.overlay.hattington.data.hat.time);
-            console.log(typeof client.overlay.hattington.data.hat.time);
-
             const viewer = tags['username'];
             const viewerID = tags['user-id'];
 
