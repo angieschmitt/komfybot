@@ -2,6 +2,9 @@
 
 import axios from 'axios';
 
+import functionsFunc from '../../functions/index.js';
+let functions = functionsFunc();
+
 export default async function(event, client) {
 
     console.log(`Channel ${event.broadcasterDisplayName} is now OFFLINE.`);
@@ -10,7 +13,7 @@ export default async function(event, client) {
     if ('notifications' in client.settings) {
         if ('streamOffline' in client.settings.notifications) {
             if (client.settings.notifications.streamOffline !== '') {
-                parent.sayHandler(client, client.settings.notifications.streamOffline);
+                functions.sayHandler(client, client.settings.notifications.streamOffline);
             }
         }
     }

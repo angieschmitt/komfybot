@@ -361,54 +361,42 @@ export async function settingsHandler(data, client, reset = false) {
         client.settings.passive = [];
         client.settings.commands = [];
         client.settings.slots = [];
+        client.settings.notifications = [];
     }
 
     if (data !== false) {
         if (Object.keys(data).length) {
 
-            // Handle currency settings
-            if ('currency' in data) {
-                if ('enabled' in data.currency) {
-                    // Basic Settings
-                    client.settings.currency['enabled'] = data.currency.enabled;
-                    client.settings.currency['name'] = [];
-                    client.settings.currency['name']['single'] = data.currency.name_single;
-                    client.settings.currency['name']['plural'] = data.currency.name_plural;
+            Object.entries(data).forEach(([key, values]) => {
+
+                if (key !== 'currency' && key !== 'passive') {
+                    Object.entries(values).forEach(([key2, value]) => {
+                        client.settings[key][key2] = value;
+                    });
                 }
-            }
-            else {
-                client.settings.currency['enabled'] = false;
-            }
-
-            if ('passive' in data) {
-                if ('enabled' in data.passive) {
-                    client.settings.passive['enabled'] = data.passive.enabled;
-                    client.settings.passive['amts'] = [];
-                    client.settings.passive['amts']['default'] = data.passive.default;
-                    client.settings.passive['amts']['subscribers'] = data.passive.subscribers;
+                else {
+                    if (key == 'currency') {
+                        if ('enabled' in values) {
+                            // Basic Settings
+                            client.settings.currency['enabled'] = data.currency.enabled;
+                            client.settings.currency['name'] = [];
+                            client.settings.currency['name']['single'] = data.currency.name_single;
+                            client.settings.currency['name']['plural'] = data.currency.name_plural;
+                        }
+                    }
+                    else if (key == 'passive') {
+                        if ('enabled' in values) {
+                            client.settings.passive['enabled'] = data.passive.enabled;
+                            client.settings.passive['amts'] = [];
+                            client.settings.passive['amts']['default'] = data.passive.default;
+                            client.settings.passive['amts']['subscribers'] = data.passive.subscribers;
+                        }
+                    }
                 }
-            }
-            else {
-                client.settings.passive['enabled'] = false;
-            }
 
-            if ('commands' in data) {
-                Object.entries(data.commands).forEach(([key, value]) => {
-                    client.settings.commands[ key ] = value;
-                });
-            }
-            else {
-                client.settings.commands = [];
-            }
+            })
 
-            if ('slots' in data) {
-                Object.entries(data.slots).forEach(([key, value]) => {
-                    client.settings.slots[ key ] = value;
-                });
-            }
-            else {
-                client.settings.slots = [];
-            }
+            console.log(client.settings);
         }
     }
 

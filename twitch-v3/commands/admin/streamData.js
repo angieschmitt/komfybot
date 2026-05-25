@@ -24,7 +24,7 @@ export const actions = {
                 if ('notifications' in client.settings) {
                     if ('streamOnline' in client.settings.notifications) {
                         if (client.settings.notifications.streamOnline !== '') {
-                            parent.sayHandler(client, client.settings.notifications.streamOnline);
+                            functions.sayHandler(client, client.settings.notifications.streamOnline);
                         }
                     }
                 }
