@@ -17,7 +17,19 @@ export default async function(event, client) {
 
         // Locally mark the user as live...
         client.isLive = true;
-        functions.sayHandler(client, 'Live Check: ' + client.isLive);
+        
+        // If they have custom text for streamOnline, send it now...
+        if ('notifications' in client.settings) {
+            if ('streamOnline' in client.settings.notifications) {
+                if (client.settings.notifications.streamOnline !== '') {
+                    parent.sayHandler(client, client.settings.notifications.streamOnline);
+                }
+            }
+        }
+        // Otherwise fall back to the base version...
+        else{
+            functions.sayHandler(client, 'Live Check: ' + client.isLive);
+        }
 
         // Force the DB to update...
         axios.get(client.endpoint + 'live/update/' + client.userID + '/force')

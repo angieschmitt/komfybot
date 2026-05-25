@@ -6,6 +6,15 @@ export default async function(event, client) {
 
     console.log(`Channel ${event.broadcasterDisplayName} is now OFFLINE.`);
 
+    // If they have custom text for streamOffline, send it now...
+    if ('notifications' in client.settings) {
+        if ('streamOffline' in client.settings.notifications) {
+            if (client.settings.notifications.streamOffline !== '') {
+                parent.sayHandler(client, client.settings.notifications.streamOffline);
+            }
+        }
+    }
+
     // If this message is about the user...
     if (event.broadcasterId == client.twitchUUID) {
         // Once we get the offline ping, wait 5 mins to mark offline...

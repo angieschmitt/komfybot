@@ -19,8 +19,21 @@ export const actions = {
             let content = '';
 
             await functions.dataLive(client).then(() => {
-                content += ' Live: ' + (client.isLive ? 'Yes' : 'No');
-                functions.sayHandler(client, content);
+
+                // If they have custom text for live set, send it now...
+                if ('notifications' in client.settings) {
+                    if ('streamOnline' in client.settings.notifications) {
+                        if (client.settings.notifications.streamOnline !== '') {
+                            parent.sayHandler(client, client.settings.notifications.streamOnline);
+                        }
+                    }
+                }
+                // Otherwise fall back to the base version...
+                else{
+                    content += 'Live Check: ' + (client.isLive ? 'Yes' : 'No');
+                    functions.sayHandler(client, 'Live Check: ' + client.isLive);
+                }
+
             });
         },
     },
