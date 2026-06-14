@@ -1,21 +1,21 @@
 import axios from 'axios';
 
-export async function messageHandler(channel, user, text, msg, client) {
+export async function messageHandler(event, client) {
     const parent = this;
 
     // Log chatters...
-    parent.dataChatters(msg, channel, client);
+    parent.dataChatters(event, client);
 
     // Setup the passive income watcher...
     let passive = true;
-    
+
     // Get the perms...
-    let perms = parent.getUserPermissions(msg);
+    const perms = await parent.getUserPermissions(await event.getChatter(), client);
 
     // Check for a command...
-    const command = await parent.commandLocator(text, client);
+    const command = await parent.commandLocator(event.messageText, client);
     if (command) {
-        parent.commandHandler(command, perms, channel, user, text, msg, client);
+        parent.commandHandler(command, perms, event, client);
         console.log('Used command: ' + command.settings.name + ' ' + (command.args[1] ? command.args[1] : ''));
         passive = false;
     }
@@ -25,7 +25,7 @@ export async function messageHandler(channel, user, text, msg, client) {
     // Chaos Mode stuff...
     if ('chaosMode' in client.redeems.states) {
         if (client.redeems.states.chaosMode) {
-            const cleanedMessage = text.trim();
+            const cleanedMessage = event.messageText.trim();
             // If a single word...
             if (!cleanedMessage.includes(' ')) {
                 // If it's in the channels chaos words...
@@ -41,7 +41,7 @@ export async function messageHandler(channel, user, text, msg, client) {
     }
 
     // Handle reactwords...
-    const reactwordCheck = await parent.reactwordLocator(text, msg, client);
+    const reactwordCheck = await parent.reactwordLocator(event, client);
     if (reactwordCheck) {
         const chosen = parent.randomObjValue(reactwordCheck);
 
@@ -64,17 +64,17 @@ export async function messageHandler(channel, user, text, msg, client) {
         if (client.settings.passive.enabled) {
             if (client.isLive) {
                 if (passive) {
-                    parent.passiveHandler(msg, perms, client);
+                    parent.passiveHandler(perms, event, client);
                 }
             }
         }
     }
 }
 
-export async function passiveHandler(msg, perms, client){
+export async function passiveHandler(perms, event, client){
 
     // Get the viewerID,
-    const viewerID = msg.userInfo.userId;
+    const viewerID = event.chatterId;
 
     // Figure out the income amout...
     let income = client.settings.passive.amts.default;
@@ -106,19 +106,23 @@ export async function sayHandler(client, message, forSourceOnly = false) {
     }
 };
 
-export function getUserPermissions(msg){
+export async function getUserPermissions(user, client){
+
+    let modStatus = await client.apiClient.moderation.checkUserMod(client.twitchUUID, user.id);
+    let subStatus = await client.apiClient.subscriptions.getSubscriptionForUser(client.twitchUUID, user.id);
+    let vipStatus = await client.apiClient.channels.checkVipForUser(client.twitchUUID, user.id);
 
     // Set the defaults...
     const perms = {
-        'admin' : (msg.userInfo.userId == '90928645' ? true : false),
-        'streamer' : msg.userInfo.isBroadcaster,
-        'mod' : msg.userInfo.isMod,
-        'vip' : msg.userInfo.isVip,
-        'sub' : msg.userInfo.isSubscriber,
+        'admin' : (user.id == '90928645' ? true : false),
+        'streamer' : (user.id == client.twitchUUID ? true : false),
+        'mod' : modStatus,
+        'vip' : vipStatus,
+        'sub' : (subStatus !== null ? true : false),
     };
 
     // For some reason, streamers aren't mods on their own channel...
-    if (msg.userInfo.isBroadcaster) {
+    if (user.id == client.twitchUUID) {
         perms.mod = true;
     }
 

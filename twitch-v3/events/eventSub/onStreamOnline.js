@@ -5,7 +5,13 @@ import axios from 'axios';
 import functionsFunc from '../../functions/index.js';
 let functions = functionsFunc();
 
-export default async function(event, client) {
+export function settings(client) {
+    return [
+        client.twitchUUID,
+    ];
+}
+
+export async function action(event, client) {
 
     console.log(`Channel ${event.broadcasterDisplayName} is now ONLINE.`);
     

@@ -177,7 +177,7 @@ export async function createBot(globals, twitchUUID, userData) {
     
     // Create the ChatClient...
     client.chatClient = new ChatClient({ 'authProvider': client.AuthProvider, channels: [userData.username] });
-    client.chatClient.connect();        
+    client.chatClient.connect();
 
     // Create the EventSub listener...
     client.eventsubListener = new EventSubWsListener({ 'apiClient': client.apiClient });

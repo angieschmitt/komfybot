@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-export async function dataChatters(msg, channel, client) {
+export async function dataChatters(event, client) {
     const parent = this;
 
-    const viewerID = parseInt(msg.userInfo.userId);
+    const viewerID = event.chatterId;
     if (!client.data.chatters.includes(viewerID)) {
         
         // Check for walk-on...
@@ -18,7 +18,7 @@ export async function dataChatters(msg, channel, client) {
                 
                 // Loop to check...
                 Object.entries(walkonsData).forEach(([key, val]) => {
-                    if (val.twitchUUID === msg.userInfo.userId){
+                    if (val.twitchUUID === viewerID){
                         walkonData = val;
                     }
                 });

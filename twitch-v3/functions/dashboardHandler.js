@@ -396,7 +396,7 @@ export async function settingsHandler(data, client, reset = false) {
 
             })
 
-            console.log(client.settings);
+            // console.log(client.settings);
         }
     }
 

@@ -96,16 +96,18 @@ export async function loadCommandData(command, args, type, commandsList) {
 
 };
 
-export async function commandHandler(command, perms, channel, user, text, msg, client) {
+export async function commandHandler(command, perms, event, client) {
     const parent = this;
+
+    console.log(command);
 
     const settings = command.settings;
     const action = command.action;
     const args = command.args;
 
     const tags = []
-    tags.username = msg.userInfo.userName;
-    tags['user-id'] = msg.userInfo.userId;
+    tags.username = event.chatterName;
+    tags['user-id'] = event.chatterId;
 
     // Check for allowOffline...
     if ('allowOffline' in settings) {
@@ -120,7 +122,33 @@ export async function commandHandler(command, perms, channel, user, text, msg, c
         }
     }
 
-    // Handle basic actions
+    // Check for top level allowOffline...
+    if ('allowOffline' in settings) {
+        // If allowOffline is false...
+        if (!settings.allowOffline) {
+            // And user isn't live...
+            if (!client.isLive) {
+                const content = 'This command cannot be used while the streamer is offline.';
+                parent.sayHandler(client, content);
+                return;
+            }
+        }
+    }
+
+    // Check for action level allowOffline...
+    if ('allowOffline' in action) {
+        // If allowOffline is false...
+        if (!action.allowOffline) {
+            // And user isn't live...
+            if (!client.isLive) {
+                const content = 'This command cannot be used while the streamer is offline.';
+                parent.sayHandler(client, content);
+                return;
+            }
+        }
+    }
+
+    // Handle action...
     if ('say' in action) {
         let output = action.say[0];
         let proceed = true;
@@ -334,7 +362,7 @@ export async function commandHandler(command, perms, channel, user, text, msg, c
 
         // If no output, execute the command...
         if (!output) {
-            action.execute(args, tags, text, channel, client);
+            action.execute(args, tags, event.messageText, client.twitchUsername, client);
             return true;
         }
         // Otherwise, output output...

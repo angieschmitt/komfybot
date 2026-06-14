@@ -24,9 +24,10 @@ export async function eventLoader(client, type = false){
             const eventName = path.parse(file).name;
             const filePath = path.join(eventsubEventsPath, file);
             const eventData = require(filePath);
+            const eventSettings = eventData.settings(client);
 
-            client.eventHandlers.eventSub[eventName] = client.eventsubListener[eventName](client.twitchUUID, event => {
-                eventData.default(event, client);
+            client.eventHandlers.eventSub[eventName] = client.eventsubListener[eventName](...eventSettings, event => {
+                eventData.action(event, client);
             });
         }
     }

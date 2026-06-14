@@ -1,6 +1,12 @@
 // https://twurple.js.org/reference/eventsub-base/classes/EventSubChannelRedemptionAddEvent.html
 
-export default async function(event, client) {
+export function settings(client) {
+    return [
+        client.twitchUUID,
+    ];
+}
+
+export async function action(event, client) {
 
     if (event.rewardId in client.redeems) {
         if ('default' in client.redeems[event.rewardId]){

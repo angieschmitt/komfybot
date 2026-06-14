@@ -3,7 +3,13 @@
 import functionsFunc from '../../functions/index.js';
 let functions = functionsFunc();
 
-export default async function(event, client) {
+export function settings(client) {
+    return [
+        client.twitchUUID,
+    ];
+}
+
+export async function action(event, client) {
 
     if (client.events['cheer']) {
         let content = client.events['cheer'];

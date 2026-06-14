@@ -1,18 +1,18 @@
-export async function reactwordLocator(text, msg, client) {
+export async function reactwordLocator(event, client) {
     const parent = this;
 
-    const userID = msg.userInfo.userId;
+    const userID = event.chatterId;
     const words = client.reactwords;
 
     const output = {};
     // Check user specific first
     if (userID in words) {
         Object.entries(words[userID]).forEach(([match, response]) => {
-            if (text.includes(match)) {
-                output[match] = response.replace('<@username>', '@' + msg.userInfo.userName);
+            if (event.messageText.includes(match)) {
+                output[match] = response.replace('<@username>', '@' + event.chatterName);
             }
-            else if (text.toLowerCase().includes(match.toLowerCase())) {
-                output[match] = response.replace('<@username>', '@' + msg.userInfo.userName);
+            else if (event.messageText.toLowerCase().includes(match.toLowerCase())) {
+                output[match] = response.replace('<@username>', '@' + event.chatterName);
             }
         });
     }
@@ -20,11 +20,11 @@ export async function reactwordLocator(text, msg, client) {
     // If no user specific, check globals
     if (0 in words) {
         Object.entries(words[0]).forEach(([match, response]) => {
-            if (text.includes(match)) {
-                output[match] = response.replace('<@username>', '@' + msg.userInfo.userName);
+            if (event.messageText.includes(match)) {
+                output[match] = response.replace('<@username>', '@' + event.chatterName);
             }
-            else if (text.toLowerCase().includes(match.toLowerCase())) {
-                output[match] = response.replace('<@username>', '@' + msg.userInfo.userName);
+            else if (event.messageText.toLowerCase().includes(match.toLowerCase())) {
+                output[match] = response.replace('<@username>', '@' + event.chatterName);
             }
         });
     }
