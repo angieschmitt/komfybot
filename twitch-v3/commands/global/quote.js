@@ -7,7 +7,6 @@ export const settings = {
     name: 'quote',
 	help: 'Command to handle quotes. Usage: !quote <quoteID:optional> || Additional args: add',
     list: true,
-    allowOffline: false,
     aliases: {}
 };
 
@@ -55,13 +54,14 @@ export const actions = {
         },
     },
     add: {
-        perms: {
-            levels: ['streamer', 'mod'],
-            error: 'this command is for the streamer and mods only.',
-        },
+        allowOffline: false,
         args: {
             required: [ 1 ],
             error: 'don\'t forgot the quote!',
+        },
+        perms: {
+            levels: ['streamer', 'mod'],
+            error: 'this command is for the streamer and mods only.',
         },
         execute(args, tags, message, channel, client) {
 
