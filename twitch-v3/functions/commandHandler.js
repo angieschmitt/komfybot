@@ -362,7 +362,7 @@ export async function commandHandler(command, perms, event, client) {
 
         // If no output, execute the command...
         if (!output) {
-            action.execute(args, tags, event.messageText, client.twitchUsername, client);
+            action.execute(args, tags, event.messageText, client.channel, client);
             return true;
         }
         // Otherwise, output output...
