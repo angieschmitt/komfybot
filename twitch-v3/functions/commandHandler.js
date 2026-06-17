@@ -99,8 +99,6 @@ export async function loadCommandData(command, args, type, commandsList) {
 export async function commandHandler(command, perms, event, client) {
     const parent = this;
 
-    console.log(command);
-
     const settings = command.settings;
     const action = command.action;
     const args = command.args;

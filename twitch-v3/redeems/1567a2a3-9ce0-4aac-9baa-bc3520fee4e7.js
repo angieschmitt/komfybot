@@ -27,7 +27,7 @@ export default function(redeemData, client) {
                 client.apiClient.channels.addVip(client.twitchUUID, redeemData.userId)
                     .then(function(response) {
                         const resData = response.data;
-                        console.log(resData);
+                        // console.log(resData);
                     })
                     .catch(function(error) {
                         if ('_body' in error){
