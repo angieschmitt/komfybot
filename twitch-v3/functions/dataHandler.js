@@ -3,7 +3,8 @@ import axios from 'axios';
 export async function dataChatters(event, client) {
     const parent = this;
 
-    const viewerID = event.chatterId;
+    const viewerID = parseInt(event.chatterId);
+
     if (!client.data.chatters.includes(viewerID)) {
         
         // Check for walk-on...
