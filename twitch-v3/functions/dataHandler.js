@@ -3,12 +3,14 @@ import axios from 'axios';
 export async function dataChatters(event, client) {
     const parent = this;
 
-    const viewerID = parseInt(event.chatterId);
+    const viewerStr = event.chatterId;
+    const viewerID = parseInt(viewerStr);
 
     if (!client.data.chatters.includes(viewerID)) {
         
         // Check for walk-on...
         if ('walk-ons' in client.overlay){
+
             const walkonsData = client.overlay['walk-ons'].data;
 
             // If there is walkonsData..
@@ -19,7 +21,7 @@ export async function dataChatters(event, client) {
                 
                 // Loop to check...
                 Object.entries(walkonsData).forEach(([key, val]) => {
-                    if (val.twitchUUID === viewerID){
+                    if (val.twitchUUID === viewerStr){
                         walkonData = val;
                     }
                 });
