@@ -6,6 +6,16 @@ export async function dataChatters(event, client) {
     const viewerStr = event.chatterId;
     const viewerID = parseInt(viewerStr);
 
+    // if it's a redeem or cheer, we ignore, since that's not what we count as a chat for these things...
+    if (event.isRedemption || event.isCheer) {
+        return true;
+    }
+
+    // Users decided to allow the ACTION loophole
+    if (event.messageText.indexOf('ACTION') !== -1) {
+        return true;
+    }
+
     if (!client.data.chatters.includes(viewerID)) {
         
         // Check for walk-on...
