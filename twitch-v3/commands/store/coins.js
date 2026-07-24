@@ -72,6 +72,8 @@ export const actions = {
         },
         execute(args, tags, message, channel, client) {
 
+            let content = '';
+
             const target = args[2].replace('@', '');
             const amount = args[3];
             if (!functions.isInt(amount)) {
@@ -83,7 +85,6 @@ export const actions = {
             let reason = message.substr(message.indexOf('!')).replace(args[0], '').replace(args[1], '').replace(args[2], '').replace(args[3], '').trim();
             reason = encodeURIComponent(reason);
 
-            let content = '';
             axios.get(client.endpoint + 'coins/insert/' + client.userID + '/' + target + '/' + amount + '/' + reason)
                 .then(function(response) {
                     const resData = response.data;
