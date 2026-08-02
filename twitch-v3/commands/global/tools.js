@@ -69,6 +69,7 @@ export const actions = {
 
             const title = message.substr(message.indexOf('!')).replace(args[0], '').replace(args[1], '').trim();
             await client.apiClient.channels.updateChannelInfo(client.twitchUUID, { 'title' : title });
+            functions.sayHandler(client, 'Updated title');
 
         },
     },
@@ -84,6 +85,7 @@ export const actions = {
             if ( newTags !== ''){
                 const newTagsArr = newTags.split(" ");
                 await client.apiClient.channels.updateChannelInfo(client.twitchUUID, { 'tags' : newTagsArr });
+                functions.sayHandler(client, 'Updated tags');
             }
             else {
                 functions.sayHandler(client, 'You must provide a list of tags.');
