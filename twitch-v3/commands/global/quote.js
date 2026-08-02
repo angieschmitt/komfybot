@@ -5,7 +5,7 @@ let functions = functionsFunc();
 
 export const settings = {
     name: 'quote',
-	help: 'Command to handle quotes. Usage: !quote <quoteID:optional> || Additional args: add',
+	help: 'Command to output or add quotes. Usage: !quote <quoteID:optional> || Additional args: add',
     list: true,
     aliases: {}
 };
@@ -59,6 +59,7 @@ export const actions = {
             required: [ 1 ],
             error: 'don\'t forgot the quote!',
         },
+        help: 'Command to add a quote to the database. Usage: !quote add <quote:required> <@username:optional> || Tip: Defaults to streamer if username not provided',
         perms: {
             levels: ['streamer', 'mod'],
             error: 'this command is for the streamer and mods only.',

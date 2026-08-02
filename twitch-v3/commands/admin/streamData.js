@@ -3,7 +3,6 @@ let functions = functionsFunc();
 
 export const settings = {
     name: 'check',
-	help: 'An assortment of ascii emojis',
     list: false,
 	aliases: {
 	},
@@ -108,6 +107,7 @@ export const actions = {
         }
     },
     debug: {
+	    help: 'Forces a debug message',
         perms: {
             levels: ['admin'],
             error: 'this command is for admins only.',

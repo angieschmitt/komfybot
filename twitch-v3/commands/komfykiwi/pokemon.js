@@ -5,10 +5,10 @@ let functions = functionsFunc();
 
 export const settings = {
     name: 'pkmn',
-    help: 'PokeAPI powered pokemon lookup, requires a name. Additional args: evolve, stats',
+    help: 'PokeAPI powered pokemon lookup. Usage: !pkmn <pokemon-name:optional> || Additional arguments: evolve, stats',
     list: true,
     allowOffline: true,
-    channel: ['2'],
+    channel: [ 1, 2 ],
     aliases: {}
 };
 
@@ -17,7 +17,63 @@ export const actions = {
         execute(args, tags, message, channel, client) {
             let output = '';
             if (!args[1]) {
-                functions.sayHandler(client, 'Please provide a pokemon to lookup!');
+                // functions.sayHandler(client, 'Please provide a pokemon to lookup!');
+
+                axios.get('https://pokeapi.co/api/v2/pokemon/?limit=9999&offset=0')
+                    .then(function(response) {
+                        const resData = response.data;
+
+                        let max = resData.results.length;
+                        let selected = functions.randomInt(0, (max-1));
+                        let pkmnUrl = resData.results[selected].url;
+
+                        axios.get(pkmnUrl)
+                            .then(function(response2) {
+                                const resData2 = response2.data;
+                                let pkmnUrl2 = resData2.species.url;
+
+                                axios.get(pkmnUrl2)
+                                    .then(function(response3) {
+                                        const resData3 = response3.data;
+
+                                        const flavorTexts = [];
+                                        resData3.flavor_text_entries.forEach(item => {
+                                            if (item.language.name === 'en') {
+                                                flavorTexts.push(item.flavor_text);
+                                            }
+                                        });
+
+                                        let flavorText = flavorTexts[ randomIntFromInterval(0, (flavorTexts.length - 1)) ];
+                                        flavorText = formatFlavorText(flavorText);
+
+                                        let natDex = 0;
+                                        resData3.pokedex_numbers.forEach(dex => {
+                                            if (dex.pokedex.name === 'national') {
+                                                natDex = dex.entry_number;
+                                            }
+                                        });
+
+                                        let genus = '';
+                                        resData3.genera.forEach(genera => {
+                                            if (genera.language.name === 'en') {
+                                                genus = genera.genus;
+                                            }
+                                        });
+
+                                        output = `${ucwords(resData3.name)}, National Dex #${natDex}, the ${genus}. `;
+                                        output += `${ flavorText }`;
+                                    })
+                                    .catch(function(error) {
+                                        client.debug.write(client.channel, 'pkmn-default', error.response.data);
+                                    })
+                                    .finally(function() {
+                                        if (output !== '') {
+                                            functions.sayHandler(client, output);
+                                        }
+                                    });
+
+                            });
+                    });
             }
             else {
                 axios.get('https://pokeapi.co/api/v2/pokemon-species/' + args[1].toLowerCase())
@@ -32,12 +88,7 @@ export const actions = {
                         });
 
                         let flavorText = flavorTexts[ randomIntFromInterval(0, (flavorTexts.length - 1)) ];
-                        flavorText = flavorText.replace('\f', '\n')
-                            .replace('\u00ad\n', '')
-                            .replace('\u00ad', '')
-                            .replace(' -\n', ' - ')
-                            .replace('-\n', '-')
-                            .replace('\n', ' ');
+                        flavorText = formatFlavorText(flavorText);
 
                         let natDex = 0;
                         resData.pokedex_numbers.forEach(dex => {
@@ -194,6 +245,25 @@ export const actions = {
 
 function ucwords(string) {
 	return string.toLowerCase().replace(/(?<= )[^\s]|^./g, a => a.toUpperCase());
+}
+
+function formatFlavorText(text){
+    let output = text.replace('\f', '\n');
+    output = output.replace(/\n/g,' ');
+    output = output.replace('\u000c',' ');
+    output = output.replace('\u00ad',' ');
+    output = output.replace('/[\x00-\x1F\x80-\xC0]/u', ' ');
+    output = output.replace(/,/g, ', ');
+    output = output.replace(/ +(?= )/g,'');
+
+    // let flavorText = flavorTexts[2];
+    // .replace('\u00ad\n', ' ')
+    // .replace(' -\n', ' ')
+    // .replace('-\n', ' ')
+    // .replace('/[\x00-\x1F\x80-\xC0]/u', ' ')
+    // .replace(/,/g, ', ');
+
+    return output;
 }
 
 function randomIntFromInterval(min, max) {

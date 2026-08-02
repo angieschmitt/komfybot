@@ -40,6 +40,7 @@ export const actions = {
         ],
     },
     hat: {
+        help: 'Command to lend a hat to Hattington. Usage: !hatty hat <hat:required>',
         execute(args, tags, message, channel, client) {
 
             let content = '';
@@ -138,6 +139,7 @@ export const actions = {
         },
     },
     snack: {
+        help: 'Command to give a snack to Hattington. Usage: !hatty snack <snack:required>',
         execute(args, tags, message, channel, client) {
 
             let content = '';
@@ -235,6 +237,7 @@ export const actions = {
         },
     },
     gacha: {
+        help: 'Command to use coins to roll on the Hattington Hat Gacha system. Usage: !hatty gacha <rolls:optional>',
         execute(args, tags, message, channel, client) {
 
             let amt = '1';

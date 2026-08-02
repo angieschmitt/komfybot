@@ -5,7 +5,7 @@ let functions = functionsFunc();
 
 export const settings = {
     name: 'giveaway',
-	help: 'Command to interact with the giveaway. Usage: !giveaway || Additional arguments: start, list, end',
+	help: 'Command to enter or interact with the giveaway. Usage: !giveaway || Additional arguments: start, list, end',
     list: false,
     allowOffline: true,
     aliases: {
@@ -59,6 +59,11 @@ export const actions = {
         },
     },
     start: {
+        help: 'Command to start a giveaway. Usage: !giveaway <prize:optional>',
+        perms: {
+            levels: ['streamer', 'mod'],
+            error: 'this command is for the streamer and mods only.',
+        },
         execute(args, tags, message, channel, client) {
             let content = '';
             const prize = message.substr(message.indexOf('!')).replace(args[0], '').replace(args[1], '').trim().toLowerCase();
@@ -113,6 +118,7 @@ export const actions = {
         },
     },
     list: {
+        help: 'Command to list out who has entered the giveaway. Usage: !giveaway list',
         execute(args, tags, message, channel, client) {
             let content = '';
             axios.get(client.endpoint + 'data/giveaway/' + client.userID + '/list')
@@ -157,6 +163,11 @@ export const actions = {
         },
     },
     end: {
+        help: 'Command to end the giveaway. Usage: !giveaway end',
+        perms: {
+            levels: ['streamer', 'mod'],
+            error: 'this command is for the streamer and mods only.',
+        },
         execute(args, tags, message, channel, client) {
             let content = '';
             axios.get(client.endpoint + 'data/giveaway/' + client.userID + '/end')

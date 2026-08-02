@@ -55,6 +55,7 @@ export const actions = {
         },
     },
     list: {
+        help: 'Command to list out current guesses. Usage: !guess list',
         execute(args, tags, message, channel, client) {
             let content = '';
             axios.get(client.endpoint + 'data/guess/' + client.userID + '/retrieve')
@@ -95,6 +96,11 @@ export const actions = {
         },
     },
     reset: {
+        help: 'Command to reset the current guesses. Usage: !guess reset',
+        perms: {
+            levels: ['streamer', 'mod'],
+            error: 'this command is for the streamer and mods only.',
+        },
         execute(args, tags, message, channel, client) {
             let content = '';
             axios.get(client.endpoint + 'data/guess/' + client.userID + '/reset')
@@ -126,6 +132,11 @@ export const actions = {
         },
     },
     lock: {
+        help: 'Command to lockin the current guesses. Usage: !guess lock',
+        perms: {
+            levels: ['streamer', 'mod'],
+            error: 'this command is for the streamer and mods only.',
+        },
         execute(args, tags, message, channel, client) {
             let content = '';
             axios.get(client.endpoint + 'data/guess/' + client.userID + '/lock')
@@ -157,6 +168,11 @@ export const actions = {
         },
     },
     unlock: {
+        help: 'Command to unlock the current guesses. Usage: !guess unlock',
+        perms: {
+            levels: ['streamer', 'mod'],
+            error: 'this command is for the streamer and mods only.',
+        },
         execute(args, tags, message, channel, client) {
             let content = '';
             axios.get(client.endpoint + 'data/guess/' + client.userID + '/unlock')

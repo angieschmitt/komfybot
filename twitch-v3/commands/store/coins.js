@@ -62,13 +62,14 @@ export const actions = {
         },
     },
     add: {
-        perms: {
-            levels: ['streamer', 'mod'],
-            error: 'this command is for the streamer and mods only.',
-        },
         args: {
             required: [ 2, 3 ],
             error: 'don\'t forgot the user and the amount!',
+        },
+        help: 'Command to give a user coins. Usage: !coins add <@username:required> <amt:required>',
+        perms: {
+            levels: ['streamer', 'mod'],
+            error: 'this command is for the streamer and mods only.',
         },
         execute(args, tags, message, channel, client) {
 
@@ -117,13 +118,14 @@ export const actions = {
         },
     },
     remove: {
-        perms: {
-            levels: ['streamer', 'mod'],
-            error: 'this command is for the streamer and mods only.',
-        },
         args: {
             required: [ 2, 3 ],
             error: 'don\'t forgot the user and the amount!',
+        },
+        help: 'Command to remove a users coins. Usage: !coins remove <@username:required> <amt:required>',
+        perms: {
+            levels: ['streamer', 'mod'],
+            error: 'this command is for the streamer and mods only.',
         },
         execute(args, tags, message, channel, client) {
 
@@ -175,6 +177,7 @@ export const actions = {
             required: [ 2, 3 ],
             error: 'don\'t forgot the user and the amount!',
         },
+        help: 'Command to transfer a user some of your coins. Usage: !coins give <@username:required> <amt:required>',
         execute(args, tags, message, channel, client) {
 
             const viewer = tags['username'];
@@ -222,6 +225,7 @@ export const actions = {
         },
     },
     holders: {
+        help: 'Command to list the users with the most coins. Usage: !coins holders',
         execute(args, tags, message, channel, client) {
 
             let content = '';
@@ -260,6 +264,7 @@ export const actions = {
         },
     },
     spenders: {
+        help: 'Command to list the users who have spent the most coins. Usage: !coins spenders',
         execute(args, tags, message, channel, client) {
 
             let content = '';
