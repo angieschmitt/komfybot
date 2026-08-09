@@ -37,7 +37,7 @@ export const actions = {
                             }
                             output += `Type :: ${resData.type_line} || `;
                             if (resData.oracle_text !== '') {
-                                output += `Text :: ${resData.oracle_text} || `;
+                                output += `Text :: ${formatFlavorText(resData.oracle_text)} || `;
                             }
                             if ('power' in resData || 'toughness' in resData) {
                                 output += 'P/T :: ';
@@ -82,3 +82,15 @@ export const actions = {
         },
     },
 };
+
+function formatFlavorText(text){
+    let output = text.replace('\f', '\n');
+    output = output.replace(/\n/g,' ');
+    output = output.replace('\u000c',' ');
+    output = output.replace('\u00ad',' ');
+    output = output.replace('/[\x00-\x1F\x80-\xC0]/u', ' ');
+    output = output.replace(/,/g, ', ');
+    output = output.replace(/ +(?= )/g,'');
+
+    return output;
+}
