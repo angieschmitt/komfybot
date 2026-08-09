@@ -59,6 +59,9 @@ export async function createBot(globals, twitchUUID, userData) {
     // Silly extras...
     client.launch = new Date();
 
+    // Handler for Mass sub events...
+    client.giftCounts = new Map();
+
     // Interval and Timeouts containers...
     client.intervals = {
     	// to keep a reference to all the intervals
