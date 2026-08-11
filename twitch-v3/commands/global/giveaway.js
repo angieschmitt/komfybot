@@ -186,7 +186,7 @@ export const actions = {
 
                         content = `Giveaway ended! The winner is ${resData.response.content.users}, winning ${resData.response.content.prize}`;
 
-                        // Now.. if the prize IS AN INT... hand out winnings..
+                        // Now... if the prize IS AN INT... hand out winnings..
                         if (functions.isInt(resData.response.content.prize)) {
 
                             content += ` ${(resData.response.content.prize > 1 ? client.settings.currency.name.plural : client.settings.currency.name.single)}.`;

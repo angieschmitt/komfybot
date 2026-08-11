@@ -24,6 +24,10 @@ export async function action(event, client) {
     }
 
     if (content !== '') {
+        // force the schedule to update...
+        client.adSchedule = await client.apiClient.channels.getAdSchedule(client.twitchUUID);
+
+        // Now say the ad message...
         functions.sayHandler(client, content);
     }
 
