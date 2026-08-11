@@ -407,7 +407,7 @@ export const actions = {
     give: {
         help: 'Command to give a user an item. Usage: !store give <@user:required> <item:required> <amt:optional>',
         perms: {
-            levels: ['streamer', 'mod'],
+            levels: ['admin', 'streamer', 'mod'],
             error: 'this command is for the streamer and mods only.',
         },
         args: {
