@@ -5,7 +5,7 @@ let functions = functionsFunc();
 
 export const settings = {
     name: 'clip',
-	help: 'Make a quick clip of the stream. Usage: !clip',
+	help: 'Make a quick clip of the stream. Usage: !clip <title:optional>',
     list: true,
     allowOffline: false,
     aliases: {}
@@ -16,11 +16,15 @@ export const actions = {
         async execute(args, tags, message, channel, client) {
 
             const viewer = tags['username'];
+            let title = `Created by ${viewer}`;
+            if ( args.length > 1 ){
+                title = message.substr(message.indexOf('!')).replace(args[0], '').trim() + ` - Created by ${viewer}`;
+            }
 
             try {
 
                 const clipData = await client.apiClient.asUser(client.botUserID, ctx => {
-                    const clipData = ctx.clips.createClip({ channel: client.twitchUUID, createAfterDelay: false, duration: 30, title: `Created by ${viewer}` });
+                    const clipData = ctx.clips.createClip({ channel: client.twitchUUID, createAfterDelay: false, duration: 30, title: title });
                     return clipData;
                 });
 
