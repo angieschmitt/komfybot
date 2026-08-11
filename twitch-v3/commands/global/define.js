@@ -7,7 +7,7 @@ export const settings = {
     name: 'define',
     help: 'Provides a definition for a word. Usage: !def <word:required>',
     list: false,
-    allowOffline: false,
+    allowOffline: true,
     aliases: {
         'def': {
 			arg: false,
@@ -27,40 +27,37 @@ export const actions = {
 
             const lookup = args[1].trim().toLowerCase();
 
-            axios.get('https://api.dictionaryapi.dev/api/v2/entries/en/' + lookup)
+            axios.get('https://freedictionaryapi.com/api/v1/entries/en/' + lookup)
                 .then(function(response) {
                     const resData = response.data;
 
-                    if (message in resData) {
-                        if (resData.message == 'Sorry pal, we couldn\'t find definitions for the word you were looking for.') {
-                            content = `Sorry @${tags.username}, we couldn't find definitions for the word you were looking for.`;
-                        }
-                    }
-                    else {
-                        content = `@${tags.username}, ${lookup} can be defined as a... `;
-                        const meanings = resData[0].meanings;
-                        Object.entries(meanings).forEach(([key]) => {
-                            content += `${meanings[key].partOfSpeech} : ${meanings[key].definitions[0].definition} || `;
-                        });
+                    if ( resData.entries.length > 0 ){
+                        content = `@${tags.username}, ${lookup} can be defined as... `;
 
+                        const entries = resData.entries;
+                        Object.entries(entries).forEach(([key, data]) => {
+                            Object.entries(data.senses).forEach(([key2, sense]) => {
+                                if (!Object.values(sense.tags).includes('slur')) {
+                                    content += `${data.partOfSpeech} : ${sense.definition} || `;
+                                }
+                            });
+                        });
                         content = content.substring(0, content.length - 3).trim();
 
-                        if (resData[0].phonetic) {
-                            content += ` It is pronounced like: ${resData[0].phonetic}`;
-                        }
                     }
-                })
-                .catch(function(caught) {
-                    const resData = caught.response.data;
-                    if (resData.message == 'Sorry pal, we couldn\'t find definitions for the word you were looking for.') {
+                    else {
                         content = `Sorry @${tags.username}, we couldn't find definitions for the word you were looking for.`;
                     }
+                })
+                .catch(function(error) {
+                    console.log(error);
                 })
                 .finally(function() {
                     if (content !== '') {
                         functions.sayHandler(client, content);
                     }
                 });
+                
         },
     },
 };
