@@ -1,4 +1,5 @@
-// https://twurple.js.org/reference/eventsub-base/classes/EventSubChannelChatMessageEvent.html
+// https://twurple.js.org/reference/eventsub-ws/classes/EventSubWsListener.html#onChannelChatMessage
+// https://twurple.js.org/reference/eventsub-base/classes/EventSubSubscription.html
 
 import e from 'express';
 import functionsFunc from '../../functions/index.js';

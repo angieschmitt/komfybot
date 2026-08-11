@@ -192,7 +192,6 @@ export async function createBot(globals, twitchUUID, userData) {
     // Load in more data...
     await parent.dataLive(client);
     await parent.dashboardLoader(client);
-    await parent.timerHandler(client);
 
     return globals;
 };
