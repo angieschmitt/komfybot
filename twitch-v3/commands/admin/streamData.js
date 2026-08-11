@@ -116,6 +116,17 @@ export const actions = {
             client.debug.write(client.channel, 'streamdata-debug', 'Hi Boss!');
         }
     },
+    nextad: {
+	    help: 'Gets the next ad a debug message',
+        perms: {
+            levels: ['admin'],
+            error: 'this command is for admins only.',
+        },
+        async execute(args, tags, message, channel, client) {
+            const nextAdDate = new Date(client.adSchedule.nextAdDate);
+            functions.sayHandler(client, 'Next ad @ ' + nextAdDate.toLocaleString('en-US', { timeZone: "America/New_York" }));
+        }
+    },
     forcechaos: {
         perms: {
             levels: ['admin'],
