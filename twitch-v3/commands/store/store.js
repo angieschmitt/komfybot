@@ -488,4 +488,83 @@ export const actions = {
                 });
         },
     },
+    search: {
+        help: 'Command to search for an item. Usage: !store search <search-term:required>',
+        args: {
+            required: [ 2 ],
+            error: 'don\'t forgot the search term!',
+        },
+        execute(args, tags, message, channel, client) {
+
+            const rarities = {
+                'common'		: 1,
+                'uncommon'		: 2,
+                'rare'			: 3,
+                'super-rare'	: 4,
+                'superrare'		: 4,
+                'custom'		: 5,
+            };
+
+            let content = '';
+            let item = message.substr(message.indexOf('!')).replace(args[0], '').replace(args[1], '').trim();
+
+            if (item.length < 3){
+                functions.sayHandler(client, `Please use a search term that is at least 3 letters`);
+                return;
+            }
+
+            axios.get(client.endpoint + 'store/search/' + client.userID + '/' + item)
+                .then(function(response) {
+                    const resData = response.data;
+
+                    if (resData.status === 'success') {
+
+                        content = `Searched store for "${item}". Found: `;
+
+                        Object.entries(resData.response).forEach(([idx, categoryLevel]) => { // eslint-disable-line no-unused-vars
+                            Object.entries(categoryLevel).forEach(([category, itemsLevel]) => { // eslint-disable-line no-unused-vars
+                                Object.entries(itemsLevel).forEach(([itemIDX, item]) => { // eslint-disable-line no-unused-vars
+                                    const itemData = JSON.parse(item['itemData']);
+                                    content += `${item.name} `;
+                                    if (itemData.type == 'gacha'){
+                                        content += `(` + 
+                                            Object.keys(rarities).find(key => rarities[key] === parseInt(itemData.rarity)) +
+                                            (itemData.type == 'gacha' ? ', gacha' : '') +
+                                        `)`;
+                                    }
+                                    content += ` || `;
+                                });
+                            });
+                        });
+
+                        content = content.substring(0, content.length - 3);
+
+                    }
+                    else if (resData.status === 'failure') {
+                        if (resData.err_msg === 'no_items_in_store') {
+                            content = "No items found that match your search";
+                        }
+                        else if (resData.err_msg === 'missing_authorization') {
+                            client.debug.write(client.channel, 'store-search', 'Authorization issue');
+                        }
+                        else {
+                            client.debug.write(client.channel, 'store-search', 'Failed response');
+                        }
+                    }
+                    else {
+                        client.debug.write(client.channel, 'store-search', 'Not sure how you got here');
+                    }
+                })
+                .catch(function() {
+                    client.debug.write(client.channel, 'store-search', 'Issue while handling command');
+                })
+                .finally(function() {
+                    if (!('silent' in tags)) {
+                        if (content !== '') {
+                            functions.sayHandler(client, content);
+                        }
+                    }
+                });
+        },
+    }
 };
