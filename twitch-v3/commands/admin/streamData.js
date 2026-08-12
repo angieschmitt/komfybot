@@ -159,4 +159,15 @@ export const actions = {
 
         },
     },
+    testing: {
+        perms: {
+            levels: ['admin'],
+            error: 'this command is for admins only.',
+        },
+        execute(args, tags, message, channel, client) {
+
+            // client.commands.global.coins['actions'].add.execute(args2, { 'silent': true }, message2, client.channel, client);
+
+        },
+    }
 };

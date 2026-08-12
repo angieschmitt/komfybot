@@ -196,7 +196,7 @@ export const actions = {
                             const args2 = ['!coins', 'add', resData.response.content.users, resData.response.content.prize, 'reason' ];
                             const message2 = `!coins add ${resData.response.content.users} ${resData.response.content.prize} ${reason}`;
                             tags['silent'] = true;
-                            client.commands.global.coins.actions.add.execute(args2, tags, message2, channel, client);
+                            client.commands.global.coins['actions'].add.execute(args2, tags, message2, channel, client);
                         }
 
                     }

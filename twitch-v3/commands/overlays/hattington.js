@@ -249,7 +249,7 @@ export const actions = {
             const args2 = ['!store', 'buy', 'Gacha', 'Hat', amt ];
             const message2 = `!store buy Gacha Hat ${amt}`;
             tags['silent'] = true;
-            client.commands['global'].store.actions.buy.execute(args2, tags, message2, channel, client);
+            client.commands.global.store['actions'].buy.execute(args2, tags, message2, channel, client);
         },
     },
 };

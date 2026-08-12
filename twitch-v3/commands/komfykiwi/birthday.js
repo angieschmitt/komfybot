@@ -46,7 +46,7 @@ export const actions = {
                 const args2 = ['!store', 'give', args[2], hat ];
                 const message2 = `!store give ${args[2]} ${hat}`;
                 tags['silent'] = true;
-                client.commands.global.store.actions.give.execute(args2, tags, message2, channel, client);
+                client.commands.global.store['actions'].give.execute(args2, tags, message2, channel, client);
             });
 
             // Remove the last ', ' ...

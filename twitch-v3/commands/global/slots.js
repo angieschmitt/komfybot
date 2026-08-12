@@ -107,7 +107,7 @@ export const actions = {
                                 const args2 = ['!coins', 'add', tags.username, riskFinal, reason ];
                                 const message2 = `!coins add ${tags.username} ${riskFinal} ${reason}`;
                                 tags['silent'] = true;
-                                client.commands.global.coins.actions.add.execute(args2, tags, message2, channel, client);
+                                client.commands.global.coins['actions'].add.execute(args2, tags, message2, channel, client);
                             }
                             else {
                                 content += `@${viewer}, you only have ${coinAmt} ${(coinAmt > 1 ? client.settings.currency.name.plural : client.settings.currency.name.single)}.`;
