@@ -25,9 +25,25 @@ export const actions = {
         execute(args, tags, message, channel, client) {
             let content = '';
 
-            const lookup = args[1].trim().toLowerCase();
+            const langList = [ 'de', 'en', 'fr' ];
 
-            axios.get('https://freedictionaryapi.com/api/v1/entries/en/' + lookup)
+            let lookup = args[1].trim().toLowerCase();
+            let lang = args.at(-1);
+
+            console.log(typeof langList);
+            console.log(lang);
+            console.log(langList.indexOf("lang"));
+
+            if ( !Object.values(langList).includes(lang) ){
+                lang = 'en';
+            }
+            else if (lang == 'de'){
+                lookup = ucwords(lookup);
+            }
+
+            console.log('https://freedictionaryapi.com/api/v1/entries/' + lang + '/' + lookup + '?translations=false');
+
+            axios.get('https://freedictionaryapi.com/api/v1/entries/' + lang + '/' + lookup + '?translations=false')
                 .then(function(response) {
                     const resData = response.data;
 
@@ -61,3 +77,7 @@ export const actions = {
         },
     },
 };
+
+function ucwords(string) {
+	return string.toLowerCase().replace(/(?<= )[^\s]|^./g, a => a.toUpperCase());
+}
