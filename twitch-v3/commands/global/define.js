@@ -5,7 +5,7 @@ let functions = functionsFunc();
 
 export const settings = {
     name: 'define',
-    help: 'Provides a definition for a word. Usage: !def <word:required>',
+    help: 'Provides a definition for a word. Usage: !def <word:required> <language:optional|de/en/fr>',
     list: false,
     allowOffline: true,
     aliases: {
@@ -27,21 +27,20 @@ export const actions = {
 
             const langList = [ 'de', 'en', 'fr' ];
 
-            let lookup = args[1].trim().toLowerCase();
+            // let lookup = args[1].trim().toLowerCase();
+            let lookup = message.substr(message.indexOf('!')).replace(args[0], '').trim().toLowerCase();
             let lang = args.at(-1);
 
-            console.log(typeof langList);
-            console.log(lang);
-            console.log(langList.indexOf("lang"));
-
-            if ( !Object.values(langList).includes(lang) ){
+            if ( Object.values(langList).includes(lang) ){
+                lookup = lookup.replace(lang, '').trim();
+                
+                if (lang == 'de'){
+                    lookup = ucwords(lookup);
+                }
+            }
+            else {
                 lang = 'en';
             }
-            else if (lang == 'de'){
-                lookup = ucwords(lookup);
-            }
-
-            console.log('https://freedictionaryapi.com/api/v1/entries/' + lang + '/' + lookup + '?translations=false');
 
             axios.get('https://freedictionaryapi.com/api/v1/entries/' + lang + '/' + lookup + '?translations=false')
                 .then(function(response) {
