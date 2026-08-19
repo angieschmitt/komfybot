@@ -17,6 +17,7 @@ export async function timerHandler(client, reset = false) {
 
     if (!('adSchedule' in client)) {
         client.adSchedule = await client.apiClient.channels.getAdSchedule(client.twitchUUID);
+        client.adSchedule.nextAdDateObj = new Date(client.adSchedule.nextAdDate);
         client.adSchedule.warning = 1;
         client.adSchedule.announced = false;
     }
@@ -69,20 +70,25 @@ export async function timerHandler(client, reset = false) {
                     // If there is a nextAdDate...
                     if ( client.adSchedule.nextAdDate !== null ){
 
-                        // If it's within 5 minutes, shout about it and make sure it's only once...
-                        if (isWithinXMinutes(client.adSchedule.nextAdDate, client.adSchedule.warning) && !client.adSchedule.announced){
+                        let windowCheck = isWithinXMinutes(client.adSchedule.nextAdDateObj, client.adSchedule.warning);
+
+                        console.log('Announced: ' + client.adSchedule.announced);
+                        console.log('- - -');
+
+                        // If it's within x minutes, shout about it and make sure it's only once...
+                        if (windowCheck && !client.adSchedule.announced){
                             client.adSchedule.announced = true;
                             parent.sayHandler(client, `Ad coming up in about the next ${client.adSchedule.warning} ${(client.adSchedule.warning > 1 ? 'minutes' : 'minute')}!`);
                         }
-                        
-                        // If it's been announced, and NOT within 5 minutes, we update the data...
-                        else if (!isWithinXMinutes(client.adSchedule.nextAdDate, client.adSchedule.warning) && client.adSchedule.announced){
+
+                        // If it's been announced, and NOT within x minutes, we update the data...
+                        else if (!windowCheck && client.adSchedule.announced){
                             client.adSchedule = await client.apiClient.channels.getAdSchedule(client.twitchUUID);
+                            client.adSchedule.nextAdDateObj = new Date(client.adSchedule.nextAdDate);
                             client.adSchedule.announced = false;
 
-                            const nextAdDate = new Date(client.adSchedule.nextAdDate);
                             console.log('adSchedule refreshed.');
-                            console.log(nextAdDate.toLocaleString('en-US', { timeZone: "America/New_York" }));
+                            console.log(nextAdDateObj.toLocaleString('en-US', { timeZone: "America/New_York" }));
                         }
 
                     }
@@ -98,11 +104,18 @@ export async function timerHandler(client, reset = false) {
 };
 
 function isWithinXMinutes(targetDate, time) {
-    const now = Date.now();
-    const target = new Date(targetDate).getTime();
+    const now = new Date(Date.now());
+    const target = new Date(targetDate);
+    const targetTime = target.getTime();
 
-    const difference = target - now;
+    console.log('Now: ' + now.toLocaleString('en-US', { timeZone: "America/New_York" }));
+    console.log('When: ' + target.toLocaleString('en-US', { timeZone: "America/New_York" }));
+
+    const difference = targetTime - now;
     const diffInMs = time * 60 * 1000;
+
+    console.log('Diff: ' + difference);
+    console.log('DiffMs: ' + diffInMs);
 
     // True if the date is in the future, but less than or equal to 5 minutes away
     return difference > 0 && difference <= diffInMs;
