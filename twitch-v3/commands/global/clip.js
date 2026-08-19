@@ -43,6 +43,10 @@ export const actions = {
                         2500, client, content,
                     );
                 }
+                else {
+                    content = `Something went wrong. Tell @kittenAngie.`;
+                    client.debug.write(client.channel, 'clip-default', args);
+                }
 
             } catch (error) {
 
@@ -52,6 +56,9 @@ export const actions = {
                     const body = JSON.parse(error._body);
                     if (body.message === 'Channel offline.') {
                         content = `@${viewer}, you can't clip an offline channel.`;
+                    }
+                    else {
+                        content = `@${viewer}, ${body.message.toLowerCase()}.`;
                     }
                 }
                 else {
