@@ -245,10 +245,6 @@ export async function commandsHandler(data, client, reset = false) {
         });
     }
 
-    // console.log(client.commands.global);
-    // console.log(client.commands.user);
-    // console.log(client.commands.alias);
-
     return client;
 };
 
@@ -395,8 +391,6 @@ export async function settingsHandler(data, client, reset = false) {
                 }
 
             })
-
-            // console.log(client.settings);
         }
     }
 

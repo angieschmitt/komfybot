@@ -16,7 +16,7 @@ export async function messageHandler(event, client) {
     const command = await parent.commandLocator(event.messageText, client);
     if (command) {
         parent.commandHandler(command, perms, event, client);
-        console.log('Used command: ' + command.settings.name + ' ' + (command.args[1] ? command.args[1] : ''));
+        console.log(`${event.chatterName} used command: ${command.args}`);
         passive = false;
     }
 
