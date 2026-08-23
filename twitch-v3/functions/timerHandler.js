@@ -16,10 +16,18 @@ export async function timerHandler(client, reset = false) {
     }
 
     if (!('adSchedule' in client)) {
-        client.adSchedule = await client.apiClient.channels.getAdSchedule(client.twitchUUID);
-        client.adSchedule.nextAdDateObj = new Date(client.adSchedule.nextAdDate);
+        client.adSchedule = {};
         client.adSchedule.warning = 1;
         client.adSchedule.announced = false;
+
+        // Now load in the schedule from twitch...
+        client.adSchedule.twitchData = await client.apiClient.channels.getAdSchedule(client.twitchUUID);
+
+        // Default to null, then override...
+        client.adSchedule.nextAdDate = null;
+        if ( client.adSchedule.twitchData.nextAdDate ){
+            client.adSchedule.nextAdDate = new Date(client.adSchedule.twitchData.nextAdDate);
+        }
     }
 
     // Now load in the timerOffsets
@@ -70,10 +78,7 @@ export async function timerHandler(client, reset = false) {
                     // If there is a nextAdDate...
                     if ( client.adSchedule.nextAdDate !== null ){
 
-                        let windowCheck = isWithinXMinutes(client.adSchedule.nextAdDateObj, client.adSchedule.warning);
-
-                        console.log('Announced: ' + client.adSchedule.announced);
-                        console.log('- - -');
+                        let windowCheck = isWithinXMinutes(client.adSchedule.nextAdDate, client.adSchedule.warning);
 
                         // If it's within x minutes, shout about it and make sure it's only once...
                         if (windowCheck && !client.adSchedule.announced){
@@ -83,12 +88,21 @@ export async function timerHandler(client, reset = false) {
 
                         // If it's been announced, and NOT within x minutes, we update the data...
                         else if (!windowCheck && client.adSchedule.announced){
-                            client.adSchedule = await client.apiClient.channels.getAdSchedule(client.twitchUUID);
-                            client.adSchedule.nextAdDateObj = new Date(client.adSchedule.nextAdDate);
+
+                            // Load in the schedule from twitch...
+                            client.adSchedule.twitchData = await client.apiClient.channels.getAdSchedule(client.twitchUUID);
+
+                            // Default to null, then override...
+                            client.adSchedule.nextAdDate = null;
+                            if ( client.adSchedule.twitchData.nextAdDate ){
+                                client.adSchedule.nextAdDate = new Date(client.adSchedule.twitchData.nextAdDate);
+                            }
+
+                            // Reset the announced state...
                             client.adSchedule.announced = false;
 
                             console.log('adSchedule refreshed.');
-                            console.log(nextAdDateObj.toLocaleString('en-US', { timeZone: "America/New_York" }));
+                            console.log(client.adSchedule.nextAdDate.toLocaleString('en-US', { timeZone: "America/New_York" }));
                         }
 
                     }

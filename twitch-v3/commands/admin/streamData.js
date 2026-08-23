@@ -123,7 +123,12 @@ export const actions = {
             error: 'this command is for admins only.',
         },
         async execute(args, tags, message, channel, client) {
-            functions.sayHandler(client, 'Next ad @ ' + client.adSchedule.nextAdDateObj.toLocaleString('en-US', { timeZone: "America/New_York" }));
+            if ( client.adSchedule.nextAdDate !== null ){
+                functions.sayHandler(client, `Next ad @ ${client.adSchedule.nextAdDate.toLocaleString('en-US', { timeZone: "America/New_York" })}`);
+            }
+            else {
+                functions.sayHandler(client, `Seems like the stream isn't live, or there are no ads scheduled.`);
+            }
         }
     },
     forcechaos: {

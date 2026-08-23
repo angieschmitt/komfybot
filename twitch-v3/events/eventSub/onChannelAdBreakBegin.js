@@ -24,8 +24,16 @@ export async function action(event, client) {
     }
 
     if (content !== '') {
-        // force the schedule to update...
-        client.adSchedule = await client.apiClient.channels.getAdSchedule(client.twitchUUID);
+        // Force the schedule to update: load in the schedule from twitch...
+        client.adSchedule.twitchData = await client.apiClient.channels.getAdSchedule(client.twitchUUID);
+
+        // Default to null, then override...
+        client.adSchedule.nextAdDate = null;
+        if ( client.adSchedule.twitchData.nextAdDate ){
+            client.adSchedule.nextAdDate = new Date(client.adSchedule.twitchData.nextAdDate);
+        }
+
+        // Reset the announced state...
         client.adSchedule.announced = false;
 
         // Now say the ad message...
