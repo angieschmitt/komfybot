@@ -130,6 +130,7 @@ function isWithinXMinutes(targetDate, time) {
 
     console.log('Diff: ' + difference);
     console.log('DiffMs: ' + diffInMs);
+    console.log('- - -');
 
     // True if the date is in the future, but less than or equal to 5 minutes away
     return difference > 0 && difference <= diffInMs;
