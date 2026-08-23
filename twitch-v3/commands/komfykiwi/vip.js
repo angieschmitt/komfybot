@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import functionsFunc from '../../functions/index.js';
+import e from 'express';
 let functions = functionsFunc();
 
 export const settings = {
@@ -24,7 +25,12 @@ export const actions = {
                     const resData = response.data;
 
                     if (resData.status === 'success') {
-                        content = `@${target}, you have ${resData.response.remaining} ${(resData.response.remaining > 1 ? 'days' : 'day')} of VIP remaining.`;
+                        if ( resData.response.remaining == 'infinite' ){
+                            content = `@${target}, you have infinite days of VIP remaining.`;
+                        }
+                        else {
+                            content = `@${target}, you have ${resData.response.remaining} ${(resData.response.remaining > 1 ? 'days' : 'day')} of VIP remaining.`;
+                        }
                     }
                     else if (resData.status === 'failure') {
                         if (resData.err_msg === 'already_mod') {
