@@ -122,15 +122,15 @@ function isWithinXMinutes(targetDate, time) {
     const target = new Date(targetDate);
     const targetTime = target.getTime();
 
-    console.log('Now: ' + now.toLocaleString('en-US', { timeZone: "America/New_York" }));
-    console.log('When: ' + target.toLocaleString('en-US', { timeZone: "America/New_York" }));
+    // console.log('Now: ' + now.toLocaleString('en-US', { timeZone: "America/New_York" }));
+    // console.log('When: ' + target.toLocaleString('en-US', { timeZone: "America/New_York" }));
 
     const difference = targetTime - now;
     const diffInMs = time * 60 * 1000;
 
-    console.log('Diff: ' + difference);
-    console.log('DiffMs: ' + diffInMs);
-    console.log('- - -');
+    // console.log('Diff: ' + difference);
+    // console.log('DiffMs: ' + diffInMs);
+    // console.log('- - -');
 
     // True if the date is in the future, but less than or equal to 5 minutes away
     return difference > 0 && difference <= diffInMs;
