@@ -353,6 +353,7 @@ export async function settingsHandler(data, client, reset = false) {
 
     if (!('settings' in client) || reset) {
         client.settings = new Array();
+        client.settings.admonitor = [];
         client.settings.currency = [];
         client.settings.passive = [];
         client.settings.commands = [];

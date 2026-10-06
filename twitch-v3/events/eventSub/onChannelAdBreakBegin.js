@@ -13,31 +13,39 @@ export function settings(client) {
 
 export async function action(event, client) {
 
-    // TODO: Add custom ad messages to dashboard
+    if (client.settings.admonitor.enabled){
 
-    let content = '';
-    if (event.isAutomatic){
-        content = `Time for a scheduled ad break! See you in about ${ fancyTimeFormat(event.durationSeconds) }!`;
-    }
-    else {
-        content = `We're taking an unscheduled ad break! See you in about ${ fancyTimeFormat(event.durationSeconds) }!`;
-    }
-
-    if (content !== '') {
-        // Force the schedule to update: load in the schedule from twitch...
-        client.adSchedule.twitchData = await client.apiClient.channels.getAdSchedule(client.twitchUUID);
-
-        // Default to null, then override...
-        client.adSchedule.nextAdDate = null;
-        if ( client.adSchedule.twitchData.nextAdDate ){
-            client.adSchedule.nextAdDate = new Date(client.adSchedule.twitchData.nextAdDate);
+        let content = '';
+        if (event.isAutomatic){
+            if (client.settings.admonitor['scheduled']) {
+                content = client.settings.admonitor['scheduled'];
+                content = content.replace('{@length}', fancyTimeFormat(event.durationSeconds));
+            }
+        }
+        else {
+            if (client.settings.admonitor['unscheduled']) {
+                content = client.settings.admonitor['unscheduled'];
+                content = content.replace('{@length}', fancyTimeFormat(event.durationSeconds));
+            }
         }
 
-        // Reset the announced state...
-        client.adSchedule.announced = false;
+        if (content !== '') {
+            // Force the schedule to update: load in the schedule from twitch...
+            client.adSchedule.twitchData = await client.apiClient.channels.getAdSchedule(client.twitchUUID);
 
-        // Now say the ad message...
-        functions.sayHandler(client, content);
+            // Default to null, then override...
+            client.adSchedule.nextAdDate = null;
+            if ( client.adSchedule.twitchData.nextAdDate ){
+                client.adSchedule.nextAdDate = new Date(client.adSchedule.twitchData.nextAdDate);
+            }
+
+            // Reset the announced state...
+            client.adSchedule.announced = false;
+
+            // Now say the ad message...
+            functions.sayHandler(client, content);
+        }
+        
     }
 
 };

@@ -15,19 +15,22 @@ export async function timerHandler(client, reset = false) {
         client.timerOffset = 1;
     }
 
-    if (!('adSchedule' in client)) {
-        client.adSchedule = {};
-        client.adSchedule.warning = 1;
-        client.adSchedule.announced = false;
+    if (client.settings.admonitor.enabled){
 
-        // Now load in the schedule from twitch...
-        client.adSchedule.twitchData = await client.apiClient.channels.getAdSchedule(client.twitchUUID);
+        if (!('adSchedule' in client)) {
+            client.adSchedule = {};
+            client.adSchedule.announced = false;
 
-        // Default to null, then override...
-        client.adSchedule.nextAdDate = null;
-        if ( client.adSchedule.twitchData.nextAdDate ){
-            client.adSchedule.nextAdDate = new Date(client.adSchedule.twitchData.nextAdDate);
+            // Now load in the schedule from twitch...
+            client.adSchedule.twitchData = await client.apiClient.channels.getAdSchedule(client.twitchUUID);
+
+            // Default to null, then override...
+            client.adSchedule.nextAdDate = null;
+            if ( client.adSchedule.twitchData.nextAdDate ){
+                client.adSchedule.nextAdDate = new Date(client.adSchedule.twitchData.nextAdDate);
+            }
         }
+        
     }
 
     // Now load in the timerOffsets
@@ -70,39 +73,45 @@ export async function timerHandler(client, reset = false) {
                 }
 
                 // Handle ad notification timer, if enabled...
-                // TODO: Add ability to toggle ad warnings
-                // TODO: Add ability to set custom time for warning to dashboard
-                // TODO: Add custom ad warning message to dashboard
-                if (client.isLive) {
+                if (client.settings.admonitor.enabled){
 
-                    // If there is a nextAdDate...
-                    if ( client.adSchedule.nextAdDate !== null ){
+                    if (client.isLive) {
 
-                        let windowCheck = isWithinXMinutes(client.adSchedule.nextAdDate, client.adSchedule.warning);
+                        // If there is a nextAdDate...
+                        if ( client.adSchedule.nextAdDate !== null ){
 
-                        // If it's within x minutes, shout about it and make sure it's only once...
-                        if (windowCheck && !client.adSchedule.announced){
-                            client.adSchedule.announced = true;
-                            parent.sayHandler(client, `Ad coming up in about the next ${client.adSchedule.warning} ${(client.adSchedule.warning > 1 ? 'minutes' : 'minute')}!`);
-                        }
+                            let windowCheck = isWithinXMinutes(client.adSchedule.nextAdDate, client.settings.admonitor);
 
-                        // If it's been announced, and NOT within x minutes, we update the data...
-                        else if (!windowCheck && client.adSchedule.announced){
+                            // If it's within x minutes, shout about it and make sure it's only once...
+                            if (windowCheck && !client.adSchedule.announced){
+                                client.adSchedule.announced = true;
 
-                            // Load in the schedule from twitch...
-                            client.adSchedule.twitchData = await client.apiClient.channels.getAdSchedule(client.twitchUUID);
-
-                            // Default to null, then override...
-                            client.adSchedule.nextAdDate = null;
-                            if ( client.adSchedule.twitchData.nextAdDate ){
-                                client.adSchedule.nextAdDate = new Date(client.adSchedule.twitchData.nextAdDate);
+                                if (client.settings.admonitor['warning']) {
+                                    let warning = client.settings.admonitor['warning'];
+                                    warning = warning.replace('{@warning}', client.settings.admonitor + (client.settings.admonitor > 1 ? ' minutes' : ' minute'));
+                                    parent.sayHandler(client, warning);
+                                }
                             }
 
-                            // Reset the announced state...
-                            client.adSchedule.announced = false;
+                            // If it's been announced, and NOT within x minutes, we update the data...
+                            else if (!windowCheck && client.adSchedule.announced){
 
-                            console.log('adSchedule refreshed.');
-                            console.log(client.adSchedule.nextAdDate.toLocaleString('en-US', { timeZone: "America/New_York" }));
+                                // Load in the schedule from twitch...
+                                client.adSchedule.twitchData = await client.apiClient.channels.getAdSchedule(client.twitchUUID);
+
+                                // Default to null, then override...
+                                client.adSchedule.nextAdDate = null;
+                                if ( client.adSchedule.twitchData.nextAdDate ){
+                                    client.adSchedule.nextAdDate = new Date(client.adSchedule.twitchData.nextAdDate);
+                                }
+
+                                // Reset the announced state...
+                                client.adSchedule.announced = false;
+
+                                console.log('adSchedule refreshed.');
+                                console.log(client.adSchedule.nextAdDate.toLocaleString('en-US', { timeZone: "America/New_York" }));
+                            }
+
                         }
 
                     }

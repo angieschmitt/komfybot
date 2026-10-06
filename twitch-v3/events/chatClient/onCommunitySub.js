@@ -5,10 +5,20 @@ let functions = functionsFunc();
 
 export default async function(channel, user, giftInfo, msg, client) {
 
-    const previousGiftCount = client.giftCounts.get(user) ?? 0;
-	client.giftCounts.set(user, previousGiftCount + giftInfo.count);
-	let content = `Thanks ${user} for gifting ${giftInfo.count} subs to the community!`;
+    // If we have custom output...
+    if (client.events['communitysub']) {
 
-    functions.sayHandler(client, content);
+        // Set the container value to prevent duplicates with onSubGift
+        const previousGiftCount = client.giftCounts.get(user) ?? 0;
+	    client.giftCounts.set(user, previousGiftCount + giftInfo.count);
+
+        // Load the output and format...
+        let content = client.events['communitysub'];
+        content = content.replace('{@user}', '@' + user);
+        content = content.replace('{@amount}', giftInfo.count + (giftInfo.count > 1 ? ' subs' : ' sub'));
+    
+        // Now say it...
+        functions.sayHandler(client, content);
+    }
     
 };

@@ -12,7 +12,7 @@ export default async function(channel, user, subInfo, msg, client) {
     // If there is exisiting gift data...
 	if (previousGiftCount > 0) {
         // Reduce each time until we hit zero...
-		client.giftCounts.set(user, previousGiftCount - 1);
+		client.giftCounts.set(gifterName, previousGiftCount - 1);
 	}
 
     // If there isn't, handle it like a single gift...
@@ -28,7 +28,7 @@ export default async function(channel, user, subInfo, msg, client) {
                 content = content.replace('{@recipient}', subInfo.displayName);
                 content = content.replace('{@months}', subInfo.streak + (subInfo.streak > 1 ? ' months' : ' month'));
 
-                functions.sayHandler(client, content);
+                functions.sayHandler(client, content, true);
             }
 
         }
@@ -41,7 +41,7 @@ export default async function(channel, user, subInfo, msg, client) {
                 content = content.replace('{@recipient}', subInfo.displayName);
                 content = content.replace('{@months}', subInfo.streak + (subInfo.streak > 1 ? ' months' : ' month'));
 
-                functions.sayHandler(client, content);
+                functions.sayHandler(client, content, true);
             }
 
         }
