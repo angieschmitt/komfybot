@@ -1,5 +1,5 @@
 module.exports = {
-	name: 'message',
+	name: 'chat',
 	actions: {
 		default: {
 			execute(users, groups, source, data) {
