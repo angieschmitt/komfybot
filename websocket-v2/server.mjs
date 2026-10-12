@@ -81,12 +81,15 @@ function init() {
                     output.source = 'server';
                 }
 
+                console.log(output);
+
                 // Handle "all" pings...
                 if ( output.target == 'all' ){
                     wss.clients.forEach(function (client) {
                         client.send( JSON.stringify(output) );
                     });
-                } else if ( typeof output.target === 'object' ){
+                }
+                else if ( typeof output.target === 'object' ){
                     // let iter = 0;
                     wss.clients.forEach(function (client) {
                     //     // if (Object.values(output.target).indexOf(iter.toString()) > -1) {
