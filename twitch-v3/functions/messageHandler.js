@@ -7,7 +7,7 @@ export async function messageHandler(event, client) {
     parent.dataChatters(event, client);
 
     // Pass to the chat overlay...
-    client.websocket.send(JSON.stringify({ 'action': 'chat', 'data': { 'event' : event }, 'source': 'komfybot' }));
+    client.websocket.send(JSON.stringify({ 'action': 'chat', 'data': { 'event' : event, 'target': 'chat:' + client.userID, }, 'source': 'komfybot' }));
 
     // Setup the passive income watcher...
     let passive = true;
