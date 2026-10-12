@@ -9,25 +9,8 @@ module.exports = {
 				const userKeys = Object.keys(users);
 				const userKey = getKeyByValue(userKeys, data['target']);
 
-                console.log(userKeys);
-                console.log(userKey);
-
-				let target = [ userKey ];
-				if (target[0] === undefined) {
-					// Let's check for a group...
-					const groupKeys = Object.keys(groups);
-					const groupKey = getKeyByValue(groupKeys, data['target']);
-					if (groupKey !== undefined) {
-						// Found the group
-						target = [];
-						Object.entries(users).forEach(([item]) => {
-							if (item.indexOf(data['target'] + ':') > -1) {
-								const tempKey = getKeyByValue(userKeys, item);
-								target.push(tempKey);
-							}
-						});
-					}
-				}
+                // No groups here, hard assign to the two versions..
+				let target = [ userKey+':default', userKey+':custom' ];
 
 				data['target'] = target;
 
