@@ -4,6 +4,8 @@ module.exports = {
 		default: {
 			execute(users, groups, source, data) {
 
+                console.log(data);
+
 				const userKeys = Object.keys(users);
 				const userKey = getKeyByValue(userKeys, data['target']);
 
