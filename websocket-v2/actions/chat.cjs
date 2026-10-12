@@ -9,6 +9,9 @@ module.exports = {
 				const userKeys = Object.keys(users);
 				const userKey = getKeyByValue(userKeys, data['target']);
 
+                console.log(userKeys);
+                console.log(userKey);
+
 				let target = [ userKey ];
 				if (target[0] === undefined) {
 					// Let's check for a group...
