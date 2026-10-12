@@ -188,10 +188,11 @@ export async function createBot(globals, twitchUUID, userData) {
 
     // Assign the subscriptions...
     parent.eventLoader(client);
-
+    
     // Load in more data...
     await parent.dataLive(client);
     await parent.dashboardLoader(client);
+    await parent.twitchLoader(client);
 
     return globals;
 };

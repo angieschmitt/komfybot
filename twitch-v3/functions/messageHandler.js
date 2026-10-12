@@ -7,7 +7,39 @@ export async function messageHandler(event, client) {
     parent.dataChatters(event, client);
 
     // Pass to the chat overlay...
-    client.websocket.send(JSON.stringify({ 'action': 'chat', 'data': { 'event' : event, 'target': 'chat:' + client.userID, }, 'source': 'komfybot' }));
+    let dataOut = {
+        'chatterDisplayName' : event.chatterDisplayName,
+        'chatterId' : event.chatterId,
+        'chatterName' : event.chatterName,
+        'color' : event.color,
+        'messageText' : event.messageText,
+        'messageType' : event.messageType,
+        'badges' : []
+    };
+
+    Object.entries(event.badges).forEach(async ([key, value]) => {
+        dataOut.badges[key] = {};
+        
+        // If we have more info, add it...
+        let badgeInfo = event.getBadgeInfo(key);
+        if (badgeInfo){
+            dataOut.badges[key]['length'] = badgeInfo;
+        }
+
+        // Now locate the image that we need...
+        if ( key in client.badges.channel ){
+            if (value in client.badges.channel[key]){                
+                dataOut.badges[key]['url'] = client.badges.channel[key][value];
+            }
+        }
+        else if ( key in client.badges.global ){
+            if (value in client.badges.global[key]){
+                dataOut.badges[key]['url'] = client.badges.global[key][value];
+            }
+        }
+    });
+
+    client.websocket.send(JSON.stringify({ 'action': 'chat', 'data': { 'event' : dataOut, 'target': 'chat:' + client.userID, }, 'source': 'komfybot' }));
 
     // Setup the passive income watcher...
     let passive = true;
