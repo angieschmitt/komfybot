@@ -81,7 +81,9 @@ function init() {
                     output.source = 'server';
                 }
 
-                console.log(output);
+                if ( action == 'chat' ) {
+                    console.log(output);
+                }
 
                 // Handle "all" pings...
                 if ( output.target == 'all' ){
