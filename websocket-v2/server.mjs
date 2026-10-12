@@ -81,10 +81,6 @@ function init() {
                     output.source = 'server';
                 }
 
-                if ( action == 'chat' ) {
-                    console.log(output);
-                }
-
                 // Handle "all" pings...
                 if ( output.target == 'all' ){
                     wss.clients.forEach(function (client) {
