@@ -6,11 +6,8 @@ module.exports = {
 
                 console.log(data);
 
-				const userKeys = Object.keys(users);
-				const userKey = getKeyByValue(userKeys, data['target']);
-
                 // No groups here, hard assign to the two versions..
-				let target = [ userKey+':default', userKey+':custom' ];
+				let target = [ data['target'] + ':default', data['target'] + ':custom' ];
 
 				data['target'] = target;
 
