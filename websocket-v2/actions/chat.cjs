@@ -32,6 +32,8 @@ module.exports = {
 					'source': source,
 				};
 
+                console.log(output);
+
 				return output;
 			},
 		},
