@@ -1,45 +1,11 @@
 import axios from 'axios';
+import { buildEmoteImageUrl } from '@twurple/chat'
 
 export async function messageHandler(event, client) {
     const parent = this;
 
     // Log chatters...
     parent.dataChatters(event, client);
-
-    // Pass to the chat overlay...
-    let dataOut = {
-        'chatterDisplayName' : event.chatterDisplayName,
-        'chatterId' : event.chatterId,
-        'chatterName' : event.chatterName,
-        'color' : event.color,
-        'messageText' : event.messageText,
-        'messageType' : event.messageType,
-        'badges' : []
-    };
-
-    Object.entries(event.badges).forEach(async ([key, value]) => {
-        dataOut.badges[key] = {};
-        
-        // If we have more info, add it...
-        let badgeInfo = event.getBadgeInfo(key);
-        if (badgeInfo){
-            dataOut.badges[key]['length'] = badgeInfo;
-        }
-
-        // Now locate the image that we need...
-        if ( key in client.badges.channel ){
-            if (value in client.badges.channel[key]){                
-                dataOut.badges[key]['url'] = client.badges.channel[key][value];
-            }
-        }
-        else if ( key in client.badges.global ){
-            if (value in client.badges.global[key]){
-                dataOut.badges[key]['url'] = client.badges.global[key][value];
-            }
-        }
-    });
-
-    client.websocket.send(JSON.stringify({ 'action': 'chat', 'data': { 'event' : dataOut, 'target': 'chat:' + client.userID, }, 'source': 'komfybot' }));
 
     // Setup the passive income watcher...
     let passive = true;
@@ -104,6 +70,66 @@ export async function messageHandler(event, client) {
             }
         }
     }
+}
+
+export async function chatOverlayHandler(event, client) {
+
+    // Pass to the chat overlay...
+    let dataOut = {
+        'chatterDisplayName' : event.chatterDisplayName,
+        'chatterId' : event.chatterId,
+        'chatterName' : event.chatterName,
+        'color' : event.color,
+        'messageId' : event.messageId,
+        'messageText' : event.messageText,
+        'messageType' : event.messageType,
+        'messageParts' : event.messageParts,
+        'badges' : {},
+        'emotes' : {},
+    };
+
+    // Handle converting badges...
+    Object.entries(event.badges).forEach(async ([key, value]) => {
+        dataOut.badges[key] = {};
+        
+        // If we have more info, add it...
+        let badgeInfo = event.getBadgeInfo(key);
+        if (badgeInfo){
+            dataOut.badges[key]['length'] = badgeInfo;
+        }
+
+        // Now locate the image that we need...
+        if ( key in client.badges.channel ){
+            if (value in client.badges.channel[key]){                
+                dataOut.badges[key]['url'] = client.badges.channel[key][value];
+            }
+        }
+        else if ( key in client.badges.global ){
+            if (value in client.badges.global[key]){
+                dataOut.badges[key]['url'] = client.badges.global[key][value];
+            }
+        }
+    });
+
+    // Handle emotes...
+    Object.entries(event.messageParts).forEach(async ([key, part]) => {
+        if (part.type === 'emote') {
+            dataOut.emotes[part.text] = {};
+
+            let settings = { 'animationSettings': 'static', 'backgroundType': 'light', 'size' : '3.0' };
+
+            // Add the static emote url
+            dataOut.emotes[part.text]['static'] = buildEmoteImageUrl(part.emote.id, settings);
+
+            // If there is an animated version...
+            if (part.emote.format.includes('animated')){
+                settings.animationSettings = 'animated';
+                dataOut.emotes[part.text]['animated'] = buildEmoteImageUrl(part.emote.id, settings);
+            }
+        }
+    });
+
+    client.websocket.send(JSON.stringify({ 'action': 'chat', 'data': { 'event' : dataOut, 'target': 'chat:' + client.userID, }, 'source': 'komfybot' }));
 }
 
 export async function passiveHandler(perms, event, client){

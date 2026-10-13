@@ -61,6 +61,7 @@ export async function action(event, client) {
                         client.timerOffset = 1;
                     }
 
+                    functions.admonitorHandler(client, true);
                     functions.timerHandler(client, true);
                 }
             })

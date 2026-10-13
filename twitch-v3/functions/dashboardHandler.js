@@ -99,6 +99,7 @@ export async function dashboardHandler(type, data, client, reset = false){
     }
     else if (type == 'settings') {
         parent.settingsHandler(data, client, reset);
+        parent.admonitorHandler(client, true);
     }
     else if (type == 'store') {
         parent.storeHandler(data, client, reset);

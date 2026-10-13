@@ -36,4 +36,7 @@ export async function action(event, client) {
         functions.messageHandler(event, client);
     }
 
+    // TODO: Handle settings later to prevent bot messages...
+    functions.chatOverlayHandler(event, client);
+
 };

@@ -2,12 +2,8 @@ export async function twitchLoader(client, type = false, reset = false){
     const parent = this;
 
     let twitchBadges = await parent.badgeLoader(client);
-    // let twitchEmotes = await parent.emoteLoader(client);
-
-    // console.log(twitchBadges.channel);
     
     client.badges = twitchBadges;
-    // client.emotes = twitchEmotes;
 
     return client;    
 }
@@ -39,11 +35,4 @@ export async function badgeLoader(client){
     badges.channel = channelBadgesOut;
 
     return badges;
-}
-
-export async function emoteLoader(client, type = false, reset = false){
-    const parent = this;
-
-    let globalBadges = client.apiClient.chat.getChannelBadges();
-    
 }
