@@ -89,7 +89,7 @@ function init() {
                 }
                 else if ( typeof output.target === 'object' ){
 
-                    console.log(output.target);
+                    console.log(output);
 
                     // let iter = 0;
                     wss.clients.forEach(function (client) {
