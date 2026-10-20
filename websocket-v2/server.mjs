@@ -88,9 +88,6 @@ function init() {
                     });
                 }
                 else if ( typeof output.target === 'object' ){
-
-                    console.log(output);
-
                     // let iter = 0;
                     wss.clients.forEach(function (client) {
                     //     // if (Object.values(output.target).indexOf(iter.toString()) > -1) {
