@@ -2,14 +2,17 @@ export async function admonitorHandler(client, reset = false) {
     const parent = this;
 
     const timerInterval = 60000;
+    // const timerInterval = 10000;
 
     if (reset) {
         clearInterval(client.admonitorTimer);
+        client.adSchedule = false;
     }
 
     if (client.settings.admonitor.enabled){
 
-        if (!('adSchedule' in client)) {
+        // If it doesn't exist, create it...
+        if (!('adSchedule' in client) || !client.adSchedule) {
             client.adSchedule = {};
             client.adSchedule.announced = false;
 
@@ -26,12 +29,9 @@ export async function admonitorHandler(client, reset = false) {
         client.admonitorTimer = setInterval(
             async function() {
 
-                if (client.isLive) {
-
-                    // If there is a nextAdDate...
+                if (client.isLive) {                    
                     if ( client.adSchedule.nextAdDate !== null ){
-
-                        let windowCheck = isWithinXMinutes(client.adSchedule.nextAdDate, client.settings.admonitor);
+                        let windowCheck = isWithinXMinutes(client.adSchedule.nextAdDate, parseInt(client.settings.admonitor.warningTime));
 
                         // If it's within x minutes, shout about it and make sure it's only once...
                         if (windowCheck && !client.adSchedule.announced){
@@ -39,12 +39,14 @@ export async function admonitorHandler(client, reset = false) {
 
                             if (client.settings.admonitor['warning']) {
                                 let warning = client.settings.admonitor['warning'];
-                                warning = warning.replace('{@warning}', client.settings.admonitor + (client.settings.admonitor > 1 ? ' minutes' : ' minute'));
+                                warning = warning.replace('{@warning}', client.settings.admonitor['warningTime'] + (client.settings.admonitor['warningTime'] > 1 ? ' minutes' : ' minute'));
                                 parent.sayHandler(client, warning);
                             }
-                        }
+                            else {
+                                parent.sayHandler(client, 'Ad break in ' + client.settings.admonitor['warningTime'] + (client.settings.admonitor['warningTime'] > 1 ? ' minutes' : ' minute') );
+                            }
 
-                        // If it's been announced, and NOT within x minutes, we update the data...
+                        }
                         else if (!windowCheck && client.adSchedule.announced){
 
                             // Load in the schedule from twitch...
@@ -59,12 +61,11 @@ export async function admonitorHandler(client, reset = false) {
                             // Reset the announced state...
                             client.adSchedule.announced = false;
 
-                            console.log('adSchedule refreshed.');
-                            console.log(client.adSchedule.nextAdDate.toLocaleString('en-US', { timeZone: "America/New_York" }));
+                            // console.log('adSchedule refreshed.');
+                            // console.log(client.adSchedule.nextAdDate.toLocaleString('en-US', { timeZone: "America/New_York" }));
+
                         }
-
                     }
-
                 }
 
             },
