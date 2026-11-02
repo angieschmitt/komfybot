@@ -104,6 +104,9 @@ export async function chatOverlayHandler(event, client) {
             if (value in client.badges.channel[key]){                
                 dataOut.badges[key]['url'] = client.badges.channel[key][value];
             }
+            else {
+                dataOut.badges[key]['url'] = client.badges.global[key][value];
+            }
         }
         else if ( key in client.badges.global ){
             if (value in client.badges.global[key]){
