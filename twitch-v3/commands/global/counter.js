@@ -138,8 +138,13 @@ export const actions = {
             error: 'this command is for the streamer and mods only.',
         },
         execute(args, tags, message, channel, client) {
+
+            if ( args.length > 2 ){
+                label = message.substr(message.indexOf('!')).replace(args[0], '').replace(args[1], '').trim();
+            }
+
             let content = '';
-            axios.get(client.endpoint + 'data/counter/' + client.userID + '/label/' + args[2])
+            axios.get(client.endpoint + 'data/counter/' + client.userID + '/label/' + label)
                 .then(function(response) {
                     const resData = response.data;
                     if (resData.status === 'success') {
