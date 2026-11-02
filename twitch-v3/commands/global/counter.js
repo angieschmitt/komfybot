@@ -28,7 +28,7 @@ export const actions = {
                 .then(function(response) {
                     const resData = response.data;
                     if (resData.status === 'success') {
-                        content += `COUNTER: ${resData.response}`;
+                        content += `${resData.response.label}: ${resData.response.count}`;
                     }
                     else if (resData.status === 'failure') {
                         if (resData.err_msg === 'missing_authorization') {
@@ -69,7 +69,7 @@ export const actions = {
                 .then(function(response) {
                     const resData = response.data;
                     if (resData.status === 'success') {
-                        content += `COUNTER: ${resData.response}`;
+                        content += `${resData.response.label}: ${resData.response.count}`;
                     }
                     else if (resData.status === 'failure') {
                         if (resData.err_msg === 'missing_authorization') {
@@ -106,7 +106,7 @@ export const actions = {
                 .then(function(response) {
                     const resData = response.data;
                     if (resData.status === 'success') {
-                        content += `COUNTER: ${resData.response}`;
+                        content += `${resData.response.label}: ${resData.response.count}`;
                     }
                     else if (resData.status === 'failure') {
                         if (resData.err_msg === 'missing_authorization') {
@@ -131,4 +131,41 @@ export const actions = {
 
         },
     },
+    label: {
+        help: 'Command to set the counter text. Usage !counter label <label:required>',
+        perms: {
+            levels: ['streamer', 'mod'],
+            error: 'this command is for the streamer and mods only.',
+        },
+        execute(args, tags, message, channel, client) {
+            let content = '';
+            axios.get(client.endpoint + 'data/counter/' + client.userID + '/label/' + args[2])
+                .then(function(response) {
+                    const resData = response.data;
+                    if (resData.status === 'success') {
+                        content += `${resData.response.label}: ${resData.response.count}`;
+                    }
+                    else if (resData.status === 'failure') {
+                        if (resData.err_msg === 'missing_authorization') {
+                            client.debug.write(client.channel, 'counter-set', 'Authorization issue');
+                        }
+                        else {
+                            client.debug.write(client.channel, 'counter-set', 'Failed response');
+                        }
+                    }
+                    else {
+                        client.debug.write(client.channel, 'counter-set', 'Not sure how you got here');
+                    }
+                })
+                .catch(function() {
+                    client.debug.write(client.channel, 'counter-set', 'Issue while handling command');
+                })
+                .finally(function() {
+                    if (content !== '') {
+                        functions.sayHandler(client, content);
+                    }
+                });
+
+        },
+    }
 };
