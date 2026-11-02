@@ -20,6 +20,7 @@ export const actions = {
         execute(args, tags, message, channel, client) {
 
             let content = '';
+            let helpOutput = {};
             let alias = false;
 
             // Strip out extra !'s
@@ -29,10 +30,12 @@ export const actions = {
 
             // Check for a matching user command...
             let commandLookup = client.commands['user'][args[1]];
+
             // No match? Check for a matching global command...
             if (commandLookup === undefined) {
-                let commandLookup = client.commands['global'][args[1]];
+                commandLookup = client.commands['global'][args[1]];
             }
+
             // Still no match? Check the aliases list...
             if (commandLookup === undefined) {
                 commandLookup = client.commands['alias'][args[1]];
@@ -59,58 +62,62 @@ export const actions = {
                 const actions = commandLookup.actions;
                 const settings = commandLookup.settings;
 
-                if (alias) {
+                // Default to the top level help details...
+                if ('help' in settings){
+                    helpOutput.text = settings.help;
+                }
+
+                // Default to the top level perm details...
+                if ('perms' in settings) {
+                    helpOutput.perms = `${settings.perms.levels.join(', ')}`;
+                }
+                else {
+                    const actionData = actions['default'];
+                    if ('perms' in actionData){
+                        helpOutput.perms = `${actionData.perms.levels.join(', ')}`;
+                    }
+                }
+
+                // If we have an action, we override that data...
+                if (args.length == 3) {
+                    if ( Object.keys(actions).includes(args[2]) ){
+                        if ('help' in actions[args[2]]){
+                            helpOutput.text = actions[args[2]].help;
+                        }
+                        if ('perms' in actions[args[2]]){
+                            helpOutput.perms = `${actions[args[2]].perms.levels.join(', ')}`;
+                        }
+                    }
+                }
+
+                // If we're dealing with a aliased command...
+                if (alias){
                     let actionName = settings['aliases'][alias]['arg'];
                     if (!actionName){
                         actionName = 'default';
                     }
-                    const actionData = actions[actionName];
 
-                    if ('help' in actionData){
-                        let adjusted = actionData.help.replaceAll('!' + settings.name + ' ' + actionName, '!' + alias);
-                        content = `!${args[1]} : ${adjusted}`;
-                    } else if ('help' in settings) {
-                        content = `!${args[1]} : ${settings.help.replaceAll('!' + settings.name, '!' + args[1])}`;
-                    }
-
-                    if (content !== ''){
-                        if ('perms' in actionData){
-                            content += ` || ${actionData.perms.levels.join(', ')}`;
-                        } else if ('perms' in settings) {
-                            content += ` || ${settings.perms.levels.join(', ')}`;
+                    if ( Object.keys(actions).includes(actionName) ){
+                        if ('help' in actions[actionName]){
+                            helpOutput.text = actions[actionName].help;
+                        }
+                        if ('perms' in actions[actionName]){
+                            helpOutput.perms = `${actions[actionName].perms.levels.join(', ')}`;
                         }
                     }
 
+                    // Now adjust text to match the alias...
+                    helpOutput.text = helpOutput.text.replaceAll('!' + settings.name + ' ' + actionName, '!' + alias);
                 }
-                else {
-                    // If we have a top level command...
-                    if (args.length == 2) {
-                        if ('help' in settings) {
-                            content = `!${args[1]} : ${settings.help.replaceAll('!' + settings.name, '!' + args[1])}`;
-                        }
 
-                        if (content !== ''){
-                            if ('perms' in actions['default']){
-                                content += ` || ${actions['default'].perms.levels.join(', ')}`;
-                            }
-                            else if ('perms' in settings){
-                                content += ` || ${settings.perms.levels.join(', ')}`;
-                            }
-                        }
-                    }
-                    // If we have MORE data, we dig...
-                    else {
-                        const actionData = actions[args[2]];
-                        if ('help' in actionData) {
-                            content = `!${args[1]} ${args[2]} : ${actionData.help.replaceAll('!' + settings.name, '!' + args[1])}`;
-
-                            if ('perms' in actionData){
-                                content += ` || ${actionData.perms.levels.join(', ')}`;
-                            }
-                        }
+                if ( Object.keys(helpOutput).length !== 0 ){
+                    content = helpOutput.text;
+                    
+                    if ('perms' in helpOutput){
+                        content += ' || ' + helpOutput.perms;
                     }
                 }
-                
+
                 // Fall back if we haven't set content...
                 if (content === '') {
                     content = `There doesn't seem to be help text for this command.`;
