@@ -86,6 +86,7 @@ export async function chatOverlayHandler(event, client) {
         'messageParts' : event.messageParts,
         'badges' : {},
         'emotes' : {},
+        'cheers' : [],
     };
 
     // Handle converting badges...
@@ -111,7 +112,7 @@ export async function chatOverlayHandler(event, client) {
         }
     });
 
-    // Handle emotes...
+    // Handle emotes and cheers...
     Object.entries(event.messageParts).forEach(async ([key, part]) => {
         if (part.type === 'emote') {
             dataOut.emotes[part.text] = {};
@@ -126,6 +127,39 @@ export async function chatOverlayHandler(event, client) {
                 settings.animationSettings = 'animated';
                 dataOut.emotes[part.text]['animated'] = buildEmoteImageUrl(part.emote.id, settings);
             }
+        }
+        else if (part.type === 'cheermote') {
+
+            let partData = part.cheermote;
+            let settingsStatic = { background: 'light', state: 'static', scale: '3' };
+            let settingsAnimated = { background: 'light', state: 'animated', scale: '3' };
+
+            // Assign the vars...
+            let cheerStatic = false;
+            let cheerAnimated = false;
+
+            if ( client.cheers.channel.names.includes(partData.prefix) ){
+                cheerStatic = client.cheers.channel.cheers.getCheermoteDisplayInfo(partData.prefix, partData.bits, settingsStatic);
+                cheerAnimated = client.cheers.channel.cheers.getCheermoteDisplayInfo(partData.prefix, partData.bits, settingsAnimated);
+
+                if ( cheerStatic && cheerAnimated ) {
+                    dataOut.cheers.push( 
+                        { 'text' : part.text, 'bits' : partData.bits,  'color' : cheerStatic.color, 'static' : cheerStatic.url, 'animated' : cheerAnimated.url } 
+                    );
+                }
+
+            }
+            else if ( client.cheers.global.names.includes(partData.prefix) ){
+                cheerStatic = client.cheers.global.cheers.getCheermoteDisplayInfo(partData.prefix, partData.bits, settingsStatic);
+                cheerAnimated = client.cheers.global.cheers.getCheermoteDisplayInfo(partData.prefix, partData.bits, settingsAnimated);
+
+                if ( cheerStatic && cheerAnimated ) {
+                    dataOut.cheers.push( 
+                        { 'text' : part.text, 'bits' : partData.bits, 'color' : cheerStatic.color, 'static' : cheerStatic.url, 'animated' : cheerAnimated.url } 
+                    );
+                }
+            }
+
         }
     });
 

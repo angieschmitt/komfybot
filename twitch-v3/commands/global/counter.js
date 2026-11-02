@@ -7,7 +7,7 @@ export const settings = {
     name: 'counter',
     help: 'Command to count something. Usage: !count || Additional arguments: set, reset',
     list: false,
-    allowOffline: false,
+    allowOffline: true,
     aliases: {
         'count': {
 			arg: false,
@@ -138,6 +138,8 @@ export const actions = {
             error: 'this command is for the streamer and mods only.',
         },
         execute(args, tags, message, channel, client) {
+
+            let label = 'COUNTER';
 
             if ( args.length > 2 ){
                 label = message.substr(message.indexOf('!')).replace(args[0], '').replace(args[1], '').trim();

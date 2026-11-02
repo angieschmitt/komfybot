@@ -185,14 +185,14 @@ export async function createBot(globals, twitchUUID, userData) {
     // Create the EventSub listener...
     client.eventsubListener = new EventSubWsListener({ 'apiClient': client.apiClient });
     client.eventsubListener.start();
-
-    // Assign the subscriptions...
-    parent.eventLoader(client);
     
     // Load in more data...
     await parent.dataLive(client);
     await parent.dashboardLoader(client);
     await parent.twitchLoader(client);
+
+    // Assign the subscriptions...
+    parent.eventLoader(client);
 
     return globals;
 };
