@@ -4,8 +4,10 @@ import { buildEmoteImageUrl } from '@twurple/chat'
 export async function messageHandler(event, client) {
     const parent = this;
 
-    // Log chatters...
-    parent.dataChatters(event, client);
+    // Log chatters if live...
+    if (client.isLive){
+        parent.dataChatters(event, client);
+    }
 
     // Setup the passive income watcher...
     let passive = true;

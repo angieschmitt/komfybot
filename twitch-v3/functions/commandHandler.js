@@ -8,7 +8,8 @@ export async function commandLocator(text, client) {
     if (cleanedMessage.indexOf('!') !== -1) {
 
         // Remove preceding text
-        const commandText = cleanedMessage.substr(cleanedMessage.indexOf('!'));
+        let commandText = cleanedMessage.substr(cleanedMessage.indexOf('!'));
+        commandText = commandText.replaceAll('  ', ' ');
 
         // Split remaing text into parts to handle things
         const args = commandText.split(' ');

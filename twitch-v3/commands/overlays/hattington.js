@@ -5,7 +5,7 @@ let functions = functionsFunc();
 
 export const settings = {
     name: 'hatty',
-	help: 'Commands for Hattington. Usage: !hatty || Additional arguments: hat, snack',
+	help: 'Commands for Hattington. Usage: !hatty || Additional arguments: hat, snack, gacha, missing',
     list: true,
     allowOffline: false,
     channel: [ 2 ],
@@ -252,4 +252,116 @@ export const actions = {
             client.commands.global.store['actions'].buy.execute(args2, tags, message2, channel, client);
         },
     },
+    missing: {
+        help: 'Command to see what hats you are missing. Usage: !hatty missing <rarity:optional>',
+        execute(args, tags, message, channel, client) {
+
+            const viewer = tags['username'];
+            const viewerID = tags['user-id'];
+
+            let content = '';
+            let rarity = message.replace(args[0],'').replace(args[1], '').trim();
+            if ( rarity == ''){ rarity = false; }
+            
+            const rarities = {
+                'common'		: 1,
+                'uncommon'		: 2,
+                'rare'			: 3,
+                'super-rare'	: 4,
+                'superrare'		: 4,
+                'custom'		: 5,
+            };
+
+            if( rarity ){
+                axios.get(client.endpoint + 'overlay/hattington/' + client.userID + '/' + viewerID + '/missing/hats/' + rarity)
+                    .then(function(response) {
+                        const resData = response.data;
+
+                        if (resData.status === 'success') {
+                            Object.entries(resData.response).forEach(([set, itemData]) => {
+                                content += 'Set ' + set + ': [ ';
+                                    Object.entries(itemData).forEach(([itemId, itemInfo]) => {
+                                        content += itemInfo.name + ', ';
+                                    });
+                                    content = content.substring(0, content.length - 2)
+                                content += ' ], '
+                            });
+                            if (content !== ''){
+                                content = `@${viewer}, you are currently missing the following hats: ` + content.substring(0, content.length - 2);
+                            }
+                        }
+                        else if (resData.status === 'failure') {
+                            if (resData.err_msg === 'no_missing_hats') {
+                                content = `@${viewer}, it seems like you aren't missing any ${rarity} hats.`;
+                            }
+                            else if (resData.err_msg === 'missing_authorization') {
+                                client.debug.write(client.channel, 'hattington-missing', 'Authorization issue');
+                            }
+                            else {
+                                client.debug.write(client.channel, 'hattington-missing', 'Failed response');
+                            }
+                        }
+                        else {
+                            client.debug.write(client.channel, 'hattington-missing', 'Not sure how you got here');
+                        }
+                    })
+                    .catch(function() {
+                        client.debug.write(client.channel, 'hattington-missing', 'Issue while handling command');
+                    })
+                    .finally(function() {
+                        if (!('silent' in tags)) {
+                            if (content !== '') {
+                                functions.sayHandler(client, content);
+                            }
+                        }
+                    });
+            }
+            else{
+                axios.get(client.endpoint + 'overlay/hattington/' + client.userID + '/' + viewerID + '/missing/hats/')
+                    .then(function(response) {
+                        const resData = response.data;
+
+                        if (resData.status === 'success') {
+                            Object.entries(resData.response).forEach(([rarity, count]) => {
+                                if (rarity !=='all' && count !== 0){
+                                    content += count + ' ' + ucwords(Object.keys(rarities).find(key => rarities[key] === parseInt(rarity))) + ', ';
+                                }
+                            });
+                            if (content !== ''){
+                                content = `@${viewer}, you are currently missing the following hats: ` + content.substring(0, content.length - 2);
+                            }
+                        }
+                        else if (resData.status === 'failure') {
+                            if (resData.err_msg === 'no_missing_hats') {
+                                content = `@${viewer}, it seems like you aren't missing any hats.`;
+                            }
+                            else if (resData.err_msg === 'missing_authorization') {
+                                client.debug.write(client.channel, 'hattington-missing', 'Authorization issue');
+                            }
+                            else {
+                                client.debug.write(client.channel, 'hattington-missing', 'Failed response');
+                            }
+                        }
+                        else {
+                            client.debug.write(client.channel, 'hattington-missing', 'Not sure how you got here');
+                        }
+                    })
+                    .catch(function() {
+                        client.debug.write(client.channel, 'hattington-missing', 'Issue while handling command');
+                    })
+                    .finally(function() {
+                        if (!('silent' in tags)) {
+                            if (content !== '') {
+                                functions.sayHandler(client, content);
+                            }
+                        }
+                    });
+
+            }
+        }
+    }
 };
+
+function ucwords(string) {
+	return string.toLowerCase().replace(/(?<= )[^\s]|^./g, a => a.toUpperCase());
+}
