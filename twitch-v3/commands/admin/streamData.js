@@ -96,10 +96,18 @@ export const actions = {
             levels: ['admin'],
             error: 'this command is for admins only.',
         },
-        execute(args, tags, message, channel, client) {
+        async execute(args, tags, message, channel, client) {
+
+            // Setup who we're looking up...
+            let target = tags['user-id'];
+            if (args.length > 1 && args[1] !== tags.username) {
+                targetUsername = args[1].replace('@', '');
+                const user = await client.apiClient.users.getUserByName(targetUsername);
+                if ( user ) { target = user.id; }
+            }
             
             const walkonsData = client.overlay['walk-ons'].data;
-            const walkonData = walkonsData.find((developer) => developer.twitchUUID === tags['user-id']);
+            const walkonData = walkonsData.find((developer) => developer.twitchUUID === target);
 
             if (walkonData){
                 client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'content' : walkonData.mediaID, 'type' : 'walkOn', 'target': 'walk-ons:' + client.userID }, 'source': 'komfybot' }));
@@ -175,3 +183,4 @@ export const actions = {
         },
     }
 };
+
