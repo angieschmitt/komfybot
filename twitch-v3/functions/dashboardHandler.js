@@ -287,6 +287,7 @@ export async function overlaysHandler(data, client, reset = false) {
 
     if (data !== false) {
         Object.entries(data).forEach(([idx, item]) => { // eslint-disable-line no-unused-vars
+
             const overlayName = item['name'].toLowerCase().replace(' ', '-');
             client.overlay[overlayName] = [];
             if ('data' in item.content) {
@@ -306,6 +307,7 @@ export async function overlaysHandler(data, client, reset = false) {
                     });
                 });
             }
+
         });
     }
 
