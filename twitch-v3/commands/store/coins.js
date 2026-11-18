@@ -184,13 +184,15 @@ export const actions = {
             const viewerID = tags['user-id'];
             const target = args[2].replace('@', '');
             const amount = args[3];
+
+            let content = '';
+
             if (!functions.isInt(amount)) {
                 content = 'The amount goes after the username';
                 functions.sayHandler(client, content);
                 return;
             }
 
-            let content = '';
             axios.get(client.endpoint + 'coins/give/' + client.userID + '/' + viewerID + '/' + target + '/' + amount + '/')
                 .then(function(response) {
                     const resData = response.data;
