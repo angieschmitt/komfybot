@@ -100,8 +100,8 @@ export const actions = {
 
             // Setup who we're looking up...
             let target = tags['user-id'];
-            if (args.length > 1 && args[1] !== tags.username) {
-                targetUsername = args[1].replace('@', '');
+            if (args.length > 2) {
+                targetUsername = args[2].replace('@', '');
                 const user = await client.apiClient.users.getUserByName(targetUsername);
                 if ( user ) { target = user.id; }
             }
