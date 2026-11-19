@@ -38,7 +38,7 @@ export const actions = {
                             content = `@${viewer} added ${resData.response[position].songData.title} to the queue.`
 
                             // Sync the other locations...
-                            client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'action' : 'update', 'target': 'music:' + client.userID }, 'source': 'komfybot' }));
+                            client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'action' : 'update', 'target': 'music:' + client.userID + ":default" }, 'source': 'komfybot' }));
                         }
                         else if (resData.status === 'failure') {
                             if (resData.err_msg === 'missing_authorization') {
@@ -85,7 +85,7 @@ export const actions = {
                         content = `Skipping and removing ${removed.songData.title} from the queue.`
 
                         // Sync the other locations...
-                        client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'action' : 'update', 'target': 'music:' + client.userID }, 'source': 'komfybot' }));
+                        client.websocket.send(JSON.stringify({ 'action': 'ping', 'data': { 'action' : 'update', 'target': 'music:' + client.userID + ':default' }, 'source': 'komfybot' }));
                     }
                     else if (resData.status === 'failure') {
                         if (resData.err_msg === 'missing_authorization') {
